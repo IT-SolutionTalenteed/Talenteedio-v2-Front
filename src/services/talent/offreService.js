@@ -7,6 +7,8 @@ export const offreService = {
     headers: { 'Content-Type': 'multipart/form-data' }
   }),
   mesCandidatures: () => api.get('/talent/mes-candidatures'),
+  getFavoris: () => api.get('/talent/favoris'),
+  toggleFavori: (offreId) => api.post(`/talent/offres/${offreId}/favori`),
 }
 
 export default offreService

@@ -43,6 +43,9 @@
         <p v-if="offre.description">{{ offre.description }}</p>
 
         <button @click="openCandidature(offre)">Postuler</button>
+        <button @click="toggleFavori(offre)">
+          {{ favorisIds.has(offre.id) ? '★ Favori' : '☆ Ajouter aux favoris' }}
+        </button>
       </div>
 
       <div v-if="pagination.last_page > 1">
@@ -63,6 +66,7 @@ import { ref, onMounted } from 'vue'
 import offreService from '../../services/talent/offreService.js'
 
 const offres = ref([])
+const favorisIds = ref(new Set())
 const loading = ref(false)
 const error = ref('')
 const success = ref('')
@@ -106,5 +110,25 @@ const postuler = async () => {
   } finally { loading.value = false }
 }
 
-onMounted(() => loadPage())
+const loadFavoris = async () => {
+  try {
+    const res = await offreService.getFavoris()
+    favorisIds.value = new Set(res.data.map(o => o.id))
+  } catch {}
+}
+
+const toggleFavori = async (offre) => {
+  try {
+    const res = await offreService.toggleFavori(offre.id)
+    if (res.data.favori) {
+      favorisIds.value.add(offre.id)
+    } else {
+      favorisIds.value.delete(offre.id)
+    }
+    // Trigger reactivity
+    favorisIds.value = new Set(favorisIds.value)
+  } catch { error.value = 'Erreur favoris' }
+}
+
+onMounted(() => { loadPage(); loadFavoris() })
 </script>

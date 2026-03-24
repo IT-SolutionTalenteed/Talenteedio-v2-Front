@@ -5,11 +5,13 @@
     <nav>
       <button @click="activeTab = 'offres'">Offres d'emploi</button>
       <button @click="activeTab = 'candidatures'">Mes candidatures</button>
+      <button @click="activeTab = 'favoris'">Mes favoris</button>
       <button @click="logout" style="background-color:#dc3545;">Déconnexion</button>
     </nav>
 
     <OffreList v-if="activeTab === 'offres'" />
     <MesCandidatures v-if="activeTab === 'candidatures'" />
+    <MesFavoris v-if="activeTab === 'favoris'" />
   </div>
 </template>
 
@@ -19,6 +21,7 @@ import { useRouter } from 'vue-router'
 import { authService } from '../services/api.js'
 import OffreList from './talent/OffreList.vue'
 import MesCandidatures from './talent/MesCandidatures.vue'
+import MesFavoris from './talent/MesFavoris.vue'
 
 const router = useRouter()
 const activeTab = ref('offres')
