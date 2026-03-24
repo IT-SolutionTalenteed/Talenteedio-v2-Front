@@ -8,6 +8,7 @@
       <button @click="activeTab = 'favoris'">Mes favoris</button>
       <button @click="activeTab = 'evenements'">Événements & Matching</button>
       <button @click="activeTab = 'entretiens'">Mes entretiens</button>
+      <button @click="activeTab = 'feedbacks'">Mes feedbacks</button>
       <button @click="logout" style="background-color:#dc3545;">Déconnexion</button>
     </nav>
 
@@ -23,6 +24,7 @@
       @fermer="rdvState = null"
     />
     <MesEntretiens v-if="activeTab === 'entretiens'" />
+    <MesFeedbacks v-if="activeTab === 'feedbacks'" />
   </div>
 </template>
 
@@ -36,6 +38,7 @@ import MesFavoris from './talent/MesFavoris.vue'
 import EvenementMatching from './talent/EvenementMatching.vue'
 import ReservationEntretien from './talent/ReservationEntretien.vue'
 import MesEntretiens from './talent/MesEntretiens.vue'
+import MesFeedbacks from './talent/MesFeedbacks.vue'
 
 const router = useRouter()
 const activeTab = ref('offres')
