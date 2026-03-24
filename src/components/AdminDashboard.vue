@@ -5,6 +5,9 @@
     <nav>
       <button @click="activeTab = 'overview'">Vue d'ensemble</button>
 
+      <!-- Offres -->
+      <button @click="activeTab = 'offres'">Offres d'emploi</button>
+
       <!-- Contenu -->
       <button @click="activeTab = 'media-categories'">Catégories Média</button>
       <button @click="activeTab = 'articles'">Articles</button>
@@ -28,6 +31,9 @@
       <p>Vous avez accès à toutes les fonctionnalités d'administration.</p>
     </div>
 
+    <!-- Offres -->
+    <OffreList v-if="activeTab === 'offres'" />
+
     <!-- Contenu -->
     <MediaCategoryList v-if="activeTab === 'media-categories'" />
     <ArticleList v-if="activeTab === 'articles'" />
@@ -49,6 +55,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { authService } from '../services/api.js'
 
+import OffreList from './admin/OffreList.vue'
 import MediaCategoryList from './admin/MediaCategoryList.vue'
 import ArticleList from './admin/ArticleList.vue'
 import JobContractList from './admin/JobContractList.vue'
