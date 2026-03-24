@@ -1,71 +1,67 @@
 <template>
   <div>
     <h1>Dashboard Administrateur</h1>
-    
+
     <nav>
       <button @click="activeTab = 'overview'">Vue d'ensemble</button>
+
+      <!-- Contenu -->
       <button @click="activeTab = 'media-categories'">Catégories Média</button>
       <button @click="activeTab = 'articles'">Articles</button>
+
+      <!-- Référentiels -->
+      <button @click="activeTab = 'job-contracts'">Contrats de travail</button>
+      <button @click="activeTab = 'job-modes'">Modes de travail</button>
+      <button @click="activeTab = 'skills'">Compétences</button>
+      <button @click="activeTab = 'study-levels'">Niveaux d'étude</button>
+      <button @click="activeTab = 'experiences'">Expériences</button>
+      <button @click="activeTab = 'languages'">Langues</button>
+      <button @click="activeTab = 'activity-sectors'">Secteurs d'activité</button>
+      <button @click="activeTab = 'legal-pages'">CGU / Mentions légales</button>
+
       <button @click="logout" style="background-color: #dc3545;">Déconnexion</button>
     </nav>
-    
+
     <!-- Vue d'ensemble -->
     <div v-if="activeTab === 'overview'">
       <h2>Bienvenue dans l'espace administrateur</h2>
       <p>Vous avez accès à toutes les fonctionnalités d'administration.</p>
-      
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px 0;">
-        <div style="border: 1px solid #ddd; padding: 20px; border-radius: 4px;">
-          <h3>Catégories Média</h3>
-          <p>{{ stats.mediaCategories }} catégories</p>
-          <button @click="activeTab = 'media-categories'">Gérer</button>
-        </div>
-        
-        <div style="border: 1px solid #ddd; padding: 20px; border-radius: 4px;">
-          <h3>Articles</h3>
-          <p>{{ stats.articles }} articles</p>
-          <button @click="activeTab = 'articles'">Gérer</button>
-        </div>
-      </div>
     </div>
-    
-    <!-- Gestion des catégories média -->
+
+    <!-- Contenu -->
     <MediaCategoryList v-if="activeTab === 'media-categories'" />
-    
-    <!-- Gestion des articles -->
     <ArticleList v-if="activeTab === 'articles'" />
+
+    <!-- Référentiels -->
+    <JobContractList v-if="activeTab === 'job-contracts'" />
+    <JobModeList v-if="activeTab === 'job-modes'" />
+    <SkillList v-if="activeTab === 'skills'" />
+    <StudyLevelList v-if="activeTab === 'study-levels'" />
+    <ExperienceList v-if="activeTab === 'experiences'" />
+    <LanguageList v-if="activeTab === 'languages'" />
+    <ActivitySectorList v-if="activeTab === 'activity-sectors'" />
+    <LegalPageList v-if="activeTab === 'legal-pages'" />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { authService } from '../services/api.js'
-import mediaCategoryService from '../services/mediaCategoryService.js'
-import articleService from '../services/articleService.js'
+
 import MediaCategoryList from './admin/MediaCategoryList.vue'
 import ArticleList from './admin/ArticleList.vue'
+import JobContractList from './admin/JobContractList.vue'
+import JobModeList from './admin/JobModeList.vue'
+import SkillList from './admin/SkillList.vue'
+import StudyLevelList from './admin/StudyLevelList.vue'
+import ExperienceList from './admin/ExperienceList.vue'
+import LanguageList from './admin/LanguageList.vue'
+import ActivitySectorList from './admin/ActivitySectorList.vue'
+import LegalPageList from './admin/LegalPageList.vue'
 
 const router = useRouter()
 const activeTab = ref('overview')
-const stats = ref({
-  mediaCategories: 0,
-  articles: 0
-})
-
-const loadStats = async () => {
-  try {
-    const [categoriesResponse, articlesResponse] = await Promise.all([
-      mediaCategoryService.getAll(),
-      articleService.getAll()
-    ])
-    
-    stats.value.mediaCategories = (categoriesResponse.data.data || categoriesResponse.data).length
-    stats.value.articles = (articlesResponse.data.data || articlesResponse.data).length
-  } catch (error) {
-    console.error('Erreur lors du chargement des statistiques:', error)
-  }
-}
 
 const logout = async () => {
   try {
@@ -78,8 +74,4 @@ const logout = async () => {
     router.push('/login')
   }
 }
-
-onMounted(() => {
-  loadStats()
-})
 </script>
