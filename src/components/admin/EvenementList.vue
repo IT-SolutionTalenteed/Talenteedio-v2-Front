@@ -2,6 +2,9 @@
   <div>
     <h2>Gestion des Événements</h2>
 
+    <p v-if="referentiels.categories?.length === 0" style="color:orange;">
+      ⚠ Aucune catégorie d'événement disponible. Créez-en une d'abord dans "Catégories d'événement".
+    </p>
     <button @click="openCreate">Ajouter un événement</button>
 
     <div v-if="showForm || editingItem">

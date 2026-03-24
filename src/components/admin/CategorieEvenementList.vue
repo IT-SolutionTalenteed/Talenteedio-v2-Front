@@ -48,9 +48,9 @@
         <!-- Liste détails -->
         <div>
           <label>Liste détails</label>
-          <div v-for="(item, i) in form.liste_details" :key="i" style="display:flex;gap:8px;margin:4px 0;">
-            <input type="text" v-model="form.liste_details[i]" style="flex:1" />
-            <button type="button" @click="form.liste_details.splice(i,1)">✕</button>
+          <div v-for="(item, i) in form.liste_details" :key="i" style="margin:4px 0;">
+            <input type="text" v-model="form.liste_details[i]" placeholder="Détail..." style="width:calc(100% - 44px);" />
+            <button type="button" @click="form.liste_details.splice(i,1)" style="margin-left:4px;">✕</button>
           </div>
           <button type="button" @click="form.liste_details.push('')">+ Ajouter un détail</button>
         </div>
@@ -58,9 +58,9 @@
         <!-- Liste témoignages -->
         <div>
           <label>Liste témoignages</label>
-          <div v-for="(item, i) in form.liste_temoignages" :key="i" style="display:flex;gap:8px;margin:4px 0;">
-            <input type="text" v-model="form.liste_temoignages[i]" style="flex:1" />
-            <button type="button" @click="form.liste_temoignages.splice(i,1)">✕</button>
+          <div v-for="(item, i) in form.liste_temoignages" :key="i" style="margin:4px 0;">
+            <input type="text" v-model="form.liste_temoignages[i]" placeholder="Témoignage..." style="width:calc(100% - 44px);" />
+            <button type="button" @click="form.liste_temoignages.splice(i,1)" style="margin-left:4px;">✕</button>
           </div>
           <button type="button" @click="form.liste_temoignages.push('')">+ Ajouter un témoignage</button>
         </div>
