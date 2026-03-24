@@ -16,8 +16,9 @@
       <button @click="activeTab = 'media-categories'">Catégories Média</button>
       <button @click="activeTab = 'articles'">Articles</button>
 
-      <!-- Entreprises -->
+      <!-- Entreprises & Talents -->
       <button @click="activeTab = 'entreprises'">Entreprises</button>
+      <button @click="activeTab = 'talents'">Talents</button>
 
       <!-- Référentiels -->
       <button @click="activeTab = 'job-contracts'">Contrats de travail</button>
@@ -49,8 +50,9 @@
     <MediaCategoryList v-if="activeTab === 'media-categories'" />
     <ArticleList v-if="activeTab === 'articles'" />
 
-    <!-- Entreprises -->
+    <!-- Entreprises & Talents -->
     <EntrepriseList v-if="activeTab === 'entreprises'" />
+    <TalentList v-if="activeTab === 'talents'" />
 
     <!-- Référentiels -->
     <JobContractList v-if="activeTab === 'job-contracts'" />
@@ -83,6 +85,7 @@ import LanguageList from './admin/LanguageList.vue'
 import ActivitySectorList from './admin/ActivitySectorList.vue'
 import LegalPageList from './admin/LegalPageList.vue'
 import EntrepriseList from './admin/EntrepriseList.vue'
+import TalentList from './admin/TalentList.vue'
 
 const router = useRouter()
 const activeTab = ref('overview')
