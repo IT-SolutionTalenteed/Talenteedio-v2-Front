@@ -7,7 +7,7 @@
     <div v-if="showForm || editingItem">
       <h3>{{ editingItem ? 'Modifier' : 'Créer' }} une entreprise</h3>
 
-      <form @submit.prevent="save">
+      <form @submit.prevent="save" enctype="multipart/form-data">
         <div>
           <label>Nom *</label>
           <input type="text" v-model="form.nom" required />
@@ -17,6 +17,50 @@
           <label>Email *</label>
           <input type="email" v-model="form.email" required :disabled="!!editingItem" />
           <small v-if="!editingItem">Un email avec les identifiants sera envoyé à cette adresse.</small>
+        </div>
+
+        <div>
+          <label>Logo</label>
+          <input type="file" accept="image/*" @change="e => logoFile = e.target.files[0]" />
+          <img v-if="editingItem?.logo_url" :src="editingItem.logo_url" style="max-width:100px;max-height:100px;" />
+        </div>
+
+        <div>
+          <label>Description</label>
+          <textarea v-model="form.description" rows="4"></textarea>
+        </div>
+
+        <div>
+          <label>Site web</label>
+          <input type="text" v-model="form.site_web" />
+        </div>
+
+        <div>
+          <label>Téléphone</label>
+          <input type="text" v-model="form.telephone" />
+        </div>
+
+        <div>
+          <label>Adresse</label>
+          <input type="text" v-model="form.adresse" />
+        </div>
+
+        <div>
+          <label>Ville</label>
+          <input type="text" v-model="form.ville" />
+        </div>
+
+        <div>
+          <label>Pays</label>
+          <input type="text" v-model="form.pays" />
+        </div>
+
+        <div>
+          <label>Secteur d'activité</label>
+          <select v-model="form.activity_sector_id">
+            <option value="">-- Aucun --</option>
+            <option v-for="s in referentiels.activity_sectors" :key="s.id" :value="s.id">{{ s.name }}</option>
+          </select>
         </div>
 
         <div>
@@ -31,14 +75,20 @@
       <table>
         <thead>
           <tr>
-            <th>ID</th><th>Nom</th><th>Email</th><th>Actions</th>
+            <th>ID</th><th>Logo</th><th>Nom</th><th>Email</th><th>Ville</th><th>Secteur</th><th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="item in items" :key="item.id">
             <td>{{ item.id }}</td>
+            <td>
+              <img v-if="item.logo_url" :src="item.logo_url" style="max-width:50px;max-height:50px;" />
+              <span v-else>-</span>
+            </td>
             <td>{{ item.nom }}</td>
             <td>{{ item.user?.email || '-' }}</td>
+            <td>{{ item.ville || '-' }}</td>
+            <td>{{ item.activity_sector?.name || '-' }}</td>
             <td>
               <button @click="editItem(item)">Modifier</button>
               <button @click="deleteItem(item.id)">Supprimer</button>
@@ -59,13 +109,18 @@ import { ref, onMounted } from 'vue'
 import entrepriseService from '../../services/entrepriseService.js'
 
 const items = ref([])
+const referentiels = ref({ activity_sectors: [] })
 const loading = ref(false)
 const error = ref('')
 const success = ref('')
 const showForm = ref(false)
 const editingItem = ref(null)
+const logoFile = ref(null)
 
-const emptyForm = () => ({ nom: '', email: '' })
+const emptyForm = () => ({
+  nom: '', email: '', description: '', site_web: '',
+  telephone: '', adresse: '', ville: '', pays: '', activity_sector_id: ''
+})
 const form = ref(emptyForm())
 
 const load = async () => {
@@ -81,9 +136,30 @@ const load = async () => {
   }
 }
 
+const loadReferentiels = async () => {
+  try {
+    const res = await entrepriseService.getReferentiels()
+    referentiels.value = res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const buildFormData = () => {
+  const fd = new FormData()
+  fd.append('nom', form.value.nom)
+  fd.append('email', form.value.email)
+  const textFields = ['description', 'site_web', 'telephone', 'adresse', 'ville', 'pays']
+  textFields.forEach(f => { if (form.value[f]) fd.append(f, form.value[f]) })
+  if (form.value.activity_sector_id) fd.append('activity_sector_id', form.value.activity_sector_id)
+  if (logoFile.value) fd.append('logo', logoFile.value)
+  return fd
+}
+
 const openCreate = () => {
   editingItem.value = null
   form.value = emptyForm()
+  logoFile.value = null
   showForm.value = true
 }
 
@@ -92,7 +168,15 @@ const editItem = (item) => {
   form.value = {
     nom: item.nom,
     email: item.user?.email || '',
+    description: item.description || '',
+    site_web: item.site_web || '',
+    telephone: item.telephone || '',
+    adresse: item.adresse || '',
+    ville: item.ville || '',
+    pays: item.pays || '',
+    activity_sector_id: item.activity_sector_id || '',
   }
+  logoFile.value = null
   showForm.value = false
 }
 
@@ -101,11 +185,13 @@ const save = async () => {
   error.value = ''
   success.value = ''
   try {
+    const fd = buildFormData()
     if (editingItem.value) {
-      await entrepriseService.update(editingItem.value.id, form.value)
+      fd.append('_method', 'PUT')
+      await entrepriseService.updateFormData(editingItem.value.id, fd)
       success.value = 'Entreprise modifiée avec succès'
     } else {
-      await entrepriseService.create(form.value)
+      await entrepriseService.create(fd)
       success.value = 'Entreprise créée — identifiants envoyés par email'
     }
     await load()
@@ -137,7 +223,11 @@ const cancelForm = () => {
   showForm.value = false
   editingItem.value = null
   form.value = emptyForm()
+  logoFile.value = null
 }
 
-onMounted(load)
+onMounted(() => {
+  load()
+  loadReferentiels()
+})
 </script>
