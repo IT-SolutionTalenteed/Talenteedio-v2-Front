@@ -5,6 +5,10 @@
     <nav>
       <button @click="activeTab = 'overview'">Vue d'ensemble</button>
 
+      <!-- Événements -->
+      <button @click="activeTab = 'categorie-evenements'">Catégories événement</button>
+      <button @click="activeTab = 'evenements'">Événements</button>
+
       <!-- Offres -->
       <button @click="activeTab = 'offres'">Offres d'emploi</button>
 
@@ -31,6 +35,10 @@
       <p>Vous avez accès à toutes les fonctionnalités d'administration.</p>
     </div>
 
+    <!-- Événements -->
+    <CategorieEvenementList v-if="activeTab === 'categorie-evenements'" />
+    <EvenementList v-if="activeTab === 'evenements'" />
+
     <!-- Offres -->
     <OffreList v-if="activeTab === 'offres'" />
 
@@ -55,6 +63,8 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { authService } from '../services/api.js'
 
+import CategorieEvenementList from './admin/CategorieEvenementList.vue'
+import EvenementList from './admin/EvenementList.vue'
 import OffreList from './admin/OffreList.vue'
 import MediaCategoryList from './admin/MediaCategoryList.vue'
 import ArticleList from './admin/ArticleList.vue'
