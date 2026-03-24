@@ -45,7 +45,7 @@
           <p v-if="r.ville">📍 {{ r.ville }}</p>
           <p v-if="r.description">{{ r.description }}</p>
           <p><em>{{ r.raison }}</em></p>
-          <button @click="$emit('demanderRdv', r.entreprise_id, resultats.evenement)">
+          <button @click="$emit('demanderRdv', r.entreprise_id, r.nom, resultats.evenement)">
             Prendre rendez-vous
           </button>
         </div>
