@@ -19,6 +19,7 @@
       <!-- Entreprises & Talents -->
       <button @click="activeTab = 'entreprises'">Entreprises</button>
       <button @click="activeTab = 'talents'">Talents</button>
+      <button @click="activeTab = 'entretiens'">Entretiens par stand</button>
 
       <!-- Référentiels -->
       <button @click="activeTab = 'job-contracts'">Contrats de travail</button>
@@ -53,6 +54,7 @@
     <!-- Entreprises & Talents -->
     <EntrepriseList v-if="activeTab === 'entreprises'" />
     <TalentList v-if="activeTab === 'talents'" />
+    <EntretienList v-if="activeTab === 'entretiens'" />
 
     <!-- Référentiels -->
     <JobContractList v-if="activeTab === 'job-contracts'" />
@@ -86,6 +88,7 @@ import ActivitySectorList from './admin/ActivitySectorList.vue'
 import LegalPageList from './admin/LegalPageList.vue'
 import EntrepriseList from './admin/EntrepriseList.vue'
 import TalentList from './admin/TalentList.vue'
+import EntretienList from './admin/EntretienList.vue'
 
 const router = useRouter()
 const activeTab = ref('overview')
