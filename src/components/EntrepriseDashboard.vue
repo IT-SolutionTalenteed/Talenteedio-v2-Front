@@ -7,6 +7,7 @@
       <button @click="activeTab = 'candidatures'">Candidatures</button>
       <button @click="activeTab = 'evenements'">Événements</button>
       <button @click="activeTab = 'articles'">Mes articles</button>
+      <button @click="activeTab = 'entretiens'">Entretiens</button>
       <button @click="logout" style="background-color:#dc3545;">Déconnexion</button>
     </nav>
 
@@ -14,6 +15,7 @@
     <CandidatureList v-if="activeTab === 'candidatures'" />
     <EvenementList v-if="activeTab === 'evenements'" />
     <ArticleList v-if="activeTab === 'articles'" />
+    <EntretienList v-if="activeTab === 'entretiens'" />
   </div>
 </template>
 
@@ -25,6 +27,7 @@ import OffreList from './entreprise/OffreList.vue'
 import CandidatureList from './entreprise/CandidatureList.vue'
 import EvenementList from './entreprise/EvenementList.vue'
 import ArticleList from './entreprise/ArticleList.vue'
+import EntretienList from './entreprise/EntretienList.vue'
 
 const router = useRouter()
 const activeTab = ref('offres')
