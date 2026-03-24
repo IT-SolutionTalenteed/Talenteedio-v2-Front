@@ -15,9 +15,11 @@
         </div>
 
         <div>
-          <label>Compétences clés</label>
-          <textarea v-model="form.competences" rows="3"
-            placeholder="Ex: Vue.js, Laravel, Python, gestion de projet..."></textarea>
+          <label>Compétences clés (sélection multiple)</label>
+          <select v-model="form.competences_ids" multiple size="6" style="width:100%;">
+            <option v-for="skill in skills" :key="skill.id" :value="skill.name">{{ skill.name }}</option>
+          </select>
+          <small>Maintenir Ctrl/Cmd pour sélectionner plusieurs compétences</small>
         </div>
 
         <div>
@@ -74,23 +76,29 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import evenementService from '../../services/talent/evenementService.js'
+import api from '../../services/api.js'
 
 defineEmits(['demanderRdv'])
 
 const evenements = ref([])
+const skills = ref([])
 const selectedEvenement = ref(null)
 const resultats = ref(null)
 const loading = ref(false)
 const error = ref('')
 const cvFile = ref(null)
 
-const form = ref({ poste_recherche: '', competences: '' })
+const form = ref({ poste_recherche: '', competences_ids: [] })
 
 const load = async () => {
   loading.value = true
   try {
-    const res = await evenementService.getAll()
-    evenements.value = res.data
+    const [evRes, skillsRes] = await Promise.all([
+      evenementService.getAll(),
+      api.get('/skills'),
+    ])
+    evenements.value = evRes.data
+    skills.value = skillsRes.data
   } catch { error.value = 'Erreur chargement' }
   finally { loading.value = false }
 }
@@ -98,7 +106,7 @@ const load = async () => {
 const ouvrirMatching = (ev) => {
   selectedEvenement.value = ev
   resultats.value = null
-  form.value = { poste_recherche: '', competences: '' }
+  form.value = { poste_recherche: '', competences_ids: [] }
   cvFile.value = null
   error.value = ''
 }
@@ -108,7 +116,9 @@ const lancerMatching = async () => {
   try {
     const fd = new FormData()
     fd.append('poste_recherche', form.value.poste_recherche)
-    if (form.value.competences) fd.append('competences', form.value.competences)
+    if (form.value.competences_ids.length) {
+      fd.append('competences', form.value.competences_ids.join(', '))
+    }
     if (cvFile.value) fd.append('cv', cvFile.value)
 
     const res = await evenementService.matching(selectedEvenement.value.id, fd)
