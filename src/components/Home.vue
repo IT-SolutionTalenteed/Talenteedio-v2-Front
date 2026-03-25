@@ -403,7 +403,13 @@ onUnmounted(() => {
 
 // ── Countdown ─────────────────────────────────────────────
 const countdownTarget = computed(() => {
-  if (event.value?.date_debut) return new Date(event.value.date_debut + 'T08:00:00')
+  if (event.value?.date_debut) {
+    const dateStr = event.value.date_debut.substring(0, 10)
+    const timeStr = event.value.heure_debut_journee
+      ? event.value.heure_debut_journee.substring(0, 5)
+      : '08:00'
+    return new Date(`${dateStr}T${timeStr}:00`)
+  }
   return new Date('2026-11-05T08:00:00')
 })
 
