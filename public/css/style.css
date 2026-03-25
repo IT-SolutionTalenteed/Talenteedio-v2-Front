@@ -1,0 +1,1320 @@
+/* =====================================================
+   AFRICA TALENT SUMMIT LUXEMBOURG
+   Reproduction fidèle — africatalentsummit.com
+   ===================================================== */
+
+/* ---------- Variables ---------- */
+:root {
+  --orange:      #f29f1f;
+  --orange-alt:  #ffb025;
+  --blue:        #3a9bff;
+  --navy:        #00235a;
+  --navy-dark:   #041a57;
+  --navy-head:   #1c244b;
+  --navy-deep:   #000c52;
+  --light-blue:  #94c4f5;
+  --white:       #ffffff;
+  --body-text:   #4a4a4a;
+  --light-bg:    #f5f7fc;
+  --border:      #e0e4ef;
+
+  --font-head: 'Barlow Condensed', 'Arial Narrow', 'Open Sans', sans-serif;
+  --font-body: 'Open Sans', sans-serif;
+  --radius-pill: 100px;
+  --radius:      8px;
+  --radius-lg:   14px;
+  --transition:  0.3s ease;
+  --shadow:      0 4px 20px rgba(0,0,0,0.10);
+  --shadow-lg:   0 8px 40px rgba(0,0,0,0.18);
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--body-text);
+  background: #fff;
+}
+img { max-width: 100%; display: block; }
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+p { margin-bottom: 1em; }
+
+/* ---------- Google Fonts ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600;700&display=swap');
+
+/* ---------- Utilities ---------- */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 30px; }
+.text-center { text-align: center; }
+.section { padding: 80px 0; }
+.section--light { background: var(--light-bg); }
+
+/* ---------- TOP BAR ---------- */
+.topbar {
+  background: var(--navy);
+  padding: 8px 0;
+  font-size: 13px;
+  color: rgba(255,255,255,0.9);
+}
+.topbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.topbar-left {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+}
+.topbar-left a {
+  color: rgba(255,255,255,0.9);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: color var(--transition);
+}
+.topbar-left a:hover { color: var(--orange); }
+.topbar-right {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.topbar-right a {
+  width: 28px; height: 28px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 12px;
+  transition: background var(--transition);
+}
+.topbar-right a:hover { background: var(--blue); }
+
+/* ---------- HEADER ---------- */
+.site-header {
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  height: 80px;
+  gap: 20px;
+}
+.site-logo img { height: 56px; width: auto; }
+
+.site-nav { flex: 1; display: flex; justify-content: flex-end; }
+.site-nav ul { display: flex; gap: 4px; align-items: center; }
+.site-nav a {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--navy);
+  padding: 6px 12px;
+  border-radius: var(--radius);
+  transition: all var(--transition);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+.site-nav a:hover,
+.site-nav a.active { color: var(--blue); background: rgba(58,155,255,0.06); }
+
+.header-btns {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-left: 16px;
+}
+
+/* ---------- BUTTONS ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 26px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition);
+  border: 2px solid transparent;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+}
+.btn--orange {
+  background: var(--orange);
+  color: #fff;
+  border-color: var(--orange);
+}
+.btn--orange:hover { background: #e08c0a; border-color: #e08c0a; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(242,159,31,0.35); }
+.btn--blue {
+  background: var(--blue);
+  color: #fff;
+  border-color: var(--blue);
+}
+.btn--blue:hover { background: #2089f0; border-color: #2089f0; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(58,155,255,0.35); }
+.btn--outline-white {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255,255,255,0.6);
+}
+.btn--outline-white:hover { background: #fff; color: var(--navy); border-color: #fff; }
+.btn--outline-navy {
+  background: transparent;
+  color: var(--navy);
+  border-color: var(--navy);
+}
+.btn--outline-navy:hover { background: var(--navy); color: #fff; }
+.btn--lg { padding: 14px 34px; font-size: 15px; }
+.btn--sm { padding: 8px 20px; font-size: 12.5px; }
+
+/* ---------- Mobile toggle ---------- */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 5px;
+  padding: 4px;
+}
+.menu-toggle span {
+  display: block; width: 24px; height: 2px;
+  background: var(--navy); border-radius: 2px; transition: var(--transition);
+}
+
+/* ========================================================
+   HERO
+   ======================================================== */
+.hero {
+  position: relative;
+  min-height: 850px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background-image: url('https://africatalentsummit.com/wp-content/uploads/2026/02/Artboard-1-vf.1.jpg');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+.hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to right, rgba(4,10,93,0.88) 0%, rgba(4,10,93,0.70) 50%, rgba(4,10,93,0.15) 100%);
+}
+.hero .container {
+  position: relative; z-index: 2;
+  width: 100%;
+}
+.hero-inner {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-height: 850px;
+}
+.hero-content {
+  flex: 0 0 58%;
+  max-width: 620px;
+  padding: 80px 0 60px;
+}
+.hero-right { flex: 0 0 42%; }
+.hero-date {
+  font-family: var(--font-body);
+  font-size: 24px;
+  font-weight: 500;
+  color: #94c4f5;
+  margin-bottom: 16px;
+  display: block;
+}
+.hero-title {
+  font-family: 'Archivo', 'Barlow Condensed', sans-serif;
+  font-size: 80px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.0;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.hero-title .orange { color: var(--orange); }
+.hero-desc {
+  font-size: 15px;
+  color: rgba(255,255,255,0.9);
+  max-width: 520px;
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+.hero-cta-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 20px;
+}
+.hero-btn { margin-top: 0; margin-bottom: 36px; }
+
+/* Countdown inside hero */
+.countdown-inner {
+  display: flex;
+  gap: 10px;
+}
+.cd-item { text-align: center; }
+.cd-box {
+  background: rgba(255,255,255,0.17);
+  width: 120px;
+  height: 104px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.cd-num {
+  font-family: 'Archivo', var(--font-head);
+  font-size: 36px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+  display: block;
+}
+.cd-label {
+  font-size: 14px;
+  color: #fff;
+  display: block;
+  margin-top: 6px;
+  font-weight: 400;
+}
+
+/* ========================================================
+   SECTION : RÉPONDRE AU DÉFI
+   ======================================================== */
+.section-defi { padding: 80px 0; background: #fff; }
+.defi-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+.defi-text h1 {
+  font-family: var(--font-body);
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--navy-head);
+  line-height: 1.2;
+  margin-bottom: 24px;
+}
+.defi-text p {
+  font-size: 15px;
+  color: var(--body-text);
+  line-height: 1.8;
+}
+.defi-text p strong { color: var(--navy-head); }
+.defi-img {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+.defi-img img { width: 100%; height: 420px; object-fit: cover; }
+
+/* ========================================================
+   SECTION : TRIPLE ANCRAGE STRATÉGIQUE
+   ======================================================== */
+.section-triple {
+  padding: 80px 0;
+  background: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.triple-watermark {
+  position: absolute;
+  top: 20px; left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-head);
+  font-size: 110px;
+  font-weight: 700;
+  color: rgba(217,217,217,0.22);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
+  line-height: 1;
+}
+.section-triple .container { position: relative; z-index: 1; }
+.triple-header { text-align: center; margin-bottom: 52px; }
+.triple-header h2 {
+  font-family: var(--font-body);
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--navy-deep);
+  margin-bottom: 16px;
+}
+.triple-header p { font-size: 15px; color: #666; max-width: 700px; margin: 0 auto; }
+
+.triple-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+.triple-card {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  transition: all var(--transition);
+}
+.triple-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+.triple-card-img {
+  height: 220px; overflow: hidden;
+}
+.triple-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+.triple-card:hover .triple-card-img img { transform: scale(1.05); }
+.triple-card-body { padding: 28px 24px; }
+.triple-card-body h3 {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--blue);
+  margin-bottom: 12px;
+}
+.triple-card-body p { font-size: 14px; color: #666; line-height: 1.75; margin: 0; }
+
+/* ========================================================
+   SECTION : POURQUOI LE LUXEMBOURG
+   ======================================================== */
+.section-lux {
+  position: relative;
+  padding: 80px 0;
+  overflow: hidden;
+}
+.lux-bg {
+  position: absolute; inset: 0;
+  background-image: url('https://africatalentsummit.com/wp-content/uploads/2026/02/Background-1-scaled.jpg');
+  background-size: cover;
+  background-position: center;
+}
+.lux-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,35,90,0.88);
+}
+.section-lux .container { position: relative; z-index: 2; }
+.lux-content { max-width: 780px; }
+.lux-content h2 {
+  font-family: var(--font-head);
+  font-size: clamp(48px, 6vw, 75px);
+  font-weight: 700;
+  color: var(--orange);
+  line-height: 1.1;
+  margin-bottom: 28px;
+}
+.lux-content p {
+  font-size: 17px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.92);
+  line-height: 1.7;
+  margin-bottom: 0;
+}
+
+/* ========================================================
+   SECTION : S'INSCRIRE (homme à la fenêtre)
+   ======================================================== */
+.section-register {
+  position: relative;
+  padding: 90px 0;
+  overflow: hidden;
+}
+.register-bg {
+  position: absolute; inset: 0;
+  background-image: url('https://africatalentsummit.com/wp-content/uploads/2026/02/back-thinking-window-with-business-black-man-standing-his-office-looking-city-view-id-scaled.jpg');
+  background-size: cover;
+  background-position: center;
+}
+.register-overlay {
+  position: absolute; inset: 0;
+  background: rgba(255,255,255,0.92);
+}
+.section-register .container { position: relative; z-index: 2; }
+.register-content { max-width: 820px; }
+.register-content h3 {
+  font-family: var(--font-body);
+  font-size: clamp(38px, 5vw, 60px);
+  font-weight: 600;
+  color: var(--navy-head);
+  line-height: 1.15;
+  margin-bottom: 20px;
+}
+.register-content p {
+  font-size: 20px;
+  font-weight: 300;
+  color: rgb(50, 74, 109);
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+
+/* ========================================================
+   SECTION : MISSION / LE TALENT AU CŒUR DE TOUT
+   ======================================================== */
+.section-mission {
+  padding: 80px 0;
+  background: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.mission-watermark {
+  position: absolute;
+  top: 10px; left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-head);
+  font-size: 150px;
+  font-weight: 700;
+  color: rgba(217,217,217,0.22);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
+  line-height: 1;
+}
+.section-mission .container { position: relative; z-index: 1; }
+.mission-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+.mission-text .label-blue {
+  font-family: var(--font-body);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--blue);
+  margin-bottom: 12px;
+  display: block;
+}
+.mission-text h2 {
+  font-family: var(--font-body);
+  font-size: 52px;
+  font-weight: 800;
+  color: var(--navy-dark);
+  line-height: 1.1;
+  margin-bottom: 24px;
+}
+.mission-text p { font-size: 15px; color: #555; line-height: 1.8; }
+.mission-imgs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.mission-imgs img {
+  border-radius: var(--radius-lg);
+  width: 100%; height: 200px;
+  object-fit: cover;
+  box-shadow: var(--shadow);
+}
+.mission-imgs .mission-img-main {
+  grid-column: span 2;
+  height: 260px;
+}
+
+/* ========================================================
+   SECTION : CTA REJOIGNEZ-NOUS
+   ======================================================== */
+.section-cta {
+  padding: 100px 0;
+  background: #fff;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-watermark {
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-head);
+  font-size: 150px;
+  font-weight: 700;
+  color: rgba(217,217,217,0.3);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
+  line-height: 1;
+}
+.section-cta .container { position: relative; z-index: 1; }
+.cta-label {
+  font-family: var(--font-body);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--blue);
+  margin-bottom: 12px;
+  display: block;
+}
+.section-cta h2 {
+  font-family: var(--font-body);
+  font-size: clamp(36px, 5vw, 58px);
+  font-weight: 800;
+  color: var(--navy-dark);
+  line-height: 1.15;
+  margin-bottom: 40px;
+}
+
+/* ========================================================
+   FOOTER
+   ======================================================== */
+.site-footer {
+  position: relative;
+  overflow: hidden;
+}
+.footer-bg {
+  position: absolute; inset: 0;
+  background-image: url('https://africatalentsummit.com/wp-content/uploads/2026/02/events-footer-bg.webp');
+  background-size: cover;
+  background-position: center;
+}
+.footer-overlay {
+  position: absolute; inset: 0;
+  background: rgba(4,26,87,0.95);
+}
+.footer-inner {
+  position: relative; z-index: 2;
+  padding: 60px 0 0;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+.footer-logo img { height: 60px; width: auto; margin-bottom: 20px; }
+.footer-brand p {
+  color: rgba(255,255,255,0.65);
+  font-size: 13.5px;
+  line-height: 1.8;
+  margin-bottom: 24px;
+}
+.footer-socials { display: flex; gap: 10px; }
+.footer-socials a {
+  width: 38px; height: 38px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  font-size: 14px;
+  transition: background var(--transition);
+}
+.footer-socials a:hover { background: var(--blue); }
+
+.footer-col h4 {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--orange);
+  margin-bottom: 20px;
+}
+.footer-col ul li { margin-bottom: 10px; }
+.footer-col ul a {
+  color: rgba(255,255,255,0.7);
+  font-size: 14px;
+  transition: color var(--transition);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.footer-col ul a:hover { color: var(--orange); }
+.footer-col .contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: rgba(255,255,255,0.7);
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+.footer-col .contact-item i { color: var(--orange); margin-top: 3px; flex-shrink: 0; }
+.footer-col .contact-item a { color: rgba(255,255,255,0.7); transition: color var(--transition); }
+.footer-col .contact-item a:hover { color: var(--orange); }
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 18px 0;
+  text-align: center;
+  position: relative; z-index: 2;
+}
+.footer-bottom p {
+  color: rgba(255,255,255,0.35);
+  font-size: 12.5px;
+  font-weight: 300;
+  margin: 0;
+}
+
+/* ========================================================
+   SECTION BRIDGING — background image réelle (Background-1-scaled.jpg)
+   ======================================================== */
+.section-bridging {
+  position: relative;
+  min-height: 480px;
+  background-image: url('https://africatalentsummit.com/wp-content/uploads/2026/02/Background-1-scaled.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+}
+.section-bridging .container { position: relative; z-index: 2; width: 100%; }
+.bridging-title {
+  font-family: 'Open Sans Hebrew Condensed', 'Barlow Condensed', sans-serif;
+  font-size: 75px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 88px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.bridging-title .orange { color: var(--orange); }
+
+/* ========================================================
+   SECTION LUX DARK — background image, photos rectangulaires
+   ======================================================== */
+.section-lux-dark {
+  position: relative;
+  min-height: 500px;
+  background-image: url('https://africatalentsummit.com/wp-content/uploads/2026/02/Background-1-scaled.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: 80px 0;
+}
+.lux-dark-inner {
+  display: grid;
+  grid-template-columns: 320px 1fr 290px;
+  gap: 48px;
+  align-items: center;
+}
+.lux-venue-photo {
+  width: 100%;
+  height: auto;
+  border-radius: 30px;
+  object-fit: cover;
+  display: block;
+}
+.lux-venue-photo:first-child { height: 216px; }
+.lux-venue-photo:last-child  { height: 200px; }
+.lux-dark-text { text-align: center; position: relative; z-index: 2; }
+.lux-dark-text h2 {
+  font-family: 'Archivo', var(--font-head);
+  font-size: 75px;
+  font-weight: 700;
+  color: var(--orange);
+  line-height: 1.1;
+  margin-bottom: 28px;
+}
+.lux-dark-text p {
+  font-size: 15.5px;
+  color: rgba(255,255,255,0.9);
+  line-height: 1.75;
+  text-align: center;
+}
+
+/* ========================================================
+   ROLE CARDS avec images
+   ======================================================== */
+.section-roles {
+  padding: 80px 0;
+  background: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.roles-watermark {
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-head);
+  font-size: 150px;
+  font-weight: 700;
+  color: rgba(217,217,217,0.28);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
+  line-height: 1;
+}
+.roles-header {
+  text-align: center;
+  margin-bottom: 52px;
+  position: relative; z-index: 1;
+}
+.roles-header h2 {
+  font-family: var(--font-body);
+  font-size: clamp(28px, 3.5vw, 46px);
+  font-weight: 800;
+  color: var(--navy-head);
+  margin-bottom: 14px;
+}
+.roles-header p { font-size: 15px; color: #666; }
+.role-cards-img {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  position: relative; z-index: 1;
+}
+.role-card-img {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  transition: transform var(--transition), box-shadow var(--transition);
+  text-align: center;
+}
+.role-card-img:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+.role-card-img .rci-img {
+  height: 160px; overflow: hidden;
+}
+.role-card-img .rci-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+.role-card-img:hover .rci-img img { transform: scale(1.06); }
+.role-card-img .rci-body { padding: 18px 14px 22px; }
+.role-card-img h4 {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--navy);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 8px;
+}
+.role-card-img p { font-size: 12px; color: #666; margin: 0; line-height: 1.65; }
+.roles-cta { text-align: center; margin-top: 40px; position: relative; z-index: 1; }
+
+/* ========================================================
+   SECTION EVENT INFO (2 colonnes)
+   ======================================================== */
+.section-event {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 480px;
+}
+.event-img {
+  position: relative;
+  overflow: hidden;
+}
+.event-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.event-info {
+  position: relative;
+  background-color: rgb(16, 17, 48);
+  background-image: url('https://africatalentsummit.com/wp-content/uploads/2026/02/Background-1-scaled.jpg');
+  background-size: cover;
+  background-position: center;
+  padding: 60px 52px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+.event-info-arc {
+  position: absolute;
+  right: -80px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 400px; height: 400px;
+  border: 70px solid rgba(58,155,255,0.12);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.event-info-arc2 {
+  position: absolute;
+  left: -40px;
+  top: -60px;
+  width: 250px; height: 250px;
+  border: 50px solid rgba(58,155,255,0.08);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.event-info .event-date {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--light-blue);
+  letter-spacing: 1px;
+  margin-bottom: 14px;
+  display: block;
+  position: relative; z-index: 2;
+}
+.event-info h2 {
+  font-family: 'Archivo', var(--font-head);
+  font-size: 80px;
+  font-weight: 900;
+  color: #fff;
+  text-transform: uppercase;
+  line-height: 1.0;
+  margin-bottom: 18px;
+  position: relative; z-index: 2;
+}
+.event-info .event-location {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.8);
+  font-size: 14px;
+  margin-bottom: 28px;
+  position: relative; z-index: 2;
+}
+.event-info .event-location i { color: var(--orange); }
+.event-countdown {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 32px;
+  position: relative; z-index: 2;
+}
+.ecd-item {
+  background: rgba(255,255,255,0.17);
+  width: 120px;
+  height: 104px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.ecd-num {
+  font-family: 'Archivo', var(--font-head);
+  font-size: 36px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+  display: block;
+}
+.ecd-label {
+  font-size: 14px;
+  color: #fff;
+  display: block;
+  margin-top: 6px;
+  font-weight: 400;
+}
+
+/* ========================================================
+   MISSION PERSON (slider/carousel)
+   ======================================================== */
+.section-mission-v2 {
+  padding: 80px 0;
+  background: #fff;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.mission-v2-watermark {
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-head);
+  font-size: 150px;
+  font-weight: 700;
+  color: rgba(217,217,217,0.22);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
+  line-height: 1;
+}
+.section-mission-v2 .container { position: relative; z-index: 1; }
+.mission-v2-header { margin-bottom: 48px; }
+.mission-v2-header .label-blue {
+  font-size: 15px; font-weight: 700;
+  color: var(--blue); display: block; margin-bottom: 8px;
+}
+.mission-v2-header h2 {
+  font-family: var(--font-body);
+  font-size: clamp(28px, 3.5vw, 44px);
+  font-weight: 800;
+  color: var(--navy-dark);
+}
+.mission-slider {
+  display: flex;
+  gap: 48px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.mission-person {
+  max-width: 480px;
+  text-align: center;
+}
+.mission-person-photo {
+  width: 110px; height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--blue);
+  margin: 0 auto 16px;
+  display: block;
+}
+.mission-person h3 {
+  font-size: 18px; font-weight: 700; color: var(--navy-head); margin-bottom: 4px;
+}
+.mission-person .person-title {
+  font-size: 13px; color: var(--orange); font-weight: 600; margin-bottom: 16px; display: block;
+}
+.mission-person p {
+  font-size: 14.5px; color: #555; line-height: 1.8; font-style: italic;
+}
+.mission-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 36px;
+}
+.mission-dots span {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--blue);
+  opacity: 0.3;
+  cursor: pointer;
+}
+.mission-dots span.active { opacity: 1; }
+
+/* ========================================================
+   PAGE HERO (pages intérieures)
+   ======================================================== */
+.page-hero {
+  position: relative;
+  padding: 100px 0 80px;
+  overflow: hidden;
+  text-align: center;
+}
+.page-hero-bg {
+  position: absolute; inset: 0;
+  background-image: url('https://africatalentsummit.com/wp-content/uploads/2026/02/Background-1-scaled.jpg');
+  background-size: cover;
+  background-position: center;
+}
+.page-hero-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,35,90,0.88);
+}
+.page-hero .container { position: relative; z-index: 2; }
+.page-hero h1 {
+  font-family: var(--font-head);
+  font-size: clamp(38px, 5.5vw, 66px);
+  font-weight: 900;
+  color: #fff;
+  text-transform: uppercase;
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+.page-hero p {
+  font-size: 18px;
+  color: rgba(255,255,255,0.85);
+  max-width: 700px;
+  margin: 0 auto 28px;
+  line-height: 1.7;
+}
+.page-hero .hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: var(--light-blue);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 7px 20px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 24px;
+}
+
+/* ========================================================
+   ROLE CARDS (section S'inscrire — index)
+   ======================================================== */
+.role-cards {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-top: 36px;
+}
+.role-card {
+  background: rgba(255,255,255,0.97);
+  border-radius: var(--radius-lg);
+  padding: 28px 16px 24px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.role-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.role-card .role-icon {
+  width: 56px; height: 56px;
+  background: var(--orange);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 14px;
+  color: #fff; font-size: 22px;
+}
+.role-card h4 {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--navy);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 10px;
+}
+.role-card p { font-size: 12.5px; color: #666; margin: 0; line-height: 1.65; }
+
+/* ========================================================
+   QUOTE / TESTIMONIAL CARDS (section Mission)
+   ======================================================== */
+.quote-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 32px;
+}
+.quote-card {
+  background: var(--light-bg);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  border-left: 4px solid var(--orange);
+}
+.quote-card blockquote {
+  font-size: 14.5px;
+  color: #555;
+  line-height: 1.8;
+  font-style: italic;
+  margin-bottom: 18px;
+}
+.quote-card cite {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--navy);
+  font-style: normal;
+}
+.quote-card cite span {
+  display: block;
+  font-weight: 400;
+  color: #888;
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+/* ========================================================
+   ADVANTAGE CARDS (partenaire / participants)
+   ======================================================== */
+.section-ecosystem { padding: 80px 0; background: var(--light-bg); }
+.ecosystem-header { text-align: center; margin-bottom: 52px; }
+.ecosystem-header .label-blue {
+  font-size: 14px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1.5px; color: var(--blue); margin-bottom: 10px; display: block;
+}
+.ecosystem-header h2 {
+  font-family: var(--font-body);
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 800;
+  color: var(--navy-dark);
+  margin-bottom: 14px;
+}
+.ecosystem-header p { font-size: 15px; color: #666; max-width: 680px; margin: 0 auto; }
+
+.advantage-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+}
+.advantage-card {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 36px 32px;
+  box-shadow: var(--shadow);
+  border-top: 4px solid var(--blue);
+  transition: transform var(--transition);
+}
+.advantage-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.advantage-card .adv-icon {
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg, var(--navy), var(--blue));
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 22px;
+  margin-bottom: 20px;
+}
+.advantage-card h3 {
+  font-size: 19px; font-weight: 700; color: var(--navy-head); margin-bottom: 12px;
+}
+.advantage-card p { font-size: 14.5px; color: #666; line-height: 1.75; margin: 0; }
+
+/* ========================================================
+   COMPETENCY GRID (7 familles)
+   ======================================================== */
+.section-competencies {
+  padding: 80px 0;
+  background: #fff;
+}
+.competencies-header { text-align: center; margin-bottom: 52px; }
+.competencies-header h2 {
+  font-family: var(--font-body);
+  font-size: clamp(28px, 3.5vw, 42px);
+  font-weight: 800;
+  color: var(--navy-dark);
+  margin-bottom: 12px;
+}
+.competencies-header p { font-size: 15px; color: #666; font-style: italic; }
+.competency-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+.competency-card {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 28px 20px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  text-align: center;
+  transition: transform var(--transition);
+}
+.competency-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.competency-card .comp-icon {
+  width: 56px; height: 56px;
+  background: linear-gradient(135deg, var(--navy), var(--blue));
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px;
+  color: #fff; font-size: 22px;
+}
+.competency-card h4 {
+  font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 8px;
+}
+.competency-card p { font-size: 12.5px; color: #888; margin: 0; line-height: 1.65; }
+
+/* ========================================================
+   POUR QUI GRID (a-propos)
+   ======================================================== */
+.section-pour-qui { padding: 80px 0; background: var(--light-bg); }
+.pour-qui-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+  margin-top: 48px;
+}
+.pour-qui-card {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  transition: transform var(--transition);
+}
+.pour-qui-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.pour-qui-card .pq-icon {
+  width: 54px; height: 54px; flex-shrink: 0;
+  background: var(--orange);
+  border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 22px;
+}
+.pour-qui-card h3 { font-size: 19px; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
+.pour-qui-card p { font-size: 14px; color: #666; line-height: 1.75; margin: 0; }
+
+/* ========================================================
+   LEADERSHIP SECTION
+   ======================================================== */
+.section-leadership { padding: 80px 0; background: #fff; }
+.leadership-header { text-align: center; margin-bottom: 52px; }
+.leadership-header h2 {
+  font-family: var(--font-body);
+  font-size: clamp(28px, 3.5vw, 42px);
+  font-weight: 800;
+  color: var(--navy-dark);
+  margin-bottom: 12px;
+}
+.leadership-header p { font-size: 15px; color: #666; max-width: 680px; margin: 0 auto; }
+
+/* ========================================================
+   CONTEXT SECTION (partenaire)
+   ======================================================== */
+.section-context { padding: 80px 0; background: #fff; }
+.context-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+.context-text h2 {
+  font-family: var(--font-body);
+  font-size: clamp(28px, 3.5vw, 42px);
+  font-weight: 800;
+  color: var(--navy-head);
+  margin-bottom: 24px;
+}
+.context-text p { font-size: 15px; color: var(--body-text); line-height: 1.8; }
+.context-text .stat-highlight {
+  display: inline-block;
+  background: var(--orange);
+  color: #fff;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+.context-img {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+.context-img img { width: 100%; height: 400px; object-fit: cover; }
+
+/* ========================================================
+   RESPONSIVE — new components
+   ======================================================== */
+@media (max-width: 1024px) {
+  .triple-cards { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+  .defi-grid { grid-template-columns: 1fr; gap: 36px; }
+  .mission-grid { grid-template-columns: 1fr; gap: 36px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .role-cards { grid-template-columns: repeat(3, 1fr); }
+  .role-cards-img { grid-template-columns: repeat(3, 1fr); }
+  .competency-grid { grid-template-columns: repeat(2, 1fr); }
+  .context-grid { grid-template-columns: 1fr; gap: 36px; }
+  .advantage-grid { grid-template-columns: 1fr; }
+  .pour-qui-grid { grid-template-columns: 1fr; }
+  .quote-cards { grid-template-columns: 1fr; }
+  .lux-dark-inner { grid-template-columns: 1fr; }
+  .lux-venue-photo { width: 180px; height: 180px; }
+  .section-event { grid-template-columns: 1fr; }
+  .event-info { padding: 40px 30px; }
+}
+@media (max-width: 768px) {
+  .section { padding: 54px 0; }
+  .site-nav, .header-btns { display: none; }
+  .site-nav.open { display: flex; }
+  .header-btns.open { display: flex; }
+  .site-header .header-inner { flex-wrap: wrap; height: auto; padding: 10px 0; }
+  .site-nav { width: 100%; order: 3; }
+  .site-nav ul { flex-direction: column; align-items: flex-start; padding: 8px 0; gap: 0; }
+  .site-nav a { width: 100%; padding: 10px 0; }
+  .header-btns { width: 100%; order: 4; padding-bottom: 10px; }
+  .menu-toggle { display: flex; }
+  .hero { min-height: 520px; }
+  .hero-title { font-size: 54px; }
+  .triple-watermark { font-size: 60px; }
+  .cta-watermark, .mission-watermark { font-size: 80px; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .countdown-inner { max-width: 100%; }
+  .topbar-left { gap: 14px; font-size: 12px; }
+  .defi-text h1 { font-size: 30px; }
+  .lux-content h2 { font-size: 40px; }
+  .section-cta h2 { font-size: 30px; }
+  .register-content h3 { font-size: 28px; }
+  .role-cards { grid-template-columns: repeat(2, 1fr); }
+  .role-cards-img { grid-template-columns: repeat(2, 1fr); }
+  .competency-grid { grid-template-columns: 1fr 1fr; }
+  .pour-qui-card { flex-direction: column; }
+  .bridging-title { font-size: 48px; }
+  .mission-slider { flex-direction: column; align-items: center; }
+}
+@media (max-width: 480px) {
+  .hero-title { font-size: 42px; }
+  .mission-imgs { grid-template-columns: 1fr; }
+  .mission-imgs .mission-img-main { grid-column: span 1; }
+}

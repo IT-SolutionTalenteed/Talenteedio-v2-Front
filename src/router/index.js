@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import Home from '../components/Home.vue'
 import Login from '../components/Login.vue'
 import Register from '../components/Register.vue'
 import AdminDashboard from '../components/AdminDashboard.vue'
@@ -10,7 +11,8 @@ import GoogleCallback from '../components/GoogleCallback.vue'
 const routes = [
   {
     path: '/',
-    redirect: '/login'
+    name: 'Home',
+    component: Home
   },
   {
     path: '/login',

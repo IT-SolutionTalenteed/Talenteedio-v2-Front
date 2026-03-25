@@ -1,0 +1,45 @@
+/* =====================================================
+   ANIMATIONS — Africa Talent Summit Luxembourg
+   ===================================================== */
+
+/* fade-in : visible par défaut, JS peut ajouter will-animate
+   pour cacher avant l'entrée dans le viewport */
+.fade-in {
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.fade-in.will-animate {
+  opacity: 0;
+  transform: translateY(24px);
+}
+.fade-in.will-animate.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Délais en cascade pour les cards */
+.triple-cards .triple-card:nth-child(2) { transition-delay: 0.1s; }
+.triple-cards .triple-card:nth-child(3) { transition-delay: 0.2s; }
+.role-cards-img .role-card-img:nth-child(2) { transition-delay: 0.08s; }
+.role-cards-img .role-card-img:nth-child(3) { transition-delay: 0.16s; }
+.role-cards-img .role-card-img:nth-child(4) { transition-delay: 0.24s; }
+.role-cards-img .role-card-img:nth-child(5) { transition-delay: 0.32s; }
+
+/* Animation entrée hero */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(36px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-content > * {
+  animation: slideUp 0.75s ease both;
+}
+.hero-content > *:nth-child(1) { animation-delay: 0.10s; }
+.hero-content > *:nth-child(2) { animation-delay: 0.25s; }
+.hero-content > *:nth-child(3) { animation-delay: 0.40s; }
+.hero-content > *:nth-child(4) { animation-delay: 0.55s; }
+.hero-content > *:nth-child(5) { animation-delay: 0.65s; }
+.hero-content > *:nth-child(6) { animation-delay: 0.75s; }
+
+.page-hero-content > * { animation: slideUp 0.7s ease both; }
+.page-hero-content > *:nth-child(1) { animation-delay: 0.10s; }
+.page-hero-content > *:nth-child(2) { animation-delay: 0.22s; }
+.page-hero-content > *:nth-child(3) { animation-delay: 0.35s; }
