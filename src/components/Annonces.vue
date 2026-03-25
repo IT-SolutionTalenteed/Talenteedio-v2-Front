@@ -1,5 +1,6 @@
 <template>
   <div class="annonces-page">
+    <PublicNav />
 
     <!-- ══ HERO ══ -->
     <section class="annonces-hero">
@@ -103,7 +104,7 @@
 
             <!-- Résultats -->
             <div v-else-if="offres.length" class="offres-grid">
-              <div v-for="offre in offres" :key="offre.id" class="offre-card">
+              <router-link v-for="offre in offres" :key="offre.id" :to="`/annonces/${offre.id}`" class="offre-card offre-card--link">
                 <!-- Logo entreprise -->
                 <div class="offre-logo">
                   <img v-if="offre.entreprise?.logo_url" :src="offre.entreprise.logo_url" :alt="offre.entreprise.nom" />
@@ -130,9 +131,9 @@
                 </div>
                 <!-- Action -->
                 <div class="offre-action">
-                  <router-link to="/login" class="btn btn--blue btn--sm">Postuler</router-link>
+                  <span class="btn btn--blue btn--sm">Voir l'offre</span>
                 </div>
-              </div>
+              </router-link>
             </div>
 
             <!-- Vide -->
@@ -164,6 +165,7 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import axios from 'axios'
+import PublicNav from './PublicNav.vue'
 
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
@@ -361,6 +363,7 @@ onMounted(() => {
   transition: border-color .2s, box-shadow .2s, transform .15s;
 }
 .offre-card:hover { border-color: var(--blue); box-shadow: 0 6px 20px rgba(0,0,0,.10); transform: translateY(-2px); }
+.offre-card--link { text-decoration: none; }
 
 .offre-logo {
   width: 56px; height: 56px; border-radius: 10px;

@@ -8,9 +8,12 @@ import EntrepriseDashboard from '../components/EntrepriseDashboard.vue'
 import TestAuth from '../components/TestAuth.vue'
 import GoogleCallback from '../components/GoogleCallback.vue'
 import Annonces from '../components/Annonces.vue'
+import AnnonceDetail from '../components/AnnonceDetail.vue'
 import Entreprises from '../components/Entreprises.vue'
+import EntrepriseDetail from '../components/EntrepriseDetail.vue'
 import CategorieEvenementPublic from '../components/CategorieEvenementPublic.vue'
 import Blog from '../components/Blog.vue'
+import ArticleDetail from '../components/ArticleDetail.vue'
 
 const routes = [
   {
@@ -24,9 +27,19 @@ const routes = [
     component: Annonces
   },
   {
+    path: '/annonces/:id',
+    name: 'AnnonceDetail',
+    component: AnnonceDetail
+  },
+  {
     path: '/entreprises',
     name: 'Entreprises',
     component: Entreprises
+  },
+  {
+    path: '/entreprises/:id',
+    name: 'EntrepriseDetail',
+    component: EntrepriseDetail
   },
   {
     path: '/evenements/categorie/:id',
@@ -37,6 +50,11 @@ const routes = [
     path: '/blog',
     name: 'Blog',
     component: Blog
+  },
+  {
+    path: '/blog/:id',
+    name: 'ArticleDetail',
+    component: ArticleDetail
   },
   {
     path: '/login',

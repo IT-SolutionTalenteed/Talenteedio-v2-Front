@@ -1,5 +1,6 @@
 <template>
   <div class="blog-page">
+    <PublicNav />
 
     <!-- ══ HERO ══ -->
     <section class="blog-hero">
@@ -70,7 +71,7 @@
               </div>
               <h3 class="blog-card-title">{{ a.title }}</h3>
               <p class="blog-card-excerpt">{{ truncate(stripHtml(a.content), 150) }}</p>
-              <router-link to="/login" class="blog-read-more">
+              <router-link :to="`/blog/${a.id}`" class="blog-read-more">
                 Lire la suite <i class="fa-solid fa-arrow-right"></i>
               </router-link>
             </div>
@@ -118,6 +119,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
+import PublicNav from './PublicNav.vue'
 
 const apiBase      = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const articles     = ref([])

@@ -1,5 +1,6 @@
 <template>
   <div class="entreprises-page">
+    <PublicNav />
 
     <!-- ══ HERO ══ -->
     <section class="ent-hero">
@@ -43,7 +44,7 @@
 
         <!-- Résultats -->
         <div v-else-if="filtered.length" class="ent-grid">
-          <div v-for="e in filtered" :key="e.id" class="ent-card">
+          <router-link v-for="e in filtered" :key="e.id" :to="`/entreprises/${e.id}`" class="ent-card ent-card--link">
 
             <!-- Badge participant -->
             <span v-if="e.participe_evenement" class="badge-participant">
@@ -80,7 +81,7 @@
               </router-link>
             </div>
 
-          </div>
+          </router-link>
         </div>
 
         <!-- Vide -->
@@ -98,6 +99,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
+import PublicNav from './PublicNav.vue'
 
 const apiBase     = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const entreprises = ref([])
@@ -192,6 +194,7 @@ onMounted(load)
   transition: border-color .2s, box-shadow .2s, transform .2s;
 }
 .ent-card:hover { border-color: var(--blue); box-shadow: 0 8px 24px rgba(0,0,0,.12); transform: translateY(-4px); }
+.ent-card--link { text-decoration: none; cursor: pointer; }
 
 /* Badge participant */
 .badge-participant {

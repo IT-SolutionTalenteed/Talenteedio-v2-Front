@@ -1,0 +1,368 @@
+<template>
+  <div class="entreprise-detail-page">
+    <PublicNav />
+
+    <!-- Loading -->
+    <div v-if="loading" class="ed-loading">
+      <i class="fa-solid fa-spinner fa-spin"></i>
+      <p>Chargement...</p>
+    </div>
+
+    <!-- Erreur -->
+    <div v-else-if="!data" class="ed-loading">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <p>Entreprise introuvable.</p>
+      <router-link to="/entreprises" class="btn btn--blue" style="margin-top:16px;">Retour aux entreprises</router-link>
+    </div>
+
+    <template v-else>
+      <!-- ══ HERO ══ -->
+      <section class="ed-hero">
+        <div class="container">
+          <div class="ed-hero-inner">
+            <div class="ed-hero-logo">
+              <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom" />
+              <span v-else class="ed-hero-initial">{{ entreprise.nom.charAt(0) }}</span>
+            </div>
+            <div class="ed-hero-info">
+              <div class="ed-badges">
+                <span v-if="data.participe_evenement" class="badge-participant">
+                  <i class="fa-solid fa-star"></i> Participant
+                </span>
+              </div>
+              <h1 class="ed-hero-title">{{ entreprise.nom }}</h1>
+              <div class="ed-hero-meta">
+                <span v-if="entreprise.activity_sector">
+                  <i class="fa-solid fa-industry"></i> {{ entreprise.activity_sector.name }}
+                </span>
+                <span v-if="entreprise.ville || entreprise.pays">
+                  <i class="fa-solid fa-location-dot"></i>
+                  {{ [entreprise.ville, entreprise.pays].filter(Boolean).join(', ') }}
+                </span>
+                <a v-if="entreprise.site_web" :href="entreprise.site_web" target="_blank" rel="noopener" class="ed-hero-link">
+                  <i class="fa-solid fa-globe"></i> Site web
+                </a>
+              </div>
+            </div>
+            <div class="ed-hero-stats">
+              <div class="ed-stat">
+                <span class="ed-stat-num">{{ offres.length }}</span>
+                <span class="ed-stat-label">offre{{ offres.length !== 1 ? 's' : '' }}</span>
+              </div>
+              <div class="ed-stat">
+                <span class="ed-stat-num">{{ articles.length }}</span>
+                <span class="ed-stat-label">article{{ articles.length !== 1 ? 's' : '' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ CORPS ══ -->
+      <section class="ed-body">
+        <div class="container">
+          <div class="ed-layout">
+
+            <!-- ── Colonne principale ── -->
+            <div class="ed-main">
+
+              <!-- Description -->
+              <div v-if="entreprise.description" class="ed-block">
+                <h2 class="ed-block-title"><i class="fa-solid fa-circle-info"></i> À propos</h2>
+                <p class="ed-description">{{ entreprise.description }}</p>
+              </div>
+
+              <!-- Offres -->
+              <div class="ed-block">
+                <h2 class="ed-block-title">
+                  <i class="fa-solid fa-briefcase"></i> Offres d'emploi
+                  <span class="ed-count">{{ offres.length }}</span>
+                </h2>
+                <div v-if="offres.length" class="ed-offres-list">
+                  <router-link
+                    v-for="o in offres"
+                    :key="o.id"
+                    :to="`/annonces/${o.id}`"
+                    class="ed-offre-card"
+                  >
+                    <div class="ed-offre-body">
+                      <div class="ed-offre-tags">
+                        <span v-for="c in o.job_contracts" :key="c.id" class="tag tag--blue">{{ c.name }}</span>
+                      </div>
+                      <h3 class="ed-offre-title">{{ o.titre }}</h3>
+                      <div class="ed-offre-meta">
+                        <span v-if="o.localisation"><i class="fa-solid fa-location-dot"></i> {{ o.localisation }}</span>
+                        <span v-if="o.date_limite"><i class="fa-solid fa-calendar"></i> Limite : {{ formatDate(o.date_limite) }}</span>
+                      </div>
+                    </div>
+                    <div class="ed-offre-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                  </router-link>
+                </div>
+                <p v-else class="ed-empty">Aucune offre en ce moment.</p>
+              </div>
+
+              <!-- Articles -->
+              <div v-if="articles.length" class="ed-block">
+                <h2 class="ed-block-title">
+                  <i class="fa-solid fa-newspaper"></i> Articles publiés
+                  <span class="ed-count">{{ articles.length }}</span>
+                </h2>
+                <div class="ed-articles-grid">
+                  <router-link
+                    v-for="a in articles"
+                    :key="a.id"
+                    :to="`/blog/${a.id}`"
+                    class="ed-article-card"
+                  >
+                    <div class="ed-article-img">
+                      <img v-if="a.image_url" :src="a.image_url" :alt="a.title" />
+                      <div v-else class="ed-article-placeholder"><i class="fa-solid fa-newspaper"></i></div>
+                    </div>
+                    <div class="ed-article-body">
+                      <span v-if="a.media_categories?.length" class="blog-cat-badge">{{ a.media_categories[0].name }}</span>
+                      <h3 class="ed-article-title">{{ a.title }}</h3>
+                      <p class="ed-article-date"><i class="fa-regular fa-calendar"></i> {{ formatDate(a.created_at) }}</p>
+                    </div>
+                  </router-link>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- ── Sidebar ── -->
+            <aside class="ed-sidebar">
+              <div class="ed-side-card">
+                <h3 class="ed-side-title">Informations</h3>
+                <ul class="ed-info-list">
+                  <li v-if="entreprise.telephone">
+                    <i class="fa-solid fa-phone"></i>
+                    <span>{{ entreprise.telephone }}</span>
+                  </li>
+                  <li v-if="entreprise.adresse">
+                    <i class="fa-solid fa-map-marker-alt"></i>
+                    <span>{{ entreprise.adresse }}</span>
+                  </li>
+                  <li v-if="entreprise.ville || entreprise.pays">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>{{ [entreprise.ville, entreprise.pays].filter(Boolean).join(', ') }}</span>
+                  </li>
+                  <li v-if="entreprise.site_web">
+                    <i class="fa-solid fa-globe"></i>
+                    <a :href="entreprise.site_web" target="_blank" rel="noopener">{{ entreprise.site_web }}</a>
+                  </li>
+                  <li v-if="entreprise.activity_sector">
+                    <i class="fa-solid fa-industry"></i>
+                    <span>{{ entreprise.activity_sector.name }}</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="ed-side-card ed-side-cta">
+                <p>Vous êtes intéressé par cette entreprise ?</p>
+                <router-link to="/register" class="btn btn--blue" style="display:block;text-align:center;">
+                  Créer un compte
+                </router-link>
+                <router-link to="/login" class="btn btn--outline" style="display:block;text-align:center;margin-top:8px;">
+                  Se connecter
+                </router-link>
+              </div>
+            </aside>
+
+          </div>
+        </div>
+      </section>
+    </template>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import axios from 'axios'
+import PublicNav from './PublicNav.vue'
+
+const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const route   = useRoute()
+const data    = ref(null)
+const loading = ref(true)
+
+const entreprise = computed(() => data.value?.entreprise)
+const offres     = computed(() => data.value?.offres || [])
+const articles   = computed(() => data.value?.articles || [])
+
+const load = async () => {
+  loading.value = true
+  try {
+    const res = await axios.get(`${apiBase}/public/entreprises/${route.params.id}`)
+    data.value = res.data
+  } catch {
+    data.value = null
+  } finally {
+    loading.value = false
+  }
+}
+
+const formatDate = (str) => !str ? '' : new Date(str).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+
+onMounted(load)
+</script>
+
+<style scoped>
+.entreprise-detail-page { min-height: 100vh; background: var(--light-bg, #f5f7fa); }
+
+.ed-loading {
+  min-height: 50vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 16px;
+  color: var(--body-text); font-size: 15px;
+}
+.ed-loading i { font-size: 42px; opacity: .4; }
+
+/* ── Hero ── */
+.ed-hero {
+  background: linear-gradient(135deg, #192bc2 0%, #2687e9 100%);
+  padding: 48px 0;
+}
+.ed-hero-inner {
+  display: grid;
+  grid-template-columns: 100px 1fr auto;
+  gap: 28px; align-items: start;
+}
+@media (max-width: 768px) {
+  .ed-hero-inner { grid-template-columns: 80px 1fr; }
+  .ed-hero-stats { grid-column: 1 / -1; flex-direction: row; }
+}
+
+.ed-hero-logo {
+  width: 90px; height: 90px; border-radius: 14px;
+  background: #fff; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,.18); flex-shrink: 0;
+}
+.ed-hero-logo img { width: 100%; height: 100%; object-fit: contain; padding: 6px; }
+.ed-hero-initial  { font-size: 32px; font-weight: 800; color: var(--blue); }
+
+.ed-badges { display: flex; gap: 8px; margin-bottom: 8px; }
+.badge-participant {
+  background: linear-gradient(135deg, #f49f0a, #ffb52e);
+  color: #fff; font-size: 11px; font-weight: 700;
+  padding: 3px 12px; border-radius: 50px;
+  display: inline-flex; align-items: center; gap: 5px;
+}
+
+.ed-hero-title { font-size: 30px; font-weight: 800; color: #fff; margin: 0 0 12px; }
+.ed-hero-meta  { display: flex; flex-wrap: wrap; gap: 14px; }
+.ed-hero-meta span { font-size: 14px; color: rgba(255,255,255,.85); display: flex; align-items: center; gap: 6px; }
+.ed-hero-meta i    { color: rgba(255,255,255,.6); }
+.ed-hero-link      { font-size: 14px; color: rgba(255,255,255,.85); text-decoration: none; display: flex; align-items: center; gap: 6px; }
+.ed-hero-link:hover { color: #fff; text-decoration: underline; }
+
+.ed-hero-stats { display: flex; flex-direction: column; gap: 12px; align-items: flex-end; }
+.ed-stat { text-align: center; background: rgba(255,255,255,.15); border-radius: 10px; padding: 12px 20px; }
+.ed-stat-num   { display: block; font-size: 24px; font-weight: 800; color: #fff; line-height: 1; }
+.ed-stat-label { display: block; font-size: 11px; color: rgba(255,255,255,.75); margin-top: 4px; }
+
+/* ── Corps ── */
+.ed-body { padding: 48px 0 80px; }
+.ed-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 28px; align-items: start;
+}
+@media (max-width: 900px) {
+  .ed-layout { grid-template-columns: 1fr; }
+  .ed-sidebar { order: -1; }
+}
+
+.ed-block {
+  background: #fff; border-radius: 14px;
+  padding: 28px; margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+}
+.ed-block-title {
+  font-size: 17px; font-weight: 700; color: var(--navy);
+  margin: 0 0 18px; display: flex; align-items: center; gap: 10px;
+}
+.ed-block-title i { color: var(--blue); }
+.ed-count {
+  font-size: 12px; font-weight: 700; color: #fff;
+  background: var(--blue); padding: 2px 8px; border-radius: 50px;
+  margin-left: auto;
+}
+.ed-description { font-size: 14px; color: var(--navy); line-height: 1.7; margin: 0; }
+.ed-empty { font-size: 14px; color: var(--body-text); font-style: italic; }
+
+/* Offres */
+.ed-offres-list { display: flex; flex-direction: column; gap: 12px; }
+.ed-offre-card {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 20px; border-radius: 10px;
+  border: 1.5px solid var(--border, #e2e8f0);
+  text-decoration: none; background: #fff;
+  transition: border-color .15s, box-shadow .15s;
+}
+.ed-offre-card:hover { border-color: var(--blue); box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+.ed-offre-body { flex: 1; }
+.ed-offre-tags   { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
+.tag { font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 50px; }
+.tag--blue { background: #e8f0fe; color: var(--blue); }
+.ed-offre-title  { font-size: 15px; font-weight: 700; color: var(--navy); margin: 0 0 6px; }
+.ed-offre-meta   { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--body-text); }
+.ed-offre-meta i { color: var(--orange); margin-right: 3px; }
+.ed-offre-arrow  { color: var(--blue); font-size: 13px; flex-shrink: 0; }
+
+/* Articles */
+.ed-articles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+.ed-article-card {
+  border-radius: 10px; overflow: hidden;
+  border: 1.5px solid var(--border, #e2e8f0);
+  text-decoration: none; background: #fff;
+  transition: border-color .15s, box-shadow .15s;
+  display: flex; flex-direction: column;
+}
+.ed-article-card:hover { border-color: var(--blue); box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+.ed-article-img { height: 130px; overflow: hidden; flex-shrink: 0; }
+.ed-article-img img { width: 100%; height: 100%; object-fit: cover; }
+.ed-article-placeholder {
+  width: 100%; height: 100%;
+  background: linear-gradient(135deg, #192bc2, #2687e9);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; color: rgba(255,255,255,.4);
+}
+.ed-article-body  { padding: 14px; display: flex; flex-direction: column; gap: 6px; }
+.blog-cat-badge {
+  background: rgba(38,135,233,.1); color: var(--blue);
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px;
+  padding: 2px 8px; border-radius: 50px; display: inline-block;
+}
+.ed-article-title { font-size: 14px; font-weight: 700; color: var(--navy); margin: 0; line-height: 1.4; }
+.ed-article-date  { font-size: 11px; color: var(--body-text); display: flex; align-items: center; gap: 5px; margin: 0; }
+.ed-article-date i { color: var(--blue); }
+
+/* Sidebar */
+.ed-sidebar { display: flex; flex-direction: column; gap: 20px; position: sticky; top: 90px; }
+.ed-side-card {
+  background: #fff; border-radius: 14px;
+  padding: 24px; box-shadow: 0 2px 10px rgba(0,0,0,.06);
+}
+.ed-side-title { font-size: 15px; font-weight: 700; color: var(--navy); margin: 0 0 16px; }
+.ed-info-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.ed-info-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--navy); }
+.ed-info-list i  { color: var(--blue); font-size: 13px; margin-top: 2px; flex-shrink: 0; width: 14px; }
+.ed-info-list a  { color: var(--blue); text-decoration: none; word-break: break-all; }
+.ed-info-list a:hover { text-decoration: underline; }
+
+.ed-side-cta { background: linear-gradient(135deg, #040a5d, #192bc2); }
+.ed-side-cta p { font-size: 14px; color: rgba(255,255,255,.85); margin: 0 0 16px; text-align: center; }
+
+.btn--outline {
+  border: 1.5px solid rgba(255,255,255,.4);
+  background: transparent; color: rgba(255,255,255,.85);
+  padding: 10px 16px; border-radius: 8px; font-size: 14px; font-weight: 600;
+  text-decoration: none; cursor: pointer; transition: background .15s;
+}
+.btn--outline:hover { background: rgba(255,255,255,.1); }
+</style>

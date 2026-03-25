@@ -1,4 +1,6 @@
 <template>
+  <div>
+  <PublicNav />
   <div class="cat-event-page" v-if="categorie">
 
     <!-- ══ HERO ══ -->
@@ -165,12 +167,14 @@
     <p>Catégorie introuvable.</p>
     <router-link to="/" class="btn btn--blue" style="margin-top:16px;">Retour à l'accueil</router-link>
   </div>
+  </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
+import PublicNav from './PublicNav.vue'
 
 const apiBase  = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const route    = useRoute()
@@ -206,7 +210,18 @@ const formatDateRange = (debut, fin) => {
 
 const truncate = (str, len) => !str ? '' : str.length > len ? str.slice(0, len) + '…' : str
 
-onMounted(load)
+onMounted(async () => {
+  await load()
+  // Activer les animations fade-in après chargement des données
+  if (typeof IntersectionObserver !== 'undefined') {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target) } })
+    }, { threshold: 0.1 })
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el))
+  } else {
+    document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible'))
+  }
+})
 </script>
 
 <style scoped>
