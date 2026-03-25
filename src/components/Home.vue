@@ -380,9 +380,9 @@ let   timer    = null
 onMounted(async () => {
   try {
     const [evRes, artRes, offRes] = await Promise.all([
-      axios.get(`${apiBase}/api/public/featured-event`),
-      axios.get(`${apiBase}/api/public/articles`),
-      axios.get(`${apiBase}/api/public/offres`),
+      axios.get(`${apiBase}/public/featured-event`),
+      axios.get(`${apiBase}/public/articles`),
+      axios.get(`${apiBase}/public/offres`),
     ])
     event.value    = evRes.data
     articles.value = artRes.data
