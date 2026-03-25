@@ -8,6 +8,7 @@ import EntrepriseDashboard from '../components/EntrepriseDashboard.vue'
 import TestAuth from '../components/TestAuth.vue'
 import GoogleCallback from '../components/GoogleCallback.vue'
 import Annonces from '../components/Annonces.vue'
+import Entreprises from '../components/Entreprises.vue'
 
 const routes = [
   {
@@ -19,6 +20,11 @@ const routes = [
     path: '/annonces',
     name: 'Annonces',
     component: Annonces
+  },
+  {
+    path: '/entreprises',
+    name: 'Entreprises',
+    component: Entreprises
   },
   {
     path: '/login',
