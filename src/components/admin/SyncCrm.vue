@@ -35,6 +35,14 @@
       Aucune synchronisation effectuée pour le moment.
     </div>
 
+    <!-- Setup (1 seule fois) -->
+    <div style="margin-top:16px;padding:12px;border:1px solid #e0b000;background:#fffbe6;">
+      <strong>Première utilisation</strong> — Créer les propriétés personnalisées dans HubSpot :
+      <button @click="runSetup" :disabled="settingUp || !status?.configured" style="margin-left:12px;">
+        {{ settingUp ? 'Création en cours...' : 'Setup HubSpot (1 fois)' }}
+      </button>
+    </div>
+
     <!-- Bouton sync manuelle -->
     <div style="margin-top:16px;">
       <button @click="runSync" :disabled="syncing || !status?.configured">
@@ -64,6 +72,7 @@ import api from '../../services/api.js'
 
 const status     = ref(null)
 const syncing    = ref(false)
+const settingUp  = ref(false)
 const syncOutput = ref('')
 const error      = ref('')
 const successMsg = ref('')
@@ -76,6 +85,22 @@ const loadStatus = async () => {
     status.value = res.data
   } catch (err) {
     error.value = 'Impossible de charger le statut HubSpot'
+  }
+}
+
+const runSetup = async () => {
+  settingUp.value  = true
+  error.value      = ''
+  successMsg.value = ''
+  syncOutput.value = ''
+  try {
+    const res = await api.post('/admin/hubspot/setup', {}, { timeout: 60000 })
+    syncOutput.value = res.data.output
+    successMsg.value = res.data.message + ' — vous pouvez maintenant lancer la synchronisation.'
+  } catch (err) {
+    error.value = err.response?.data?.message || 'Erreur lors du setup'
+  } finally {
+    settingUp.value = false
   }
 }
 
