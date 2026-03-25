@@ -145,22 +145,35 @@
 
 
     <!-- ══ ENTREPRISES PARTICIPANTES ══ -->
-    <section v-if="event && event.entreprises && event.entreprises.length" style="padding:60px 0;background:var(--light-bg);">
+    <section v-if="event && event.entreprises && event.entreprises.length" class="section-partners">
       <div class="container">
-        <div class="triple-header fade-in" style="text-align:center;margin-bottom:40px;">
+        <div class="partners-header fade-in">
+          <span class="label-blue">Ils recrutent</span>
           <h2>Entreprises Participantes</h2>
           <p>Les entreprises qui recrutent lors de cet événement</p>
         </div>
-        <div style="display:flex;flex-wrap:wrap;gap:24px;justify-content:center;">
-          <div v-for="entreprise in event.entreprises" :key="entreprise.id"
-               style="background:#fff;border-radius:12px;padding:20px 28px;box-shadow:var(--shadow);display:flex;align-items:center;gap:14px;min-width:180px;">
-            <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom"
-                 style="width:48px;height:48px;object-fit:contain;border-radius:6px;">
-            <div v-else style="width:48px;height:48px;border-radius:6px;background:var(--light-blue);display:flex;align-items:center;justify-content:center;">
-              <i class="fa-solid fa-building" style="color:var(--navy);font-size:20px;"></i>
+        <div class="partners-grid fade-in">
+          <router-link
+            v-for="entreprise in event.entreprises"
+            :key="entreprise.id"
+            to="/entreprises"
+            class="partner-card"
+          >
+            <div class="partner-logo">
+              <img v-if="entreprise.logo_url"
+                   :src="entreprise.logo_url"
+                   :alt="entreprise.nom">
+              <span v-else class="partner-initials">
+                {{ entreprise.nom.charAt(0).toUpperCase() }}
+              </span>
             </div>
-            <span style="font-weight:600;color:var(--navy);font-size:15px;">{{ entreprise.nom }}</span>
-          </div>
+            <span class="partner-name">{{ entreprise.nom }}</span>
+          </router-link>
+        </div>
+        <div class="partners-cta fade-in">
+          <router-link to="/entreprises" class="btn btn--blue">
+            Voir toutes les entreprises <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
+          </router-link>
         </div>
       </div>
     </section>
@@ -600,6 +613,81 @@ function initFadeIn() {
 }
 .has-mega:hover .nav-chevron {
   transform: rotate(180deg);
+}
+
+/* ── Section partenaires ──────────────────────────────── */
+.section-partners {
+  padding: 80px 0;
+  background: #fff;
+}
+.partners-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+.partners-header h2 {
+  margin: 8px 0 12px;
+}
+.partners-header p {
+  color: var(--body-text);
+  font-size: 16px;
+}
+.partners-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 20px;
+  margin-bottom: 48px;
+}
+.partner-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 28px 16px 22px;
+  background: var(--light-bg, #f5f7fa);
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-lg, 14px);
+  text-decoration: none;
+  transition: border-color .2s, box-shadow .2s, transform .2s;
+  cursor: pointer;
+}
+.partner-card:hover {
+  border-color: var(--blue);
+  box-shadow: 0 6px 24px rgba(0,0,0,.10);
+  transform: translateY(-4px);
+}
+.partner-logo {
+  width: 72px;
+  height: 72px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  flex-shrink: 0;
+}
+.partner-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 6px;
+}
+.partner-initials {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--blue);
+  line-height: 1;
+}
+.partner-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--navy);
+  text-align: center;
+  line-height: 1.3;
+}
+.partners-cta {
+  text-align: center;
 }
 
 /* ── Switcher langue ──────────────────────────────────── */
