@@ -144,6 +144,51 @@
 
 
 
+    <!-- ══ 4 CARDS ACCÈS RAPIDE ══ -->
+    <section class="section-quicklinks">
+      <div class="container">
+        <div class="quicklinks-grid">
+
+          <router-link to="/annonces" class="ql-card">
+            <div class="ql-icon"><i class="fa-solid fa-briefcase"></i></div>
+            <div class="ql-body">
+              <h3>Trouver un emploi</h3>
+              <p>Votre porte d'entrée vers des possibilités infinies et des opportunités de carrière passionnantes</p>
+              <span class="ql-link">Parcourir les emplois <i class="fa-solid fa-arrow-right"></i></span>
+            </div>
+          </router-link>
+
+          <router-link :to="categories.length ? `/evenements/categorie/${categories[0].id}` : '/'" class="ql-card">
+            <div class="ql-icon ql-icon--orange"><i class="fa-solid fa-calendar-days"></i></div>
+            <div class="ql-body">
+              <h3>Événements</h3>
+              <p>Participez aux événements RH et développez votre réseau professionnel</p>
+              <span class="ql-link">Découvrir <i class="fa-solid fa-arrow-right"></i></span>
+            </div>
+          </router-link>
+
+          <router-link to="/blog" class="ql-card">
+            <div class="ql-icon ql-icon--green"><i class="fa-solid fa-newspaper"></i></div>
+            <div class="ql-body">
+              <h3>Articles</h3>
+              <p>Actualités RH, conseils carrière et tendances du marché du travail africain</p>
+              <span class="ql-link">Lire <i class="fa-solid fa-arrow-right"></i></span>
+            </div>
+          </router-link>
+
+          <router-link :to="isLoggedIn && userRole === 'talent' ? '/talent' : '/login'" class="ql-card ql-card--featured">
+            <div class="ql-icon ql-icon--white"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+            <div class="ql-body">
+              <h3>Matching Profile</h3>
+              <p>Trouvez les opportunités qui correspondent parfaitement à votre profil et vos compétences</p>
+              <span class="ql-link">Découvrir mon match <i class="fa-solid fa-arrow-right"></i></span>
+            </div>
+          </router-link>
+
+        </div>
+      </div>
+    </section>
+
     <!-- ══ ENTREPRISES PARTICIPANTES ══ -->
     <section v-if="event && event.entreprises && event.entreprises.length" class="section-partners">
       <div class="container">
@@ -614,6 +659,91 @@ function initFadeIn() {
 .has-mega:hover .nav-chevron {
   transform: rotate(180deg);
 }
+
+/* ── 4 cards accès rapide ─────────────────────────────── */
+.section-quicklinks {
+  padding: 80px 0;
+  background: var(--light-bg, #f5f7fa);
+}
+.quicklinks-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+@media (max-width: 1024px) {
+  .quicklinks-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .quicklinks-grid { grid-template-columns: 1fr; }
+}
+.ql-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 32px 28px;
+  background: #fff;
+  border-radius: var(--radius-lg, 14px);
+  box-shadow: var(--shadow, 0 2px 12px rgba(0,0,0,.07));
+  text-decoration: none;
+  border: 1.5px solid transparent;
+  transition: border-color .2s, box-shadow .2s, transform .2s;
+}
+.ql-card:hover {
+  border-color: var(--blue);
+  box-shadow: 0 8px 28px rgba(0,0,0,.12);
+  transform: translateY(-4px);
+}
+.ql-card--featured {
+  background: var(--navy, #0d2b55);
+}
+.ql-card--featured .ql-body h3,
+.ql-card--featured .ql-body p,
+.ql-card--featured .ql-link {
+  color: #fff;
+}
+.ql-card--featured:hover {
+  border-color: var(--orange);
+}
+.ql-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: var(--light-blue, #e8f0fe);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: var(--blue);
+  flex-shrink: 0;
+}
+.ql-icon--orange { background: #fff3e0; color: var(--orange, #f07c00); }
+.ql-icon--green  { background: #e8f5e9; color: #2e7d32; }
+.ql-icon--white  { background: rgba(255,255,255,.15); color: #fff; }
+.ql-body h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0 0 8px;
+  line-height: 1.3;
+}
+.ql-body p {
+  font-size: 14px;
+  color: var(--body-text);
+  line-height: 1.6;
+  margin: 0 0 16px;
+  flex: 1;
+}
+.ql-link {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--blue);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+}
+.ql-link i { font-size: 11px; transition: transform .2s; }
+.ql-card:hover .ql-link i { transform: translateX(4px); }
 
 /* ── Section partenaires ──────────────────────────────── */
 .section-partners {
