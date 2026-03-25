@@ -13,7 +13,13 @@ export const categorieEvenementService = {
     })
   },
   delete: (id) => api.delete(`/admin/categorie-evenements/${id}`),
-  removeGalerieItem: (id, path) => api.delete(`/admin/categorie-evenements/${id}/galerie`, { data: { path } })
+  removeGalerieItem: (id, path) => api.delete(`/admin/categorie-evenements/${id}/galerie`, { data: { path } }),
+
+  // Témoignages
+  attachTemoignage: (categorieId, temoignageId) =>
+    api.post(`/admin/categorie-evenements/${categorieId}/temoignages`, { temoignage_id: temoignageId }),
+  detachTemoignage: (categorieId, temoignageId) =>
+    api.delete(`/admin/categorie-evenements/${categorieId}/temoignages/${temoignageId}`),
 }
 
 export default categorieEvenementService
