@@ -257,9 +257,8 @@ const editItem = (ev) => {
 
 const toggleFeatured = async (ev) => {
   try {
-    const res = await evenementService.toggleFeatured(ev.id)
-    const idx = evenements.value.findIndex(e => e.id === ev.id)
-    if (idx !== -1) evenements.value[idx].is_featured = res.data.is_featured
+    await evenementService.toggleFeatured(ev.id)
+    await loadPage(pagination.value.current_page)
   } catch {
     error.value = 'Erreur lors de la mise à jour'
   }
