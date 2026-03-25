@@ -10,6 +10,7 @@ import GoogleCallback from '../components/GoogleCallback.vue'
 import Annonces from '../components/Annonces.vue'
 import Entreprises from '../components/Entreprises.vue'
 import CategorieEvenementPublic from '../components/CategorieEvenementPublic.vue'
+import Blog from '../components/Blog.vue'
 
 const routes = [
   {
@@ -31,6 +32,11 @@ const routes = [
     path: '/evenements/categorie/:id',
     name: 'CategorieEvenementPublic',
     component: CategorieEvenementPublic
+  },
+  {
+    path: '/blog',
+    name: 'Blog',
+    component: Blog
   },
   {
     path: '/login',
