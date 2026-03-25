@@ -7,12 +7,18 @@ import TalentDashboard from '../components/TalentDashboard.vue'
 import EntrepriseDashboard from '../components/EntrepriseDashboard.vue'
 import TestAuth from '../components/TestAuth.vue'
 import GoogleCallback from '../components/GoogleCallback.vue'
+import Annonces from '../components/Annonces.vue'
 
 const routes = [
   {
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/annonces',
+    name: 'Annonces',
+    component: Annonces
   },
   {
     path: '/login',
@@ -60,7 +66,7 @@ const router = createRouter({
 })
 
 // Navigation guard pour vérifier l'authentification
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
   const token = localStorage.getItem('token')
   const userRole = localStorage.getItem('userRole')
   
