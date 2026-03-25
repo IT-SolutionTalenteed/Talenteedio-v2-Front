@@ -22,8 +22,7 @@
       <div class="container">
         <div class="header-inner">
           <a href="/" class="site-logo">
-            <img src="https://africatalentsummit.com/wp-content/uploads/2026/02/ATSL-Logo-1.png"
-                 alt="Africa Talent Summit Luxembourg" width="160" height="56">
+            <img src="/logo.png" alt="Talenteed" width="160" height="56">
           </a>
 
           <!-- Boutons auth -->
@@ -140,9 +139,6 @@
         </div>
       </div>
     </section>
-
-
-
 
     <!-- ══ 4 CARDS ACCÈS RAPIDE ══ -->
     <section class="section-quicklinks">
@@ -375,8 +371,7 @@
           <div class="footer-grid">
             <div class="footer-brand">
               <div class="footer-logo">
-                <img src="https://africatalentsummit.com/wp-content/uploads/2026/02/ATSL-Logo-2.png"
-                     alt="Africa Talent Summit Luxembourg" width="180">
+                <img src="/logo.png" alt="Talenteed" width="180">
               </div>
               <p>L'Africa Talent Summit Luxembourg est la première plateforme stratégique européenne dédiée à la mobilisation de l'intelligence collective et des compétences rares de la diaspora, afin d'accélérer la performance des entreprises en Afrique.</p>
               <div class="footer-socials">
