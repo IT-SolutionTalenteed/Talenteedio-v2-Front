@@ -29,6 +29,9 @@
       </button>
     </form>
 
+    <hr />
+    <button type="button" @click="loginWithGoogle">Se connecter avec Google</button>
+
     <p>
       Pas de compte ?
       <router-link to="/register">S'inscrire</router-link>
@@ -53,6 +56,9 @@ const loading       = ref(false)
 const error         = ref('')
 const recaptchaToken = ref('')
 const recaptchaRef  = ref(null)
+
+const apiBase = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8000'
+const loginWithGoogle = () => { window.location.href = `${apiBase}/api/auth/google/redirect` }
 
 const onRecaptchaVerify  = (token) => { recaptchaToken.value = token }
 const onRecaptchaExpired = ()      => { recaptchaToken.value = '' }

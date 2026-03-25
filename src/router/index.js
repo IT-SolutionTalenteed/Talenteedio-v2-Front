@@ -5,6 +5,7 @@ import AdminDashboard from '../components/AdminDashboard.vue'
 import TalentDashboard from '../components/TalentDashboard.vue'
 import EntrepriseDashboard from '../components/EntrepriseDashboard.vue'
 import TestAuth from '../components/TestAuth.vue'
+import GoogleCallback from '../components/GoogleCallback.vue'
 
 const routes = [
   {
@@ -25,6 +26,11 @@ const routes = [
     path: '/test-auth',
     name: 'TestAuth',
     component: TestAuth
+  },
+  {
+    path: '/auth/google/callback',
+    name: 'GoogleCallback',
+    component: GoogleCallback
   },
   {
     path: '/admin',

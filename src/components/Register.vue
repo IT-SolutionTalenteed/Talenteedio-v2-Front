@@ -57,8 +57,11 @@
       </button>
     </form>
     
+    <hr />
+    <button type="button" @click="loginWithGoogle">S'inscrire / Se connecter avec Google</button>
+
     <p>
-      Déjà un compte ? 
+      Déjà un compte ?
       <router-link to="/login">Se connecter</router-link>
     </p>
     
@@ -77,7 +80,9 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { authService } from '../services/api.js'
 
-const router = useRouter()
+const router  = useRouter()
+const apiBase = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8000'
+const loginWithGoogle = () => { window.location.href = `${apiBase}/api/auth/google/redirect` }
 
 const form = ref({
   name: '',
