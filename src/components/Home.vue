@@ -25,20 +25,85 @@
             <img src="https://africatalentsummit.com/wp-content/uploads/2026/02/ATSL-Logo-1.png"
                  alt="Africa Talent Summit Luxembourg" width="160" height="56">
           </a>
+
+          <!-- Boutons auth -->
           <div class="header-btns" id="headerBtns">
-            <router-link to="/register" class="btn btn--orange btn--sm">S'INSCRIRE</router-link>
-            <router-link to="/login"    class="btn btn--blue   btn--sm">SE CONNECTER</router-link>
+            <template v-if="isLoggedIn">
+              <router-link :to="dashboardRoute" class="btn btn--blue btn--sm">
+                <i class="fa-solid fa-gauge" style="margin-right:5px;"></i>DASHBOARD
+              </router-link>
+            </template>
+            <template v-else>
+              <router-link to="/register" class="btn btn--orange btn--sm">S'INSCRIRE</router-link>
+              <router-link to="/login"    class="btn btn--blue   btn--sm">SE CONNECTER</router-link>
+            </template>
           </div>
+
           <button class="menu-toggle" id="menuToggle" aria-label="Menu" aria-expanded="false">
             <span></span><span></span><span></span>
           </button>
+
           <nav class="site-nav" id="siteNav">
             <ul>
-              <li><a href="#about">À PROPOS</a></li>
-              <li><a href="#offres">OFFRES</a></li>
-              <li><a href="#articles">ACTUALITÉS</a></li>
-              <li><router-link to="/login">MATCHING PROFILE</router-link></li>
-              <li><a href="mailto:contact@africatalentsummit.com">CONTACTEZ-NOUS</a></li>
+              <li><router-link to="/">ACCUEIL</router-link></li>
+
+              <!-- Mega menu Annonces -->
+              <li class="has-mega">
+                <a href="#" @click.prevent class="mega-trigger">
+                  ANNONCES <i class="fa-solid fa-chevron-down nav-chevron"></i>
+                </a>
+                <div class="mega-menu">
+                  <router-link to="/annonces" class="mega-item">
+                    <i class="fa-solid fa-briefcase mega-icon"></i>
+                    <div>
+                      <strong>Jobs</strong>
+                      <small>Toutes les offres d'emploi</small>
+                    </div>
+                  </router-link>
+                  <router-link to="/entreprises" class="mega-item">
+                    <i class="fa-solid fa-building mega-icon"></i>
+                    <div>
+                      <strong>Entreprises</strong>
+                      <small>Les entreprises partenaires</small>
+                    </div>
+                  </router-link>
+                </div>
+              </li>
+
+              <!-- Mega menu Événements -->
+              <li class="has-mega">
+                <a href="#" @click.prevent class="mega-trigger">
+                  ÉVÉNEMENTS <i class="fa-solid fa-chevron-down nav-chevron"></i>
+                </a>
+                <div class="mega-menu">
+                  <template v-if="categories.length">
+                    <router-link
+                      v-for="cat in categories"
+                      :key="cat.id"
+                      :to="`/evenements/categorie/${cat.id}`"
+                      class="mega-item"
+                    >
+                      <i class="fa-solid fa-calendar-days mega-icon"></i>
+                      <div>
+                        <strong>{{ cat.titre }}</strong>
+                      </div>
+                    </router-link>
+                  </template>
+                  <div v-else class="mega-item mega-item--empty">
+                    <i class="fa-solid fa-calendar-xmark mega-icon"></i>
+                    <div><strong>Aucun événement disponible</strong></div>
+                  </div>
+                </div>
+              </li>
+
+              <li><router-link to="/blog">ARTICLES</router-link></li>
+
+              <!-- Switcher Fr / En -->
+              <li>
+                <button class="lang-switch" @click="toggleLocale">
+                  {{ locale === 'fr' ? 'EN' : 'FR' }}
+                </button>
+              </li>
             </ul>
           </nav>
         </div>
@@ -76,43 +141,8 @@
       </div>
     </section>
 
-    <!-- ══ BRIDGING ══ -->
-    <section class="section-bridging">
-      <div class="container">
-        <h2 class="bridging-title fade-in">
-          Bridging<br>Competencies,<br>Accelerating<br><span class="orange">Performance</span>
-        </h2>
-      </div>
-    </section>
 
-    <!-- ══ À PROPOS DE L'ÉVÉNEMENT ══ -->
-    <section class="section-defi" id="about" v-if="event">
-      <div class="container">
-        <div class="defi-grid">
-          <div class="defi-text fade-in">
-            <h1>{{ event.titre }}</h1>
-            <p>{{ event.description }}</p>
-            <div v-if="event.details_supplementaires" style="margin-top:8px;color:var(--body-text);">
-              {{ event.details_supplementaires }}
-            </div>
-            <div style="margin-top:16px;display:flex;gap:16px;flex-wrap:wrap;font-size:14px;color:var(--navy);">
-              <span v-if="event.ville"><i class="fa-solid fa-location-dot" style="color:var(--orange);margin-right:6px;"></i>{{ event.ville }}{{ event.pays ? ', ' + event.pays : '' }}</span>
-              <span v-if="event.adresse"><i class="fa-solid fa-map-pin" style="color:var(--orange);margin-right:6px;"></i>{{ event.adresse }}</span>
-            </div>
-            <router-link to="/register" class="btn btn--blue" style="margin-top:20px;">
-              S'inscrire <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
-            </router-link>
-          </div>
-          <div class="defi-img fade-in" v-if="event.image_mise_en_avant_url">
-            <img :src="event.image_mise_en_avant_url" :alt="event.titre" loading="lazy">
-          </div>
-          <div class="defi-img fade-in" v-else>
-            <img src="https://africatalentsummit.com/wp-content/uploads/2026/02/business-partners-at-seminar-2026-01-08-00-15-05-utc-1024x683.jpg"
-                 alt="Événement" loading="lazy">
-          </div>
-        </div>
-      </div>
-    </section>
+
 
     <!-- ══ ENTREPRISES PARTICIPANTES ══ -->
     <section v-if="event && event.entreprises && event.entreprises.length" style="padding:60px 0;background:var(--light-bg);">
@@ -238,44 +268,6 @@
       </div>
     </section>
 
-    <!-- ══ ARTICLES / ACTUALITÉS ══ -->
-    <section id="articles" style="padding:80px 0;background:#fff;">
-      <div class="container">
-        <div class="roles-header fade-in" style="text-align:center;margin-bottom:48px;">
-          <span class="label-blue">Actualités</span>
-          <h2>Nos derniers articles</h2>
-          <p>Restez informé des dernières tendances et actualités du monde du talent africain</p>
-        </div>
-        <div v-if="articles.length" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:28px;">
-          <div v-for="article in articles" :key="article.id" class="triple-card fade-in">
-            <div class="triple-card-img">
-              <img v-if="article.image_url" :src="article.image_url" :alt="article.title" loading="lazy"
-                   style="width:100%;height:200px;object-fit:cover;">
-              <img v-else src="https://africatalentsummit.com/wp-content/uploads/2026/02/business-partners-at-seminar-2026-01-08-00-15-05-utc-1024x683.jpg"
-                   :alt="article.title" loading="lazy" style="width:100%;height:200px;object-fit:cover;">
-            </div>
-            <div class="triple-card-body">
-              <div style="font-size:12px;color:var(--blue);margin-bottom:8px;">
-                {{ formatDate(article.created_at) }}
-              </div>
-              <h3 style="font-size:18px;margin-bottom:10px;">{{ article.title }}</h3>
-              <p>{{ truncate(stripHtml(article.content), 120) }}</p>
-              <router-link to="/login" style="color:var(--blue);font-weight:600;font-size:14px;margin-top:8px;display:inline-block;">
-                Lire la suite <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
-              </router-link>
-            </div>
-          </div>
-        </div>
-        <div v-else style="text-align:center;color:var(--body-text);padding:40px 0;">
-          Aucun article disponible pour le moment.
-        </div>
-        <div style="text-align:center;margin-top:40px;">
-          <router-link to="/login" class="btn btn--blue btn--lg">
-            Voir tous les articles <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
-          </router-link>
-        </div>
-      </div>
-    </section>
 
     <!-- ══ SECTION EVENT (countdown 2) ══ -->
     <section class="section-event" v-if="event">
@@ -370,11 +362,28 @@ import axios from 'axios'
 
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
-const event    = ref(null)
-const articles = ref([])
-const offres   = ref([])
-const cd       = ref({ days: '000', hours: '00', minutes: '00', seconds: '00' })
-let   timer    = null
+const event      = ref(null)
+const articles   = ref([])
+const offres     = ref([])
+const categories = ref([])
+const cd         = ref({ days: '000', hours: '00', minutes: '00', seconds: '00' })
+let   timer      = null
+
+// ── Auth state ─────────────────────────────────────────────
+const isLoggedIn = ref(!!localStorage.getItem('token'))
+const userRole   = ref(localStorage.getItem('userRole') || '')
+
+const dashboardRoute = computed(() => {
+  const routes = { admin: '/admin', talent: '/talent', entreprise: '/entreprise' }
+  return routes[userRole.value] || '/login'
+})
+
+// ── Locale Fr / En ─────────────────────────────────────────
+const locale = ref(localStorage.getItem('locale') || 'fr')
+function toggleLocale() {
+  locale.value = locale.value === 'fr' ? 'en' : 'fr'
+  localStorage.setItem('locale', locale.value)
+}
 
 // ── Chargement des données ─────────────────────────────────
 onMounted(async () => {
@@ -390,6 +399,12 @@ onMounted(async () => {
   } catch (e) {
     console.error('Erreur chargement page accueil', e)
   }
+
+  // Catégories événements pour le mega menu (non bloquant)
+  try {
+    const catRes = await axios.get(`${apiBase}/public/categories-evenements`)
+    categories.value = catRes.data
+  } catch {}
 
   startCountdown()
   initMenuToggle()
@@ -498,12 +513,12 @@ function initFadeIn() {
 </script>
 
 <style>
-/* Surcharge hero-bg pour image dynamique via CSS variable */
+/* ── Hero bg dynamique ────────────────────────────────── */
 .hero[style] .hero-bg {
   background-image: var(--hero-bg-image, url('https://africatalentsummit.com/wp-content/uploads/2026/02/sn6234-lux-kirchberg-centredeconference-13.jpeg'));
 }
 
-/* Label bleu (réutilisé depuis le template) */
+/* ── Label bleu ───────────────────────────────────────── */
 .label-blue {
   display: inline-block;
   background: var(--blue);
@@ -515,5 +530,93 @@ function initFadeIn() {
   padding: 4px 14px;
   border-radius: var(--radius-pill);
   margin-bottom: 12px;
+}
+
+/* ── Mega menu ────────────────────────────────────────── */
+.has-mega {
+  position: relative;
+}
+.has-mega .mega-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: 0 8px 32px rgba(0,0,0,.14);
+  padding: 10px;
+  min-width: 240px;
+  z-index: 200;
+  border-top: 3px solid var(--blue);
+}
+.has-mega:hover .mega-menu,
+.has-mega:focus-within .mega-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.mega-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: var(--navy);
+  text-decoration: none;
+  transition: background .15s;
+}
+.mega-item:hover {
+  background: var(--light-bg, #f5f7fa);
+}
+.mega-item strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
+}
+.mega-item small {
+  display: block;
+  font-size: 12px;
+  color: var(--body-text);
+  margin-top: 2px;
+}
+.mega-item--empty {
+  opacity: .6;
+  cursor: default;
+  pointer-events: none;
+}
+.mega-icon {
+  font-size: 18px;
+  color: var(--blue);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.nav-chevron {
+  font-size: 9px;
+  margin-left: 3px;
+  vertical-align: middle;
+  transition: transform .2s;
+}
+.has-mega:hover .nav-chevron {
+  transform: rotate(180deg);
+}
+
+/* ── Switcher langue ──────────────────────────────────── */
+.lang-switch {
+  background: transparent;
+  border: 1.5px solid var(--blue);
+  color: var(--blue);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill, 50px);
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.lang-switch:hover {
+  background: var(--blue);
+  color: #fff;
 }
 </style>
