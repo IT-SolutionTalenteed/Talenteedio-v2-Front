@@ -4,8 +4,21 @@
     <div class="topbar">
       <div class="container">
         <div class="topbar-left">
-          <a href="tel:+3522060162"><i class="fa-solid fa-phone"></i> +3522060162</a>
-          <a href="mailto:contact@africatalentsummit.com"><i class="fa-solid fa-envelope"></i> contact@africatalentsummit.com</a>
+          <template v-if="featuredEvent">
+            <span class="countdown-label">
+              <i class="fa-solid fa-calendar-star"></i>
+              {{ featuredEvent.titre }} —
+            </span>
+            <div class="countdown-blocks">
+              <div class="cd-block"><span class="cd-num">{{ countdown.days }}</span><span class="cd-unit">J</span></div>
+              <div class="cd-sep">:</div>
+              <div class="cd-block"><span class="cd-num">{{ countdown.hours }}</span><span class="cd-unit">H</span></div>
+              <div class="cd-sep">:</div>
+              <div class="cd-block"><span class="cd-num">{{ countdown.minutes }}</span><span class="cd-unit">M</span></div>
+              <div class="cd-sep">:</div>
+              <div class="cd-block"><span class="cd-num">{{ countdown.seconds }}</span><span class="cd-unit">S</span></div>
+            </div>
+          </template>
         </div>
         <div class="topbar-right">
           <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
@@ -115,10 +128,13 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import axios from 'axios'
 
-const apiBase     = import.meta.env.VITE_API_URL || 'http://localhost:8000'
-const categories  = ref([])
-const isScrolled  = ref(false)
-const menuOpen    = ref(false)
+const apiBase      = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const categories   = ref([])
+const isScrolled   = ref(false)
+const menuOpen     = ref(false)
+const featuredEvent = ref(null)
+const countdown    = ref({ days: '00', hours: '00', minutes: '00', seconds: '00' })
+let   countdownTimer = null
 
 const isLoggedIn     = ref(!!localStorage.getItem('token'))
 const userRole       = ref(localStorage.getItem('userRole') || '')
@@ -144,16 +160,45 @@ function closeOnLink(e) {
   }
 }
 
+function pad(n) { return String(n).padStart(2, '0') }
+
+function tickCountdown(target) {
+  const diff = target - Date.now()
+  if (diff <= 0) {
+    countdown.value = { days: '00', hours: '00', minutes: '00', seconds: '00' }
+    return
+  }
+  const totalSeconds = Math.floor(diff / 1000)
+  countdown.value = {
+    days:    pad(Math.floor(totalSeconds / 86400)),
+    hours:   pad(Math.floor((totalSeconds % 86400) / 3600)),
+    minutes: pad(Math.floor((totalSeconds % 3600) / 60)),
+    seconds: pad(totalSeconds % 60),
+  }
+}
+
 onMounted(async () => {
   window.addEventListener('scroll', onScroll, { passive: true })
   try {
-    const res = await axios.get(`${apiBase}/public/categories-evenements`)
-    categories.value = res.data
+    const [catRes, evRes] = await Promise.all([
+      axios.get(`${apiBase}/public/categories-evenements`),
+      axios.get(`${apiBase}/public/featured-event`),
+    ])
+    categories.value = catRes.data
+    if (evRes.data) {
+      featuredEvent.value = evRes.data
+      const dateStr  = evRes.data.date_debut.substring(0, 10)
+      const timeStr  = (evRes.data.heure_debut_journee || '00:00').substring(0, 5)
+      const target   = new Date(`${dateStr}T${timeStr}:00`).getTime()
+      tickCountdown(target)
+      countdownTimer = setInterval(() => tickCountdown(target), 1000)
+    }
   } catch {}
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', onScroll)
+  if (countdownTimer) clearInterval(countdownTimer)
 })
 </script>
 
@@ -166,9 +211,13 @@ onUnmounted(() => {
   color: rgba(255,255,255,.75);
 }
 .topbar .container { display: flex; justify-content: space-between; align-items: center; }
-.topbar-left { display: flex; gap: 20px; }
-.topbar-left a { color: rgba(255,255,255,.75); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color .15s; }
-.topbar-left a:hover { color: #fff; }
+.topbar-left { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.countdown-label { color: rgba(255,255,255,.75); display: flex; align-items: center; gap: 6px; font-size: 11px; white-space: nowrap; }
+.countdown-blocks { display: flex; align-items: center; gap: 4px; }
+.cd-block { display: flex; align-items: baseline; gap: 2px; }
+.cd-num { font-size: 14px; font-weight: 700; color: #fff; line-height: 1; min-width: 20px; text-align: center; }
+.cd-unit { font-size: 9px; font-weight: 700; color: var(--orange, #f07c00); letter-spacing: .5px; }
+.cd-sep { font-size: 14px; font-weight: 700; color: rgba(255,255,255,.4); margin: 0 1px; line-height: 1; }
 .topbar-right { display: flex; gap: 12px; }
 .topbar-right a { color: rgba(255,255,255,.65); font-size: 13px; transition: color .15s; }
 .topbar-right a:hover { color: var(--orange, #f07c00); }
