@@ -23,6 +23,7 @@
         <div class="header-inner">
           <a href="/" class="site-logo">
             <img src="/logo.png" alt="Talenteed" width="160" height="56">
+            <span class="site-tagline">Le média alternatif pour les RH</span>
           </a>
 
           <!-- Boutons auth -->
@@ -566,6 +567,24 @@ function initFadeIn() {
 </script>
 
 <style>
+/* ── Logo + tagline ───────────────────────────────────── */
+.site-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  text-decoration: none;
+}
+.site-tagline {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--orange, #f07c00);
+  letter-spacing: 0.3px;
+  line-height: 1;
+  position: relative;
+  top: -8px;
+}
+
 /* ── Hero bg dynamique ────────────────────────────────── */
 .hero[style] .hero-bg {
   background-image: var(--hero-bg-image, url('https://africatalentsummit.com/wp-content/uploads/2026/02/sn6234-lux-kirchberg-centredeconference-13.jpeg'));
