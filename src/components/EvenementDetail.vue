@@ -84,8 +84,6 @@
                     v-for="ent in evenement.entreprises"
                     :key="ent.id"
                     class="evd-company-card"
-                    :class="{ 'evd-company-card--selected': matchingEntrepriseId === ent.id }"
-                    @click="isTalent ? ouvrirReservation(ent) : null"
                   >
                     <!-- Logo -->
                     <div class="evd-company-logo">
@@ -110,22 +108,27 @@
                     </div>
                     <!-- Action -->
                     <div class="evd-company-action">
-                      <template v-if="isTalent">
-                        <button class="btn btn--blue btn--sm" @click.stop="ouvrirReservation(ent)">
-                          <i class="fa-solid fa-calendar-plus"></i> Prendre RDV
-                        </button>
-                      </template>
-                      <template v-else>
-                        <router-link :to="`/entreprises/${ent.id}`" class="btn btn--outline-nav btn--sm">
-                          Voir le profil
-                        </router-link>
-                      </template>
+                      <router-link :to="`/entreprises/${ent.id}`" class="btn btn--outline-nav btn--sm">
+                        Voir le profil
+                      </router-link>
                     </div>
                   </div>
                 </div>
                 <div v-else class="evd-empty">
                   <i class="fa-solid fa-building-circle-xmark"></i>
                   <p>Aucune entreprise enregistrée pour cet événement.</p>
+                </div>
+
+                <!-- Indicateur matching pour les talents -->
+                <div v-if="isTalent && evenement.entreprises?.length" class="evd-matching-hint">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i>
+                  <div>
+                    <strong>Prendre un rendez-vous ?</strong>
+                    Lancez d'abord le matching IA ci-dessous pour identifier les entreprises les plus adaptées à votre profil, puis prenez rendez-vous depuis les résultats.
+                  </div>
+                  <button class="btn btn--blue btn--sm" @click="scrollToMatching">
+                    Lancer le matching
+                  </button>
                 </div>
               </div>
 
@@ -700,6 +703,17 @@ onMounted(async () => {
   display: inline-flex; align-items: center; gap: 5px;
 }
 .btn--outline-nav:hover { border-color: var(--blue); color: var(--blue); }
+
+/* Encart hint matching */
+.evd-matching-hint {
+  margin-top: 20px; padding: 16px 20px;
+  background: linear-gradient(135deg, #e8f0fe, #f0f4ff);
+  border: 1.5px solid rgba(25,43,194,.2); border-radius: 10px;
+  display: flex; align-items: flex-start; gap: 14px; flex-wrap: wrap;
+}
+.evd-matching-hint i { font-size: 20px; color: var(--blue); margin-top: 2px; flex-shrink: 0; }
+.evd-matching-hint div { flex: 1; font-size: 14px; color: var(--navy); line-height: 1.5; }
+.evd-matching-hint strong { font-weight: 700; display: block; margin-bottom: 4px; }
 
 /* ── Matching ── */
 .evd-matching-block { border-top: 3px solid var(--blue); }
