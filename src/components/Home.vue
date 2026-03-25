@@ -681,54 +681,42 @@ function initFadeIn() {
   flex-direction: column;
   gap: 16px;
   padding: 32px 28px;
-  background: #fff;
   border-radius: var(--radius-lg, 14px);
-  box-shadow: var(--shadow, 0 2px 12px rgba(0,0,0,.07));
+  box-shadow: 0 4px 20px rgba(0,0,0,.15);
   text-decoration: none;
-  border: 1.5px solid transparent;
-  transition: border-color .2s, box-shadow .2s, transform .2s;
+  border: none;
+  transition: box-shadow .2s, transform .2s;
 }
 .ql-card:hover {
-  border-color: var(--blue);
-  box-shadow: 0 8px 28px rgba(0,0,0,.12);
-  transform: translateY(-4px);
+  box-shadow: 0 10px 32px rgba(0,0,0,.22);
+  transform: translateY(-5px);
 }
-.ql-card--featured {
-  background: var(--navy, #0d2b55);
-}
-.ql-card--featured .ql-body h3,
-.ql-card--featured .ql-body p,
-.ql-card--featured .ql-link {
-  color: #fff;
-}
-.ql-card--featured:hover {
-  border-color: var(--orange);
-}
+.ql-card:nth-child(1) { background: linear-gradient(135deg,#040a5d 0%,#192bc2 100%); }
+.ql-card:nth-child(2) { background: linear-gradient(135deg,#192bc2 0%,#2687e9 100%); }
+.ql-card:nth-child(3) { background: linear-gradient(135deg,#2687e9 0%,#5ba3f0 100%); }
+.ql-card:nth-child(4) { background: linear-gradient(135deg,#f49f0a 0%,#ffb52e 100%); }
 .ql-icon {
   width: 52px;
   height: 52px;
   border-radius: 12px;
-  background: var(--light-blue, #e8f0fe);
+  background: rgba(255,255,255,.18);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 22px;
-  color: var(--blue);
+  color: #fff;
   flex-shrink: 0;
 }
-.ql-icon--orange { background: #fff3e0; color: var(--orange, #f07c00); }
-.ql-icon--green  { background: #e8f5e9; color: #2e7d32; }
-.ql-icon--white  { background: rgba(255,255,255,.15); color: #fff; }
 .ql-body h3 {
   font-size: 18px;
   font-weight: 700;
-  color: var(--navy);
+  color: #fff;
   margin: 0 0 8px;
   line-height: 1.3;
 }
 .ql-body p {
   font-size: 14px;
-  color: var(--body-text);
+  color: rgba(255,255,255,.82);
   line-height: 1.6;
   margin: 0 0 16px;
   flex: 1;
@@ -736,7 +724,7 @@ function initFadeIn() {
 .ql-link {
   font-size: 13px;
   font-weight: 700;
-  color: var(--blue);
+  color: #fff;
   display: flex;
   align-items: center;
   gap: 6px;
