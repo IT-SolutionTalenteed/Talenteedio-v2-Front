@@ -144,27 +144,48 @@
           <p>Pour garantir un impact systémique et durable, le sommet repose sur trois piliers indissociables, pensés pour transformer l'intention en action :</p>
         </div>
         <div class="triple-cards">
-          <div class="triple-card fade-in">
-            <div class="triple-card-img">
-              <img src="https://africatalentsummit.com/wp-content/uploads/2026/02/staff-tech-accounting-discussion-office-development-feedback-budget-communication-business-project-group-collaboration-financial-firm-people-planning-with-team-scaled.jpg"
-                   alt="Think Tank" loading="lazy">
+          <!-- Articles dynamiques (3 premiers) -->
+          <template v-if="articles.length">
+            <div v-for="article in articles.slice(0, 3)" :key="article.id" class="triple-card fade-in">
+              <div class="triple-card-img">
+                <img v-if="article.image_url" :src="article.image_url" :alt="article.title" loading="lazy">
+                <img v-else src="https://africatalentsummit.com/wp-content/uploads/2026/02/staff-tech-accounting-discussion-office-development-feedback-budget-communication-business-project-group-collaboration-financial-firm-people-planning-with-team-scaled.jpg"
+                     :alt="article.title" loading="lazy">
+              </div>
+              <div class="triple-card-body">
+                <div style="font-size:12px;color:var(--blue);margin-bottom:6px;">{{ formatDate(article.created_at) }}</div>
+                <h3>{{ article.title }}</h3>
+                <p>{{ truncate(stripHtml(article.content), 120) }}</p>
+                <router-link to="/login" style="color:var(--blue);font-weight:600;font-size:14px;margin-top:8px;display:inline-block;">
+                  Lire la suite <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
+                </router-link>
+              </div>
             </div>
-            <div class="triple-card-body"><h3>Think Tank</h3><p>Un Comité Scientifique international composé de chercheurs, experts RH et décideurs produit chaque année un Livre Blanc de référence.</p></div>
-          </div>
-          <div class="triple-card fade-in">
-            <div class="triple-card-img">
-              <img src="https://africatalentsummit.com/wp-content/uploads/2026/02/all-their-input-is-vital-when-it-comes-to-decision-2026-01-09-10-57-28-utc-scaled.jpg"
-                   alt="Hub de Recrutement Premium" loading="lazy">
+          </template>
+          <!-- Fallback statique si aucun article -->
+          <template v-else>
+            <div class="triple-card fade-in">
+              <div class="triple-card-img">
+                <img src="https://africatalentsummit.com/wp-content/uploads/2026/02/staff-tech-accounting-discussion-office-development-feedback-budget-communication-business-project-group-collaboration-financial-firm-people-planning-with-team-scaled.jpg"
+                     alt="Think Tank" loading="lazy">
+              </div>
+              <div class="triple-card-body"><h3>Think Tank</h3><p>Un Comité Scientifique international composé de chercheurs, experts RH et décideurs produit chaque année un Livre Blanc de référence.</p></div>
             </div>
-            <div class="triple-card-body"><h3>Hub de Recrutement Premium</h3><p>Une plateforme de matching direct entre les entreprises en quête de compétences critiques et les talents de la diaspora.</p></div>
-          </div>
-          <div class="triple-card fade-in">
-            <div class="triple-card-img">
-              <img src="https://africatalentsummit.com/wp-content/uploads/2026/02/recording-the-facts-shot-of-a-group-of-people-sit-2026-01-09-11-19-42-utc-scaled.jpg"
-                   alt="Levier de Diplomatie Économique" loading="lazy">
+            <div class="triple-card fade-in">
+              <div class="triple-card-img">
+                <img src="https://africatalentsummit.com/wp-content/uploads/2026/02/all-their-input-is-vital-when-it-comes-to-decision-2026-01-09-10-57-28-utc-scaled.jpg"
+                     alt="Hub de Recrutement Premium" loading="lazy">
+              </div>
+              <div class="triple-card-body"><h3>Hub de Recrutement Premium</h3><p>Une plateforme de matching direct entre les entreprises en quête de compétences critiques et les talents de la diaspora.</p></div>
             </div>
-            <div class="triple-card-body"><h3>Levier de Diplomatie Économique</h3><p>Un cadre privilégié pour la signature d'accords bilatéraux et le renforcement des partenariats institutionnels Europe-Afrique.</p></div>
-          </div>
+            <div class="triple-card fade-in">
+              <div class="triple-card-img">
+                <img src="https://africatalentsummit.com/wp-content/uploads/2026/02/recording-the-facts-shot-of-a-group-of-people-sit-2026-01-09-11-19-42-utc-scaled.jpg"
+                     alt="Levier de Diplomatie Économique" loading="lazy">
+              </div>
+              <div class="triple-card-body"><h3>Levier de Diplomatie Économique</h3><p>Un cadre privilégié pour la signature d'accords bilatéraux et le renforcement des partenariats institutionnels Europe-Afrique.</p></div>
+            </div>
+          </template>
         </div>
       </div>
     </section>
