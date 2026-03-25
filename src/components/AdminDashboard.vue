@@ -22,6 +22,7 @@
       <button @click="activeTab = 'entretiens'">Entretiens par stand</button>
       <button @click="activeTab = 'feedbacks'">Feedbacks</button>
       <button @click="activeTab = 'import-candidats'">Import XLS</button>
+      <button @click="activeTab = 'sync-crm'">Sync CRM HubSpot</button>
 
       <!-- Référentiels -->
       <button @click="activeTab = 'job-contracts'">Contrats de travail</button>
@@ -59,6 +60,7 @@
     <EntretienList v-if="activeTab === 'entretiens'" />
     <FeedbackList v-if="activeTab === 'feedbacks'" />
     <ImportCandidats v-if="activeTab === 'import-candidats'" />
+    <SyncCrm v-if="activeTab === 'sync-crm'" />
 
     <!-- Référentiels -->
     <JobContractList v-if="activeTab === 'job-contracts'" />
@@ -95,6 +97,7 @@ import TalentList from './admin/TalentList.vue'
 import EntretienList from './admin/EntretienList.vue'
 import FeedbackList from './admin/FeedbackList.vue'
 import ImportCandidats from './admin/ImportCandidats.vue'
+import SyncCrm from './admin/SyncCrm.vue'
 
 const router = useRouter()
 const activeTab = ref('overview')
