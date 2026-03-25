@@ -82,8 +82,8 @@
               </div>
             </div>
             <div class="cat-event-footer">
-              <router-link to="/register" class="btn btn--blue">
-                S'inscrire <i class="fa-solid fa-chevron-right" style="font-size:10px;"></i>
+              <router-link :to="`/evenements/${ev.id}`" class="btn btn--blue">
+                Voir l'événement <i class="fa-solid fa-chevron-right" style="font-size:10px;"></i>
               </router-link>
             </div>
           </div>
