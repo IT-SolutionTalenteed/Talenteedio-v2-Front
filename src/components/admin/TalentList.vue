@@ -1,19 +1,44 @@
 <template>
   <div>
-    <h2>Gestion des Talents</h2>
+    <h2>Gestion des Talents & Consultants</h2>
 
     <div v-if="talents.length > 0">
       <table>
         <thead>
           <tr>
-            <th>ID</th><th>Nom</th><th>Email</th><th>Suspendu</th><th>Banni</th><th>Actions</th>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Rôle</th>
+            <th>Ville / Pays</th>
+            <th>Provenance</th>
+            <th>Statut CRM</th>
+            <th>Suspendu</th>
+            <th>Banni</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="talent in talents" :key="talent.id">
-            <td>{{ talent.id }}</td>
-            <td>{{ talent.name }}</td>
+            <td>
+              <div>{{ talent.name }}</div>
+              <small v-if="talent.titre_poste" style="color:#666;">{{ talent.titre_poste }}</small>
+            </td>
             <td>{{ talent.email }}</td>
+            <td>{{ talent.role === 'consultant_externe' ? 'Consultant' : 'Talent' }}</td>
+            <td>{{ [talent.ville, talent.pays].filter(Boolean).join(', ') || '—' }}</td>
+            <td>{{ talent.source_provenance || '—' }}</td>
+            <td>
+              <select @change="updateStatutCrm(talent, $event.target.value)" :value="talent.statut_crm || ''">
+                <option value="">— Aucun —</option>
+                <option value="a_traiter">A traiter</option>
+                <option value="en_cours_qualif">En cours de qualif.</option>
+                <option value="vivier">Vivier</option>
+                <option value="top_profil">Top profil</option>
+                <option value="converti_ressource">Converti en ressource</option>
+                <option value="recrute_client">Recruté par client</option>
+                <option value="ne_plus_contacter">Ne plus contacter</option>
+              </select>
+            </td>
             <td>{{ talent.is_suspended ? 'Oui' : 'Non' }}</td>
             <td>{{ talent.is_banned ? 'Oui' : 'Non' }}</td>
             <td>
@@ -59,7 +84,7 @@ const loadPage = async (page = 1) => {
     const res = await talentService.getAll(page)
     talents.value = res.data.data
     pagination.value = { current_page: res.data.current_page, last_page: res.data.last_page }
-  } catch (err) {
+  } catch {
     error.value = 'Erreur lors du chargement'
   } finally {
     loading.value = false
@@ -83,6 +108,17 @@ const toggleBan = async (talent) => {
     success.value = talent.is_banned ? 'Talent banni' : 'Talent débanni'
   } catch {
     error.value = 'Erreur lors du bannissement'
+  }
+}
+
+const updateStatutCrm = async (talent, statut) => {
+  try {
+    const res = await talentService.updateStatutCrm(talent.id, statut || null)
+    talent.statut_crm = res.data.statut_crm
+    talent.is_banned = res.data.is_banned
+    success.value = 'Statut CRM mis à jour'
+  } catch {
+    error.value = 'Erreur lors de la mise à jour du statut'
   }
 }
 
