@@ -21,6 +21,7 @@
       <button @click="activeTab = 'talents'">Talents</button>
       <button @click="activeTab = 'entretiens'">Entretiens par stand</button>
       <button @click="activeTab = 'feedbacks'">Feedbacks</button>
+      <button @click="activeTab = 'import-candidats'">Import XLS</button>
 
       <!-- Référentiels -->
       <button @click="activeTab = 'job-contracts'">Contrats de travail</button>
@@ -57,6 +58,7 @@
     <TalentList v-if="activeTab === 'talents'" />
     <EntretienList v-if="activeTab === 'entretiens'" />
     <FeedbackList v-if="activeTab === 'feedbacks'" />
+    <ImportCandidats v-if="activeTab === 'import-candidats'" />
 
     <!-- Référentiels -->
     <JobContractList v-if="activeTab === 'job-contracts'" />
@@ -92,6 +94,7 @@ import EntrepriseList from './admin/EntrepriseList.vue'
 import TalentList from './admin/TalentList.vue'
 import EntretienList from './admin/EntretienList.vue'
 import FeedbackList from './admin/FeedbackList.vue'
+import ImportCandidats from './admin/ImportCandidats.vue'
 
 const router = useRouter()
 const activeTab = ref('overview')
