@@ -13,16 +13,8 @@
         <input type="password" id="password" v-model="form.password" required />
       </div>
 
-      <!-- reCAPTCHA v2 checkbox -->
-      <div>
-        <VueRecaptcha
-          :sitekey="siteKey"
-          ref="recaptchaRef"
-          @verify="onRecaptchaVerify"
-          @expired="onRecaptchaExpired"
-          @error="onRecaptchaError"
-        />
-      </div>
+      <!-- reCAPTCHA v2 checkbox — rendu par window.grecaptcha.render() -->
+      <div ref="recaptchaContainer"></div>
 
       <button type="submit" :disabled="loading || !recaptchaToken">
         {{ loading ? 'Connexion...' : 'Se connecter' }}
@@ -42,27 +34,60 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { authService } from '../services/api.js'
-import { VueRecaptcha } from 'vue-recaptcha'
 
 const router = useRouter()
 
+const form             = ref({ email: '', password: '' })
+const loading          = ref(false)
+const error            = ref('')
+const recaptchaToken   = ref('')
+const recaptchaContainer = ref(null)
+const widgetId         = ref(null)
+
 const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY
-
-const form = ref({ email: '', password: '' })
-const loading       = ref(false)
-const error         = ref('')
-const recaptchaToken = ref('')
-const recaptchaRef  = ref(null)
-
 const apiBase = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8000'
+
 const loginWithGoogle = () => { window.location.href = `${apiBase}/api/auth/google/redirect` }
 
-const onRecaptchaVerify  = (token) => { recaptchaToken.value = token }
-const onRecaptchaExpired = ()      => { recaptchaToken.value = '' }
-const onRecaptchaError   = ()      => { recaptchaToken.value = ''; error.value = 'Erreur reCAPTCHA' }
+// Rend le widget reCAPTCHA v2 une fois le DOM + script chargés
+const renderRecaptcha = () => {
+  if (!recaptchaContainer.value || !window.grecaptcha) return
+  widgetId.value = window.grecaptcha.render(recaptchaContainer.value, {
+    sitekey:          siteKey,
+    callback:         (token) => { recaptchaToken.value = token },
+    'expired-callback': () => { recaptchaToken.value = '' },
+    'error-callback':   () => { recaptchaToken.value = ''; error.value = 'Erreur reCAPTCHA' },
+  })
+}
+
+onMounted(() => {
+  // Le script Google peut être déjà chargé ou en cours de chargement
+  if (window.grecaptcha && window.grecaptcha.render) {
+    renderRecaptcha()
+  } else {
+    // Attendre que le script soit prêt via le callback global
+    window.onRecaptchaLoad = renderRecaptcha
+    // Ajouter onload au script si pas encore fait
+    const scripts = document.querySelectorAll('script[src*="recaptcha"]')
+    if (scripts.length === 0) {
+      const s = document.createElement('script')
+      s.src = 'https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit'
+      s.async = true
+      document.head.appendChild(s)
+    } else {
+      // Script présent mais pas encore prêt — poll
+      const interval = setInterval(() => {
+        if (window.grecaptcha && window.grecaptcha.render) {
+          clearInterval(interval)
+          renderRecaptcha()
+        }
+      }, 100)
+    }
+  }
+})
 
 const handleLogin = async () => {
   if (!recaptchaToken.value) {
@@ -83,16 +108,19 @@ const handleLogin = async () => {
     localStorage.setItem('userRole', response.data.user.role)
 
     switch (response.data.user.role) {
-      case 'admin':        router.push('/admin');      break
-      case 'talent':       router.push('/talent');     break
-      case 'entreprise':   router.push('/entreprise'); break
+      case 'admin':      router.push('/admin');      break
+      case 'talent':     router.push('/talent');     break
+      case 'entreprise': router.push('/entreprise'); break
       default: error.value = 'Rôle utilisateur non reconnu'
     }
   } catch (err) {
     error.value = err.response?.data?.message
       || Object.values(err.response?.data?.errors || {}).flat().join(' | ')
       || 'Erreur de connexion'
-    recaptchaRef.value?.reset()
+    // Réinitialiser le widget
+    if (widgetId.value !== null && window.grecaptcha) {
+      window.grecaptcha.reset(widgetId.value)
+    }
     recaptchaToken.value = ''
   } finally {
     loading.value = false
