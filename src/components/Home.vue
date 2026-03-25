@@ -26,17 +26,42 @@
             <span class="site-tagline">Le média alternatif pour les RH</span>
           </a>
 
-          <!-- Boutons auth -->
-          <div class="header-btns" id="headerBtns">
-            <template v-if="isLoggedIn">
-              <router-link :to="dashboardRoute" class="btn btn--blue btn--sm">
-                <i class="fa-solid fa-gauge" style="margin-right:5px;"></i>DASHBOARD
-              </router-link>
-            </template>
-            <template v-else>
-              <router-link to="/register" class="btn btn--orange btn--sm">S'INSCRIRE</router-link>
-              <router-link to="/login"    class="btn btn--blue   btn--sm">SE CONNECTER</router-link>
-            </template>
+          <!-- Countdown + boutons auth (droite) -->
+          <div class="header-right" id="headerBtns">
+            <!-- Countdown header -->
+            <div class="header-countdown" v-if="event">
+              <div class="hcd-item">
+                <span class="hcd-num">{{ cd.days }}</span>
+                <span class="hcd-label">Jours</span>
+              </div>
+              <div class="hcd-sep">:</div>
+              <div class="hcd-item">
+                <span class="hcd-num">{{ cd.hours }}</span>
+                <span class="hcd-label">Heures</span>
+              </div>
+              <div class="hcd-sep">:</div>
+              <div class="hcd-item">
+                <span class="hcd-num">{{ cd.minutes }}</span>
+                <span class="hcd-label">Minutes</span>
+              </div>
+              <div class="hcd-sep">:</div>
+              <div class="hcd-item">
+                <span class="hcd-num">{{ cd.seconds }}</span>
+                <span class="hcd-label">Secondes</span>
+              </div>
+            </div>
+            <!-- Boutons -->
+            <div class="header-btns">
+              <template v-if="isLoggedIn">
+                <router-link :to="dashboardRoute" class="btn btn--blue btn--sm">
+                  <i class="fa-solid fa-gauge" style="margin-right:5px;"></i>DASHBOARD
+                </router-link>
+              </template>
+              <template v-else>
+                <router-link to="/register" class="btn btn--orange btn--sm">S'INSCRIRE</router-link>
+                <router-link to="/login"    class="btn btn--blue   btn--sm">SE CONNECTER</router-link>
+              </template>
+            </div>
           </div>
 
           <button class="menu-toggle" id="menuToggle" aria-label="Menu" aria-expanded="false">
@@ -567,6 +592,57 @@ function initFadeIn() {
 </script>
 
 <style>
+/* ── Header right (countdown + btns) ─────────────────── */
+.header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  margin-left: auto;
+}
+.header-btns {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.header-countdown {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.hcd-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 36px;
+}
+.hcd-num {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--navy, #0d2b55);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.hcd-label {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--body-text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+.hcd-sep {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--orange, #f07c00);
+  line-height: 1;
+  margin-bottom: 12px;
+}
+/* Masquer le countdown header sur mobile */
+@media (max-width: 768px) {
+  .header-countdown { display: none; }
+}
+
 /* ── Logo + tagline ───────────────────────────────────── */
 .site-logo {
   display: flex;
