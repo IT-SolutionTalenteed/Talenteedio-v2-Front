@@ -21,6 +21,10 @@ import LegalPage from '../components/LegalPage.vue'
 const routes = [
   {
     path: '/',
+    redirect: '/home'
+  },
+  {
+    path: '/home',
     name: 'Home',
     component: Home
   },

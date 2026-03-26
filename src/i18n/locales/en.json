@@ -1,0 +1,218 @@
+{
+  "nav": {
+    "home": "HOME",
+    "announcements": "JOBS",
+    "events": "EVENTS",
+    "articles": "ARTICLES",
+    "jobs": "Jobs",
+    "jobsDesc": "All job offers",
+    "companies": "Companies",
+    "companiesDesc": "Partner companies",
+    "noEvents": "No events available",
+    "subscription": "SUBSCRIBE",
+    "login": "LOGIN",
+    "dashboard": "Dashboard",
+    "logout": "Logout",
+    "myAccount": "MY ACCOUNT",
+    "learnMore": "Learn more"
+  },
+  "favorites": {
+    "title": "My favorites",
+    "empty": "No favorites yet",
+    "viewAll": "View all my favorites"
+  },
+  "language": {
+    "french": "Français",
+    "english": "English"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "apply": "Apply",
+    "viewDetails": "View details",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "home": {
+    "tagline": "The alternative media for HR",
+    "hero": {
+      "title": "Find your next talent",
+      "subtitle": "The platform that connects companies and talents"
+    }
+  },
+  "jobs": {
+    "title": "Job offers",
+    "searchPlaceholder": "Search for a job...",
+    "contract": "Contract type",
+    "location": "Location",
+    "experience": "Experience",
+    "salary": "Salary",
+    "applyNow": "Apply now",
+    "addToFavorites": "Add to favorites",
+    "removeFromFavorites": "Remove from favorites",
+    "noResults": "No jobs found",
+    "publishedOn": "Published on"
+  },
+  "companies": {
+    "title": "Companies",
+    "employees": "employees",
+    "viewProfile": "View profile",
+    "website": "Website",
+    "sector": "Industry sector"
+  },
+  "events": {
+    "title": "Events",
+    "upcoming": "Upcoming",
+    "past": "Past",
+    "register": "Register",
+    "date": "Date",
+    "time": "Time",
+    "location": "Location",
+    "online": "Online",
+    "inPerson": "In person"
+  },
+  "blog": {
+    "title": "Articles",
+    "readMore": "Read more",
+    "author": "Author",
+    "publishedOn": "Published on",
+    "category": "Category",
+    "relatedArticles": "Related articles"
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Forgot password?",
+      "noAccount": "No account yet?",
+      "register": "Sign up",
+      "submit": "Login"
+    },
+    "register": {
+      "title": "Sign up",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "accountType": "Account type",
+      "talent": "Talent",
+      "company": "Company",
+      "hasAccount": "Already have an account?",
+      "login": "Login",
+      "submit": "Sign up"
+    }
+  },
+  "dashboard": {
+    "welcome": "Welcome",
+    "stats": "Statistics",
+    "recentActivity": "Recent activity",
+    "myApplications": "My applications",
+    "myOffers": "My offers",
+    "myEvents": "My events"
+  },
+  "footer": {
+    "about": "About",
+    "contact": "Contact",
+    "terms": "Terms of service",
+    "privacy": "Privacy policy",
+    "legal": "Legal notice",
+    "followUs": "Follow us",
+    "allRightsReserved": "All rights reserved",
+    "description": "The Africa Talent Summit Luxembourg is the first European strategic platform dedicated to mobilizing collective intelligence and rare skills from the diaspora to accelerate business performance in Africa.",
+    "contactUs": "Contact us",
+    "joinUs": "Join us",
+    "becomeTalent": "Become a Talent",
+    "pressMedia": "Press and Media",
+    "partnerships": "Partnerships",
+    "legalInfo": "Legal information",
+    "copyright": "Solution Talenteed SARL R.C.S. Luxembourg B 255 801. All rights reserved. Africa Talent Summit Luxembourg is a registered trademark."
+  },
+  "hero": {
+    "defaultTitle": "Africa Talent Summit",
+    "defaultLocation": "Luxembourg",
+    "defaultDescription": "The first European platform mobilizing African Talent to accelerate business performance in Africa.",
+    "subscriptionsOpen": "SUBSCRIPTIONS ARE OPEN – RESERVE YOUR SPOT",
+    "subscribe": "Subscribe",
+    "days": "Days",
+    "hours": "Hours",
+    "minutes": "Minutes",
+    "seconds": "Seconds"
+  },
+  "quicklinks": {
+    "findJob": {
+      "title": "Find a job",
+      "description": "Your gateway to infinite possibilities and exciting career opportunities",
+      "action": "Browse jobs"
+    },
+    "events": {
+      "title": "Events",
+      "description": "Participate in HR events and expand your professional network",
+      "action": "Discover"
+    },
+    "articles": {
+      "title": "Articles",
+      "description": "HR news, career advice and African labor market trends",
+      "action": "Read"
+    },
+    "matching": {
+      "title": "Matching Profile",
+      "description": "Find opportunities that perfectly match your profile and skills",
+      "action": "Discover my match"
+    }
+  },
+  "partners": {
+    "label": "They're hiring",
+    "title": "Participating Companies",
+    "description": "Companies recruiting at this event",
+    "viewAll": "View all companies"
+  },
+  "triple": {
+    "watermark": "Systemic Impact",
+    "title": "Triple Strategic Anchoring",
+    "description": "To ensure systemic and lasting impact, the summit is based on three inseparable pillars, designed to transform intention into action:",
+    "readMore": "Read more",
+    "thinkTank": {
+      "title": "Think Tank",
+      "description": "An international Scientific Committee composed of researchers, HR experts and decision-makers produces a reference White Paper each year."
+    },
+    "recruitmentHub": {
+      "title": "Premium Recruitment Hub",
+      "description": "A direct matching platform between companies seeking critical skills and diaspora talents."
+    },
+    "diplomacy": {
+      "title": "Economic Diplomacy Lever",
+      "description": "A privileged framework for signing bilateral agreements and strengthening Europe-Africa institutional partnerships."
+    }
+  },
+  "jobOffers": {
+    "label": "Opportunities",
+    "title": "Recent job offers",
+    "description": "Discover the latest opportunities available on the platform",
+    "apply": "Apply",
+    "noOffers": "No offers available at the moment.",
+    "viewAll": "View all offers"
+  },
+  "eventSection": {
+    "participate": "Participate"
+  },
+  "cta": {
+    "watermark": "Participate",
+    "label": "Join us",
+    "title": "Companies, talents, institutions,<br>partners",
+    "action": "Participate"
+  }
+}
