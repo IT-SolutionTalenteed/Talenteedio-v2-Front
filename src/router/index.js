@@ -16,6 +16,7 @@ import Blog from '../components/Blog.vue'
 import ArticleDetail from '../components/ArticleDetail.vue'
 import EvenementDetail from '../components/EvenementDetail.vue'
 import MesFavoris from '../components/MesFavoris.vue'
+import LegalPage from '../components/LegalPage.vue'
 
 const routes = [
   {
@@ -68,6 +69,21 @@ const routes = [
     name: 'MesFavoris',
     component: MesFavoris,
     meta: { requiresAuth: true, role: 'talent' }
+  },
+  {
+    path: '/terms-and-conditions',
+    name: 'TermsAndConditions',
+    component: LegalPage
+  },
+  {
+    path: '/privacy-policy',
+    name: 'PrivacyPolicy',
+    component: LegalPage
+  },
+  {
+    path: '/legal/:slug',
+    name: 'LegalPage',
+    component: LegalPage
   },
   {
     path: '/login',

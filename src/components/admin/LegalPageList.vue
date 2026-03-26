@@ -13,7 +13,12 @@
         </div>
         <div>
           <label for="description">Contenu:</label>
-          <textarea id="description" v-model="form.description" rows="10" required></textarea>
+          <component 
+            :is="ckeditor"
+            v-model="form.description" 
+            :editor="editor"
+            :config="editorConfig"
+          />
         </div>
         <button type="submit" :disabled="loading">
           {{ loading ? 'Enregistrement...' : 'Enregistrer' }}
@@ -48,7 +53,11 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import CKEditor from '@ckeditor/ckeditor5-vue'
 import legalPageService from '../../services/legalPageService.js'
+
+const ckeditor = CKEditor.component
 
 const items = ref([])
 const loading = ref(false)
@@ -57,6 +66,20 @@ const success = ref('')
 const showForm = ref(false)
 const editingItem = ref(null)
 const form = ref({ title: '', description: '' })
+
+const editor = ClassicEditor
+const editorConfig = {
+  toolbar: {
+    items: [
+      'undo', 'redo',
+      '|', 'heading',
+      '|', 'bold', 'italic',
+      '|', 'link', 'bulletedList', 'numberedList',
+      '|', 'blockQuote', 'insertTable',
+      '|', 'outdent', 'indent'
+    ]
+  }
+}
 
 const load = async () => {
   loading.value = true
@@ -121,3 +144,10 @@ const cancelForm = () => {
 
 onMounted(load)
 </script>
+
+
+<style scoped>
+:deep(.ck-editor__editable) {
+  min-height: 400px;
+}
+</style>
