@@ -8,9 +8,9 @@
       <h3>{{ editingItem ? 'Modifier' : 'Nouvelle' }} offre</h3>
       <form @submit.prevent="save">
         <div><label>Titre *</label><input type="text" v-model="form.titre" required /></div>
-        <div><label>Mission</label><textarea v-model="form.mission" rows="3"></textarea></div>
-        <div><label>Profil recherché</label><textarea v-model="form.profil_recherche" rows="3"></textarea></div>
-        <div><label>Description</label><textarea v-model="form.description" rows="3"></textarea></div>
+        <div><label>Mission</label><WysiwygEditor v-model="form.mission" /></div>
+        <div><label>Profil recherché</label><WysiwygEditor v-model="form.profil_recherche" /></div>
+        <div><label>Description</label><WysiwygEditor v-model="form.description" /></div>
         <div><label>Localisation</label><input type="text" v-model="form.localisation" /></div>
         <div><label>Fourchette salariale</label><input type="text" v-model="form.fourchette_salariale" /></div>
         <div><label>Date limite</label><input type="date" v-model="form.date_limite" /></div>
@@ -72,6 +72,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import offreService from '../../services/entreprise/offreService.js'
+import WysiwygEditor from '../WysiwygEditor.vue'
 
 const items = ref([])
 const referentiels = ref({ job_contracts: [], job_modes: [], skills: [], study_levels: [], experiences: [] })

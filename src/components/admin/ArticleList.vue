@@ -21,12 +21,7 @@
 
         <div>
           <label for="content">Contenu:</label>
-          <textarea
-            id="content"
-            v-model="form.content"
-            rows="10"
-            required
-          ></textarea>
+          <WysiwygEditor v-model="form.content" />
         </div>
 
         <div>
@@ -152,6 +147,7 @@
 import { ref, onMounted } from 'vue'
 import articleService from '../../services/articleService.js'
 import mediaCategoryService from '../../services/mediaCategoryService.js'
+import WysiwygEditor from '../WysiwygEditor.vue'
 
 const articles = ref([])
 const mediaCategories = ref([])

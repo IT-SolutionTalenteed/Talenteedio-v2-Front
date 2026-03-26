@@ -46,27 +46,27 @@
 
         <div>
           <label>Mission</label>
-          <textarea v-model="form.mission" rows="4"></textarea>
+          <WysiwygEditor v-model="form.mission" />
         </div>
 
         <div>
           <label>Profil recherché</label>
-          <textarea v-model="form.profil_recherche" rows="4"></textarea>
+          <WysiwygEditor v-model="form.profil_recherche" />
         </div>
 
         <div>
           <label>À propos</label>
-          <textarea v-model="form.a_propos" rows="4"></textarea>
+          <WysiwygEditor v-model="form.a_propos" />
         </div>
 
         <div>
           <label>Liste offre</label>
-          <textarea v-model="form.liste_offre" rows="4"></textarea>
+          <WysiwygEditor v-model="form.liste_offre" />
         </div>
 
         <div>
           <label>Description</label>
-          <textarea v-model="form.description" rows="4"></textarea>
+          <WysiwygEditor v-model="form.description" />
         </div>
 
         <!-- Relations -->
@@ -174,6 +174,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import offreService from '../../services/offreService.js'
+import WysiwygEditor from '../WysiwygEditor.vue'
 
 const offres = ref([])
 const referentiels = ref({ job_contracts: [], job_modes: [], skills: [], study_levels: [], experiences: [] })

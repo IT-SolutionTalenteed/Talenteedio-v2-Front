@@ -8,7 +8,7 @@
       <h3>{{ editingItem ? 'Modifier' : 'Nouvel' }} article</h3>
       <form @submit.prevent="save">
         <div><label>Titre *</label><input type="text" v-model="form.title" required /></div>
-        <div><label>Contenu *</label><textarea v-model="form.content" rows="8" required></textarea></div>
+        <div><label>Contenu *</label><WysiwygEditor v-model="form.content" /></div>
 
         <div>
           <label>Image</label>
@@ -61,6 +61,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import articleService from '../../services/entreprise/articleService.js'
+import WysiwygEditor from '../WysiwygEditor.vue'
 
 const items = ref([])
 const referentiels = ref({ media_categories: [] })

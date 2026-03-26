@@ -69,12 +69,12 @@
 
         <div>
           <label>Description</label>
-          <textarea v-model="form.description" rows="4"></textarea>
+          <WysiwygEditor v-model="form.description" />
         </div>
 
         <div>
           <label>Détails supplémentaires</label>
-          <textarea v-model="form.details_supplementaires" rows="4"></textarea>
+          <WysiwygEditor v-model="form.details_supplementaires" />
         </div>
 
         <div>
@@ -146,6 +146,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import evenementService from '../../services/evenementService.js'
+import WysiwygEditor from '../WysiwygEditor.vue'
 
 const evenements = ref([])
 const referentiels = ref({ categories: [], entreprises: [] })
