@@ -18,7 +18,7 @@
         </div>
         <div class="cta">
           <router-link :to="`/evenements/${featuredEvent.id}`" class="topbar-link">
-            En savoir plus
+            {{ t('nav.learnMore') }}
           </router-link>
         </div>
       </div>
@@ -32,29 +32,29 @@
           <!-- Logo -->
           <router-link to="/" class="site-logo" @click="menuOpen = false">
             <img src="/logo.png" alt="Talenteed" width="148" height="52">
-            <span class="site-tagline">Le média alternatif pour les RH</span>
+            <span class="site-tagline">{{ t('home.tagline') }}</span>
           </router-link>
 
           <!-- Nav desktop -->
           <nav class="site-nav" :class="{ open: menuOpen }">
             <ul>
               <li>
-                <router-link to="/" exact-active-class="active" @click="menuOpen = false">ACCUEIL</router-link>
+                <router-link to="/" exact-active-class="active" @click="menuOpen = false">{{ t('nav.home') }}</router-link>
               </li>
 
               <!-- Mega menu Annonces -->
               <li class="has-mega">
                 <a href="#" @click.prevent class="mega-trigger">
-                  ANNONCES <i class="fa-solid fa-chevron-down nav-chevron"></i>
+                  {{ t('nav.announcements') }} <i class="fa-solid fa-chevron-down nav-chevron"></i>
                 </a>
                 <div class="mega-menu">
                   <router-link to="/annonces" class="mega-item" @click="menuOpen = false">
                     <i class="fa-solid fa-briefcase mega-icon"></i>
-                    <div><strong>Jobs</strong><small>Toutes les offres d'emploi</small></div>
+                    <div><strong>{{ t('nav.jobs') }}</strong><small>{{ t('nav.jobsDesc') }}</small></div>
                   </router-link>
                   <router-link to="/entreprises" class="mega-item" @click="menuOpen = false">
                     <i class="fa-solid fa-building mega-icon"></i>
-                    <div><strong>Entreprises</strong><small>Les entreprises partenaires</small></div>
+                    <div><strong>{{ t('nav.companies') }}</strong><small>{{ t('nav.companiesDesc') }}</small></div>
                   </router-link>
                 </div>
               </li>
@@ -62,7 +62,7 @@
               <!-- Mega menu Événements -->
               <li class="has-mega">
                 <a href="#" @click.prevent class="mega-trigger">
-                  ÉVÉNEMENTS <i class="fa-solid fa-chevron-down nav-chevron"></i>
+                  {{ t('nav.events') }} <i class="fa-solid fa-chevron-down nav-chevron"></i>
                 </a>
                 <div class="mega-menu">
                   <template v-if="categories.length">
@@ -78,13 +78,13 @@
                   </template>
                   <div v-else class="mega-item mega-item--empty">
                     <i class="fa-solid fa-calendar-xmark mega-icon"></i>
-                    <div><strong>Aucun événement disponible</strong></div>
+                    <div><strong>{{ t('nav.noEvents') }}</strong></div>
                   </div>
                 </div>
               </li>
 
               <li>
-                <router-link to="/blog" active-class="active" @click="menuOpen = false">ARTICLES</router-link>
+                <router-link to="/blog" active-class="active" @click="menuOpen = false">{{ t('nav.articles') }}</router-link>
               </li>
             </ul>
           </nav>
@@ -101,12 +101,12 @@
               <Transition name="drop-anim">
                 <div v-if="favoriOpen" class="favori-dropdown">
                   <div class="favori-head">
-                    <span><i class="fa-solid fa-heart"></i> Mes favoris</span>
+                    <span><i class="fa-solid fa-heart"></i> {{ t('favorites.title') }}</span>
                     <span class="fav-count">{{ favoris.length }}</span>
                   </div>
                   <div v-if="!favoris.length" class="favori-empty">
                     <i class="fa-regular fa-heart"></i>
-                    <p>Aucun favori pour l'instant</p>
+                    <p>{{ t('favorites.empty') }}</p>
                   </div>
                   <ul v-else class="favori-list">
                     <li v-for="offre in favoris" :key="offre.id" class="favori-item">
@@ -124,7 +124,7 @@
                     </li>
                   </ul>
                   <router-link v-if="favoris.length" to="/favoris" class="favori-footer" @click="favoriOpen = false">
-                    Voir tous mes favoris <i class="fa-solid fa-arrow-right"></i>
+                    {{ t('favorites.viewAll') }} <i class="fa-solid fa-arrow-right"></i>
                   </router-link>
                 </div>
               </Transition>
@@ -134,16 +134,16 @@
             <div class="has-lang">
               <button class="lang-trigger">
                 <span>{{ locale === 'fr' ? '🇫🇷' : '🇬🇧' }}</span>
-                {{ locale === 'fr' ? 'Français' : 'English' }}
+                {{ t(`language.${locale === 'fr' ? 'french' : 'english'}`) }}
                 <i class="fa-solid fa-chevron-down nav-chevron"></i>
               </button>
               <div class="lang-menu">
                 <button class="lang-item" :class="{ active: locale === 'fr' }" @click="setLocale('fr')">
-                  <span>🇫🇷</span> Français
+                  <span>🇫🇷</span> {{ t('language.french') }}
                   <i v-if="locale === 'fr'" class="fa-solid fa-check lang-check"></i>
                 </button>
                 <button class="lang-item" :class="{ active: locale === 'en' }" @click="setLocale('en')">
-                  <span>🇬🇧</span> English
+                  <span>🇬🇧</span> {{ t('language.english') }}
                   <i v-if="locale === 'en'" class="fa-solid fa-check lang-check"></i>
                 </button>
               </div>
@@ -151,8 +151,8 @@
 
             <!-- Non-connecté -->
             <template v-if="!isLoggedIn">
-              <router-link to="/register" class="btn btn--orange btn--sm">SOUSCRIPTION</router-link>
-              <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--blue btn--sm">SE CONNECTER</router-link>
+              <router-link to="/register" class="btn btn--orange btn--sm">{{ t('nav.subscription') }}</router-link>
+              <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--blue btn--sm">{{ t('nav.login') }}</router-link>
             </template>
 
             <!-- Connecté : dropdown utilisateur -->
@@ -165,11 +165,11 @@
               <Transition name="drop-anim">
                 <div v-if="userOpen" class="user-dropdown">
                   <router-link :to="dashboardRoute" class="user-item" @click="userOpen = false">
-                    <i class="fa-solid fa-gauge"></i> Dashboard
+                    <i class="fa-solid fa-gauge"></i> {{ t('nav.dashboard') }}
                   </router-link>
                   <div class="user-divider"></div>
                   <button class="user-item user-item--danger" @click="logout">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Déconnexion
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> {{ t('nav.logout') }}
                   </button>
                 </div>
               </Transition>
@@ -191,12 +191,14 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import { useFavoris } from '../composables/useFavoris.js'
 
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const route   = useRoute()
 const router  = useRouter()
+const { locale, t } = useI18n()
 
 const categories    = ref([])
 const isScrolled    = ref(false)
@@ -210,15 +212,17 @@ const isLoggedIn = ref(!!localStorage.getItem('token'))
 const userRole   = ref(localStorage.getItem('userRole') || '')
 const userName   = computed(() => {
   const n = localStorage.getItem('userName') || localStorage.getItem('userEmail') || ''
-  return n.split(' ')[0].toUpperCase() || 'MON COMPTE'
+  return n.split(' ')[0].toUpperCase() || t('nav.myAccount')
 })
 const dashboardRoute = computed(() =>
   ({ admin: '/admin', talent: '/talent', entreprise: '/entreprise' }[userRole.value] || '/login')
 )
 
 // ── Langue ───────────────────────────────────────────────
-const locale = ref(localStorage.getItem('locale') || 'fr')
-function setLocale(l) { locale.value = l; localStorage.setItem('locale', l) }
+function setLocale(l) { 
+  locale.value = l
+  localStorage.setItem('locale', l)
+}
 
 // ── Favoris ──────────────────────────────────────────────
 const { favoris, loadFavoris, removeFavori } = useFavoris()

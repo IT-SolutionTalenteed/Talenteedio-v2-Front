@@ -12,21 +12,21 @@
           <div class="hero-content fade-in">
             <span class="hero-date">{{ eventDateRange }}</span>
             <h1 class="hero-title" v-if="event">{{ event.titre }}</h1>
-            <h1 class="hero-title" v-else>Africa Talent Summit <span class="orange">Luxembourg</span></h1>
+            <h1 class="hero-title" v-else>{{ t('hero.defaultTitle') }} <span class="orange">{{ t('hero.defaultLocation') }}</span></h1>
             <p class="hero-desc" v-if="event">
               {{ event.ville }}{{ event.pays ? ', ' + event.pays : '' }}
             </p>
-            <p class="hero-desc" v-else>La première plateforme européenne qui mobilise le Talent africain pour accélérer la performance des entreprises en Afrique.</p>
-            <p class="hero-cta-label">LES SOUSCRIPTIONS SONT OUVERTES – RÉSERVEZ VOTRE PLACE</p>
+            <p class="hero-desc" v-else>{{ t('hero.defaultDescription') }}</p>
+            <p class="hero-cta-label">{{ t('hero.subscriptionsOpen') }}</p>
             <router-link to="/register" class="btn btn--blue btn--lg hero-btn">
-              Souscrire <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
+              {{ t('hero.subscribe') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
             </router-link>
             <!-- Countdown -->
             <div class="countdown-inner" id="countdown">
-              <div class="cd-item"><div class="cd-box"><span class="cd-num">{{ cd.days }}</span><span class="cd-label">Jours</span></div></div>
-              <div class="cd-item"><div class="cd-box"><span class="cd-num">{{ cd.hours }}</span><span class="cd-label">Heures</span></div></div>
-              <div class="cd-item"><div class="cd-box"><span class="cd-num">{{ cd.minutes }}</span><span class="cd-label">Minutes</span></div></div>
-              <div class="cd-item"><div class="cd-box"><span class="cd-num">{{ cd.seconds }}</span><span class="cd-label">Secondes</span></div></div>
+              <div class="cd-item"><div class="cd-box"><span class="cd-num">{{ cd.days }}</span><span class="cd-label">{{ t('hero.days') }}</span></div></div>
+              <div class="cd-item"><div class="cd-box"><span class="cd-num">{{ cd.hours }}</span><span class="cd-label">{{ t('hero.hours') }}</span></div></div>
+              <div class="cd-item"><div class="cd-box"><span class="cd-num">{{ cd.minutes }}</span><span class="cd-label">{{ t('hero.minutes') }}</span></div></div>
+              <div class="cd-item"><div class="cd-box"><span class="cd-num">{{ cd.seconds }}</span><span class="cd-label">{{ t('hero.seconds') }}</span></div></div>
             </div>
           </div>
           <div class="hero-right"></div>
@@ -42,36 +42,36 @@
           <router-link to="/annonces" class="ql-card">
             <div class="ql-icon"><i class="fa-solid fa-briefcase"></i></div>
             <div class="ql-body">
-              <h3>Trouver un emploi</h3>
-              <p>Votre porte d'entrée vers des possibilités infinies et des opportunités de carrière passionnantes</p>
-              <span class="ql-link">Parcourir les emplois <i class="fa-solid fa-arrow-right"></i></span>
+              <h3>{{ t('quicklinks.findJob.title') }}</h3>
+              <p>{{ t('quicklinks.findJob.description') }}</p>
+              <span class="ql-link">{{ t('quicklinks.findJob.action') }} <i class="fa-solid fa-arrow-right"></i></span>
             </div>
           </router-link>
 
           <router-link :to="categories.length ? `/evenements/categorie/${categories[0].id}` : '/'" class="ql-card">
             <div class="ql-icon ql-icon--orange"><i class="fa-solid fa-calendar-days"></i></div>
             <div class="ql-body">
-              <h3>Événements</h3>
-              <p>Participez aux événements RH et développez votre réseau professionnel</p>
-              <span class="ql-link">Découvrir <i class="fa-solid fa-arrow-right"></i></span>
+              <h3>{{ t('quicklinks.events.title') }}</h3>
+              <p>{{ t('quicklinks.events.description') }}</p>
+              <span class="ql-link">{{ t('quicklinks.events.action') }} <i class="fa-solid fa-arrow-right"></i></span>
             </div>
           </router-link>
 
           <router-link to="/blog" class="ql-card">
             <div class="ql-icon ql-icon--green"><i class="fa-solid fa-newspaper"></i></div>
             <div class="ql-body">
-              <h3>Articles</h3>
-              <p>Actualités RH, conseils carrière et tendances du marché du travail africain</p>
-              <span class="ql-link">Lire <i class="fa-solid fa-arrow-right"></i></span>
+              <h3>{{ t('quicklinks.articles.title') }}</h3>
+              <p>{{ t('quicklinks.articles.description') }}</p>
+              <span class="ql-link">{{ t('quicklinks.articles.action') }} <i class="fa-solid fa-arrow-right"></i></span>
             </div>
           </router-link>
 
           <router-link :to="isLoggedIn && userRole === 'talent' ? '/talent' : '/login'" class="ql-card ql-card--featured">
             <div class="ql-icon ql-icon--white"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
             <div class="ql-body">
-              <h3>Matching Profile</h3>
-              <p>Trouvez les opportunités qui correspondent parfaitement à votre profil et vos compétences</p>
-              <span class="ql-link">Découvrir mon match <i class="fa-solid fa-arrow-right"></i></span>
+              <h3>{{ t('quicklinks.matching.title') }}</h3>
+              <p>{{ t('quicklinks.matching.description') }}</p>
+              <span class="ql-link">{{ t('quicklinks.matching.action') }} <i class="fa-solid fa-arrow-right"></i></span>
             </div>
           </router-link>
 
@@ -83,9 +83,9 @@
     <section v-if="event && event.entreprises && event.entreprises.length" class="section-partners">
       <div class="container">
         <div class="partners-header fade-in">
-          <span class="label-blue">Ils recrutent</span>
-          <h2>Entreprises Participantes</h2>
-          <p>Les entreprises qui recrutent lors de cet événement</p>
+          <span class="label-blue">{{ t('partners.label') }}</span>
+          <h2>{{ t('partners.title') }}</h2>
+          <p>{{ t('partners.description') }}</p>
         </div>
         <div class="partners-grid fade-in">
           <router-link
@@ -107,7 +107,7 @@
         </div>
         <div class="partners-cta fade-in">
           <router-link to="/entreprises" class="btn btn--blue">
-            Voir toutes les entreprises <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
+            {{ t('partners.viewAll') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
           </router-link>
         </div>
       </div>
@@ -115,11 +115,11 @@
 
     <!-- ══ TRIPLE ANCRAGE ══ -->
     <section class="section-triple">
-      <div class="triple-watermark">Impact Systémique</div>
+      <div class="triple-watermark">{{ t('triple.watermark') }}</div>
       <div class="container">
         <div class="triple-header fade-in">
-          <h2>Triple Ancrage Stratégique</h2>
-          <p>Pour garantir un impact systémique et durable, le sommet repose sur trois piliers indissociables, pensés pour transformer l'intention en action :</p>
+          <h2>{{ t('triple.title') }}</h2>
+          <p>{{ t('triple.description') }}</p>
         </div>
         <div class="triple-cards">
           <!-- Articles dynamiques (3 premiers) -->
@@ -135,7 +135,7 @@
                 <h3>{{ article.title }}</h3>
                 <p>{{ truncate(stripHtml(article.content), 120) }}</p>
                 <router-link to="/login" style="color:var(--blue);font-weight:600;font-size:14px;margin-top:8px;display:inline-block;">
-                  Lire la suite <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
+                  {{ t('triple.readMore') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
                 </router-link>
               </div>
             </div>
@@ -147,21 +147,21 @@
                 <img src="https://africatalentsummit.com/wp-content/uploads/2026/02/staff-tech-accounting-discussion-office-development-feedback-budget-communication-business-project-group-collaboration-financial-firm-people-planning-with-team-scaled.jpg"
                      alt="Think Tank" loading="lazy">
               </div>
-              <div class="triple-card-body"><h3>Think Tank</h3><p>Un Comité Scientifique international composé de chercheurs, experts RH et décideurs produit chaque année un Livre Blanc de référence.</p></div>
+              <div class="triple-card-body"><h3>{{ t('triple.thinkTank.title') }}</h3><p>{{ t('triple.thinkTank.description') }}</p></div>
             </div>
             <div class="triple-card fade-in">
               <div class="triple-card-img">
                 <img src="https://africatalentsummit.com/wp-content/uploads/2026/02/all-their-input-is-vital-when-it-comes-to-decision-2026-01-09-10-57-28-utc-scaled.jpg"
                      alt="Hub de Recrutement Premium" loading="lazy">
               </div>
-              <div class="triple-card-body"><h3>Hub de Recrutement Premium</h3><p>Une plateforme de matching direct entre les entreprises en quête de compétences critiques et les talents de la diaspora.</p></div>
+              <div class="triple-card-body"><h3>{{ t('triple.recruitmentHub.title') }}</h3><p>{{ t('triple.recruitmentHub.description') }}</p></div>
             </div>
             <div class="triple-card fade-in">
               <div class="triple-card-img">
                 <img src="https://africatalentsummit.com/wp-content/uploads/2026/02/recording-the-facts-shot-of-a-group-of-people-sit-2026-01-09-11-19-42-utc-scaled.jpg"
                      alt="Levier de Diplomatie Économique" loading="lazy">
               </div>
-              <div class="triple-card-body"><h3>Levier de Diplomatie Économique</h3><p>Un cadre privilégié pour la signature d'accords bilatéraux et le renforcement des partenariats institutionnels Europe-Afrique.</p></div>
+              <div class="triple-card-body"><h3>{{ t('triple.diplomacy.title') }}</h3><p>{{ t('triple.diplomacy.description') }}</p></div>
             </div>
           </template>
         </div>
@@ -172,9 +172,9 @@
     <section id="offres" style="padding:80px 0;background:var(--light-bg);">
       <div class="container">
         <div class="roles-header fade-in" style="text-align:center;margin-bottom:48px;">
-          <span class="label-blue">Opportunités</span>
-          <h2>Offres d'emploi récentes</h2>
-          <p>Découvrez les dernières opportunités disponibles sur la plateforme</p>
+          <span class="label-blue">{{ t('jobOffers.label') }}</span>
+          <h2>{{ t('jobOffers.title') }}</h2>
+          <p>{{ t('jobOffers.description') }}</p>
         </div>
         <div v-if="offres.length" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:28px;">
           <div v-for="offre in offres" :key="offre.id" class="fade-in"
@@ -201,16 +201,16 @@
               <span style="font-size:13px;color:var(--body-text);">
                 <i class="fa-solid fa-location-dot" style="color:var(--orange);margin-right:4px;"></i>{{ offre.localisation || '—' }}
               </span>
-              <router-link to="/login" class="btn btn--blue btn--sm">Postuler</router-link>
+              <router-link to="/login" class="btn btn--blue btn--sm">{{ t('jobOffers.apply') }}</router-link>
             </div>
           </div>
         </div>
         <div v-else style="text-align:center;color:var(--body-text);padding:40px 0;">
-          Aucune offre disponible pour le moment.
+          {{ t('jobOffers.noOffers') }}
         </div>
         <div style="text-align:center;margin-top:40px;">
           <router-link to="/login" class="btn btn--blue btn--lg">
-            Voir toutes les offres <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
+            {{ t('jobOffers.viewAll') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
           </router-link>
         </div>
       </div>
@@ -233,25 +233,25 @@
           <span>{{ event.ville }}{{ event.pays ? ', ' + event.pays : '' }}</span>
         </div>
         <div class="event-countdown">
-          <div class="ecd-item"><span class="ecd-num">{{ pad(cd.days, 3) }}</span><span class="ecd-label">Jours</span></div>
-          <div class="ecd-item"><span class="ecd-num">{{ pad(cd.hours, 2) }}</span><span class="ecd-label">Heures</span></div>
-          <div class="ecd-item"><span class="ecd-num">{{ pad(cd.minutes, 2) }}</span><span class="ecd-label">Minutes</span></div>
-          <div class="ecd-item"><span class="ecd-num">{{ pad(cd.seconds, 2) }}</span><span class="ecd-label">Secondes</span></div>
+          <div class="ecd-item"><span class="ecd-num">{{ pad(cd.days, 3) }}</span><span class="ecd-label">{{ t('hero.days') }}</span></div>
+          <div class="ecd-item"><span class="ecd-num">{{ pad(cd.hours, 2) }}</span><span class="ecd-label">{{ t('hero.hours') }}</span></div>
+          <div class="ecd-item"><span class="ecd-num">{{ pad(cd.minutes, 2) }}</span><span class="ecd-label">{{ t('hero.minutes') }}</span></div>
+          <div class="ecd-item"><span class="ecd-num">{{ pad(cd.seconds, 2) }}</span><span class="ecd-label">{{ t('hero.seconds') }}</span></div>
         </div>
         <router-link to="/register" class="btn btn--blue btn--lg" style="position:relative;z-index:2;">
-          Participez <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
+          {{ t('eventSection.participate') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
         </router-link>
       </div>
     </section>
 
     <!-- ══ CTA ══ -->
     <section class="section-cta">
-      <div class="cta-watermark">Participez</div>
+      <div class="cta-watermark">{{ t('cta.watermark') }}</div>
       <div class="container">
-        <span class="cta-label">Rejoignez-nous</span>
-        <h2>Entreprises, talents, institutions,<br>partenaires</h2>
+        <span class="cta-label">{{ t('cta.label') }}</span>
+        <h2 v-html="t('cta.title')"></h2>
         <router-link to="/register" class="btn btn--blue btn--lg">
-          Participez <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
+          {{ t('cta.action') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
         </router-link>
       </div>
     </section>
@@ -267,7 +267,7 @@
               <div class="footer-logo">
                 <img src="/logo.png" alt="Talenteed" width="180">
               </div>
-              <p>L'Africa Talent Summit Luxembourg est la première plateforme stratégique européenne dédiée à la mobilisation de l'intelligence collective et des compétences rares de la diaspora, afin d'accélérer la performance des entreprises en Afrique.</p>
+              <p>{{ t('footer.description') }}</p>
               <div class="footer-socials">
                 <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
                 <a href="https://x.com/" target="_blank" rel="noopener" aria-label="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
@@ -276,25 +276,25 @@
               </div>
             </div>
             <div class="footer-col">
-              <h4>Contactez-nous</h4>
+              <h4>{{ t('footer.contactUs') }}</h4>
               <div class="contact-item"><i class="fa-solid fa-phone"></i><a href="tel:+3522060162">+3522060162</a></div>
               <div class="contact-item"><i class="fa-solid fa-location-dot"></i><span>57 avenue de la Gare, L-1611 Luxembourg</span></div>
               <div class="contact-item"><i class="fa-solid fa-envelope"></i><a href="mailto:contact@africatalentsummit.com">contact@africatalentsummit.com</a></div>
             </div>
             <div class="footer-col">
-              <h4>Rejoignez-nous</h4>
+              <h4>{{ t('footer.joinUs') }}</h4>
               <ul>
-                <li><router-link to="/register"><i class="fa-solid fa-chevron-right"></i> Devenir Talent</router-link></li>
-                <li><router-link to="/login"><i class="fa-solid fa-chevron-right"></i> Se connecter</router-link></li>
-                <li><a href="mailto:contact@africatalentsummit.com"><i class="fa-solid fa-chevron-right"></i> Presse et Média</a></li>
-                <li><a href="mailto:contact@africatalentsummit.com"><i class="fa-solid fa-chevron-right"></i> Partenariats</a></li>
+                <li><router-link to="/register"><i class="fa-solid fa-chevron-right"></i> {{ t('footer.becomeTalent') }}</router-link></li>
+                <li><router-link to="/login"><i class="fa-solid fa-chevron-right"></i> {{ t('nav.login') }}</router-link></li>
+                <li><a href="mailto:contact@africatalentsummit.com"><i class="fa-solid fa-chevron-right"></i> {{ t('footer.pressMedia') }}</a></li>
+                <li><a href="mailto:contact@africatalentsummit.com"><i class="fa-solid fa-chevron-right"></i> {{ t('footer.partnerships') }}</a></li>
               </ul>
             </div>
             <div class="footer-col">
-              <h4>Informations légales</h4>
+              <h4>{{ t('footer.legalInfo') }}</h4>
               <ul>
-                <li><router-link to="/terms-and-conditions"><i class="fa-solid fa-chevron-right"></i> Conditions générales</router-link></li>
-                <li><router-link to="/privacy-policy"><i class="fa-solid fa-chevron-right"></i> Confidentialité</router-link></li>
+                <li><router-link to="/terms-and-conditions"><i class="fa-solid fa-chevron-right"></i> {{ t('footer.terms') }}</router-link></li>
+                <li><router-link to="/privacy-policy"><i class="fa-solid fa-chevron-right"></i> {{ t('footer.privacy') }}</router-link></li>
               </ul>
             </div>
           </div>
@@ -302,7 +302,7 @@
       </div>
       <div class="footer-bottom">
         <div class="container">
-          <p>© {{ new Date().getFullYear() }} Solution Talenteed SARL R.C.S. Luxembourg B 255 801. Tous droits réservés. Africa Talent Summit Luxembourg est une marque déposée.</p>
+          <p>© {{ new Date().getFullYear() }} {{ t('footer.copyright') }}</p>
         </div>
       </div>
     </footer>
@@ -312,9 +312,11 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
 
+const { t, locale } = useI18n()
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
 const event      = ref(null)
@@ -323,6 +325,10 @@ const categories = ref([])
 const offres   = ref([])
 const cd       = ref({ days: '000', hours: '00', minutes: '00', seconds: '00' })
 let   timer    = null
+
+// Auth state
+const isLoggedIn = computed(() => !!localStorage.getItem('token'))
+const userRole = computed(() => localStorage.getItem('userRole') || '')
 
 // ── Chargement des données ─────────────────────────────────
 onMounted(async () => {
@@ -388,9 +394,10 @@ const heroStyle = computed(() => {
 // ── Computed ──────────────────────────────────────────────
 const eventDateRange = computed(() => {
   if (!event.value) return '5 - 6 Novembre 2026'
+  const lang = locale.value === 'en' ? 'en-US' : 'fr-FR'
   const d = (str) => {
     const dt = new Date(str)
-    return dt.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+    return dt.toLocaleDateString(lang, { day: 'numeric', month: 'long', year: 'numeric' })
   }
   if (event.value.date_debut && event.value.date_fin) {
     return `${d(event.value.date_debut)} – ${d(event.value.date_fin)}`
@@ -418,7 +425,8 @@ function stripHtml(html) {
 
 function formatDate(str) {
   if (!str) return ''
-  return new Date(str).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+  const lang = locale.value === 'en' ? 'en-US' : 'fr-FR'
+  return new Date(str).toLocaleDateString(lang, { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
 function initFadeIn() {
