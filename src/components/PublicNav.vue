@@ -6,21 +6,20 @@
         <div class="topbar-left">
           <span class="topbar-dot"></span>
           <span class="topbar-label">{{ featuredEvent.titre }}</span>
-          <div class="countdown-blocks">
-            <div class="cd-block"><span class="cd-num">{{ countdown.days }}</span><span class="cd-unit">J</span></div>
-            <span class="cd-sep">:</span>
-            <div class="cd-block"><span class="cd-num">{{ countdown.hours }}</span><span class="cd-unit">H</span></div>
-            <span class="cd-sep">:</span>
-            <div class="cd-block"><span class="cd-num">{{ countdown.minutes }}</span><span class="cd-unit">M</span></div>
-            <span class="cd-sep">:</span>
-            <div class="cd-block"><span class="cd-num">{{ countdown.seconds }}</span><span class="cd-unit">S</span></div>
-          </div>
         </div>
-        <div class="topbar-right">
-          <a href="https://www.facebook.com/" target="_blank" rel="noopener"><i class="fa-brands fa-facebook-f"></i></a>
-          <a href="https://x.com/"            target="_blank" rel="noopener"><i class="fa-brands fa-x-twitter"></i></a>
-          <a href="https://www.linkedin.com/" target="_blank" rel="noopener"><i class="fa-brands fa-linkedin-in"></i></a>
-          <a href="https://wa.me/"            target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i></a>
+        <div class="countdown-blocks">
+          <div class="cd-block"><span class="cd-num">{{ countdown.days }}</span><span class="cd-unit">J</span></div>
+          <span class="cd-sep">:</span>
+          <div class="cd-block"><span class="cd-num">{{ countdown.hours }}</span><span class="cd-unit">H</span></div>
+          <span class="cd-sep">:</span>
+          <div class="cd-block"><span class="cd-num">{{ countdown.minutes }}</span><span class="cd-unit">M</span></div>
+          <span class="cd-sep">:</span>
+          <div class="cd-block"><span class="cd-num">{{ countdown.seconds }}</span><span class="cd-unit">S</span></div>
+        </div>
+        <div class="cta">
+          <router-link :to="`/evenements/${featuredEvent.id}`" class="topbar-link">
+            En savoir plus
+          </router-link>
         </div>
       </div>
     </div>
@@ -31,112 +30,74 @@
         <div class="header-inner">
 
           <!-- Logo -->
-          <router-link to="/" class="site-logo" @click="closeAll">
+          <router-link to="/" class="site-logo" @click="menuOpen = false">
             <img src="/logo.png" alt="Talenteed" width="148" height="52">
             <span class="site-tagline">Le média alternatif pour les RH</span>
           </router-link>
 
           <!-- Nav desktop -->
           <nav class="site-nav" :class="{ open: menuOpen }">
-
-            <!-- Bouton fermer mobile -->
-            <button class="nav-close" @click="menuOpen = false"><i class="fa-solid fa-xmark"></i></button>
-
             <ul>
               <li>
-                <router-link to="/" class="nav-link" exact-active-class="nav-link--active" @click="closeAll">
-                  Accueil
-                </router-link>
+                <router-link to="/" exact-active-class="active" @click="menuOpen = false">ACCUEIL</router-link>
               </li>
 
-              <!-- Dropdown Annonces -->
-              <li class="has-drop" :class="{ 'drop-open': activeDrop === 'annonces' }">
-                <button class="nav-link nav-link--drop" @click.stop="toggleDrop('annonces')">
-                  Annonces <i class="fa-solid fa-chevron-down drop-chevron"></i>
-                </button>
-                <div class="drop-panel">
-                  <router-link to="/annonces" class="drop-item" @click="closeAll">
-                    <div class="drop-item-icon di--blue"><i class="fa-solid fa-briefcase"></i></div>
-                    <div>
-                      <strong>Offres d'emploi</strong>
-                      <span>Trouvez votre prochain poste</span>
-                    </div>
+              <!-- Mega menu Annonces -->
+              <li class="has-mega">
+                <a href="#" @click.prevent class="mega-trigger">
+                  ANNONCES <i class="fa-solid fa-chevron-down nav-chevron"></i>
+                </a>
+                <div class="mega-menu">
+                  <router-link to="/annonces" class="mega-item" @click="menuOpen = false">
+                    <i class="fa-solid fa-briefcase mega-icon"></i>
+                    <div><strong>Jobs</strong><small>Toutes les offres d'emploi</small></div>
                   </router-link>
-                  <router-link to="/entreprises" class="drop-item" @click="closeAll">
-                    <div class="drop-item-icon di--violet"><i class="fa-solid fa-building"></i></div>
-                    <div>
-                      <strong>Entreprises</strong>
-                      <span>Découvrez nos partenaires</span>
-                    </div>
+                  <router-link to="/entreprises" class="mega-item" @click="menuOpen = false">
+                    <i class="fa-solid fa-building mega-icon"></i>
+                    <div><strong>Entreprises</strong><small>Les entreprises partenaires</small></div>
                   </router-link>
                 </div>
               </li>
 
-              <!-- Dropdown Événements -->
-              <li class="has-drop" :class="{ 'drop-open': activeDrop === 'evenements' }">
-                <button class="nav-link nav-link--drop" @click.stop="toggleDrop('evenements')">
-                  Événements <i class="fa-solid fa-chevron-down drop-chevron"></i>
-                </button>
-                <div class="drop-panel">
+              <!-- Mega menu Événements -->
+              <li class="has-mega">
+                <a href="#" @click.prevent class="mega-trigger">
+                  ÉVÉNEMENTS <i class="fa-solid fa-chevron-down nav-chevron"></i>
+                </a>
+                <div class="mega-menu">
                   <template v-if="categories.length">
                     <router-link
                       v-for="cat in categories" :key="cat.id"
                       :to="`/evenements/categorie/${cat.id}`"
-                      class="drop-item"
-                      @click="closeAll"
+                      class="mega-item"
+                      @click="menuOpen = false"
                     >
-                      <div class="drop-item-icon di--orange"><i class="fa-solid fa-calendar-days"></i></div>
-                      <div>
-                        <strong>{{ cat.titre }}</strong>
-                        <span>Voir les événements</span>
-                      </div>
+                      <i class="fa-solid fa-calendar-days mega-icon"></i>
+                      <div><strong>{{ cat.titre }}</strong></div>
                     </router-link>
                   </template>
-                  <div v-else class="drop-empty">
-                    <i class="fa-solid fa-calendar-xmark"></i> Aucun événement
+                  <div v-else class="mega-item mega-item--empty">
+                    <i class="fa-solid fa-calendar-xmark mega-icon"></i>
+                    <div><strong>Aucun événement disponible</strong></div>
                   </div>
                 </div>
               </li>
 
               <li>
-                <router-link to="/blog" class="nav-link" active-class="nav-link--active" @click="closeAll">
-                  Articles
-                </router-link>
+                <router-link to="/blog" active-class="active" @click="menuOpen = false">ARTICLES</router-link>
               </li>
             </ul>
-
-            <!-- Mobile : actions auth dans le menu -->
-            <div class="nav-mobile-actions">
-              <button class="lang-pill lang-pill--mobile" @click="toggleLocale">
-                <i class="fa-solid fa-globe"></i>
-                {{ locale === 'fr' ? 'Français' : 'English' }}
-                <i class="fa-solid fa-chevron-down" style="font-size:9px;"></i>
-              </button>
-              <template v-if="!isLoggedIn">
-                <router-link to="/register" class="btn btn--outline-white" @click="closeAll">Souscription</router-link>
-                <router-link to="/login"    class="btn btn--orange-solid"  @click="closeAll">Connexion</router-link>
-              </template>
-              <template v-else>
-                <router-link :to="dashboardRoute" class="btn btn--outline-white" @click="closeAll">Dashboard</router-link>
-              </template>
-            </div>
           </nav>
 
-          <!-- Actions droite (desktop) -->
-          <div class="header-actions">
+          <!-- Actions droite -->
+          <div class="header-btns">
 
             <!-- Favoris (talent) -->
             <div v-if="isLoggedIn && userRole === 'talent'" class="favori-wrap" ref="favoriWrapRef">
-              <button
-                class="fav-btn"
-                :class="{ 'fav-btn--active': favoris.length > 0 }"
-                @click="favoriOpen = !favoriOpen"
-                aria-label="Mes favoris"
-              >
+              <button class="fav-btn" :class="{ 'fav-btn--active': favoris.length > 0 }" @click="favoriOpen = !favoriOpen" aria-label="Mes favoris">
                 <i :class="favoris.length > 0 ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
                 <span v-if="favoris.length" class="fav-badge">{{ favoris.length > 9 ? '9+' : favoris.length }}</span>
               </button>
-
               <Transition name="drop-anim">
                 <div v-if="favoriOpen" class="favori-dropdown">
                   <div class="favori-head">
@@ -170,30 +131,28 @@
             </div>
 
             <!-- Switcher langue -->
-            <div class="lang-wrap" ref="langWrapRef">
-              <button class="lang-pill" @click.stop="langOpen = !langOpen">
-                <i class="fa-solid fa-globe"></i>
+            <div class="has-lang">
+              <button class="lang-trigger">
+                <span>{{ locale === 'fr' ? '🇫🇷' : '🇬🇧' }}</span>
                 {{ locale === 'fr' ? 'Français' : 'English' }}
-                <i class="fa-solid fa-chevron-down lang-chevron" :class="{ open: langOpen }"></i>
+                <i class="fa-solid fa-chevron-down nav-chevron"></i>
               </button>
-              <Transition name="drop-anim">
-                <div v-if="langOpen" class="lang-dropdown">
-                  <button class="lang-option" :class="{ active: locale === 'fr' }" @click="setLocale('fr')">
-                    <span>🇫🇷</span> Français
-                    <i v-if="locale === 'fr'" class="fa-solid fa-check"></i>
-                  </button>
-                  <button class="lang-option" :class="{ active: locale === 'en' }" @click="setLocale('en')">
-                    <span>🇬🇧</span> English
-                    <i v-if="locale === 'en'" class="fa-solid fa-check"></i>
-                  </button>
-                </div>
-              </Transition>
+              <div class="lang-menu">
+                <button class="lang-item" :class="{ active: locale === 'fr' }" @click="setLocale('fr')">
+                  <span>🇫🇷</span> Français
+                  <i v-if="locale === 'fr'" class="fa-solid fa-check lang-check"></i>
+                </button>
+                <button class="lang-item" :class="{ active: locale === 'en' }" @click="setLocale('en')">
+                  <span>🇬🇧</span> English
+                  <i v-if="locale === 'en'" class="fa-solid fa-check lang-check"></i>
+                </button>
+              </div>
             </div>
 
             <!-- Non-connecté -->
             <template v-if="!isLoggedIn">
-              <router-link to="/register" class="btn btn--outline">Souscription</router-link>
-              <router-link to="/login"    class="btn btn--orange">Connexion</router-link>
+              <router-link to="/register" class="btn btn--orange btn--sm">SOUSCRIPTION</router-link>
+              <router-link to="/login"    class="btn btn--blue   btn--sm">SE CONNECTER</router-link>
             </template>
 
             <!-- Connecté : dropdown utilisateur -->
@@ -219,15 +178,12 @@
           </div>
 
           <!-- Burger mobile -->
-          <button class="burger" :class="{ open: menuOpen }" @click="menuOpen = !menuOpen" aria-label="Menu">
+          <button class="menu-toggle" :class="{ open: menuOpen }" @click="menuOpen = !menuOpen" aria-label="Menu">
             <span></span><span></span><span></span>
           </button>
 
         </div>
       </div>
-
-      <!-- Overlay (ferme les dropdowns) -->
-      <div v-if="activeDrop" class="nav-overlay" @click="closeAll"></div>
     </header>
   </div>
 </template>
@@ -238,47 +194,36 @@ import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 import { useFavoris } from '../composables/useFavoris.js'
 
-const apiBase    = import.meta.env.VITE_API_URL || 'http://localhost:8000'
-const route      = useRoute()
-const router     = useRouter()
+const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const route   = useRoute()
+const router  = useRouter()
 
 const categories    = ref([])
 const isScrolled    = ref(false)
 const menuOpen      = ref(false)
-const activeDrop    = ref(null)
 const featuredEvent = ref(null)
 const countdown     = ref({ days: '00', hours: '00', minutes: '00', seconds: '00' })
 let   countdownTimer = null
 
+// ── Auth ─────────────────────────────────────────────────
 const isLoggedIn = ref(!!localStorage.getItem('token'))
 const userRole   = ref(localStorage.getItem('userRole') || '')
 const userName   = computed(() => {
   const n = localStorage.getItem('userName') || localStorage.getItem('userEmail') || ''
   return n.split(' ')[0].toUpperCase() || 'MON COMPTE'
 })
-
 const dashboardRoute = computed(() =>
   ({ admin: '/admin', talent: '/talent', entreprise: '/entreprise' }[userRole.value] || '/login')
 )
 
-// ── Langue ──────────────────────────────────────────────
-const locale   = ref(localStorage.getItem('locale') || 'fr')
-const langOpen  = ref(false)
-const langWrapRef = ref(null)
+// ── Langue ───────────────────────────────────────────────
+const locale = ref(localStorage.getItem('locale') || 'fr')
+function setLocale(l) { locale.value = l; localStorage.setItem('locale', l) }
 
-function setLocale(l) { locale.value = l; localStorage.setItem('locale', l); langOpen.value = false }
-function toggleLocale() { setLocale(locale.value === 'fr' ? 'en' : 'fr') }
-
-// ── Dropdowns ────────────────────────────────────────────
-function toggleDrop(name) { activeDrop.value = activeDrop.value === name ? null : name }
-function closeAll() { activeDrop.value = null; menuOpen.value = false; favoriOpen.value = false; langOpen.value = false; userOpen.value = false }
-
-watch(() => route.fullPath, () => {
-  isLoggedIn.value = !!localStorage.getItem('token')
-  userRole.value   = localStorage.getItem('userRole') || ''
-  if (isLoggedIn.value && userRole.value === 'talent') loadFavoris()
-  closeAll()
-})
+// ── Favoris ──────────────────────────────────────────────
+const { favoris, loadFavoris, removeFavori } = useFavoris()
+const favoriOpen    = ref(false)
+const favoriWrapRef = ref(null)
 
 // ── User dropdown ────────────────────────────────────────
 const userOpen    = ref(false)
@@ -289,21 +234,24 @@ function logout() {
   localStorage.removeItem('userRole')
   localStorage.removeItem('userName')
   localStorage.removeItem('userEmail')
-  closeAll()
+  userOpen.value = false
   router.push('/login')
 }
 
-// ── Favoris ──────────────────────────────────────────────
-const { favoris, loadFavoris, removeFavori } = useFavoris()
-const favoriOpen    = ref(false)
-const favoriWrapRef = ref(null)
+// ── Sync auth sur navigation ──────────────────────────────
+watch(() => route.fullPath, () => {
+  isLoggedIn.value = !!localStorage.getItem('token')
+  userRole.value   = localStorage.getItem('userRole') || ''
+  if (isLoggedIn.value && userRole.value === 'talent') loadFavoris()
+  menuOpen.value = false
+  favoriOpen.value = false
+  userOpen.value = false
+})
 
 // ── Click outside ────────────────────────────────────────
 function onClickOutside(e) {
   if (favoriWrapRef.value && !favoriWrapRef.value.contains(e.target)) favoriOpen.value = false
-  if (langWrapRef.value   && !langWrapRef.value.contains(e.target))   langOpen.value   = false
   if (userWrapRef.value   && !userWrapRef.value.contains(e.target))   userOpen.value   = false
-  if (!e.target.closest('.has-drop')) activeDrop.value = null
 }
 
 // ── Scroll ───────────────────────────────────────────────
@@ -345,173 +293,111 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* ── Topbar ─────────────────────────────────────────── */
-.topbar {
-  background: #040a5d; height: 34px;
-  display: flex; align-items: center;
-  font-size: 11px; color: rgba(255,255,255,.6);
-}
-.topbar .container { display: flex; justify-content: space-between; align-items: center; }
-.topbar-left  { display: flex; align-items: center; gap: 8px; }
-.topbar-right { display: flex; gap: 12px; }
-.topbar-right a { color: rgba(255,255,255,.45); font-size: 11px; transition: color .15s; }
+/* ── Topbar ──────────────────────────────────────────── */
+.topbar { background: #040a5d; height: 52px; color: rgba(255,255,255,.6); display: flex; align-items: center; }
+.topbar .container { display: flex; align-items: center; justify-content: space-between; gap: 24px; width: 100%; }
+.topbar-left  { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.topbar-right { display: flex; align-items: center; justify-content: flex-end; flex: 1; }
+.topbar-right a { color: rgba(255,255,255,.5); font-size: 13px; transition: color .15s; text-decoration: none; }
 .topbar-right a:hover { color: #f07c00; }
-.topbar-dot {
-  width: 5px; height: 5px; border-radius: 50%; background: #f07c00;
-  box-shadow: 0 0 5px #f07c00; animation: blink 2s infinite; flex-shrink: 0;
-}
+.topbar-dot { width: 8px; height: 8px; border-radius: 50%; background: #f07c00; box-shadow: 0 0 7px #f07c00; animation: blink 2s infinite; flex-shrink: 0; }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
-.topbar-label { color: rgba(255,255,255,.75); font-weight: 600; max-width: 240px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.countdown-blocks { display: flex; align-items: center; gap: 2px; }
-.cd-block  { display: flex; align-items: baseline; gap: 1px; }
-.cd-num    { font-size: 12px; font-weight: 700; color: #fff; min-width: 16px; text-align: center; }
-.cd-unit   { font-size: 8px; font-weight: 700; color: #f07c00; }
-.cd-sep    { font-size: 11px; color: rgba(255,255,255,.3); margin: 0 1px; }
+.topbar-label { color: #fff; font-weight: 700; font-size: 15px; max-width: 340px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.countdown-blocks { display: flex; align-items: center; gap: 6px; }
+.cd-block { display: flex; flex-direction: row; align-items: center; gap: 3px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); border-radius: 6px; padding: 5px 12px; }
+.cd-num   { font-size: 20px; font-weight: 800; color: #fff; line-height: 1; }
+.cd-unit  { font-size: 13px; font-weight: 700; color: #f07c00; text-transform: uppercase; letter-spacing: 1px; }
+.cd-sep   { font-size: 20px; font-weight: 800; color: rgba(255,255,255,.4); margin: 0 2px; padding-bottom: 8px; }
+.topbar-link { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 20px; background: #f07c00; color: #fff; font-size: 12px; font-weight: 700; text-decoration: none; white-space: nowrap; transition: background .15s; }
+.topbar-link:hover { background: #d96b00; }
 
-/* ── Header ─────────────────────────────────────────── */
+/* ── Header ──────────────────────────────────────────── */
 .site-header {
-  background: #fff;
-  position: sticky; top: 0; z-index: 200;
-  border-bottom: 1.5px solid #f0f2f8;
-  transition: box-shadow .25s, border-color .25s;
+  background: #fff; position: sticky; top: 0; z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+  transition: box-shadow .25s;
 }
-.site-header.scrolled { box-shadow: 0 4px 24px rgba(4,10,93,.09); border-color: transparent; }
-
-.header-inner {
-  display: flex; align-items: center; height: 64px; gap: 0;
-}
+.site-header.scrolled { box-shadow: 0 4px 24px rgba(4,10,93,.12); }
+.header-inner { display: flex; align-items: center; height: 80px; gap: 20px; }
 
 /* Logo */
-.site-logo {
-  display: flex; flex-direction: column; gap: 1px;
-  text-decoration: none; flex-shrink: 0; margin-right: 36px;
-}
+.site-logo { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-decoration: none; flex-shrink: 0; }
+.site-logo img { height: 52px; width: auto; }
 .site-tagline { font-size: 10px; font-weight: 700; color: #f07c00; letter-spacing: .3px; position: relative; top: -5px; }
 
-/* ── Nav ─────────────────────────────────────────────── */
-.site-nav { display: flex; flex: 1; }
-.site-nav ul { display: flex; list-style: none; margin: 0; padding: 0; align-items: center; gap: 2px; }
-
-.nav-link {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 6px 14px; border-radius: 8px;
-  font-size: 14px; font-weight: 500; color: #374151;
-  text-decoration: none; background: none; border: none;
-  cursor: pointer; white-space: nowrap;
-  transition: color .15s, background .15s;
+/* Nav */
+.site-nav { flex: 1; display: flex; justify-content: center; }
+.site-nav ul { display: flex; gap: 4px; align-items: center; margin: 0; padding: 0; }
+.site-nav a {
+  font-size: 13px; font-weight: 600; color: #040a5d;
+  padding: 6px 12px; border-radius: 8px;
+  text-decoration: none; text-transform: uppercase; letter-spacing: .3px;
+  white-space: nowrap; transition: color .15s, background .15s;
 }
-.nav-link:hover          { color: #192bc2; background: #f0f3ff; }
-.nav-link--active        { color: #192bc2; background: #eef1fd; font-weight: 600; }
-.nav-link--drop          { user-select: none; }
-.drop-open .nav-link--drop { color: #192bc2; background: #eef1fd; }
+.site-nav a:hover, .site-nav a.active { color: #192bc2; background: rgba(58,155,255,.06); }
 
-.drop-chevron {
-  font-size: 9px; color: #9ca3af;
-  transition: transform .2s, color .2s;
+/* Mega menu */
+.has-mega { position: relative; }
+.mega-trigger { cursor: pointer; }
+.mega-menu {
+  display: none;
+  position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+  background: #fff; border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.14);
+  padding: 10px; min-width: 240px; z-index: 200;
+  border-top: 3px solid #192bc2;
+  flex-direction: column; gap: 4px;
 }
-.drop-open .drop-chevron { transform: rotate(180deg); color: #192bc2; }
+.has-mega:hover .mega-menu,
+.has-mega:focus-within .mega-menu { display: flex; }
+.mega-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 10px 14px; border-radius: 8px;
+  color: #040a5d; text-decoration: none; transition: background .15s;
+}
+.mega-item:hover { background: #f5f7fa; }
+.mega-item strong { display: block; font-size: 14px; font-weight: 700; color: #040a5d; }
+.mega-item small  { display: block; font-size: 12px; color: #6b7280; margin-top: 2px; }
+.mega-item--empty { opacity: .6; cursor: default; pointer-events: none; }
+.mega-icon { font-size: 18px; color: #192bc2; margin-top: 2px; flex-shrink: 0; }
+.nav-chevron { font-size: 9px; margin-left: 3px; vertical-align: middle; transition: transform .2s; }
+.has-mega:hover .nav-chevron { transform: rotate(180deg); }
 
-/* ── Dropdown panel ──────────────────────────────────── */
-.has-drop { position: relative; }
-
-.drop-panel {
-  position: absolute; top: calc(100% + 10px); left: 50%;
-  transform: translateX(-50%);
-  background: #fff; border-radius: 14px;
-  box-shadow: 0 8px 40px rgba(4,10,93,.13), 0 1px 4px rgba(0,0,0,.05);
-  border: 1px solid #eef0f8;
-  padding: 8px; min-width: 280px; z-index: 300;
-  /* hidden by default */
-  opacity: 0; pointer-events: none;
-  transform: translateX(-50%) translateY(-8px);
-  transition: opacity .18s, transform .18s;
-}
-.drop-panel::before {
-  content: ''; position: absolute; top: -6px; left: 50%; transform: translateX(-50%);
-  border: 6px solid transparent; border-bottom-color: #fff;
-  filter: drop-shadow(0 -1px 1px rgba(0,0,0,.05));
-}
-.drop-open .drop-panel {
-  opacity: 1; pointer-events: auto;
-  transform: translateX(-50%) translateY(0);
-}
-
-.drop-item {
-  display: flex; align-items: center; gap: 12px;
-  padding: 10px 12px; border-radius: 8px;
-  text-decoration: none; color: #1e293b;
-  transition: background .12s;
-}
-.drop-item:hover { background: #f8f9ff; }
-.drop-item strong { display: block; font-size: 13.5px; font-weight: 600; color: #1e293b; margin-bottom: 2px; }
-.drop-item span   { display: block; font-size: 12px; color: #94a3b8; }
-
-.drop-item-icon {
-  width: 38px; height: 38px; border-radius: 9px; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center; font-size: 15px;
-}
-.di--blue   { background: #e8f0fe; color: #192bc2; }
-.di--violet { background: #ede9fe; color: #7c3aed; }
-.di--orange { background: #fff3e0; color: #f07c00; }
-
-.drop-empty { display: flex; align-items: center; gap: 10px; padding: 14px 12px; font-size: 13px; color: #94a3b8; }
-
-.nav-overlay { position: fixed; inset: 0; z-index: 150; }
-
-/* ── Header actions ──────────────────────────────────── */
-.header-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; flex-shrink: 0; }
-
-/* Boutons auth */
-.btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 20px; border-radius: 8px;
-  font-size: 13.5px; font-weight: 600;
-  text-decoration: none; border: none; cursor: pointer;
-  white-space: nowrap; transition: all .15s;
-}
-.btn--outline {
-  background: #fff; color: #1e293b;
-  border: 1.5px solid #d1d5db;
-}
-.btn--outline:hover { border-color: #192bc2; color: #192bc2; background: #f0f3ff; }
-.btn--orange {
-  background: #f07c00; color: #fff;
-  box-shadow: 0 2px 8px rgba(240,124,0,.25);
-}
-.btn--orange:hover { background: #d96e00; box-shadow: 0 4px 14px rgba(240,124,0,.35); transform: translateY(-1px); }
+/* Header buttons area */
+.header-btns { display: flex; gap: 10px; align-items: center; margin-left: auto; flex-shrink: 0; }
 
 /* Langue */
-.lang-wrap { position: relative; }
-.lang-pill {
+.has-lang { position: relative; }
+.lang-trigger {
   display: flex; align-items: center; gap: 6px;
-  padding: 7px 12px; border-radius: 8px;
-  font-size: 13.5px; font-weight: 500; color: #374151;
-  background: none; border: 1.5px solid #e5e7eb;
-  cursor: pointer; transition: border-color .15s, color .15s, background .15s;
-  white-space: nowrap;
+  font-size: 13px; font-weight: 600; color: #040a5d;
+  padding: 6px 12px; border-radius: 8px; border: none;
+  background: none; cursor: pointer; white-space: nowrap;
+  text-transform: uppercase; letter-spacing: .3px;
+  transition: color .15s, background .15s;
 }
-.lang-pill i:first-child { font-size: 14px; color: #6b7280; }
-.lang-pill:hover { border-color: #192bc2; color: #192bc2; background: #f0f3ff; }
-.lang-chevron { font-size: 9px; color: #9ca3af; transition: transform .2s; }
-.lang-chevron.open { transform: rotate(180deg); }
-
-.lang-dropdown {
-  position: absolute; top: calc(100% + 8px); right: 0;
-  background: #fff; border-radius: 10px;
-  box-shadow: 0 8px 32px rgba(4,10,93,.12), 0 1px 4px rgba(0,0,0,.05);
-  border: 1px solid #eef0f8;
-  padding: 6px; min-width: 150px; z-index: 400;
+.lang-trigger:hover, .has-lang:hover .lang-trigger { color: #192bc2; background: rgba(58,155,255,.06); }
+.has-lang:hover .nav-chevron { transform: rotate(180deg); }
+.lang-menu {
+  display: none;
+  position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+  background: #fff; border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.14);
+  padding: 8px; min-width: 160px; z-index: 200;
+  border-top: 3px solid #192bc2;
+  flex-direction: column; gap: 4px;
 }
-.lang-option {
-  display: flex; align-items: center; gap: 8px;
-  width: 100%; padding: 8px 12px; border-radius: 7px;
-  font-size: 13.5px; font-weight: 500; color: #374151;
-  background: none; border: none; cursor: pointer;
+.has-lang:hover .lang-menu { display: flex; }
+.lang-item {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; padding: 9px 14px; border-radius: 8px;
+  font-size: 13.5px; font-weight: 500; color: #040a5d;
+  background: none; border: none; cursor: pointer; text-align: left;
   transition: background .12s;
 }
-.lang-option:hover  { background: #f8f9ff; }
-.lang-option.active { color: #192bc2; font-weight: 600; }
-.lang-option i      { margin-left: auto; font-size: 11px; color: #192bc2; }
+.lang-item:hover   { background: #f5f7fa; }
+.lang-item.active  { font-weight: 700; color: #192bc2; }
+.lang-check { margin-left: auto; font-size: 11px; color: #192bc2; }
 
 /* Favoris */
 .favori-wrap { position: relative; }
@@ -519,48 +405,39 @@ onUnmounted(() => {
   position: relative; background: none; border: none; cursor: pointer;
   width: 38px; height: 38px; border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 17px; color: #9ca3af;
-  transition: color .15s, background .15s;
+  font-size: 17px; color: #9ca3af; transition: color .15s, background .15s;
 }
-.fav-btn:hover          { color: #f43f5e; background: #fff5f7; }
-.fav-btn--active        { color: #f43f5e; }
+.fav-btn:hover { color: #f43f5e; background: #fff5f7; }
+.fav-btn--active { color: #f43f5e; }
 .fav-badge {
   position: absolute; top: 1px; right: 1px;
-  background: #f43f5e; color: #fff;
-  font-size: 9px; font-weight: 800; min-width: 16px; height: 16px;
-  border-radius: 50px; padding: 0 3px;
-  display: flex; align-items: center; justify-content: center;
-  border: 2px solid #fff; line-height: 1;
+  background: #f43f5e; color: #fff; font-size: 9px; font-weight: 800;
+  min-width: 16px; height: 16px; border-radius: 50px; padding: 0 3px;
+  display: flex; align-items: center; justify-content: center; border: 2px solid #fff;
 }
-
 .favori-dropdown {
   position: absolute; top: calc(100% + 10px); right: 0;
   width: 300px; background: #fff; border-radius: 14px;
   box-shadow: 0 8px 40px rgba(4,10,93,.13); border: 1px solid #eef0f8;
   border-top: 3px solid #f43f5e; z-index: 400; overflow: hidden;
 }
-.favori-head {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 13px 15px 11px;
-  font-size: 13px; font-weight: 700; color: #1e293b;
-  border-bottom: 1px solid #f4f5fb;
-}
+.favori-head { display: flex; align-items: center; justify-content: space-between; padding: 13px 15px 11px; font-size: 13px; font-weight: 700; color: #1e293b; border-bottom: 1px solid #f4f5fb; }
 .favori-head i { color: #f43f5e; margin-right: 5px; }
 .fav-count { background: #f43f5e; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 50px; }
 .favori-empty { padding: 22px 15px; text-align: center; color: #94a3b8; }
 .favori-empty i { font-size: 26px; opacity: .25; display: block; margin-bottom: 7px; }
 .favori-empty p { font-size: 13px; margin: 0; }
-.favori-list { list-style: none; margin: 0; padding: 7px; max-height: 280px; overflow-y: auto; }
+.favori-list { margin: 0; padding: 7px; max-height: 280px; overflow-y: auto; }
 .favori-item { display: flex; align-items: center; border-radius: 8px; transition: background .12s; }
 .favori-item:hover { background: #f8f9ff; }
 .favori-link { flex: 1; display: flex; align-items: center; gap: 9px; padding: 8px 7px; text-decoration: none; min-width: 0; }
 .favori-logo { width: 34px; height: 34px; border-radius: 7px; flex-shrink: 0; background: #f4f5fb; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.favori-logo img  { width: 100%; height: 100%; object-fit: contain; padding: 3px; }
+.favori-logo img { width: 100%; height: 100%; object-fit: contain; padding: 3px; }
 .favori-logo span { font-size: 13px; font-weight: 800; color: #192bc2; }
 .favori-info { flex: 1; min-width: 0; }
 .favori-titre { font-size: 12.5px; font-weight: 600; color: #1e293b; margin: 0 0 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .favori-ent   { font-size: 11px; color: #94a3b8; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.favori-rm    { flex-shrink: 0; background: none; border: none; cursor: pointer; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #cbd5e1; transition: background .12s, color .12s; margin-right: 7px; }
+.favori-rm { flex-shrink: 0; background: none; border: none; cursor: pointer; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #cbd5e1; transition: background .12s, color .12s; margin-right: 7px; }
 .favori-rm:hover { background: #fee2e2; color: #f43f5e; }
 .favori-footer { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 11px 15px; font-size: 12px; font-weight: 700; color: #192bc2; text-decoration: none; border-top: 1px solid #f4f5fb; transition: background .12s; }
 .favori-footer:hover { background: #f8f9ff; }
@@ -568,104 +445,81 @@ onUnmounted(() => {
 /* User pill */
 .user-wrap { position: relative; }
 .user-pill {
-  display: flex; align-items: center; gap: 8px;
-  padding: 6px 12px; border-radius: 8px;
-  background: none; border: 1.5px solid #e5e7eb;
-  cursor: pointer; font-size: 13.5px; font-weight: 600; color: #374151;
-  transition: border-color .15s, background .15s, color .15s;
+  display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 8px;
+  background: none; border: 1.5px solid #e5e7eb; cursor: pointer;
+  font-size: 13px; font-weight: 600; color: #374151; transition: border-color .15s, background .15s, color .15s;
 }
 .user-pill:hover { border-color: #192bc2; color: #192bc2; background: #f0f3ff; }
-.user-avatar {
-  width: 26px; height: 26px; border-radius: 50%;
-  background: #eef1fd; display: flex; align-items: center; justify-content: center;
-  font-size: 11px; color: #192bc2; flex-shrink: 0;
-}
+.user-avatar { width: 26px; height: 26px; border-radius: 50%; background: #eef1fd; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #192bc2; flex-shrink: 0; }
 .user-name   { max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .user-chevron { font-size: 9px; color: #9ca3af; transition: transform .2s; }
 .user-chevron.open { transform: rotate(180deg); }
-
 .user-dropdown {
-  position: absolute; top: calc(100% + 8px); right: 0;
-  background: #fff; border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(4,10,93,.12), 0 1px 4px rgba(0,0,0,.05);
-  border: 1px solid #eef0f8;
-  padding: 6px; min-width: 180px; z-index: 400;
+  position: absolute; top: calc(100% + 8px); right: 0; background: #fff; border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(4,10,93,.12); border: 1px solid #eef0f8; padding: 6px; min-width: 180px; z-index: 400;
 }
 .user-item {
-  display: flex; align-items: center; gap: 10px;
-  width: 100%; padding: 9px 12px; border-radius: 8px;
-  font-size: 13.5px; font-weight: 500; color: #374151;
-  text-decoration: none; background: none; border: none; cursor: pointer;
-  transition: background .12s, color .12s;
+  display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 12px; border-radius: 8px;
+  font-size: 13px; font-weight: 500; color: #374151; text-decoration: none; background: none; border: none; cursor: pointer; transition: background .12s, color .12s;
 }
-.user-item i          { font-size: 13px; color: #9ca3af; width: 16px; text-align: center; }
-.user-item:hover      { background: #f8f9ff; color: #192bc2; }
-.user-item:hover i    { color: #192bc2; }
-.user-item--danger:hover { background: #fff5f5; color: #ef4444; }
+.user-item i       { font-size: 13px; color: #9ca3af; width: 16px; text-align: center; }
+.user-item:hover   { background: #f8f9ff; color: #192bc2; }
+.user-item:hover i { color: #192bc2; }
+.user-item--danger:hover   { background: #fff5f5; color: #ef4444; }
 .user-item--danger:hover i { color: #ef4444; }
 .user-divider { height: 1px; background: #f0f2f8; margin: 4px 6px; }
 
-/* Animations dropdowns */
+/* Animations */
 .drop-anim-enter-active, .drop-anim-leave-active { transition: opacity .16s ease, transform .16s ease; }
 .drop-anim-enter-from, .drop-anim-leave-to { opacity: 0; transform: translateY(-6px); }
 
-/* ── Burger mobile ───────────────────────────────────── */
-.burger {
-  display: none; flex-direction: column; justify-content: center; gap: 5px;
-  padding: 8px; background: none; border: none; cursor: pointer; margin-left: 12px;
+/* Boutons */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 8px 20px; border-radius: 50px;
+  font-size: 12.5px; font-weight: 700; text-decoration: none; border: 2px solid transparent;
+  cursor: pointer; white-space: nowrap; transition: all .15s; letter-spacing: .2px;
 }
-.burger span { width: 22px; height: 2px; background: #374151; border-radius: 2px; display: block; transition: transform .25s, opacity .25s; }
-.burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-.burger.open span:nth-child(2) { opacity: 0; }
-.burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.btn--orange { background: #f07c00; color: #fff; border-color: #f07c00; }
+.btn--orange:hover { background: #d96e00; border-color: #d96e00; transform: translateY(-1px); }
+.btn--blue   { background: #192bc2; color: #fff; border-color: #192bc2; }
+.btn--blue:hover   { background: #1222a8; border-color: #1222a8; transform: translateY(-1px); }
+.btn--sm { padding: 7px 16px; font-size: 12px; }
 
-.nav-close { display: none; position: absolute; top: 18px; right: 18px; background: rgba(255,255,255,.12); border: none; cursor: pointer; width: 38px; height: 38px; border-radius: 50%; font-size: 17px; color: #fff; align-items: center; justify-content: center; }
-.nav-mobile-actions { display: none; }
+/* Burger */
+.menu-toggle {
+  display: none; flex-direction: column; justify-content: center; gap: 5px;
+  padding: 8px; background: none; border: none; cursor: pointer; margin-left: 8px;
+}
+.menu-toggle span { width: 24px; height: 2px; background: #040a5d; border-radius: 2px; display: block; transition: transform .25s, opacity .25s; }
+.menu-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.menu-toggle.open span:nth-child(2) { opacity: 0; }
+.menu-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 /* ── Mobile ──────────────────────────────────────────── */
 @media (max-width: 900px) {
-  .burger { display: flex; }
-
+  .menu-toggle { display: flex; }
   .site-nav {
     display: none; position: fixed; inset: 0; z-index: 500;
-    background: #040a5d;
-    flex-direction: column; align-items: center; justify-content: center; padding: 48px 24px;
+    background: #040a5d; flex-direction: column; align-items: center; justify-content: center; padding: 48px 24px;
   }
   .site-nav.open { display: flex; }
-  .nav-close { display: flex; }
-
-  .site-nav ul { flex-direction: column; gap: 2px; width: 100%; max-width: 280px; }
-  .nav-link { color: rgba(255,255,255,.8); font-size: 16px; padding: 11px 16px; width: 100%; justify-content: space-between; border-radius: 10px; }
-  .nav-link:hover, .nav-link--active { background: rgba(255,255,255,.1); color: #fff; }
-  .drop-chevron { color: rgba(255,255,255,.4); }
-  .drop-open .nav-link--drop { background: rgba(255,255,255,.1); color: #fff; }
-
-  .drop-panel {
-    position: static; transform: none; opacity: 1; pointer-events: auto;
-    background: rgba(255,255,255,.07); box-shadow: none; border: none; border-radius: 8px; margin-top: 4px; padding: 4px;
-  }
-  .drop-panel::before { display: none; }
-  .drop-item { padding: 9px 10px; border-radius: 7px; }
-  .drop-item:hover { background: rgba(255,255,255,.08); }
-  .drop-item strong { color: rgba(255,255,255,.85); }
-  .drop-item span   { color: rgba(255,255,255,.45); }
-
-  .nav-mobile-actions { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 280px; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.1); }
-  .lang-pill--mobile { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.2); color: rgba(255,255,255,.8); width: 100%; justify-content: center; }
-  .btn--outline-white { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,.3); text-align: center; justify-content: center; }
-  .btn--orange-solid  { background: #f07c00; color: #fff; text-align: center; justify-content: center; }
-
-  .header-actions .btn--outline,
-  .header-actions .lang-wrap,
-  .header-actions .user-wrap { display: none; }
-
-  .nav-overlay { display: none; }
-
+  .site-nav ul { flex-direction: column; gap: 4px; width: 100%; max-width: 300px; }
+  .site-nav a { color: rgba(255,255,255,.85); font-size: 16px; padding: 11px 16px; display: block; border-radius: 10px; }
+  .site-nav a:hover, .site-nav a.active { background: rgba(255,255,255,.1); color: #fff; }
+  .mega-menu { position: static; transform: none; box-shadow: none; border: none; background: rgba(255,255,255,.07); border-top: none; margin-top: 4px; }
+  .has-mega:hover .mega-menu, .has-mega:focus-within .mega-menu { display: flex; }
+  .mega-item strong { color: rgba(255,255,255,.85); }
+  .mega-item small  { color: rgba(255,255,255,.5); }
+  .mega-item:hover  { background: rgba(255,255,255,.08); }
+  .mega-icon { color: #f07c00; }
+  .header-btns .has-lang,
+  .header-btns .user-wrap,
+  .header-btns .btn { display: none; }
   .topbar-label { max-width: 140px; }
+  .topbar-link { display: none; }
 }
 
 @media (max-width: 480px) {
-  .site-logo img { width: 120px; }
-  .header-actions .btn--orange { padding: 7px 14px; font-size: 12.5px; }
+  .site-logo img { height: 40px; }
 }
 </style>

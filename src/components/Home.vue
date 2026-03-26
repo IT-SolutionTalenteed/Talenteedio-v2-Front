@@ -1,114 +1,7 @@
 <template>
   <div>
 
-    <!-- ══ TOP BAR ══ -->
-    <div class="topbar">
-      <div class="container">
-        <div class="topbar-left">
-          <a href="tel:+3522060162"><i class="fa-solid fa-phone"></i> +3522060162</a>
-          <a href="mailto:contact@africatalentsummit.com"><i class="fa-solid fa-envelope"></i> contact@africatalentsummit.com</a>
-        </div>
-        <div class="topbar-right">
-          <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-          <a href="https://x.com/" target="_blank" rel="noopener" aria-label="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
-          <a href="https://www.linkedin.com/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-          <a href="https://wa.me/" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══ HEADER ══ -->
-    <header class="site-header" id="site-header">
-      <div class="container">
-        <div class="header-inner">
-          <a href="/" class="site-logo">
-            <img src="/logo.png" alt="Talenteed" width="160" height="56">
-            <span class="site-tagline">Le média alternatif pour les RH</span>
-          </a>
-
-          <!-- Boutons auth -->
-          <div class="header-btns" id="headerBtns">
-            <template v-if="isLoggedIn">
-              <router-link :to="dashboardRoute" class="btn btn--blue btn--sm">
-                <i class="fa-solid fa-gauge" style="margin-right:5px;"></i>DASHBOARD
-              </router-link>
-            </template>
-            <template v-else>
-              <router-link to="/register" class="btn btn--orange btn--sm">S'INSCRIRE</router-link>
-              <router-link to="/login"    class="btn btn--blue   btn--sm">SE CONNECTER</router-link>
-            </template>
-          </div>
-
-          <button class="menu-toggle" id="menuToggle" aria-label="Menu" aria-expanded="false">
-            <span></span><span></span><span></span>
-          </button>
-
-          <nav class="site-nav" id="siteNav">
-            <ul>
-              <li><router-link to="/">ACCUEIL</router-link></li>
-
-              <!-- Mega menu Annonces -->
-              <li class="has-mega">
-                <a href="#" @click.prevent class="mega-trigger">
-                  ANNONCES <i class="fa-solid fa-chevron-down nav-chevron"></i>
-                </a>
-                <div class="mega-menu">
-                  <router-link to="/annonces" class="mega-item">
-                    <i class="fa-solid fa-briefcase mega-icon"></i>
-                    <div>
-                      <strong>Jobs</strong>
-                      <small>Toutes les offres d'emploi</small>
-                    </div>
-                  </router-link>
-                  <router-link to="/entreprises" class="mega-item">
-                    <i class="fa-solid fa-building mega-icon"></i>
-                    <div>
-                      <strong>Entreprises</strong>
-                      <small>Les entreprises partenaires</small>
-                    </div>
-                  </router-link>
-                </div>
-              </li>
-
-              <!-- Mega menu Événements -->
-              <li class="has-mega">
-                <a href="#" @click.prevent class="mega-trigger">
-                  ÉVÉNEMENTS <i class="fa-solid fa-chevron-down nav-chevron"></i>
-                </a>
-                <div class="mega-menu">
-                  <template v-if="categories.length">
-                    <router-link
-                      v-for="cat in categories"
-                      :key="cat.id"
-                      :to="`/evenements/categorie/${cat.id}`"
-                      class="mega-item"
-                    >
-                      <i class="fa-solid fa-calendar-days mega-icon"></i>
-                      <div>
-                        <strong>{{ cat.titre }}</strong>
-                      </div>
-                    </router-link>
-                  </template>
-                  <div v-else class="mega-item mega-item--empty">
-                    <i class="fa-solid fa-calendar-xmark mega-icon"></i>
-                    <div><strong>Aucun événement disponible</strong></div>
-                  </div>
-                </div>
-              </li>
-
-              <li><router-link to="/blog">ARTICLES</router-link></li>
-
-              <!-- Switcher Fr / En -->
-              <li>
-                <button class="lang-switch" @click="toggleLocale">
-                  {{ locale === 'fr' ? 'EN' : 'FR' }}
-                </button>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </div>
-    </header>
+    <PublicNav />
 
     <!-- ══ HERO — Événement mis en avant ══ -->
     <section class="hero">
@@ -413,31 +306,16 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import axios from 'axios'
+import PublicNav from './PublicNav.vue'
 
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
 const event      = ref(null)
 const articles   = ref([])
-const offres     = ref([])
 const categories = ref([])
-const cd         = ref({ days: '000', hours: '00', minutes: '00', seconds: '00' })
-let   timer      = null
-
-// ── Auth state ─────────────────────────────────────────────
-const isLoggedIn = ref(!!localStorage.getItem('token'))
-const userRole   = ref(localStorage.getItem('userRole') || '')
-
-const dashboardRoute = computed(() => {
-  const routes = { admin: '/admin', talent: '/talent', entreprise: '/entreprise' }
-  return routes[userRole.value] || '/login'
-})
-
-// ── Locale Fr / En ─────────────────────────────────────────
-const locale = ref(localStorage.getItem('locale') || 'fr')
-function toggleLocale() {
-  locale.value = locale.value === 'fr' ? 'en' : 'fr'
-  localStorage.setItem('locale', locale.value)
-}
+const offres   = ref([])
+const cd       = ref({ days: '000', hours: '00', minutes: '00', seconds: '00' })
+let   timer    = null
 
 // ── Chargement des données ─────────────────────────────────
 onMounted(async () => {
@@ -454,15 +332,12 @@ onMounted(async () => {
     console.error('Erreur chargement page accueil', e)
   }
 
-  // Catégories événements pour le mega menu (non bloquant)
   try {
     const catRes = await axios.get(`${apiBase}/public/categories-evenements`)
     categories.value = catRes.data
   } catch {}
 
   startCountdown()
-  initMenuToggle()
-  initScrollHeader()
   initFadeIn()
 })
 
@@ -539,25 +414,6 @@ function formatDate(str) {
   return new Date(str).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
-// ── Init comportements du template ───────────────────────
-function initMenuToggle() {
-  const toggle = document.getElementById('menuToggle')
-  const nav    = document.getElementById('siteNav')
-  if (!toggle || !nav) return
-  toggle.addEventListener('click', () => {
-    const open = nav.classList.toggle('open')
-    toggle.setAttribute('aria-expanded', open)
-  })
-}
-
-function initScrollHeader() {
-  const header = document.getElementById('site-header')
-  if (!header) return
-  window.addEventListener('scroll', () => {
-    header.classList.toggle('scrolled', window.scrollY > 50)
-  })
-}
-
 function initFadeIn() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible') })
@@ -567,6 +423,27 @@ function initFadeIn() {
 </script>
 
 <style>
+/* ── Topbar countdown ─────────────────────────────────── */
+.topbar { background: #040a5d; height: 48px; display: flex; align-items: center; color: rgba(255,255,255,.6); }
+.topbar .container { display: flex; justify-content: space-between; align-items: center; }
+.topbar-left  { display: flex; align-items: center; gap: 12px; }
+.topbar-right { display: flex; gap: 16px; }
+.topbar-right a { color: rgba(255,255,255,.55); font-size: 14px; transition: color .15s; }
+.topbar-right a:hover { color: #f07c00; }
+.topbar-dot { width: 8px; height: 8px; border-radius: 50%; background: #f07c00; box-shadow: 0 0 7px #f07c00; animation: blink 2s infinite; flex-shrink: 0; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
+.topbar-label { color: #fff; font-weight: 700; font-size: 15px; max-width: 340px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.countdown-blocks { display: flex; align-items: center; gap: 6px; }
+.cd-block  { display: flex; flex-direction: row; align-items: center; gap: 3px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); border-radius: 6px; padding: 5px 12px; }
+.cd-num    { font-size: 20px; font-weight: 800; color: #fff; line-height: 1; }
+.cd-unit   { font-size: 13px; font-weight: 700; color: #f07c00; text-transform: uppercase; letter-spacing: 1px; }
+.cd-sep    { font-size: 20px; font-weight: 800; color: rgba(255,255,255,.4); margin: 0 2px; padding-bottom: 8px; }
+.topbar-link { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 20px; background: #f07c00; color: #fff; font-size: 12px; font-weight: 700; text-decoration: none; white-space: nowrap; transition: background .15s; }
+.topbar-link:hover { background: #d96b00; }
+.topbar-right { display: flex; gap: 14px; }
+.topbar-right a { color: rgba(255,255,255,.5); font-size: 13px; transition: color .15s; text-decoration: none; }
+.topbar-right a:hover { color: #f07c00; }
+
 /* ── Logo + tagline ───────────────────────────────────── */
 .site-logo {
   display: flex;
