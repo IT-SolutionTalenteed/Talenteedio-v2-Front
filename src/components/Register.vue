@@ -51,8 +51,25 @@
           <option value="entreprise">Entreprise</option>
         </select>
       </div>
+
+      <!-- Consent Checkbox (obligatoire pour les talents) -->
+      <div v-if="form.role === 'talent'" class="checkbox-group">
+        <label class="checkbox-label">
+          <input 
+            type="checkbox" 
+            id="consent"
+            v-model="form.consent"
+            class="checkbox-input"
+          />
+          <span class="checkbox-text">
+            Je reconnais avoir lu 
+            <a href="/legal/consentement" target="_blank">le consentement</a>
+            et accepte de le signer électroniquement avec mon nom.
+          </span>
+        </label>
+      </div>
       
-      <button type="submit" :disabled="loading">
+      <button type="submit" :disabled="isSubmitDisabled">
         {{ loading ? 'Souscription...' : 'Souscrire' }}
       </button>
     </form>
@@ -76,7 +93,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { authService } from '../services/api.js'
 
@@ -89,12 +106,17 @@ const form = ref({
   email: '',
   password: '',
   password_confirmation: '',
-  role: ''
+  role: '',
+  consent: false
 })
 
 const loading = ref(false)
 const error = ref('')
 const success = ref('')
+
+const isSubmitDisabled = computed(() => {
+  return loading.value || (form.value.role === 'talent' && !form.value.consent)
+})
 
 const handleRegister = async () => {
   loading.value = true
@@ -124,3 +146,53 @@ const handleRegister = async () => {
   }
 }
 </script>
+
+
+<style scoped>
+.checkbox-group {
+  margin: 20px 0;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.checkbox-input {
+  margin-top: 4px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.checkbox-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+}
+
+.checkbox-text a {
+  color: #040a5d;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.checkbox-text a:hover {
+  color: #192bc2;
+}
+
+.consent-error {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #ef4444;
+  font-weight: 500;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+</style>
