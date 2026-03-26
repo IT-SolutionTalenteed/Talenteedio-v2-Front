@@ -51,9 +51,19 @@
             <!-- CTA -->
             <div class="od-hero-cta">
               <template v-if="isLoggedIn && userRole === 'talent'">
-                <button class="btn btn--blue btn--lg" @click="postuler">
-                  <i class="fa-solid fa-paper-plane" style="margin-right:6px;"></i>Postuler
-                </button>
+                <div class="od-cta-row">
+                  <button class="btn btn--blue btn--lg" @click="postuler">
+                    <i class="fa-solid fa-paper-plane" style="margin-right:6px;"></i>Postuler
+                  </button>
+                  <button
+                    class="btn-favori-hero"
+                    :class="{ 'btn-favori-hero--active': isFavori }"
+                    :title="isFavori ? 'Retirer des favoris' : 'Ajouter aux favoris'"
+                    @click="toggleFavori"
+                  >
+                    <i :class="isFavori ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
+                  </button>
+                </div>
               </template>
               <template v-else-if="isLoggedIn">
                 <p class="od-cta-note">Seuls les talents peuvent postuler.</p>
@@ -209,21 +219,28 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
+import { useFavoris } from '../composables/useFavoris.js'
 
-const apiBase   = import.meta.env.VITE_API_URL || 'http://localhost:8000'
-const route     = useRoute()
-const offre     = ref(null)
-const loading   = ref(true)
+const apiBase    = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const route      = useRoute()
+const offre      = ref(null)
+const loading    = ref(true)
 
-const isLoggedIn = ref(!!localStorage.getItem('token'))
+const token      = localStorage.getItem('token')
+const isLoggedIn = ref(!!token)
 const userRole   = ref(localStorage.getItem('userRole') || '')
+const isTalent   = isLoggedIn.value && userRole.value === 'talent'
 
 const postuleMsg = ref('')
 const postuleOk  = ref(false)
+
+const { favoris, loadFavoris, toggleFavori: _toggleFavori, isFavoriId } = useFavoris()
+
+const isFavori = computed(() => offre.value ? isFavoriId(offre.value.id) : false)
 
 const load = async () => {
   loading.value = true
@@ -239,7 +256,6 @@ const load = async () => {
 
 const postuler = async () => {
   try {
-    const token = localStorage.getItem('token')
     await axios.post(
       `${apiBase}/talent/offres/${offre.value.id}/postuler`,
       {},
@@ -253,9 +269,16 @@ const postuler = async () => {
   }
 }
 
+const toggleFavori = () => {
+  if (offre.value) _toggleFavori(offre.value)
+}
+
 const formatDate = (str) => !str ? '' : new Date(str).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
 
-onMounted(load)
+onMounted(() => {
+  load()
+  loadFavoris()
+})
 </script>
 
 <style scoped>
@@ -309,6 +332,21 @@ onMounted(load)
 
 .od-hero-cta { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; min-width: 200px; }
 .od-cta-note { font-size: 13px; color: rgba(255,255,255,.7); text-align: center; }
+
+.od-cta-row { display: flex; align-items: center; gap: 10px; }
+
+.btn-favori-hero {
+  background: rgba(255,255,255,.15);
+  border: 1.5px solid rgba(255,255,255,.3);
+  border-radius: 10px;
+  width: 46px; height: 46px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 20px; color: rgba(255,255,255,.7);
+  transition: background .2s, color .2s, transform .15s;
+  flex-shrink: 0;
+}
+.btn-favori-hero:hover         { background: rgba(244,63,94,.2); color: #f43f5e; border-color: #f43f5e; transform: scale(1.08); }
+.btn-favori-hero--active       { background: rgba(244,63,94,.25); color: #f43f5e; border-color: #f43f5e; }
 .od-apply-msg { font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 8px; text-align: center; }
 .od-apply-msg--ok  { background: rgba(34,197,94,.2); color: #d1fae5; }
 .od-apply-msg--err { background: rgba(239,68,68,.2); color: #fee2e2; }

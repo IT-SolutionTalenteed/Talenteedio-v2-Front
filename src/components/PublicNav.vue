@@ -40,6 +40,59 @@
 
           <!-- Boutons auth -->
           <div class="header-btns">
+            <!-- Icône favoris (talent uniquement) -->
+            <div v-if="isLoggedIn && userRole === 'talent'" class="favori-wrap" ref="favoriWrapRef">
+              <button
+                class="btn-nav-favori"
+                :class="{ 'btn-nav-favori--active': favoris.length > 0 }"
+                @click="favoriOpen = !favoriOpen"
+                aria-label="Mes favoris"
+              >
+                <i :class="favoris.length > 0 ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
+                <span v-if="favoris.length" class="favori-badge">
+                  {{ favoris.length > 9 ? '9+' : favoris.length }}
+                </span>
+              </button>
+
+              <!-- Dropdown favoris -->
+              <div v-if="favoriOpen" class="favori-dropdown">
+                <div class="favori-dropdown-header">
+                  <span><i class="fa-solid fa-heart"></i> Mes favoris</span>
+                  <span class="favori-count">{{ favoris.length }}</span>
+                </div>
+
+                <div v-if="!favoris.length" class="favori-empty">
+                  <i class="fa-regular fa-heart"></i>
+                  <p>Aucun favori pour l'instant</p>
+                </div>
+
+                <ul v-else class="favori-list">
+                  <li v-for="offre in favoris" :key="offre.id" class="favori-item">
+                    <router-link :to="`/annonces/${offre.id}`" class="favori-item-link" @click="favoriOpen = false">
+                      <div class="favori-logo">
+                        <img v-if="offre.entreprise?.logo_url" :src="offre.entreprise.logo_url" :alt="offre.entreprise?.nom" />
+                        <span v-else>{{ offre.entreprise?.nom?.charAt(0) || '?' }}</span>
+                      </div>
+                      <div class="favori-info">
+                        <p class="favori-titre">{{ offre.titre }}</p>
+                        <p class="favori-entreprise">{{ offre.entreprise?.nom || '—' }}</p>
+                        <div class="favori-tags">
+                          <span v-for="c in offre.job_contracts?.slice(0,1)" :key="c.id" class="favori-tag">{{ c.name }}</span>
+                        </div>
+                      </div>
+                    </router-link>
+                    <button class="favori-remove" @click="removeFavori(offre.id)" title="Retirer des favoris">
+                      <i class="fa-solid fa-xmark"></i>
+                    </button>
+                  </li>
+                </ul>
+
+                <router-link v-if="favoris.length" to="/talent" class="favori-see-all" @click="favoriOpen = false">
+                  Voir tous mes favoris <i class="fa-solid fa-arrow-right"></i>
+                </router-link>
+              </div>
+            </div>
+
             <template v-if="isLoggedIn">
               <router-link :to="dashboardRoute" class="btn btn--blue btn--sm">
                 <i class="fa-solid fa-gauge" style="margin-right:5px;"></i>DASHBOARD
@@ -127,6 +180,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import axios from 'axios'
+import { useFavoris } from '../composables/useFavoris.js'
 
 const apiBase      = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const categories   = ref([])
@@ -138,6 +192,17 @@ let   countdownTimer = null
 
 const isLoggedIn     = ref(!!localStorage.getItem('token'))
 const userRole       = ref(localStorage.getItem('userRole') || '')
+
+// ── Favoris ────────────────────────────────────────────────
+const { favoris, loadFavoris, removeFavori } = useFavoris()
+const favoriOpen    = ref(false)
+const favoriWrapRef = ref(null)
+
+const onClickOutside = (e) => {
+  if (favoriWrapRef.value && !favoriWrapRef.value.contains(e.target)) {
+    favoriOpen.value = false
+  }
+}
 
 const dashboardRoute = computed(() => {
   const routes = { admin: '/admin', talent: '/talent', entreprise: '/entreprise' }
@@ -179,6 +244,8 @@ function tickCountdown(target) {
 
 onMounted(async () => {
   window.addEventListener('scroll', onScroll, { passive: true })
+  document.addEventListener('click', onClickOutside)
+  loadFavoris()
   try {
     const [catRes, evRes] = await Promise.all([
       axios.get(`${apiBase}/public/categories-evenements`),
@@ -198,6 +265,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
   window.removeEventListener('scroll', onScroll)
+  document.removeEventListener('click', onClickOutside)
   if (countdownTimer) clearInterval(countdownTimer)
 })
 </script>
@@ -362,6 +430,111 @@ onUnmounted(() => {
 .menu-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
 .menu-toggle.open span:nth-child(2) { opacity: 0; }
 .menu-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── Favoris nav ── */
+.favori-wrap { position: relative; }
+
+.btn-nav-favori {
+  position: relative;
+  background: none; border: none; cursor: pointer;
+  width: 38px; height: 38px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; color: var(--navy);
+  transition: background .15s, color .15s;
+}
+.btn-nav-favori:hover         { background: rgba(244,63,94,.1); color: #f43f5e; }
+.btn-nav-favori--active       { color: #f43f5e; }
+
+.favori-badge {
+  position: absolute;
+  top: 2px; right: 2px;
+  background: #f43f5e; color: #fff;
+  font-size: 9px; font-weight: 800;
+  min-width: 16px; height: 16px;
+  border-radius: 50px; padding: 0 4px;
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1; border: 2px solid #fff;
+}
+
+.favori-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 320px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.14);
+  border-top: 3px solid #f43f5e;
+  z-index: 400;
+  overflow: hidden;
+}
+
+.favori-dropdown-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px 10px;
+  font-size: 13px; font-weight: 700; color: var(--navy);
+  border-bottom: 1px solid var(--border, #e2e8f0);
+}
+.favori-dropdown-header i { color: #f43f5e; margin-right: 6px; }
+.favori-count {
+  background: #f43f5e; color: #fff;
+  font-size: 11px; font-weight: 700;
+  padding: 2px 8px; border-radius: 50px;
+}
+
+.favori-empty {
+  padding: 28px 16px; text-align: center; color: var(--body-text);
+}
+.favori-empty i { font-size: 32px; opacity: .25; display: block; margin-bottom: 10px; }
+.favori-empty p { font-size: 13px; margin: 0; }
+
+.favori-list { list-style: none; margin: 0; padding: 8px; max-height: 340px; overflow-y: auto; }
+.favori-item {
+  display: flex; align-items: center; gap: 0;
+  border-radius: 8px;
+  transition: background .15s;
+}
+.favori-item:hover { background: var(--light-bg, #f5f7fa); }
+
+.favori-item-link {
+  flex: 1; display: flex; align-items: center; gap: 10px;
+  padding: 10px 8px; text-decoration: none;
+  min-width: 0;
+}
+
+.favori-logo {
+  width: 38px; height: 38px; border-radius: 8px; flex-shrink: 0;
+  background: var(--light-bg, #f5f7fa);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.favori-logo img  { width: 100%; height: 100%; object-fit: contain; padding: 3px; }
+.favori-logo span { font-size: 15px; font-weight: 800; color: var(--blue); }
+
+.favori-info { flex: 1; min-width: 0; }
+.favori-titre      { font-size: 13px; font-weight: 700; color: var(--navy); margin: 0 0 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.favori-entreprise { font-size: 11px; color: var(--body-text); margin: 0 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.favori-tags       { display: flex; gap: 4px; }
+.favori-tag        { font-size: 10px; font-weight: 700; padding: 1px 8px; border-radius: 50px; background: #e8f0fe; color: var(--blue); }
+
+.favori-remove {
+  flex-shrink: 0; background: none; border: none; cursor: pointer;
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: #94a3b8;
+  transition: background .15s, color .15s;
+  margin-right: 6px;
+}
+.favori-remove:hover { background: #fee2e2; color: #f43f5e; }
+
+.favori-see-all {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 12px 16px;
+  font-size: 12px; font-weight: 700; color: var(--blue);
+  text-decoration: none; border-top: 1px solid var(--border, #e2e8f0);
+  transition: background .15s;
+}
+.favori-see-all:hover { background: var(--light-bg, #f5f7fa); }
 
 @media (max-width: 768px) {
   .menu-toggle { display: flex; }

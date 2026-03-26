@@ -131,6 +131,14 @@
                 </div>
                 <!-- Action -->
                 <div class="offre-action">
+                  <button
+                    class="btn-favori"
+                    :class="{ 'btn-favori--active': isFavoriId(offre.id) }"
+                    :title="isFavoriId(offre.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'"
+                    @click.stop.prevent="toggleFavori(offre.id)"
+                  >
+                    <i :class="isFavoriId(offre.id) ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
+                  </button>
                   <span class="btn btn--blue btn--sm">Voir l'offre</span>
                 </div>
               </router-link>
@@ -166,13 +174,16 @@
 import { ref, reactive, onMounted } from 'vue'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
+import { useFavoris } from '../composables/useFavoris.js'
 
-const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const apiBase    = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
 const offres       = ref([])
 const referentiels = ref({ job_contracts: [], study_levels: [], activity_sectors: [] })
 const loading      = ref(false)
 const pagination   = ref({ current_page: 1, last_page: 1, total: 0 })
+
+const { favoris, loadFavoris, toggleFavori: _toggleFavori, isFavoriId } = useFavoris()
 
 const dateRanges = [
   { value: '',          label: 'Tous' },
@@ -268,9 +279,15 @@ const truncate = (str, len) => !str ? '' : str.length > len ? str.slice(0, len) 
 const stripHtml = (html) => !html ? '' : html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
 const formatDate = (str) => !str ? '' : new Date(str).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })
 
+const toggleFavori = async (offreId) => {
+  const offre = offres.value.find(o => o.id === offreId)
+  if (offre) await _toggleFavori(offre)
+}
+
 onMounted(() => {
   loadPage()
   loadReferentiels()
+  loadFavoris()
 })
 </script>
 
@@ -384,7 +401,16 @@ onMounted(() => {
 .offre-meta       { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--body-text); }
 .offre-meta i     { color: var(--orange); margin-right: 4px; }
 
-.offre-action { flex-shrink: 0; }
+.offre-action { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+
+.btn-favori {
+  background: none; border: none; cursor: pointer;
+  font-size: 18px; color: #cbd5e1; padding: 4px;
+  transition: color .2s, transform .15s;
+  line-height: 1;
+}
+.btn-favori:hover        { color: #f43f5e; transform: scale(1.15); }
+.btn-favori--active      { color: #f43f5e; }
 
 /* ── Skeleton ── */
 .offre-card--skeleton { pointer-events: none; }
