@@ -351,9 +351,29 @@ onUnmounted(() => {
   padding: 10px; min-width: 240px; z-index: 200;
   border-top: 3px solid #192bc2;
   flex-direction: column; gap: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s ease, transform .2s ease;
+  transform: translateX(-50%) translateY(-5px);
 }
 .has-mega:hover .mega-menu,
-.has-mega:focus-within .mega-menu { display: flex; }
+.has-mega:focus-within .mega-menu,
+.mega-menu:hover { 
+  display: flex;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+/* Zone de hover étendue pour éviter la fermeture accidentelle */
+.has-mega::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background: transparent;
+}
 .mega-item {
   display: flex; align-items: flex-start; gap: 12px;
   padding: 10px 14px; border-radius: 8px;
@@ -390,8 +410,28 @@ onUnmounted(() => {
   padding: 8px; min-width: 160px; z-index: 200;
   border-top: 3px solid #192bc2;
   flex-direction: column; gap: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s ease, transform .2s ease;
+  transform: translateX(-50%) translateY(-5px);
 }
-.has-lang:hover .lang-menu { display: flex; }
+.has-lang:hover .lang-menu,
+.lang-menu:hover { 
+  display: flex;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+/* Zone de hover étendue pour le menu langue */
+.has-lang::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background: transparent;
+}
 .lang-item {
   display: flex; align-items: center; gap: 10px;
   width: 100%; padding: 9px 14px; border-radius: 8px;
