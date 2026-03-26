@@ -1,28 +1,26 @@
 <template>
   <div>
-    <!-- ══ TOP BAR ══ -->
-    <div class="topbar">
+    <!-- ══ TOP BAR (countdown événement featured) ══ -->
+    <div v-if="featuredEvent" class="topbar">
       <div class="container">
         <div class="topbar-left">
-          <template v-if="featuredEvent">
-            <span class="topbar-event-dot"></span>
-            <span class="topbar-event-label">{{ featuredEvent.titre }}</span>
-            <div class="countdown-blocks">
-              <div class="cd-block"><span class="cd-num">{{ countdown.days }}</span><span class="cd-unit">J</span></div>
-              <span class="cd-sep">:</span>
-              <div class="cd-block"><span class="cd-num">{{ countdown.hours }}</span><span class="cd-unit">H</span></div>
-              <span class="cd-sep">:</span>
-              <div class="cd-block"><span class="cd-num">{{ countdown.minutes }}</span><span class="cd-unit">M</span></div>
-              <span class="cd-sep">:</span>
-              <div class="cd-block"><span class="cd-num">{{ countdown.seconds }}</span><span class="cd-unit">S</span></div>
-            </div>
-          </template>
+          <span class="topbar-dot"></span>
+          <span class="topbar-label">{{ featuredEvent.titre }}</span>
+          <div class="countdown-blocks">
+            <div class="cd-block"><span class="cd-num">{{ countdown.days }}</span><span class="cd-unit">J</span></div>
+            <span class="cd-sep">:</span>
+            <div class="cd-block"><span class="cd-num">{{ countdown.hours }}</span><span class="cd-unit">H</span></div>
+            <span class="cd-sep">:</span>
+            <div class="cd-block"><span class="cd-num">{{ countdown.minutes }}</span><span class="cd-unit">M</span></div>
+            <span class="cd-sep">:</span>
+            <div class="cd-block"><span class="cd-num">{{ countdown.seconds }}</span><span class="cd-unit">S</span></div>
+          </div>
         </div>
         <div class="topbar-right">
-          <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-          <a href="https://x.com/" target="_blank" rel="noopener" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
-          <a href="https://www.linkedin.com/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-          <a href="https://wa.me/" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="https://www.facebook.com/" target="_blank" rel="noopener"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="https://x.com/"            target="_blank" rel="noopener"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="https://www.linkedin.com/" target="_blank" rel="noopener"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="https://wa.me/"            target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i></a>
         </div>
       </div>
     </div>
@@ -40,113 +38,110 @@
 
           <!-- Nav desktop -->
           <nav class="site-nav" :class="{ open: menuOpen }">
+
+            <!-- Bouton fermer mobile -->
+            <button class="nav-close" @click="menuOpen = false"><i class="fa-solid fa-xmark"></i></button>
+
             <ul>
               <li>
-                <router-link to="/" class="nav-link" @click="closeAll">Accueil</router-link>
+                <router-link to="/" class="nav-link" exact-active-class="nav-link--active" @click="closeAll">
+                  Accueil
+                </router-link>
               </li>
 
-              <!-- Mega : Annonces -->
-              <li class="has-mega" :class="{ 'mega-open': activeMega === 'annonces' }">
-                <button class="nav-link nav-link--trigger" @click.stop="toggleMega('annonces')">
-                  Annonces
-                  <i class="fa-solid fa-chevron-down mega-chevron"></i>
+              <!-- Dropdown Annonces -->
+              <li class="has-drop" :class="{ 'drop-open': activeDrop === 'annonces' }">
+                <button class="nav-link nav-link--drop" @click.stop="toggleDrop('annonces')">
+                  Annonces <i class="fa-solid fa-chevron-down drop-chevron"></i>
                 </button>
-                <div class="mega-panel" @click.stop>
-                  <div class="mega-grid mega-grid--2">
-                    <router-link to="/annonces" class="mega-card" @click="closeAll">
-                      <div class="mega-card-icon mega-card-icon--blue">
-                        <i class="fa-solid fa-briefcase"></i>
-                      </div>
-                      <div class="mega-card-body">
-                        <strong>Offres d'emploi</strong>
-                        <span>Trouvez votre prochain poste</span>
-                      </div>
-                      <i class="fa-solid fa-arrow-right mega-card-arrow"></i>
-                    </router-link>
-                    <router-link to="/entreprises" class="mega-card" @click="closeAll">
-                      <div class="mega-card-icon mega-card-icon--indigo">
-                        <i class="fa-solid fa-building"></i>
-                      </div>
-                      <div class="mega-card-body">
-                        <strong>Entreprises</strong>
-                        <span>Découvrez nos partenaires</span>
-                      </div>
-                      <i class="fa-solid fa-arrow-right mega-card-arrow"></i>
-                    </router-link>
-                  </div>
+                <div class="drop-panel">
+                  <router-link to="/annonces" class="drop-item" @click="closeAll">
+                    <div class="drop-item-icon di--blue"><i class="fa-solid fa-briefcase"></i></div>
+                    <div>
+                      <strong>Offres d'emploi</strong>
+                      <span>Trouvez votre prochain poste</span>
+                    </div>
+                  </router-link>
+                  <router-link to="/entreprises" class="drop-item" @click="closeAll">
+                    <div class="drop-item-icon di--violet"><i class="fa-solid fa-building"></i></div>
+                    <div>
+                      <strong>Entreprises</strong>
+                      <span>Découvrez nos partenaires</span>
+                    </div>
+                  </router-link>
                 </div>
               </li>
 
-              <!-- Mega : Événements -->
-              <li class="has-mega" :class="{ 'mega-open': activeMega === 'evenements' }">
-                <button class="nav-link nav-link--trigger" @click.stop="toggleMega('evenements')">
-                  Événements
-                  <i class="fa-solid fa-chevron-down mega-chevron"></i>
+              <!-- Dropdown Événements -->
+              <li class="has-drop" :class="{ 'drop-open': activeDrop === 'evenements' }">
+                <button class="nav-link nav-link--drop" @click.stop="toggleDrop('evenements')">
+                  Événements <i class="fa-solid fa-chevron-down drop-chevron"></i>
                 </button>
-                <div class="mega-panel" @click.stop>
-                  <div v-if="categories.length" class="mega-grid mega-grid--auto">
+                <div class="drop-panel">
+                  <template v-if="categories.length">
                     <router-link
-                      v-for="cat in categories"
-                      :key="cat.id"
+                      v-for="cat in categories" :key="cat.id"
                       :to="`/evenements/categorie/${cat.id}`"
-                      class="mega-card"
+                      class="drop-item"
                       @click="closeAll"
                     >
-                      <div class="mega-card-icon mega-card-icon--orange">
-                        <i class="fa-solid fa-calendar-days"></i>
-                      </div>
-                      <div class="mega-card-body">
+                      <div class="drop-item-icon di--orange"><i class="fa-solid fa-calendar-days"></i></div>
+                      <div>
                         <strong>{{ cat.titre }}</strong>
                         <span>Voir les événements</span>
                       </div>
-                      <i class="fa-solid fa-arrow-right mega-card-arrow"></i>
                     </router-link>
-                  </div>
-                  <div v-else class="mega-empty">
-                    <i class="fa-solid fa-calendar-xmark"></i>
-                    <span>Aucun événement disponible</span>
+                  </template>
+                  <div v-else class="drop-empty">
+                    <i class="fa-solid fa-calendar-xmark"></i> Aucun événement
                   </div>
                 </div>
               </li>
 
               <li>
-                <router-link to="/blog" class="nav-link" @click="closeAll">Articles</router-link>
-              </li>
-
-              <!-- Switcher langue -->
-              <li>
-                <button class="lang-btn" @click="toggleLocale">
-                  <i class="fa-solid fa-globe"></i>
-                  {{ locale === 'fr' ? 'EN' : 'FR' }}
-                </button>
+                <router-link to="/blog" class="nav-link" active-class="nav-link--active" @click="closeAll">
+                  Articles
+                </router-link>
               </li>
             </ul>
 
-            <!-- Mobile close -->
-            <button class="nav-close" @click="menuOpen = false" aria-label="Fermer le menu">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
+            <!-- Mobile : actions auth dans le menu -->
+            <div class="nav-mobile-actions">
+              <button class="lang-pill lang-pill--mobile" @click="toggleLocale">
+                <i class="fa-solid fa-globe"></i>
+                {{ locale === 'fr' ? 'Français' : 'English' }}
+                <i class="fa-solid fa-chevron-down" style="font-size:9px;"></i>
+              </button>
+              <template v-if="!isLoggedIn">
+                <router-link to="/register" class="btn btn--outline-white" @click="closeAll">Inscription</router-link>
+                <router-link to="/login"    class="btn btn--orange-solid"  @click="closeAll">Connexion</router-link>
+              </template>
+              <template v-else>
+                <router-link :to="dashboardRoute" class="btn btn--outline-white" @click="closeAll">Dashboard</router-link>
+              </template>
+            </div>
           </nav>
 
-          <!-- Actions droite -->
+          <!-- Actions droite (desktop) -->
           <div class="header-actions">
-            <!-- Favoris -->
+
+            <!-- Favoris (talent) -->
             <div v-if="isLoggedIn && userRole === 'talent'" class="favori-wrap" ref="favoriWrapRef">
               <button
-                class="icon-btn"
-                :class="{ 'icon-btn--active': favoris.length > 0 }"
+                class="fav-btn"
+                :class="{ 'fav-btn--active': favoris.length > 0 }"
                 @click="favoriOpen = !favoriOpen"
                 aria-label="Mes favoris"
               >
                 <i :class="favoris.length > 0 ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
-                <span v-if="favoris.length" class="icon-badge">{{ favoris.length > 9 ? '9+' : favoris.length }}</span>
+                <span v-if="favoris.length" class="fav-badge">{{ favoris.length > 9 ? '9+' : favoris.length }}</span>
               </button>
 
-              <Transition name="dropdown">
+              <Transition name="drop-anim">
                 <div v-if="favoriOpen" class="favori-dropdown">
                   <div class="favori-head">
                     <span><i class="fa-solid fa-heart"></i> Mes favoris</span>
-                    <span class="favori-count-badge">{{ favoris.length }}</span>
+                    <span class="fav-count">{{ favoris.length }}</span>
                   </div>
                   <div v-if="!favoris.length" class="favori-empty">
                     <i class="fa-regular fa-heart"></i>
@@ -156,7 +151,7 @@
                     <li v-for="offre in favoris" :key="offre.id" class="favori-item">
                       <router-link :to="`/annonces/${offre.id}`" class="favori-link" @click="favoriOpen = false">
                         <div class="favori-logo">
-                          <img v-if="offre.entreprise?.logo_url" :src="offre.entreprise.logo_url" :alt="offre.entreprise?.nom" />
+                          <img v-if="offre.entreprise?.logo_url" :src="offre.entreprise.logo_url" />
                           <span v-else>{{ offre.entreprise?.nom?.charAt(0) || '?' }}</span>
                         </div>
                         <div class="favori-info">
@@ -164,9 +159,7 @@
                           <p class="favori-ent">{{ offre.entreprise?.nom || '—' }}</p>
                         </div>
                       </router-link>
-                      <button class="favori-rm" @click="removeFavori(offre.id)" title="Retirer">
-                        <i class="fa-solid fa-xmark"></i>
-                      </button>
+                      <button class="favori-rm" @click="removeFavori(offre.id)"><i class="fa-solid fa-xmark"></i></button>
                     </li>
                   </ul>
                   <router-link v-if="favoris.length" to="/favoris" class="favori-footer" @click="favoriOpen = false">
@@ -176,16 +169,53 @@
               </Transition>
             </div>
 
-            <!-- Auth -->
-            <template v-if="isLoggedIn">
-              <router-link :to="dashboardRoute" class="btn btn--primary">
-                <i class="fa-solid fa-gauge"></i> Dashboard
-              </router-link>
+            <!-- Switcher langue -->
+            <div class="lang-wrap" ref="langWrapRef">
+              <button class="lang-pill" @click.stop="langOpen = !langOpen">
+                <i class="fa-solid fa-globe"></i>
+                {{ locale === 'fr' ? 'Français' : 'English' }}
+                <i class="fa-solid fa-chevron-down lang-chevron" :class="{ open: langOpen }"></i>
+              </button>
+              <Transition name="drop-anim">
+                <div v-if="langOpen" class="lang-dropdown">
+                  <button class="lang-option" :class="{ active: locale === 'fr' }" @click="setLocale('fr')">
+                    <span>🇫🇷</span> Français
+                    <i v-if="locale === 'fr'" class="fa-solid fa-check"></i>
+                  </button>
+                  <button class="lang-option" :class="{ active: locale === 'en' }" @click="setLocale('en')">
+                    <span>🇬🇧</span> English
+                    <i v-if="locale === 'en'" class="fa-solid fa-check"></i>
+                  </button>
+                </div>
+              </Transition>
+            </div>
+
+            <!-- Non-connecté -->
+            <template v-if="!isLoggedIn">
+              <router-link to="/register" class="btn btn--outline">Inscription</router-link>
+              <router-link to="/login"    class="btn btn--orange">Connexion</router-link>
             </template>
-            <template v-else>
-              <router-link to="/login" class="btn btn--ghost">Connexion</router-link>
-              <router-link to="/register" class="btn btn--primary">S'inscrire</router-link>
-            </template>
+
+            <!-- Connecté : dropdown utilisateur -->
+            <div v-else class="user-wrap" ref="userWrapRef">
+              <button class="user-pill" @click.stop="userOpen = !userOpen">
+                <span class="user-avatar"><i class="fa-solid fa-user"></i></span>
+                <span class="user-name">{{ userName }}</span>
+                <i class="fa-solid fa-chevron-down user-chevron" :class="{ open: userOpen }"></i>
+              </button>
+              <Transition name="drop-anim">
+                <div v-if="userOpen" class="user-dropdown">
+                  <router-link :to="dashboardRoute" class="user-item" @click="userOpen = false">
+                    <i class="fa-solid fa-gauge"></i> Dashboard
+                  </router-link>
+                  <div class="user-divider"></div>
+                  <button class="user-item user-item--danger" @click="logout">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Déconnexion
+                  </button>
+                </div>
+              </Transition>
+            </div>
+
           </div>
 
           <!-- Burger mobile -->
@@ -196,85 +226,91 @@
         </div>
       </div>
 
-      <!-- Overlay mega menus -->
-      <div v-if="activeMega" class="mega-overlay" @click="closeAll"></div>
+      <!-- Overlay (ferme les dropdowns) -->
+      <div v-if="activeDrop" class="nav-overlay" @click="closeAll"></div>
     </header>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 import { useFavoris } from '../composables/useFavoris.js'
 
-const apiBase       = import.meta.env.VITE_API_URL || 'http://localhost:8000'
-const route         = useRoute()
+const apiBase    = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const route      = useRoute()
+const router     = useRouter()
+
 const categories    = ref([])
 const isScrolled    = ref(false)
 const menuOpen      = ref(false)
-const activeMega    = ref(null)
+const activeDrop    = ref(null)
 const featuredEvent = ref(null)
 const countdown     = ref({ days: '00', hours: '00', minutes: '00', seconds: '00' })
 let   countdownTimer = null
 
 const isLoggedIn = ref(!!localStorage.getItem('token'))
 const userRole   = ref(localStorage.getItem('userRole') || '')
-
-const dashboardRoute = computed(() => {
-  return { admin: '/admin', talent: '/talent', entreprise: '/entreprise' }[userRole.value] || '/login'
+const userName   = computed(() => {
+  const n = localStorage.getItem('userName') || localStorage.getItem('userEmail') || ''
+  return n.split(' ')[0].toUpperCase() || 'MON COMPTE'
 })
 
-const locale = ref(localStorage.getItem('locale') || 'fr')
-function toggleLocale() {
-  locale.value = locale.value === 'fr' ? 'en' : 'fr'
-  localStorage.setItem('locale', locale.value)
-}
+const dashboardRoute = computed(() =>
+  ({ admin: '/admin', talent: '/talent', entreprise: '/entreprise' }[userRole.value] || '/login')
+)
 
-// ── Mega menus ──────────────────────────────────────────
-function toggleMega(name) {
-  activeMega.value = activeMega.value === name ? null : name
-}
+// ── Langue ──────────────────────────────────────────────
+const locale   = ref(localStorage.getItem('locale') || 'fr')
+const langOpen  = ref(false)
+const langWrapRef = ref(null)
 
-function closeAll() {
-  activeMega.value = null
-  menuOpen.value   = false
-  favoriOpen.value = false
-}
+function setLocale(l) { locale.value = l; localStorage.setItem('locale', l); langOpen.value = false }
+function toggleLocale() { setLocale(locale.value === 'fr' ? 'en' : 'fr') }
 
-// Fermer les megas à chaque navigation
+// ── Dropdowns ────────────────────────────────────────────
+function toggleDrop(name) { activeDrop.value = activeDrop.value === name ? null : name }
+function closeAll() { activeDrop.value = null; menuOpen.value = false; favoriOpen.value = false; langOpen.value = false; userOpen.value = false }
+
 watch(() => route.fullPath, () => closeAll())
 
-// ── Favoris ─────────────────────────────────────────────
+// ── User dropdown ────────────────────────────────────────
+const userOpen    = ref(false)
+const userWrapRef = ref(null)
+
+function logout() {
+  localStorage.removeItem('token')
+  localStorage.removeItem('userRole')
+  localStorage.removeItem('userName')
+  localStorage.removeItem('userEmail')
+  closeAll()
+  router.push('/login')
+}
+
+// ── Favoris ──────────────────────────────────────────────
 const { favoris, loadFavoris, removeFavori } = useFavoris()
 const favoriOpen    = ref(false)
 const favoriWrapRef = ref(null)
 
+// ── Click outside ────────────────────────────────────────
 function onClickOutside(e) {
-  if (favoriWrapRef.value && !favoriWrapRef.value.contains(e.target)) {
-    favoriOpen.value = false
-  }
-  if (!e.target.closest('.has-mega')) {
-    activeMega.value = null
-  }
+  if (favoriWrapRef.value && !favoriWrapRef.value.contains(e.target)) favoriOpen.value = false
+  if (langWrapRef.value   && !langWrapRef.value.contains(e.target))   langOpen.value   = false
+  if (userWrapRef.value   && !userWrapRef.value.contains(e.target))   userOpen.value   = false
+  if (!e.target.closest('.has-drop')) activeDrop.value = null
 }
 
-// ── Scroll ──────────────────────────────────────────────
+// ── Scroll ───────────────────────────────────────────────
 function onScroll() { isScrolled.value = window.scrollY > 50 }
 
-// ── Countdown ───────────────────────────────────────────
+// ── Countdown ────────────────────────────────────────────
 function pad(n) { return String(n).padStart(2, '0') }
-
 function tickCountdown(target) {
   const diff = target - Date.now()
-  if (diff <= 0) { countdown.value = { days: '00', hours: '00', minutes: '00', seconds: '00' }; return }
+  if (diff <= 0) { countdown.value = { days:'00', hours:'00', minutes:'00', seconds:'00' }; return }
   const s = Math.floor(diff / 1000)
-  countdown.value = {
-    days:    pad(Math.floor(s / 86400)),
-    hours:   pad(Math.floor((s % 86400) / 3600)),
-    minutes: pad(Math.floor((s % 3600) / 60)),
-    seconds: pad(s % 60),
-  }
+  countdown.value = { days: pad(Math.floor(s/86400)), hours: pad(Math.floor((s%86400)/3600)), minutes: pad(Math.floor((s%3600)/60)), seconds: pad(s%60) }
 }
 
 onMounted(async () => {
@@ -289,9 +325,7 @@ onMounted(async () => {
     categories.value = catRes.data
     if (evRes.data) {
       featuredEvent.value = evRes.data
-      const dateStr = evRes.data.date_debut.substring(0, 10)
-      const timeStr = (evRes.data.heure_debut_journee || '00:00').substring(0, 5)
-      const target  = new Date(`${dateStr}T${timeStr}:00`).getTime()
+      const target = new Date(`${evRes.data.date_debut.substring(0,10)}T${(evRes.data.heure_debut_journee||'00:00').substring(0,5)}:00`).getTime()
       tickCountdown(target)
       countdownTimer = setInterval(() => tickCountdown(target), 1000)
     }
@@ -306,410 +340,327 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   TOP BAR
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* ── Topbar ─────────────────────────────────────────── */
 .topbar {
-  background: #040a5d;
-  height: 36px;
+  background: #040a5d; height: 34px;
   display: flex; align-items: center;
-  font-size: 11.5px;
-  color: rgba(255,255,255,.65);
+  font-size: 11px; color: rgba(255,255,255,.6);
 }
 .topbar .container { display: flex; justify-content: space-between; align-items: center; }
-.topbar-left  { display: flex; align-items: center; gap: 10px; }
-.topbar-right { display: flex; gap: 14px; }
-.topbar-right a { color: rgba(255,255,255,.5); font-size: 12px; transition: color .15s; }
+.topbar-left  { display: flex; align-items: center; gap: 8px; }
+.topbar-right { display: flex; gap: 12px; }
+.topbar-right a { color: rgba(255,255,255,.45); font-size: 11px; transition: color .15s; }
 .topbar-right a:hover { color: #f07c00; }
-
-.topbar-event-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: #f07c00;
-  box-shadow: 0 0 6px #f07c00;
-  animation: pulse 2s infinite;
-  flex-shrink: 0;
+.topbar-dot {
+  width: 5px; height: 5px; border-radius: 50%; background: #f07c00;
+  box-shadow: 0 0 5px #f07c00; animation: blink 2s infinite; flex-shrink: 0;
 }
-@keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: .4 } }
-
-.topbar-event-label {
-  color: rgba(255,255,255,.8);
-  font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 260px;
-}
-
-.countdown-blocks { display: flex; align-items: center; gap: 3px; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
+.topbar-label { color: rgba(255,255,255,.75); font-weight: 600; max-width: 240px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.countdown-blocks { display: flex; align-items: center; gap: 2px; }
 .cd-block  { display: flex; align-items: baseline; gap: 1px; }
-.cd-num    { font-size: 12px; font-weight: 700; color: #fff; min-width: 18px; text-align: center; }
-.cd-unit   { font-size: 8px; font-weight: 700; color: #f07c00; text-transform: uppercase; }
-.cd-sep    { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.3); margin: 0 1px; }
+.cd-num    { font-size: 12px; font-weight: 700; color: #fff; min-width: 16px; text-align: center; }
+.cd-unit   { font-size: 8px; font-weight: 700; color: #f07c00; }
+.cd-sep    { font-size: 11px; color: rgba(255,255,255,.3); margin: 0 1px; }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   HEADER
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* ── Header ─────────────────────────────────────────── */
 .site-header {
   background: #fff;
   position: sticky; top: 0; z-index: 200;
-  border-bottom: 1px solid #f0f0f5;
+  border-bottom: 1.5px solid #f0f2f8;
   transition: box-shadow .25s, border-color .25s;
 }
-.site-header.scrolled {
-  box-shadow: 0 4px 24px rgba(4,10,93,.10);
-  border-color: transparent;
-}
+.site-header.scrolled { box-shadow: 0 4px 24px rgba(4,10,93,.09); border-color: transparent; }
 
 .header-inner {
-  display: flex; align-items: center; gap: 0;
-  height: 68px;
+  display: flex; align-items: center; height: 64px; gap: 0;
 }
 
 /* Logo */
 .site-logo {
-  display: flex; flex-direction: column; align-items: flex-start;
-  gap: 1px; text-decoration: none; flex-shrink: 0; margin-right: 32px;
+  display: flex; flex-direction: column; gap: 1px;
+  text-decoration: none; flex-shrink: 0; margin-right: 36px;
 }
-.site-logo img { display: block; }
-.site-tagline {
-  font-size: 10px; font-weight: 700; color: #f07c00;
-  letter-spacing: .4px; line-height: 1;
-  position: relative; top: -6px;
-}
+.site-tagline { font-size: 10px; font-weight: 700; color: #f07c00; letter-spacing: .3px; position: relative; top: -5px; }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   NAV
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* ── Nav ─────────────────────────────────────────────── */
 .site-nav { display: flex; flex: 1; }
-.site-nav ul {
-  display: flex; list-style: none; margin: 0; padding: 0;
-  align-items: center; gap: 2px; flex: 1;
-}
+.site-nav ul { display: flex; list-style: none; margin: 0; padding: 0; align-items: center; gap: 2px; }
 
 .nav-link {
-  display: flex; align-items: center; gap: 5px;
-  padding: 6px 14px;
-  font-size: 13.5px; font-weight: 600;
-  color: #1e2a4a;
-  text-decoration: none;
-  border-radius: 8px;
-  background: none; border: none; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 14px; border-radius: 8px;
+  font-size: 14px; font-weight: 500; color: #374151;
+  text-decoration: none; background: none; border: none;
+  cursor: pointer; white-space: nowrap;
   transition: color .15s, background .15s;
-  white-space: nowrap;
-  position: relative;
 }
-.nav-link::after {
-  content: '';
-  position: absolute; bottom: 0; left: 14px; right: 14px; height: 2px;
-  background: #192bc2; border-radius: 2px;
-  transform: scaleX(0); transform-origin: center;
-  transition: transform .2s;
-}
-.nav-link:hover { color: #192bc2; background: rgba(25,43,194,.05); }
-.nav-link:hover::after,
-.nav-link.router-link-active::after { transform: scaleX(1); }
-.nav-link.router-link-active { color: #192bc2; }
+.nav-link:hover          { color: #192bc2; background: #f0f3ff; }
+.nav-link--active        { color: #192bc2; background: #eef1fd; font-weight: 600; }
+.nav-link--drop          { user-select: none; }
+.drop-open .nav-link--drop { color: #192bc2; background: #eef1fd; }
 
-.nav-link--trigger { user-select: none; }
-
-.mega-chevron {
-  font-size: 9px; color: #94a3b8;
+.drop-chevron {
+  font-size: 9px; color: #9ca3af;
   transition: transform .2s, color .2s;
 }
-.mega-open .mega-chevron { transform: rotate(180deg); color: #192bc2; }
-.mega-open .nav-link--trigger { color: #192bc2; background: rgba(25,43,194,.05); }
+.drop-open .drop-chevron { transform: rotate(180deg); color: #192bc2; }
 
-.lang-btn {
-  display: flex; align-items: center; gap: 5px;
-  padding: 5px 12px;
-  font-size: 12px; font-weight: 700; letter-spacing: .5px;
-  color: #64748b;
-  background: #f8fafc; border: 1.5px solid #e2e8f0;
-  border-radius: 50px; cursor: pointer;
-  transition: border-color .15s, color .15s, background .15s;
-}
-.lang-btn:hover { border-color: #192bc2; color: #192bc2; background: #fff; }
-.lang-btn i { font-size: 11px; }
+/* ── Dropdown panel ──────────────────────────────────── */
+.has-drop { position: relative; }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   MEGA PANEL
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.has-mega { position: relative; }
-
-.mega-panel {
-  position: absolute;
-  top: calc(100% + 12px);
-  left: 50%; transform: translateX(-50%);
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 16px 48px rgba(4,10,93,.14), 0 2px 8px rgba(0,0,0,.06);
-  border: 1px solid #f0f0f5;
-  padding: 12px;
-  min-width: 320px;
-  z-index: 300;
-  /* Animation */
+.drop-panel {
+  position: absolute; top: calc(100% + 10px); left: 50%;
+  transform: translateX(-50%);
+  background: #fff; border-radius: 14px;
+  box-shadow: 0 8px 40px rgba(4,10,93,.13), 0 1px 4px rgba(0,0,0,.05);
+  border: 1px solid #eef0f8;
+  padding: 8px; min-width: 280px; z-index: 300;
+  /* hidden by default */
   opacity: 0; pointer-events: none;
-  transform: translateX(-50%) translateY(-6px);
-  transition: opacity .18s ease, transform .18s ease;
+  transform: translateX(-50%) translateY(-8px);
+  transition: opacity .18s, transform .18s;
 }
-.mega-open .mega-panel {
+.drop-panel::before {
+  content: ''; position: absolute; top: -6px; left: 50%; transform: translateX(-50%);
+  border: 6px solid transparent; border-bottom-color: #fff;
+  filter: drop-shadow(0 -1px 1px rgba(0,0,0,.05));
+}
+.drop-open .drop-panel {
   opacity: 1; pointer-events: auto;
   transform: translateX(-50%) translateY(0);
 }
 
-/* Petit triangle */
-.mega-panel::before {
-  content: '';
-  position: absolute; top: -6px; left: 50%; transform: translateX(-50%);
-  width: 12px; height: 6px;
-  background: #fff;
-  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-  filter: drop-shadow(0 -1px 1px rgba(0,0,0,.06));
+.drop-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; border-radius: 8px;
+  text-decoration: none; color: #1e293b;
+  transition: background .12s;
 }
+.drop-item:hover { background: #f8f9ff; }
+.drop-item strong { display: block; font-size: 13.5px; font-weight: 600; color: #1e293b; margin-bottom: 2px; }
+.drop-item span   { display: block; font-size: 12px; color: #94a3b8; }
 
-.mega-grid { display: flex; flex-direction: column; gap: 4px; }
-.mega-grid--auto { min-width: 260px; }
-
-.mega-overlay {
-  position: fixed; inset: 0; z-index: 150;
-  background: transparent;
+.drop-item-icon {
+  width: 38px; height: 38px; border-radius: 9px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 15px;
 }
+.di--blue   { background: #e8f0fe; color: #192bc2; }
+.di--violet { background: #ede9fe; color: #7c3aed; }
+.di--orange { background: #fff3e0; color: #f07c00; }
 
-/* Card mega */
-.mega-card {
-  display: flex; align-items: center; gap: 14px;
-  padding: 12px 14px; border-radius: 10px;
-  text-decoration: none;
-  transition: background .15s;
-  cursor: pointer;
-}
-.mega-card:hover { background: #f8fafc; }
-.mega-card:hover .mega-card-arrow { opacity: 1; transform: translateX(0); }
+.drop-empty { display: flex; align-items: center; gap: 10px; padding: 14px 12px; font-size: 13px; color: #94a3b8; }
 
-.mega-card-icon {
-  width: 40px; height: 40px; border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px; flex-shrink: 0;
-}
-.mega-card-icon--blue   { background: #e8f0fe; color: #192bc2; }
-.mega-card-icon--indigo { background: #ede9fe; color: #6d28d9; }
-.mega-card-icon--orange { background: #fff7ed; color: #f07c00; }
+.nav-overlay { position: fixed; inset: 0; z-index: 150; }
 
-.mega-card-body { flex: 1; min-width: 0; }
-.mega-card-body strong {
-  display: block; font-size: 14px; font-weight: 700; color: #1e2a4a; margin-bottom: 2px;
-}
-.mega-card-body span { display: block; font-size: 12px; color: #94a3b8; }
+/* ── Header actions ──────────────────────────────────── */
+.header-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; flex-shrink: 0; }
 
-.mega-card-arrow {
-  font-size: 11px; color: #94a3b8;
-  opacity: 0; transform: translateX(-4px);
-  transition: opacity .15s, transform .15s;
-  flex-shrink: 0;
-}
-
-.mega-empty {
-  display: flex; align-items: center; gap: 10px;
-  padding: 14px; font-size: 13px; color: #94a3b8;
-}
-.mega-empty i { font-size: 18px; }
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   ACTIONS DROITE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.header-actions {
-  display: flex; align-items: center; gap: 8px;
-  margin-left: auto; flex-shrink: 0;
-}
-
+/* Boutons auth */
 .btn {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 18px; border-radius: 8px;
-  font-size: 13px; font-weight: 700;
-  text-decoration: none; cursor: pointer;
-  border: none; transition: all .15s; white-space: nowrap;
+  padding: 8px 20px; border-radius: 8px;
+  font-size: 13.5px; font-weight: 600;
+  text-decoration: none; border: none; cursor: pointer;
+  white-space: nowrap; transition: all .15s;
 }
-.btn--primary {
-  background: #192bc2; color: #fff;
-  box-shadow: 0 2px 8px rgba(25,43,194,.3);
+.btn--outline {
+  background: #fff; color: #1e293b;
+  border: 1.5px solid #d1d5db;
 }
-.btn--primary:hover { background: #0f1d96; box-shadow: 0 4px 14px rgba(25,43,194,.4); transform: translateY(-1px); }
-.btn--ghost {
-  background: transparent; color: #1e2a4a;
-  border: 1.5px solid #e2e8f0;
+.btn--outline:hover { border-color: #192bc2; color: #192bc2; background: #f0f3ff; }
+.btn--orange {
+  background: #f07c00; color: #fff;
+  box-shadow: 0 2px 8px rgba(240,124,0,.25);
 }
-.btn--ghost:hover { border-color: #192bc2; color: #192bc2; background: rgba(25,43,194,.04); }
+.btn--orange:hover { background: #d96e00; box-shadow: 0 4px 14px rgba(240,124,0,.35); transform: translateY(-1px); }
 
-/* Icon btn (favoris) */
-.icon-btn {
-  position: relative;
-  background: none; border: 1.5px solid #e2e8f0;
-  width: 40px; height: 40px; border-radius: 10px;
+/* Langue */
+.lang-wrap { position: relative; }
+.lang-pill {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 12px; border-radius: 8px;
+  font-size: 13.5px; font-weight: 500; color: #374151;
+  background: none; border: 1.5px solid #e5e7eb;
+  cursor: pointer; transition: border-color .15s, color .15s, background .15s;
+  white-space: nowrap;
+}
+.lang-pill i:first-child { font-size: 14px; color: #6b7280; }
+.lang-pill:hover { border-color: #192bc2; color: #192bc2; background: #f0f3ff; }
+.lang-chevron { font-size: 9px; color: #9ca3af; transition: transform .2s; }
+.lang-chevron.open { transform: rotate(180deg); }
+
+.lang-dropdown {
+  position: absolute; top: calc(100% + 8px); right: 0;
+  background: #fff; border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(4,10,93,.12), 0 1px 4px rgba(0,0,0,.05);
+  border: 1px solid #eef0f8;
+  padding: 6px; min-width: 150px; z-index: 400;
+}
+.lang-option {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; padding: 8px 12px; border-radius: 7px;
+  font-size: 13.5px; font-weight: 500; color: #374151;
+  background: none; border: none; cursor: pointer;
+  transition: background .12s;
+}
+.lang-option:hover  { background: #f8f9ff; }
+.lang-option.active { color: #192bc2; font-weight: 600; }
+.lang-option i      { margin-left: auto; font-size: 11px; color: #192bc2; }
+
+/* Favoris */
+.favori-wrap { position: relative; }
+.fav-btn {
+  position: relative; background: none; border: none; cursor: pointer;
+  width: 38px; height: 38px; border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 16px; color: #94a3b8; cursor: pointer;
-  transition: border-color .15s, color .15s, background .15s;
+  font-size: 17px; color: #9ca3af;
+  transition: color .15s, background .15s;
 }
-.icon-btn:hover          { border-color: #f43f5e; color: #f43f5e; background: #fff5f7; }
-.icon-btn--active        { border-color: #fecdd3; color: #f43f5e; background: #fff5f7; }
-
-.icon-badge {
-  position: absolute; top: -5px; right: -5px;
+.fav-btn:hover          { color: #f43f5e; background: #fff5f7; }
+.fav-btn--active        { color: #f43f5e; }
+.fav-badge {
+  position: absolute; top: 1px; right: 1px;
   background: #f43f5e; color: #fff;
-  font-size: 9px; font-weight: 800;
-  min-width: 17px; height: 17px;
-  border-radius: 50px; padding: 0 4px;
+  font-size: 9px; font-weight: 800; min-width: 16px; height: 16px;
+  border-radius: 50px; padding: 0 3px;
   display: flex; align-items: center; justify-content: center;
   border: 2px solid #fff; line-height: 1;
 }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   DROPDOWN FAVORIS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.favori-wrap { position: relative; }
-
-.dropdown-enter-active, .dropdown-leave-active { transition: opacity .18s, transform .18s; }
-.dropdown-enter-from, .dropdown-leave-to { opacity: 0; transform: translateY(-6px); }
-
 .favori-dropdown {
   position: absolute; top: calc(100% + 10px); right: 0;
-  width: 310px; background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 16px 48px rgba(4,10,93,.14), 0 2px 8px rgba(0,0,0,.06);
-  border: 1px solid #f0f0f5;
-  border-top: 3px solid #f43f5e;
-  z-index: 400; overflow: hidden;
+  width: 300px; background: #fff; border-radius: 14px;
+  box-shadow: 0 8px 40px rgba(4,10,93,.13); border: 1px solid #eef0f8;
+  border-top: 3px solid #f43f5e; z-index: 400; overflow: hidden;
 }
-
 .favori-head {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 16px 12px;
-  font-size: 13px; font-weight: 700; color: #1e2a4a;
-  border-bottom: 1px solid #f4f4f8;
+  padding: 13px 15px 11px;
+  font-size: 13px; font-weight: 700; color: #1e293b;
+  border-bottom: 1px solid #f4f5fb;
 }
-.favori-head i { color: #f43f5e; margin-right: 6px; }
-.favori-count-badge {
-  background: #f43f5e; color: #fff;
-  font-size: 11px; font-weight: 700;
-  padding: 2px 8px; border-radius: 50px;
-}
-
-.favori-empty { padding: 24px 16px; text-align: center; color: #94a3b8; }
-.favori-empty i { font-size: 28px; opacity: .3; display: block; margin-bottom: 8px; }
+.favori-head i { color: #f43f5e; margin-right: 5px; }
+.fav-count { background: #f43f5e; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 50px; }
+.favori-empty { padding: 22px 15px; text-align: center; color: #94a3b8; }
+.favori-empty i { font-size: 26px; opacity: .25; display: block; margin-bottom: 7px; }
 .favori-empty p { font-size: 13px; margin: 0; }
-
-.favori-list { list-style: none; margin: 0; padding: 8px; max-height: 300px; overflow-y: auto; }
+.favori-list { list-style: none; margin: 0; padding: 7px; max-height: 280px; overflow-y: auto; }
 .favori-item { display: flex; align-items: center; border-radius: 8px; transition: background .12s; }
-.favori-item:hover { background: #f8fafc; }
-
-.favori-link {
-  flex: 1; display: flex; align-items: center; gap: 10px;
-  padding: 9px 8px; text-decoration: none; min-width: 0;
-}
-.favori-logo {
-  width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
-  background: #f4f4f8;
-  display: flex; align-items: center; justify-content: center; overflow: hidden;
-}
+.favori-item:hover { background: #f8f9ff; }
+.favori-link { flex: 1; display: flex; align-items: center; gap: 9px; padding: 8px 7px; text-decoration: none; min-width: 0; }
+.favori-logo { width: 34px; height: 34px; border-radius: 7px; flex-shrink: 0; background: #f4f5fb; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .favori-logo img  { width: 100%; height: 100%; object-fit: contain; padding: 3px; }
-.favori-logo span { font-size: 14px; font-weight: 800; color: #192bc2; }
+.favori-logo span { font-size: 13px; font-weight: 800; color: #192bc2; }
 .favori-info { flex: 1; min-width: 0; }
-.favori-titre { font-size: 13px; font-weight: 700; color: #1e2a4a; margin: 0 0 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.favori-titre { font-size: 12.5px; font-weight: 600; color: #1e293b; margin: 0 0 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .favori-ent   { font-size: 11px; color: #94a3b8; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-.favori-rm {
-  flex-shrink: 0; background: none; border: none; cursor: pointer;
-  width: 26px; height: 26px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; color: #cbd5e1;
-  transition: background .12s, color .12s;
-  margin-right: 8px;
-}
+.favori-rm    { flex-shrink: 0; background: none; border: none; cursor: pointer; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #cbd5e1; transition: background .12s, color .12s; margin-right: 7px; }
 .favori-rm:hover { background: #fee2e2; color: #f43f5e; }
+.favori-footer { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 11px 15px; font-size: 12px; font-weight: 700; color: #192bc2; text-decoration: none; border-top: 1px solid #f4f5fb; transition: background .12s; }
+.favori-footer:hover { background: #f8f9ff; }
 
-.favori-footer {
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-  padding: 12px 16px;
-  font-size: 12px; font-weight: 700; color: #192bc2;
-  text-decoration: none; border-top: 1px solid #f4f4f8;
-  transition: background .12s;
+/* User pill */
+.user-wrap { position: relative; }
+.user-pill {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 12px; border-radius: 8px;
+  background: none; border: 1.5px solid #e5e7eb;
+  cursor: pointer; font-size: 13.5px; font-weight: 600; color: #374151;
+  transition: border-color .15s, background .15s, color .15s;
 }
-.favori-footer:hover { background: #f8fafc; }
+.user-pill:hover { border-color: #192bc2; color: #192bc2; background: #f0f3ff; }
+.user-avatar {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: #eef1fd; display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: #192bc2; flex-shrink: 0;
+}
+.user-name   { max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.user-chevron { font-size: 9px; color: #9ca3af; transition: transform .2s; }
+.user-chevron.open { transform: rotate(180deg); }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   BURGER MOBILE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.user-dropdown {
+  position: absolute; top: calc(100% + 8px); right: 0;
+  background: #fff; border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(4,10,93,.12), 0 1px 4px rgba(0,0,0,.05);
+  border: 1px solid #eef0f8;
+  padding: 6px; min-width: 180px; z-index: 400;
+}
+.user-item {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; padding: 9px 12px; border-radius: 8px;
+  font-size: 13.5px; font-weight: 500; color: #374151;
+  text-decoration: none; background: none; border: none; cursor: pointer;
+  transition: background .12s, color .12s;
+}
+.user-item i          { font-size: 13px; color: #9ca3af; width: 16px; text-align: center; }
+.user-item:hover      { background: #f8f9ff; color: #192bc2; }
+.user-item:hover i    { color: #192bc2; }
+.user-item--danger:hover { background: #fff5f5; color: #ef4444; }
+.user-item--danger:hover i { color: #ef4444; }
+.user-divider { height: 1px; background: #f0f2f8; margin: 4px 6px; }
+
+/* Animations dropdowns */
+.drop-anim-enter-active, .drop-anim-leave-active { transition: opacity .16s ease, transform .16s ease; }
+.drop-anim-enter-from, .drop-anim-leave-to { opacity: 0; transform: translateY(-6px); }
+
+/* ── Burger mobile ───────────────────────────────────── */
 .burger {
   display: none; flex-direction: column; justify-content: center; gap: 5px;
-  padding: 8px; background: none; border: none; cursor: pointer; margin-left: 8px;
+  padding: 8px; background: none; border: none; cursor: pointer; margin-left: 12px;
 }
-.burger span {
-  width: 22px; height: 2px; background: #1e2a4a;
-  border-radius: 2px; display: block;
-  transition: transform .25s, opacity .25s, background .15s;
-}
+.burger span { width: 22px; height: 2px; background: #374151; border-radius: 2px; display: block; transition: transform .25s, opacity .25s; }
 .burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
 .burger.open span:nth-child(2) { opacity: 0; }
 .burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-/* Bouton fermer (mobile) */
-.nav-close {
-  display: none; position: absolute; top: 20px; right: 20px;
-  background: rgba(255,255,255,.1); border: none; cursor: pointer;
-  width: 40px; height: 40px; border-radius: 50%;
-  font-size: 18px; color: #fff;
-  align-items: center; justify-content: center;
-}
+.nav-close { display: none; position: absolute; top: 18px; right: 18px; background: rgba(255,255,255,.12); border: none; cursor: pointer; width: 38px; height: 38px; border-radius: 50%; font-size: 17px; color: #fff; align-items: center; justify-content: center; }
+.nav-mobile-actions { display: none; }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   MOBILE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* ── Mobile ──────────────────────────────────────────── */
 @media (max-width: 900px) {
   .burger { display: flex; }
 
   .site-nav {
-    display: none;
-    position: fixed; inset: 0; z-index: 500;
+    display: none; position: fixed; inset: 0; z-index: 500;
     background: #040a5d;
-    flex-direction: column; align-items: center; justify-content: center;
-    padding: 40px 24px;
+    flex-direction: column; align-items: center; justify-content: center; padding: 48px 24px;
   }
   .site-nav.open { display: flex; }
   .nav-close { display: flex; }
 
-  .site-nav ul { flex-direction: column; gap: 4px; width: 100%; max-width: 280px; }
-  .nav-link {
-    color: rgba(255,255,255,.85); font-size: 17px; padding: 12px 16px;
-    width: 100%; justify-content: space-between;
+  .site-nav ul { flex-direction: column; gap: 2px; width: 100%; max-width: 280px; }
+  .nav-link { color: rgba(255,255,255,.8); font-size: 16px; padding: 11px 16px; width: 100%; justify-content: space-between; border-radius: 10px; }
+  .nav-link:hover, .nav-link--active { background: rgba(255,255,255,.1); color: #fff; }
+  .drop-chevron { color: rgba(255,255,255,.4); }
+  .drop-open .nav-link--drop { background: rgba(255,255,255,.1); color: #fff; }
+
+  .drop-panel {
+    position: static; transform: none; opacity: 1; pointer-events: auto;
+    background: rgba(255,255,255,.07); box-shadow: none; border: none; border-radius: 8px; margin-top: 4px; padding: 4px;
   }
-  .nav-link::after { display: none; }
-  .nav-link:hover, .mega-open .nav-link--trigger { background: rgba(255,255,255,.08); color: #fff; }
-  .nav-link.router-link-active { color: #fff; background: rgba(255,255,255,.12); }
-  .mega-chevron { color: rgba(255,255,255,.5); }
+  .drop-panel::before { display: none; }
+  .drop-item { padding: 9px 10px; border-radius: 7px; }
+  .drop-item:hover { background: rgba(255,255,255,.08); }
+  .drop-item strong { color: rgba(255,255,255,.85); }
+  .drop-item span   { color: rgba(255,255,255,.45); }
 
-  .mega-panel {
-    position: static; transform: none; opacity: 1;
-    pointer-events: auto;
-    background: rgba(255,255,255,.06);
-    box-shadow: none; border: none; border-radius: 8px;
-    margin-top: 4px; padding: 6px;
-  }
-  .mega-panel::before { display: none; }
-  .mega-card { padding: 10px 12px; }
-  .mega-card:hover { background: rgba(255,255,255,.08); }
-  .mega-card-body strong { color: rgba(255,255,255,.9); }
-  .mega-card-body span  { color: rgba(255,255,255,.5); }
-  .mega-card-arrow { opacity: 1; transform: none; color: rgba(255,255,255,.3); }
+  .nav-mobile-actions { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 280px; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.1); }
+  .lang-pill--mobile { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.2); color: rgba(255,255,255,.8); width: 100%; justify-content: center; }
+  .btn--outline-white { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,.3); text-align: center; justify-content: center; }
+  .btn--orange-solid  { background: #f07c00; color: #fff; text-align: center; justify-content: center; }
 
-  .lang-btn { color: rgba(255,255,255,.6); border-color: rgba(255,255,255,.2); background: transparent; }
-  .lang-btn:hover { border-color: #fff; color: #fff; background: transparent; }
+  .header-actions .btn--outline,
+  .header-actions .lang-wrap,
+  .header-actions .user-wrap { display: none; }
 
-  .header-actions .btn--ghost { display: none; }
+  .nav-overlay { display: none; }
 
-  .mega-overlay { display: none; }
+  .topbar-label { max-width: 140px; }
 }
 
 @media (max-width: 480px) {
   .site-logo img { width: 120px; }
-  .header-actions .btn--primary { padding: 7px 12px; font-size: 12px; }
+  .header-actions .btn--orange { padding: 7px 14px; font-size: 12.5px; }
 }
 </style>
