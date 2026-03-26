@@ -52,7 +52,7 @@
             <div class="od-hero-cta">
               <template v-if="isLoggedIn && userRole === 'talent'">
                 <div class="od-cta-row">
-                  <button class="btn btn--blue btn--lg" @click="postuler">
+                  <button class="btn btn--blue btn--lg" @click="showModal = true">
                     <i class="fa-solid fa-paper-plane" style="margin-right:6px;"></i>Postuler
                   </button>
                   <button
@@ -200,7 +200,7 @@
               <div class="od-side-card od-side-cta">
                 <p>Intéressé par ce poste ?</p>
                 <template v-if="isLoggedIn && userRole === 'talent'">
-                  <button class="btn btn--blue" style="width:100%;" @click="postuler">Postuler maintenant</button>
+                  <button class="btn btn--blue" style="width:100%;" @click="showModal = true">Postuler maintenant</button>
                 </template>
                 <template v-else>
                   <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--blue" style="display:block;text-align:center;">
@@ -215,6 +215,42 @@
       </section>
 
     </template>
+
+    <!-- Modal de candidature -->
+    <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Postuler à cette offre</h2>
+          <button class="modal-close" @click="closeModal">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <form @submit.prevent="postuler" class="modal-body">
+          <div class="form-group">
+            <label for="cv">CV (PDF, DOC, DOCX) <span class="required">*</span></label>
+            <input
+              type="file"
+              id="cv"
+              ref="cvInput"
+              accept=".pdf,.doc,.docx"
+              @change="handleFileChange"
+              required
+            />
+            <p v-if="cvFile" class="file-name">
+              <i class="fa-solid fa-file"></i> {{ cvFile.name }}
+            </p>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn--outline" @click="closeModal">Annuler</button>
+            <button type="submit" class="btn btn--blue" :disabled="submitting">
+              <i v-if="submitting" class="fa-solid fa-spinner fa-spin"></i>
+              <i v-else class="fa-solid fa-paper-plane"></i>
+              {{ submitting ? 'Envoi...' : 'Envoyer ma candidature' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -238,6 +274,10 @@ const isTalent   = isLoggedIn.value && userRole.value === 'talent'
 const postuleMsg = ref('')
 const postuleOk  = ref(false)
 
+const showModal = ref(false)
+const cvFile = ref(null)
+const submitting = ref(false)
+
 const { favoris, loadFavoris, toggleFavori: _toggleFavori, isFavoriId } = useFavoris()
 
 const isFavori = computed(() => offre.value ? isFavoriId(offre.value.id) : false)
@@ -254,18 +294,58 @@ const load = async () => {
   }
 }
 
+const handleFileChange = (e) => {
+  const file = e.target.files[0]
+  if (file) {
+    const maxSize = 5 * 1024 * 1024 // 5MB
+    if (file.size > maxSize) {
+      alert('Le fichier est trop volumineux. Taille maximale : 5 Mo')
+      e.target.value = ''
+      cvFile.value = null
+      return
+    }
+    cvFile.value = file
+  }
+}
+
+const closeModal = () => {
+  showModal.value = false
+  cvFile.value = null
+  postuleMsg.value = ''
+}
+
 const postuler = async () => {
+  if (!cvFile.value) {
+    alert('Veuillez sélectionner un CV')
+    return
+  }
+
+  submitting.value = true
+  postuleMsg.value = ''
+
   try {
+    const formData = new FormData()
+    formData.append('cv', cvFile.value)
+
     await axios.post(
       `${apiBase}/talent/offres/${offre.value.id}/postuler`,
-      {},
-      { headers: { Authorization: `Bearer ${token}` } }
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      }
     )
+
     postuleMsg.value = 'Votre candidature a bien été envoyée !'
-    postuleOk.value  = true
+    postuleOk.value = true
+    closeModal()
   } catch (e) {
     postuleMsg.value = e.response?.data?.message || 'Une erreur est survenue.'
-    postuleOk.value  = false
+    postuleOk.value = false
+  } finally {
+    submitting.value = false
   }
 }
 
@@ -424,4 +504,72 @@ onMounted(() => {
   text-decoration: none; cursor: pointer; transition: border-color .15s, color .15s;
 }
 .btn--outline:hover { border-color: var(--blue); color: var(--blue); }
+
+/* Modal */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.6); z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; backdrop-filter: blur(4px);
+}
+.modal-content {
+  background: #fff; border-radius: 16px;
+  max-width: 600px; width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-height: 90vh; overflow-y: auto;
+}
+.modal-header {
+  padding: 24px 28px; border-bottom: 1px solid var(--border, #e2e8f0);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.modal-header h2 {
+  font-size: 20px; font-weight: 700; color: var(--navy); margin: 0;
+}
+.modal-close {
+  background: transparent; border: none; cursor: pointer;
+  font-size: 24px; color: var(--body-text); padding: 0;
+  width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+  border-radius: 6px; transition: background .2s, color .2s;
+}
+.modal-close:hover { background: var(--light-bg, #f5f7fa); color: var(--navy); }
+.modal-body {
+  padding: 28px;
+}
+.form-group {
+  margin-bottom: 20px;
+}
+.form-group label {
+  display: block; font-size: 14px; font-weight: 600;
+  color: var(--navy); margin-bottom: 8px;
+}
+.required { color: #ef4444; }
+.form-group input[type="file"] {
+  display: block; width: 100%; padding: 10px 12px;
+  border: 1.5px solid var(--border, #e2e8f0); border-radius: 8px;
+  font-size: 14px; cursor: pointer; transition: border-color .2s;
+}
+.form-group input[type="file"]:hover { border-color: var(--blue); }
+.file-name {
+  margin-top: 8px; font-size: 13px; color: var(--body-text);
+  display: flex; align-items: center; gap: 6px;
+}
+.file-name i { color: var(--blue); }
+.form-group textarea {
+  width: 100%; padding: 12px; border: 1.5px solid var(--border, #e2e8f0);
+  border-radius: 8px; font-size: 14px; font-family: inherit;
+  resize: vertical; transition: border-color .2s;
+}
+.form-group textarea:focus {
+  outline: none; border-color: var(--blue);
+}
+.char-count {
+  margin-top: 4px; font-size: 12px; color: var(--body-text); text-align: right;
+}
+.modal-actions {
+  display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;
+}
+.modal-actions .btn { min-width: 120px; }
+.btn:disabled {
+  opacity: 0.6; cursor: not-allowed;
+}
 </style>
