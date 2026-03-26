@@ -14,7 +14,7 @@ import enAnnonces from './locales/en/annonces.json'
 import enAuth from './locales/en/auth.json'
 import enFooter from './locales/en/footer.json'
 
-// Merge translations
+// Merge translations with proper nesting
 const fr = {
   ...frCommon,
   home: frHome,

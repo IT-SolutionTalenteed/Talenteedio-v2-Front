@@ -12,21 +12,21 @@
           <div class="hero-content fade-in">
             <span class="hero-date">{{ eventDateRange }}</span>
             <h1 class="hero-title" v-if="event">{{ event.titre }}</h1>
-            <h1 class="hero-title" v-else>{{ t('hero.defaultTitle') }} <span class="orange">{{ t('hero.defaultLocation') }}</span></h1>
+            <h1 class="hero-title" v-else>{{ t('home.hero.defaultTitle') }} <span class="orange">{{ t('home.hero.defaultLocation') }}</span></h1>
             <p class="hero-desc" v-if="event">
               {{ event.ville }}{{ event.pays ? ', ' + event.pays : '' }}
             </p>
-            <p class="hero-desc" v-else>{{ t('hero.defaultDescription') }}</p>
-            <p class="hero-cta-label">{{ t('hero.subscriptionsOpen') }}</p>
+            <p class="hero-desc" v-else>{{ t('home.hero.defaultDescription') }}</p>
+            <p class="hero-cta-label">{{ t('home.hero.subscriptionsOpen') }}</p>
             <router-link to="/register" class="btn btn--blue btn--lg hero-btn">
-              {{ t('hero.subscribe') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
+              {{ t('home.hero.subscribe') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
             </router-link>
             <!-- Countdown -->
             <div class="countdown-inner" id="countdown">
-              <div class="cd-item"><div class="cd-box"><span class="cd-num">{{ cd.days }}</span><span class="cd-label">{{ t('hero.days') }}</span></div></div>
-              <div class="cd-item"><div class="cd-box"><span class="cd-num">{{ cd.hours }}</span><span class="cd-label">{{ t('hero.hours') }}</span></div></div>
-              <div class="cd-item"><div class="cd-box"><span class="cd-num">{{ cd.minutes }}</span><span class="cd-label">{{ t('hero.minutes') }}</span></div></div>
-              <div class="cd-item"><div class="cd-box"><span class="cd-num">{{ cd.seconds }}</span><span class="cd-label">{{ t('hero.seconds') }}</span></div></div>
+              <div class="cd-item"><div class="cd-box"><span class="cd-num">{{ cd.days }}</span><span class="cd-label">{{ t('home.hero.days') }}</span></div></div>
+              <div class="cd-item"><div class="cd-box"><span class="cd-num">{{ cd.hours }}</span><span class="cd-label">{{ t('home.hero.hours') }}</span></div></div>
+              <div class="cd-item"><div class="cd-box"><span class="cd-num">{{ cd.minutes }}</span><span class="cd-label">{{ t('home.hero.minutes') }}</span></div></div>
+              <div class="cd-item"><div class="cd-box"><span class="cd-num">{{ cd.seconds }}</span><span class="cd-label">{{ t('home.hero.seconds') }}</span></div></div>
             </div>
           </div>
           <div class="hero-right"></div>
@@ -42,36 +42,36 @@
           <router-link to="/annonces" class="ql-card">
             <div class="ql-icon"><i class="fa-solid fa-briefcase"></i></div>
             <div class="ql-body">
-              <h3>{{ t('quicklinks.findJob.title') }}</h3>
-              <p>{{ t('quicklinks.findJob.description') }}</p>
-              <span class="ql-link">{{ t('quicklinks.findJob.action') }} <i class="fa-solid fa-arrow-right"></i></span>
+              <h3>{{ t('home.quicklinks.findJob.title') }}</h3>
+              <p>{{ t('home.quicklinks.findJob.description') }}</p>
+              <span class="ql-link">{{ t('home.quicklinks.findJob.action') }} <i class="fa-solid fa-arrow-right"></i></span>
             </div>
           </router-link>
 
           <router-link :to="categories.length ? `/evenements/categorie/${categories[0].id}` : '/'" class="ql-card">
             <div class="ql-icon ql-icon--orange"><i class="fa-solid fa-calendar-days"></i></div>
             <div class="ql-body">
-              <h3>{{ t('quicklinks.events.title') }}</h3>
-              <p>{{ t('quicklinks.events.description') }}</p>
-              <span class="ql-link">{{ t('quicklinks.events.action') }} <i class="fa-solid fa-arrow-right"></i></span>
+              <h3>{{ t('home.quicklinks.events.title') }}</h3>
+              <p>{{ t('home.quicklinks.events.description') }}</p>
+              <span class="ql-link">{{ t('home.quicklinks.events.action') }} <i class="fa-solid fa-arrow-right"></i></span>
             </div>
           </router-link>
 
           <router-link to="/blog" class="ql-card">
             <div class="ql-icon ql-icon--green"><i class="fa-solid fa-newspaper"></i></div>
             <div class="ql-body">
-              <h3>{{ t('quicklinks.articles.title') }}</h3>
-              <p>{{ t('quicklinks.articles.description') }}</p>
-              <span class="ql-link">{{ t('quicklinks.articles.action') }} <i class="fa-solid fa-arrow-right"></i></span>
+              <h3>{{ t('home.quicklinks.articles.title') }}</h3>
+              <p>{{ t('home.quicklinks.articles.description') }}</p>
+              <span class="ql-link">{{ t('home.quicklinks.articles.action') }} <i class="fa-solid fa-arrow-right"></i></span>
             </div>
           </router-link>
 
           <router-link :to="isLoggedIn && userRole === 'talent' ? '/talent' : '/login'" class="ql-card ql-card--featured">
             <div class="ql-icon ql-icon--white"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
             <div class="ql-body">
-              <h3>{{ t('quicklinks.matching.title') }}</h3>
-              <p>{{ t('quicklinks.matching.description') }}</p>
-              <span class="ql-link">{{ t('quicklinks.matching.action') }} <i class="fa-solid fa-arrow-right"></i></span>
+              <h3>{{ t('home.quicklinks.matching.title') }}</h3>
+              <p>{{ t('home.quicklinks.matching.description') }}</p>
+              <span class="ql-link">{{ t('home.quicklinks.matching.action') }} <i class="fa-solid fa-arrow-right"></i></span>
             </div>
           </router-link>
 
@@ -83,9 +83,9 @@
     <section v-if="event && event.entreprises && event.entreprises.length" class="section-partners">
       <div class="container">
         <div class="partners-header fade-in">
-          <span class="label-blue">{{ t('partners.label') }}</span>
-          <h2>{{ t('partners.title') }}</h2>
-          <p>{{ t('partners.description') }}</p>
+          <span class="label-blue">{{ t('home.partners.label') }}</span>
+          <h2>{{ t('home.partners.title') }}</h2>
+          <p>{{ t('home.partners.description') }}</p>
         </div>
         <div class="partners-grid fade-in">
           <router-link
@@ -107,7 +107,7 @@
         </div>
         <div class="partners-cta fade-in">
           <router-link to="/entreprises" class="btn btn--blue">
-            {{ t('partners.viewAll') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
+            {{ t('home.partners.viewAll') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
           </router-link>
         </div>
       </div>
@@ -115,11 +115,11 @@
 
     <!-- ══ TRIPLE ANCRAGE ══ -->
     <section class="section-triple">
-      <div class="triple-watermark">{{ t('triple.watermark') }}</div>
+      <div class="triple-watermark">{{ t('home.triple.watermark') }}</div>
       <div class="container">
         <div class="triple-header fade-in">
-          <h2>{{ t('triple.title') }}</h2>
-          <p>{{ t('triple.description') }}</p>
+          <h2>{{ t('home.triple.title') }}</h2>
+          <p>{{ t('home.triple.description') }}</p>
         </div>
         <div class="triple-cards">
           <!-- Articles dynamiques (3 premiers) -->
@@ -135,7 +135,7 @@
                 <h3>{{ article.title }}</h3>
                 <p>{{ truncate(stripHtml(article.content), 120) }}</p>
                 <router-link to="/login" style="color:var(--blue);font-weight:600;font-size:14px;margin-top:8px;display:inline-block;">
-                  {{ t('triple.readMore') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
+                  {{ t('home.triple.readMore') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
                 </router-link>
               </div>
             </div>
@@ -147,21 +147,21 @@
                 <img src="https://africatalentsummit.com/wp-content/uploads/2026/02/staff-tech-accounting-discussion-office-development-feedback-budget-communication-business-project-group-collaboration-financial-firm-people-planning-with-team-scaled.jpg"
                      alt="Think Tank" loading="lazy">
               </div>
-              <div class="triple-card-body"><h3>{{ t('triple.thinkTank.title') }}</h3><p>{{ t('triple.thinkTank.description') }}</p></div>
+              <div class="triple-card-body"><h3>{{ t('home.triple.thinkTank.title') }}</h3><p>{{ t('home.triple.thinkTank.description') }}</p></div>
             </div>
             <div class="triple-card fade-in">
               <div class="triple-card-img">
                 <img src="https://africatalentsummit.com/wp-content/uploads/2026/02/all-their-input-is-vital-when-it-comes-to-decision-2026-01-09-10-57-28-utc-scaled.jpg"
                      alt="Hub de Recrutement Premium" loading="lazy">
               </div>
-              <div class="triple-card-body"><h3>{{ t('triple.recruitmentHub.title') }}</h3><p>{{ t('triple.recruitmentHub.description') }}</p></div>
+              <div class="triple-card-body"><h3>{{ t('home.triple.recruitmentHub.title') }}</h3><p>{{ t('home.triple.recruitmentHub.description') }}</p></div>
             </div>
             <div class="triple-card fade-in">
               <div class="triple-card-img">
                 <img src="https://africatalentsummit.com/wp-content/uploads/2026/02/recording-the-facts-shot-of-a-group-of-people-sit-2026-01-09-11-19-42-utc-scaled.jpg"
                      alt="Levier de Diplomatie Économique" loading="lazy">
               </div>
-              <div class="triple-card-body"><h3>{{ t('triple.diplomacy.title') }}</h3><p>{{ t('triple.diplomacy.description') }}</p></div>
+              <div class="triple-card-body"><h3>{{ t('home.triple.diplomacy.title') }}</h3><p>{{ t('home.triple.diplomacy.description') }}</p></div>
             </div>
           </template>
         </div>
@@ -172,9 +172,9 @@
     <section id="offres" style="padding:80px 0;background:var(--light-bg);">
       <div class="container">
         <div class="roles-header fade-in" style="text-align:center;margin-bottom:48px;">
-          <span class="label-blue">{{ t('jobOffers.label') }}</span>
-          <h2>{{ t('jobOffers.title') }}</h2>
-          <p>{{ t('jobOffers.description') }}</p>
+          <span class="label-blue">{{ t('home.jobOffers.label') }}</span>
+          <h2>{{ t('home.jobOffers.title') }}</h2>
+          <p>{{ t('home.jobOffers.description') }}</p>
         </div>
         <div v-if="offres.length" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:28px;">
           <div v-for="offre in offres" :key="offre.id" class="fade-in"
@@ -201,16 +201,16 @@
               <span style="font-size:13px;color:var(--body-text);">
                 <i class="fa-solid fa-location-dot" style="color:var(--orange);margin-right:4px;"></i>{{ offre.localisation || '—' }}
               </span>
-              <router-link to="/login" class="btn btn--blue btn--sm">{{ t('jobOffers.apply') }}</router-link>
+              <router-link to="/login" class="btn btn--blue btn--sm">{{ t('home.jobOffers.apply') }}</router-link>
             </div>
           </div>
         </div>
         <div v-else style="text-align:center;color:var(--body-text);padding:40px 0;">
-          {{ t('jobOffers.noOffers') }}
+          {{ t('home.jobOffers.noOffers') }}
         </div>
         <div style="text-align:center;margin-top:40px;">
           <router-link to="/login" class="btn btn--blue btn--lg">
-            {{ t('jobOffers.viewAll') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
+            {{ t('home.jobOffers.viewAll') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
           </router-link>
         </div>
       </div>
@@ -233,25 +233,25 @@
           <span>{{ event.ville }}{{ event.pays ? ', ' + event.pays : '' }}</span>
         </div>
         <div class="event-countdown">
-          <div class="ecd-item"><span class="ecd-num">{{ pad(cd.days, 3) }}</span><span class="ecd-label">{{ t('hero.days') }}</span></div>
-          <div class="ecd-item"><span class="ecd-num">{{ pad(cd.hours, 2) }}</span><span class="ecd-label">{{ t('hero.hours') }}</span></div>
-          <div class="ecd-item"><span class="ecd-num">{{ pad(cd.minutes, 2) }}</span><span class="ecd-label">{{ t('hero.minutes') }}</span></div>
-          <div class="ecd-item"><span class="ecd-num">{{ pad(cd.seconds, 2) }}</span><span class="ecd-label">{{ t('hero.seconds') }}</span></div>
+          <div class="ecd-item"><span class="ecd-num">{{ pad(cd.days, 3) }}</span><span class="ecd-label">{{ t('home.hero.days') }}</span></div>
+          <div class="ecd-item"><span class="ecd-num">{{ pad(cd.hours, 2) }}</span><span class="ecd-label">{{ t('home.hero.hours') }}</span></div>
+          <div class="ecd-item"><span class="ecd-num">{{ pad(cd.minutes, 2) }}</span><span class="ecd-label">{{ t('home.hero.minutes') }}</span></div>
+          <div class="ecd-item"><span class="ecd-num">{{ pad(cd.seconds, 2) }}</span><span class="ecd-label">{{ t('home.hero.seconds') }}</span></div>
         </div>
         <router-link to="/register" class="btn btn--blue btn--lg" style="position:relative;z-index:2;">
-          {{ t('eventSection.participate') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
+          {{ t('home.eventSection.participate') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
         </router-link>
       </div>
     </section>
 
     <!-- ══ CTA ══ -->
     <section class="section-cta">
-      <div class="cta-watermark">{{ t('cta.watermark') }}</div>
+      <div class="cta-watermark">{{ t('home.cta.watermark') }}</div>
       <div class="container">
-        <span class="cta-label">{{ t('cta.label') }}</span>
-        <h2 v-html="t('cta.title')"></h2>
+        <span class="cta-label">{{ t('home.cta.label') }}</span>
+        <h2>{{ t('home.cta.title') }}</h2>
         <router-link to="/register" class="btn btn--blue btn--lg">
-          {{ t('cta.action') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
+          {{ t('home.cta.action') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
         </router-link>
       </div>
     </section>
