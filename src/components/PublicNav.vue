@@ -87,7 +87,7 @@
                   </li>
                 </ul>
 
-                <router-link v-if="favoris.length" to="/talent" class="favori-see-all" @click="favoriOpen = false">
+                <router-link v-if="favoris.length" to="/favoris" class="favori-see-all" @click="favoriOpen = false">
                   Voir tous mes favoris <i class="fa-solid fa-arrow-right"></i>
                 </router-link>
               </div>

@@ -15,6 +15,7 @@ import CategorieEvenementPublic from '../components/CategorieEvenementPublic.vue
 import Blog from '../components/Blog.vue'
 import ArticleDetail from '../components/ArticleDetail.vue'
 import EvenementDetail from '../components/EvenementDetail.vue'
+import MesFavoris from '../components/MesFavoris.vue'
 
 const routes = [
   {
@@ -61,6 +62,12 @@ const routes = [
     path: '/blog/:id',
     name: 'ArticleDetail',
     component: ArticleDetail
+  },
+  {
+    path: '/favoris',
+    name: 'MesFavoris',
+    component: MesFavoris,
+    meta: { requiresAuth: true, role: 'talent' }
   },
   {
     path: '/login',
