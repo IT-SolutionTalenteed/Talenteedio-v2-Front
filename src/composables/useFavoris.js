@@ -34,7 +34,11 @@ async function loadFavoris() {
  * Retourne le nouvel état booléen (true = ajouté, false = retiré).
  */
 async function toggleFavori(offre) {
-  if (!isTalent()) { window.location.href = '/login'; return false }
+  if (!isTalent()) {
+    const current = window.location.pathname + window.location.search
+    window.location.href = `/login?redirect=${encodeURIComponent(current)}`
+    return false
+  }
   try {
     const res = await axios.post(
       `${apiBase}/talent/offres/${offre.id}/favori`,

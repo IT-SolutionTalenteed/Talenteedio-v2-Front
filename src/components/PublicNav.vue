@@ -152,7 +152,7 @@
             <!-- Non-connecté -->
             <template v-if="!isLoggedIn">
               <router-link to="/register" class="btn btn--orange btn--sm">SOUSCRIPTION</router-link>
-              <router-link to="/login"    class="btn btn--blue   btn--sm">SE CONNECTER</router-link>
+              <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--blue btn--sm">SE CONNECTER</router-link>
             </template>
 
             <!-- Connecté : dropdown utilisateur -->

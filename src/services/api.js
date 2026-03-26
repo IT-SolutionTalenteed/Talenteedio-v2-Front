@@ -47,7 +47,8 @@ api.interceptors.response.use(
       console.log('Token expiré ou invalide, redirection vers login')
       localStorage.removeItem('token')
       localStorage.removeItem('userRole')
-      window.location.href = '/login'
+      const current = window.location.pathname + window.location.search
+      window.location.href = `/login?redirect=${encodeURIComponent(current)}`
     }
     return Promise.reject(error)
   }
