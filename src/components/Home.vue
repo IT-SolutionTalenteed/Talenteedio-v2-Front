@@ -111,8 +111,8 @@
     </header>
 
     <!-- ══ HERO — Événement mis en avant ══ -->
-    <section class="hero" :style="heroStyle">
-      <div class="hero-bg"></div>
+    <section class="hero">
+      <div class="hero-bg" :style="heroStyle"></div>
       <div class="hero-overlay"></div>
       <div class="container">
         <div class="hero-inner">
@@ -498,7 +498,7 @@ function startCountdown() {
 // ── Style hero — image de fond dynamique ──────────────────
 const heroStyle = computed(() => {
   if (event.value?.image_mise_en_avant_url) {
-    return { '--hero-bg-image': `url('${event.value.image_mise_en_avant_url}')` }
+    return { backgroundImage: `url('${event.value.image_mise_en_avant_url}')` }
   }
   return {}
 })
@@ -585,10 +585,6 @@ function initFadeIn() {
   top: -8px;
 }
 
-/* ── Hero bg dynamique ────────────────────────────────── */
-.hero[style] .hero-bg {
-  background-image: var(--hero-bg-image, url('https://africatalentsummit.com/wp-content/uploads/2026/02/sn6234-lux-kirchberg-centredeconference-13.jpeg'));
-}
 
 /* ── Label bleu ───────────────────────────────────────── */
 .label-blue {
