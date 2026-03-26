@@ -62,9 +62,10 @@
             class="checkbox-input"
           />
           <span class="checkbox-text">
-            Je reconnais avoir lu 
-            <a href="/legal/consentement" target="_blank">le consentement</a>
-            et accepte de le signer électroniquement avec mon nom.
+            J'accepte les 
+            <router-link to="/terms-and-conditions" target="_blank">conditions générales</router-link>
+            et la 
+            <router-link to="/privacy-policy" target="_blank">politique de confidentialité</router-link>
           </span>
         </label>
       </div>
