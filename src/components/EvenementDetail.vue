@@ -49,7 +49,7 @@
                 <router-link to="/register" class="btn btn--orange btn--lg">
                   <i class="fa-solid fa-user-plus" style="margin-right:6px;"></i>Souscrire pour participer
                 </router-link>
-                <router-link to="/login" class="btn btn--outline-white btn--lg">
+                <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--outline-white btn--lg">
                   Se connecter
                 </router-link>
               </template>
@@ -72,6 +72,63 @@
                 <p class="evd-description">{{ evenement.description }}</p>
               </div>
 
+              <!-- ══ PARTICIPATION ENTREPRISE ══ -->
+              <div v-if="isEntreprise" class="evd-block evd-participation-block">
+                <h2 class="evd-block-title">
+                  <i class="fa-solid fa-handshake"></i> Participation à l'événement
+                </h2>
+
+                <!-- Déjà participante -->
+                <div v-if="estParticipant" class="evd-part-status evd-part-status--ok">
+                  <i class="fa-solid fa-circle-check"></i>
+                  <div>
+                    <strong>Vous participez à cet événement</strong>
+                    <p>Votre entreprise est inscrite comme recruteur partenaire.</p>
+                  </div>
+                </div>
+
+                <!-- Demande en attente -->
+                <div v-else-if="maDemandeStatut === 'en_attente'" class="evd-part-status evd-part-status--pending">
+                  <i class="fa-solid fa-clock"></i>
+                  <div>
+                    <strong>Demande en cours de traitement</strong>
+                    <p>Votre demande de participation a été transmise à l'équipe Talenteed.</p>
+                  </div>
+                </div>
+
+                <!-- Demande acceptée (mais pas encore dans le pivot) -->
+                <div v-else-if="maDemandeStatut === 'accepte'" class="evd-part-status evd-part-status--ok">
+                  <i class="fa-solid fa-circle-check"></i>
+                  <div>
+                    <strong>Demande acceptée</strong>
+                    <p>Votre participation a été validée par l'équipe Talenteed.</p>
+                  </div>
+                </div>
+
+                <!-- Demande refusée -->
+                <div v-else-if="maDemandeStatut === 'refuse'" class="evd-part-status evd-part-status--refused">
+                  <i class="fa-solid fa-circle-xmark"></i>
+                  <div>
+                    <strong>Demande refusée</strong>
+                    <p>Votre demande de participation n'a pas été retenue pour cet événement.</p>
+                  </div>
+                </div>
+
+                <!-- Aucune demande -->
+                <div v-else class="evd-part-cta">
+                  <p>Votre entreprise ne participe pas encore à cet événement. Soumettez une demande pour rejoindre les recruteurs partenaires.</p>
+                  <button
+                    class="btn btn--blue"
+                    :disabled="demandeLoading"
+                    @click="demanderParticipation"
+                  >
+                    <i class="fa-solid fa-paper-plane" v-if="!demandeLoading"></i>
+                    <i class="fa-solid fa-spinner fa-spin" v-else></i>
+                    {{ demandeLoading ? 'Envoi en cours…' : 'Demander à participer' }}
+                  </button>
+                </div>
+              </div>
+
               <!-- ══ ENTREPRISES PARTICIPANTES ══ -->
               <div class="evd-block" id="entreprises-section">
                 <h2 class="evd-block-title">
@@ -85,28 +142,22 @@
                     :key="ent.id"
                     class="evd-company-card"
                   >
-                    <!-- Logo -->
                     <div class="evd-company-logo">
                       <img v-if="ent.logo_url" :src="ent.logo_url" :alt="ent.nom" />
                       <span v-else class="evd-company-initial">{{ ent.nom.charAt(0) }}</span>
                     </div>
-                    <!-- Infos -->
-                    <div class="evd-company-info">
-                      <h3 class="evd-company-name">{{ ent.nom }}</h3>
-                      <p v-if="ent.activity_sector" class="evd-company-sector">
-                        <i class="fa-solid fa-industry"></i> {{ ent.activity_sector.name }}
-                      </p>
-                      <p v-if="ent.ville || ent.pays" class="evd-company-loc">
-                        <i class="fa-solid fa-location-dot"></i>
-                        {{ [ent.ville, ent.pays].filter(Boolean).join(', ') }}
-                      </p>
-                      <p v-if="ent.description" class="evd-company-desc">{{ truncate(ent.description, 80) }}</p>
-                      <div v-if="ent.offres?.length" class="evd-company-offres">
-                        <i class="fa-solid fa-briefcase"></i>
-                        {{ ent.offres.length }} offre{{ ent.offres.length > 1 ? 's' : '' }}
-                      </div>
+                    <h3 class="evd-company-name">{{ ent.nom }}</h3>
+                    <p v-if="ent.activity_sector" class="evd-company-sector">
+                      <i class="fa-solid fa-industry"></i> {{ ent.activity_sector.name }}
+                    </p>
+                    <p v-if="ent.ville || ent.pays" class="evd-company-loc">
+                      <i class="fa-solid fa-location-dot"></i>
+                      {{ [ent.ville, ent.pays].filter(Boolean).join(', ') }}
+                    </p>
+                    <div v-if="ent.offres?.length" class="evd-company-offres">
+                      <i class="fa-solid fa-briefcase"></i>
+                      {{ ent.offres.length }} offre{{ ent.offres.length > 1 ? 's' : '' }}
                     </div>
-                    <!-- Action -->
                     <div class="evd-company-action">
                       <router-link :to="`/entreprises/${ent.id}`" class="btn btn--outline-nav btn--sm">
                         Voir le profil
@@ -119,24 +170,12 @@
                   <p>Aucune entreprise enregistrée pour cet événement.</p>
                 </div>
 
-                <!-- Indicateur matching pour les talents -->
-                <div v-if="isTalent && evenement.entreprises?.length" class="evd-matching-hint">
-                  <i class="fa-solid fa-wand-magic-sparkles"></i>
-                  <div>
-                    <strong>Prendre un rendez-vous ?</strong>
-                    Lancez d'abord le matching IA ci-dessous pour identifier les entreprises les plus adaptées à votre profil, puis prenez rendez-vous depuis les résultats.
-                  </div>
-                  <button class="btn btn--blue btn--sm" @click="scrollToMatching">
-                    Lancer le matching
-                  </button>
-                </div>
               </div>
 
               <!-- ══ MATCHING IA (talent seulement) ══ -->
               <div v-if="isTalent" class="evd-block evd-matching-block" id="matching-section">
                 <h2 class="evd-block-title">
                   <i class="fa-solid fa-wand-magic-sparkles"></i> Matching IA
-                  <span class="evd-label-ai">Propulsé par OpenAI</span>
                 </h2>
                 <p class="evd-matching-intro">
                   Notre IA analyse votre profil et le compare aux entreprises participantes pour vous proposer les meilleures opportunités.
@@ -246,9 +285,40 @@
                     <h3>Matching IA & Prise de rendez-vous</h3>
                     <p>Connectez-vous en tant que talent pour accéder au matching IA et réserver un entretien avec les entreprises de votre choix.</p>
                     <div class="evd-cta-login-btns">
-                      <router-link to="/login" class="btn btn--blue">Se connecter</router-link>
+                      <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--blue">Se connecter</router-link>
                       <router-link to="/register" class="btn btn--orange">Créer un compte talent</router-link>
                     </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ══ MES ENTRETIENS (talent seulement) ══ -->
+              <div v-if="isTalent && mesEntretiens.length" class="evd-block">
+                <h2 class="evd-block-title">
+                  <i class="fa-solid fa-calendar-check"></i> Mes entretiens
+                  <span class="evd-count">{{ mesEntretiens.length }}</span>
+                </h2>
+                <div class="evd-entretiens-list">
+                  <div
+                    v-for="ent in mesEntretiens"
+                    :key="ent.id"
+                    class="evd-entretien-item"
+                  >
+                    <div class="evd-entretien-logo">
+                      <img v-if="ent.entreprise?.logo_url" :src="ent.entreprise.logo_url" :alt="ent.entreprise?.nom" />
+                      <span v-else>{{ ent.entreprise?.nom?.charAt(0) || '?' }}</span>
+                    </div>
+                    <div class="evd-entretien-info">
+                      <div class="evd-entretien-company">{{ ent.entreprise?.nom || '—' }}</div>
+                      <div class="evd-entretien-datetime">
+                        <i class="fa-solid fa-calendar"></i> {{ ent.date }}
+                        &nbsp;·&nbsp;
+                        <i class="fa-solid fa-clock"></i> {{ ent.heure_debut?.substring(0,5) }}
+                      </div>
+                    </div>
+                    <span :class="['evd-entretien-badge', `status--${ent.statut}`]">
+                      {{ ent.statut === 'confirme' ? 'Confirmé' : ent.statut === 'refuse' ? 'Refusé' : 'En attente' }}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -325,6 +395,7 @@
                 </template>
               </div>
 
+
             </aside>
           </div>
         </div>
@@ -333,24 +404,31 @@
       <!-- ══ MODAL RÉSERVATION ══ -->
       <div v-if="rdvEntreprise" class="evd-modal-overlay" @click.self="rdvEntreprise = null">
         <div class="evd-modal">
-          <button class="evd-modal-close" @click="rdvEntreprise = null">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
 
+          <!-- Header modal -->
           <div class="evd-modal-header">
-            <h3>Prendre rendez-vous</h3>
-            <p>
-              <strong>{{ rdvEntreprise.nom }}</strong> —
-              {{ evenement.titre }}
-            </p>
+            <div class="evd-modal-company">
+              <div class="evd-modal-logo">
+                <img v-if="rdvEntreprise.logo_url" :src="rdvEntreprise.logo_url" :alt="rdvEntreprise.nom" />
+                <span v-else>{{ rdvEntreprise.nom.charAt(0) }}</span>
+              </div>
+              <div>
+                <div class="evd-modal-company-name">{{ rdvEntreprise.nom }}</div>
+                <div class="evd-modal-event-name">{{ evenement.titre }}</div>
+              </div>
+            </div>
+            <button class="evd-modal-close" @click="rdvEntreprise = null">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
           </div>
 
-          <!-- Chargement créneaux -->
+          <!-- Chargement -->
           <div v-if="rdvLoading" class="evd-rdv-loading">
-            <i class="fa-solid fa-spinner fa-spin"></i> Chargement des créneaux...
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <span>Chargement des créneaux…</span>
           </div>
 
-          <!-- Confirmation -->
+          <!-- Confirmation réussie -->
           <div v-else-if="rdvConfirme" class="evd-rdv-confirme">
             <i class="fa-solid fa-circle-check"></i>
             <p>Entretien réservé le <strong>{{ rdvConfirme.date }}</strong> à <strong>{{ rdvConfirme.heure_debut }}</strong></p>
@@ -359,12 +437,12 @@
           </div>
 
           <!-- Créneaux -->
-          <div v-else>
+          <div v-else class="evd-modal-body">
             <div v-if="rdvCreneaux.length" class="evd-creneaux">
               <div v-for="jour in rdvCreneaux" :key="jour.date" class="evd-creneau-jour">
-                <h4 class="evd-creneau-date">
-                  <i class="fa-solid fa-calendar"></i> {{ formatJour(jour.date) }}
-                </h4>
+                <div class="evd-creneau-date">
+                  <i class="fa-solid fa-calendar-day"></i> {{ formatJour(jour.date) }}
+                </div>
                 <div class="evd-creneau-slots">
                   <button
                     v-for="slot in jour.slots"
@@ -377,28 +455,28 @@
                     @click="slot.disponible && selectSlot(jour.date, slot)"
                   >
                     {{ slot.heure_debut.substring(0,5) }}
-                    <span v-if="!slot.disponible" class="evd-slot-pris">pris</span>
                   </button>
                 </div>
               </div>
             </div>
             <div v-else class="evd-rdv-loading">
-              <i class="fa-solid fa-calendar-xmark" style="font-size:32px;opacity:.4;"></i>
-              <p>Aucun créneau disponible.</p>
+              <i class="fa-solid fa-calendar-xmark"></i>
+              <span>Aucun créneau disponible.</span>
             </div>
+          </div>
 
-            <div v-if="selectedSlot" class="evd-slot-confirm">
-              <p>
-                <i class="fa-solid fa-clock"></i>
-                Créneau sélectionné : <strong>{{ formatJour(selectedDate) }} à {{ selectedSlot.heure_debut.substring(0,5) }}</strong>
-              </p>
-              <div v-if="rdvError" class="evd-error">{{ rdvError }}</div>
-              <div class="evd-slot-confirm-btns">
-                <button class="btn btn--blue" @click="confirmerReservation" :disabled="rdvLoading">
-                  <i class="fa-solid fa-check"></i> Confirmer la réservation
-                </button>
-                <button class="btn btn--ghost" @click="selectedSlot = null">Annuler</button>
-              </div>
+          <!-- Footer confirmation -->
+          <div v-if="selectedSlot && !rdvConfirme" class="evd-modal-footer">
+            <div class="evd-slot-selected-info">
+              <i class="fa-solid fa-clock"></i>
+              <span>{{ formatJour(selectedDate) }} · <strong>{{ selectedSlot.heure_debut.substring(0,5) }}</strong></span>
+            </div>
+            <div v-if="rdvError" class="evd-error">{{ rdvError }}</div>
+            <div class="evd-modal-footer-btns">
+              <button class="btn btn--ghost" @click="selectedSlot = null">Annuler</button>
+              <button class="btn btn--blue" @click="confirmerReservation" :disabled="rdvLoading">
+                <i class="fa-solid fa-check"></i> Confirmer
+              </button>
             </div>
           </div>
 
@@ -425,9 +503,10 @@ const loading   = ref(true)
 const skills    = ref([])
 
 // ── Auth ──────────────────────────────────────────────────────
-const isLoggedIn = ref(!!localStorage.getItem('token'))
-const userRole   = ref(localStorage.getItem('userRole') || '')
-const isTalent   = computed(() => isLoggedIn.value && userRole.value === 'talent')
+const isLoggedIn   = ref(!!localStorage.getItem('token'))
+const userRole     = ref(localStorage.getItem('userRole') || '')
+const isTalent     = computed(() => isLoggedIn.value && userRole.value === 'talent')
+const isEntreprise = computed(() => isLoggedIn.value && userRole.value === 'entreprise')
 
 // ── Matching ──────────────────────────────────────────────────
 const matchingForm      = ref({ poste_recherche: '', competences_ids: [] })
@@ -445,6 +524,49 @@ const rdvError      = ref('')
 const rdvConfirme   = ref(null)
 const selectedDate  = ref(null)
 const selectedSlot  = ref(null)
+
+// ── Participation entreprise ───────────────────────────────────
+const maDemandeStatut  = ref(null)   // null | 'en_attente' | 'accepte' | 'refuse'
+const demandeLoading   = ref(false)
+const demandeEnvoye    = ref(false)
+const estParticipant   = computed(() =>
+  isEntreprise.value &&
+  evenement.value?.entreprises?.some(e => e.user_id === parseInt(localStorage.getItem('userId') || '0'))
+)
+
+const loadMaDemande = async () => {
+  if (!isEntreprise.value || !evenement.value) return
+  try {
+    const res = await api.get('/entreprise/mes-demandes')
+    const demandes = Array.isArray(res.data) ? res.data : []
+    const d = demandes.find(d => d.evenement_id === evenement.value.id)
+    maDemandeStatut.value = d?.statut ?? null
+  } catch {}
+}
+
+const demanderParticipation = async () => {
+  demandeLoading.value = true
+  try {
+    await api.post(`/entreprise/evenements/${evenement.value.id}/demande`, {})
+    maDemandeStatut.value = 'en_attente'
+    demandeEnvoye.value   = true
+  } catch (e) {
+    alert(e.response?.data?.message || 'Erreur lors de la demande.')
+  } finally {
+    demandeLoading.value = false
+  }
+}
+
+// ── Mes entretiens (talent) ────────────────────────────────────
+const mesEntretiens = ref([])
+const loadMesEntretiens = async () => {
+  if (!isTalent.value || !evenement.value) return
+  try {
+    const res = await api.get('/talent/mes-entretiens')
+    const all = Array.isArray(res.data) ? res.data : (res.data.data || [])
+    mesEntretiens.value = all.filter(e => e.evenement_id === evenement.value.id)
+  } catch {}
+}
 
 // ── Computed style héro ───────────────────────────────────────
 const heroStyle = computed(() => {
@@ -550,6 +672,7 @@ const confirmerReservation = async () => {
       heure_debut:   selectedSlot.value.heure_debut,
     })
     rdvConfirme.value = res.data
+    await loadMesEntretiens()
   } catch (e) {
     rdvError.value = e.response?.data?.message || 'Erreur lors de la réservation.'
   } finally {
@@ -583,7 +706,13 @@ const scoreClass = (score) => {
 
 onMounted(async () => {
   await load()
-  if (isTalent.value) loadSkills()
+  if (isTalent.value) {
+    loadSkills()
+    loadMesEntretiens()
+  }
+  if (isEntreprise.value) {
+    loadMaDemande()
+  }
 })
 </script>
 
@@ -661,40 +790,44 @@ onMounted(async () => {
 .evd-empty i { font-size: 36px; opacity: .25; margin-bottom: 12px; display: block; }
 
 /* ── Grille entreprises ── */
-.evd-companies-grid { display: flex; flex-direction: column; gap: 14px; }
-.evd-company-card {
+.evd-companies-grid {
   display: grid;
-  grid-template-columns: 70px 1fr auto;
-  gap: 16px; align-items: center;
-  padding: 18px 20px; border-radius: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+.evd-company-card {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 24px 16px 18px;
+  border-radius: 14px;
   border: 1.5px solid var(--border, #e2e8f0);
-  background: var(--light-bg, #f5f7fa);
-  transition: border-color .2s, box-shadow .2s, background .2s;
+  background: #fff;
+  transition: border-color .2s, box-shadow .2s, transform .2s;
+  gap: 8px;
 }
 .evd-company-card.evd-company-card--selected { border-color: var(--blue); }
-.evd-company-card:hover { border-color: var(--blue); box-shadow: 0 4px 14px rgba(0,0,0,.09); background: #fff; }
-@media (max-width: 640px) {
-  .evd-company-card { grid-template-columns: 56px 1fr; }
-  .evd-company-action { grid-column: 1/-1; }
-}
+.evd-company-card:hover { border-color: var(--blue); box-shadow: 0 6px 20px rgba(0,0,0,.10); transform: translateY(-3px); }
 
 .evd-company-logo {
-  width: 60px; height: 60px; border-radius: 10px;
-  background: #fff; overflow: hidden; flex-shrink: 0;
+  width: 72px; height: 72px; border-radius: 12px;
+  background: var(--light-bg, #f5f7fa); overflow: hidden; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  box-shadow: 0 2px 8px rgba(0,0,0,.08); margin-bottom: 4px;
 }
-.evd-company-logo img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
-.evd-company-initial { font-size: 24px; font-weight: 800; color: var(--blue); }
+.evd-company-logo img { width: 100%; height: 100%; object-fit: contain; padding: 6px; }
+.evd-company-initial { font-size: 28px; font-weight: 800; color: var(--blue); }
 
-.evd-company-name   { font-size: 15px; font-weight: 700; color: var(--navy); margin: 0 0 4px; }
-.evd-company-sector { font-size: 12px; color: var(--body-text); margin: 0 0 3px; display: flex; align-items: center; gap: 5px; }
-.evd-company-sector i { color: var(--blue); font-size: 11px; }
-.evd-company-loc    { font-size: 12px; color: var(--body-text); margin: 0 0 5px; display: flex; align-items: center; gap: 5px; }
-.evd-company-loc i  { color: var(--orange); font-size: 11px; }
-.evd-company-desc   { font-size: 12px; color: var(--body-text); margin: 0 0 6px; line-height: 1.4; }
-.evd-company-offres { font-size: 12px; font-weight: 600; color: var(--navy); display: flex; align-items: center; gap: 5px; }
+.evd-company-name   { font-size: 14px; font-weight: 700; color: var(--navy); margin: 0; line-height: 1.3; }
+.evd-company-sector { font-size: 11px; color: var(--body-text); margin: 0; display: flex; align-items: center; justify-content: center; gap: 4px; }
+.evd-company-sector i { color: var(--blue); font-size: 10px; }
+.evd-company-loc    { font-size: 11px; color: var(--body-text); margin: 0; display: flex; align-items: center; justify-content: center; gap: 4px; }
+.evd-company-loc i  { color: var(--orange); font-size: 10px; }
+.evd-company-offres { font-size: 11px; font-weight: 600; color: var(--navy); display: flex; align-items: center; justify-content: center; gap: 4px; }
 .evd-company-offres i { color: var(--orange); }
+.evd-company-action { margin-top: auto; padding-top: 8px; }
+
+@media (max-width: 640px) {
+  .evd-companies-grid { grid-template-columns: repeat(2, 1fr); }
+}
 
 .btn--outline-nav {
   border: 1.5px solid var(--border, #e2e8f0); background: #fff; color: var(--navy);
@@ -706,14 +839,27 @@ onMounted(async () => {
 
 /* Encart hint matching */
 .evd-matching-hint {
-  margin-top: 20px; padding: 16px 20px;
-  background: linear-gradient(135deg, #e8f0fe, #f0f4ff);
-  border: 1.5px solid rgba(25,43,194,.2); border-radius: 10px;
-  display: flex; align-items: flex-start; gap: 14px; flex-wrap: wrap;
+  margin-top: 24px;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  padding: 18px 22px;
+  background: #eef2ff;
+  border: 1.5px solid #c7d2fe;
+  border-left: 4px solid #192bc2;
+  border-radius: 12px;
 }
-.evd-matching-hint i { font-size: 20px; color: var(--blue); margin-top: 2px; flex-shrink: 0; }
-.evd-matching-hint div { flex: 1; font-size: 14px; color: var(--navy); line-height: 1.5; }
-.evd-matching-hint strong { font-weight: 700; display: block; margin-bottom: 4px; }
+.evd-matching-hint__icon { font-size: 22px; color: #192bc2; flex-shrink: 0; }
+.evd-matching-hint__body { flex: 1; min-width: 0; }
+.evd-matching-hint__body strong { display: block; font-size: 14px; font-weight: 700; color: #040a5d; margin-bottom: 3px; }
+.evd-matching-hint__body p { font-size: 13px; color: #4b5563; margin: 0; line-height: 1.5; }
+.evd-matching-hint__cta {
+  display: inline-flex; align-items: center; gap: 7px; flex-shrink: 0;
+  padding: 9px 20px; border-radius: 50px;
+  background: #192bc2; color: #fff;
+  font-size: 13px; font-weight: 700; border: none; cursor: pointer;
+  white-space: nowrap; transition: background .15s;
+}
+.evd-matching-hint__cta:hover { background: #1020a8; }
+.evd-matching-hint__cta i { font-size: 12px; }
 
 /* ── Matching ── */
 .evd-matching-block { border-top: 3px solid var(--blue); }
@@ -850,73 +996,144 @@ onMounted(async () => {
 
 /* ══ MODAL RÉSERVATION ══ */
 .evd-modal-overlay {
-  position: fixed; inset: 0; background: rgba(4,10,93,.55); z-index: 1000;
+  position: fixed; inset: 0; background: rgba(4,10,93,.5); z-index: 1000;
   display: flex; align-items: center; justify-content: center; padding: 20px;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(3px);
 }
 .evd-modal {
-  background: #fff; border-radius: 18px; width: 100%; max-width: 560px;
-  max-height: 90vh; overflow-y: auto; padding: 32px; position: relative;
-  box-shadow: 0 20px 60px rgba(0,0,0,.25);
+  background: #fff; border-radius: 20px; width: 100%; max-width: 520px;
+  max-height: 88vh; display: flex; flex-direction: column;
+  box-shadow: 0 24px 64px rgba(0,0,0,.2);
+  overflow: hidden;
 }
-.evd-modal-close {
-  position: absolute; top: 18px; right: 18px;
-  background: var(--light-bg, #f5f7fa); border: none;
-  width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
-  font-size: 14px; color: var(--navy);
+
+/* Header */
+.evd-modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px; border-bottom: 1px solid #f0f2f8; flex-shrink: 0;
+}
+.evd-modal-company { display: flex; align-items: center; gap: 12px; }
+.evd-modal-logo {
+  width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0;
+  background: #f5f7fa; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+.evd-modal-logo img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+.evd-modal-logo span { font-size: 18px; font-weight: 800; color: var(--blue); }
+.evd-modal-company-name { font-size: 15px; font-weight: 700; color: var(--navy); }
+.evd-modal-event-name   { font-size: 12px; color: var(--body-text); margin-top: 1px; }
+.evd-modal-close {
+  background: #f5f7fa; border: none; width: 34px; height: 34px;
+  border-radius: 50%; cursor: pointer; font-size: 13px; color: var(--navy);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   transition: background .15s;
 }
 .evd-modal-close:hover { background: #e2e8f0; }
-.evd-modal-header { margin-bottom: 24px; }
-.evd-modal-header h3 { font-size: 20px; font-weight: 800; color: var(--navy); margin: 0 0 6px; }
-.evd-modal-header p  { font-size: 14px; color: var(--body-text); margin: 0; }
 
-.evd-rdv-loading { text-align: center; padding: 32px 0; color: var(--body-text); display: flex; flex-direction: column; align-items: center; gap: 12px; }
-.evd-rdv-loading i { font-size: 24px; color: var(--blue); }
+/* Body scrollable */
+.evd-modal-body { flex: 1; overflow-y: auto; padding: 20px 24px; }
 
-.evd-rdv-confirme {
-  text-align: center; padding: 28px;
-  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-  border-radius: 12px; margin-bottom: 16px;
+.evd-rdv-loading {
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  padding: 40px 24px; color: var(--body-text);
 }
-.evd-rdv-confirme i { font-size: 48px; color: #16a34a; margin-bottom: 16px; display: block; }
+.evd-rdv-loading i { font-size: 28px; color: var(--blue); }
+
+/* Créneaux */
+.evd-creneaux { display: flex; flex-direction: column; gap: 24px; }
+.evd-creneau-jour {}
+.evd-creneau-date {
+  font-size: 12px; font-weight: 700; color: var(--body-text);
+  text-transform: uppercase; letter-spacing: .6px;
+  display: flex; align-items: center; gap: 6px;
+  margin-bottom: 12px; padding-bottom: 8px;
+  border-bottom: 1px solid #f0f2f8;
+}
+.evd-creneau-date i { color: var(--blue); }
+.evd-creneau-slots {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+.evd-slot {
+  padding: 8px 0; border-radius: 8px; font-size: 12.5px; font-weight: 600;
+  border: 1.5px solid #e2e8f0; background: #f8fafc;
+  color: var(--navy); cursor: pointer; transition: all .12s;
+  text-align: center;
+}
+.evd-slot:hover:not(:disabled) { border-color: var(--blue); background: #eef2ff; color: var(--blue); }
+.evd-slot--selected { border-color: var(--blue) !important; background: var(--blue) !important; color: #fff !important; }
+.evd-slot--pris { opacity: .35; cursor: not-allowed !important; text-decoration: line-through; }
+
+/* Confirmation réussie */
+.evd-rdv-confirme { text-align: center; padding: 36px 24px; }
+.evd-rdv-confirme i { font-size: 52px; color: #16a34a; margin-bottom: 16px; display: block; }
 .evd-rdv-confirme p { font-size: 15px; color: var(--navy); margin: 0 0 8px; }
 .evd-rdv-status { font-size: 13px; color: var(--body-text) !important; font-style: italic; }
 
-.evd-creneaux { display: flex; flex-direction: column; gap: 20px; }
-.evd-creneau-jour {}
-.evd-creneau-date {
-  font-size: 14px; font-weight: 700; color: var(--navy);
-  margin: 0 0 10px; display: flex; align-items: center; gap: 8px;
-  text-transform: capitalize;
+/* Footer sticky */
+.evd-modal-footer {
+  border-top: 1px solid #f0f2f8; padding: 16px 24px;
+  background: #fafbff; flex-shrink: 0;
 }
-.evd-creneau-date i { color: var(--blue); }
-.evd-creneau-slots { display: flex; flex-wrap: wrap; gap: 8px; }
-
-.evd-slot {
-  padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600;
-  border: 1.5px solid var(--border, #e2e8f0); background: var(--light-bg, #f5f7fa);
-  color: var(--navy); cursor: pointer; transition: all .15s; position: relative;
+.evd-slot-selected-info {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13.5px; color: var(--navy); margin-bottom: 12px;
 }
-.evd-slot:hover:not(:disabled) { border-color: var(--blue); background: #e8f0fe; color: var(--blue); }
-.evd-slot--selected { border-color: var(--blue) !important; background: var(--blue) !important; color: #fff !important; }
-.evd-slot--pris { opacity: .4; cursor: not-allowed !important; text-decoration: line-through; }
-.evd-slot-pris { font-size: 10px; margin-left: 3px; }
-
-.evd-slot-confirm {
-  margin-top: 20px; padding: 16px 20px;
-  background: linear-gradient(135deg, #e8f0fe, #f0f4ff);
-  border-radius: 10px; border: 1.5px solid rgba(25,43,194,.2);
-}
-.evd-slot-confirm p { font-size: 14px; color: var(--navy); margin: 0 0 14px; display: flex; align-items: center; gap: 8px; }
-.evd-slot-confirm p i { color: var(--blue); }
-.evd-slot-confirm-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+.evd-slot-selected-info i { color: var(--blue); }
+.evd-modal-footer-btns { display: flex; gap: 10px; justify-content: flex-end; }
 
 .btn--ghost {
-  background: transparent; border: none; color: var(--body-text);
-  font-size: 14px; font-weight: 600; cursor: pointer; padding: 10px;
-  border-radius: 8px; transition: background .15s;
+  background: transparent; border: 1.5px solid #e2e8f0; color: var(--body-text);
+  font-size: 13.5px; font-weight: 600; cursor: pointer; padding: 9px 20px;
+  border-radius: 50px; transition: background .15s;
 }
-.btn--ghost:hover { background: var(--light-bg, #f5f7fa); }
+.btn--ghost:hover { background: #f5f7fa; }
+
+/* ── Participation entreprise ── */
+.evd-part-status {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 16px 18px; border-radius: 10px;
+}
+.evd-part-status i { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+.evd-part-status strong { font-size: 14px; font-weight: 700; display: block; margin-bottom: 4px; }
+.evd-part-status p { font-size: 13px; margin: 0; }
+
+.evd-part-status--ok      { background: #dcfce7; color: #15803d; }
+.evd-part-status--ok i    { color: #16a34a; }
+.evd-part-status--pending { background: #fef9c3; color: #92400e; }
+.evd-part-status--pending i { color: #b45309; }
+.evd-part-status--refused { background: #fee2e2; color: #991b1b; }
+.evd-part-status--refused i { color: #dc2626; }
+
+.evd-part-cta { display: flex; flex-direction: column; gap: 14px; }
+.evd-part-cta p { font-size: 14px; color: var(--body-text); margin: 0; line-height: 1.6; }
+
+/* ── Mes entretiens ── */
+.evd-entretiens-list { display: flex; flex-direction: column; gap: 10px; }
+.evd-entretien-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 10px;
+  background: #f8fafc; border: 1px solid #e8edf5;
+}
+.evd-entretien-logo {
+  width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
+  background: #fff; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+.evd-entretien-logo img { width: 100%; height: 100%; object-fit: contain; padding: 3px; }
+.evd-entretien-logo span { font-size: 14px; font-weight: 800; color: var(--blue); }
+.evd-entretien-info { flex: 1; min-width: 0; }
+.evd-entretien-company { font-size: 13px; font-weight: 700; color: var(--navy); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.evd-entretien-datetime { font-size: 11px; color: var(--body-text); margin-top: 2px; display: flex; align-items: center; gap: 3px; flex-wrap: wrap; }
+.evd-entretien-datetime i { color: var(--blue); font-size: 10px; }
+.evd-entretien-badge {
+  font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 50px;
+  white-space: nowrap; flex-shrink: 0;
+}
+.status--confirme  { background: #dcfce7; color: #16a34a; }
+.status--refuse    { background: #fee2e2; color: #dc2626; }
+.status--en_attente, .status--pending { background: #fef9c3; color: #b45309; }
 </style>
