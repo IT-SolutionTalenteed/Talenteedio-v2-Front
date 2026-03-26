@@ -171,13 +171,13 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
 
-const apiBase  = import.meta.env.VITE_API_URL || 'http://localhost:8000'
-const route    = useRoute()
+const apiBase   = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const route     = useRoute()
 const categorie = ref(null)
 const loading   = ref(true)
 const openFaq   = ref(null)
@@ -189,17 +189,40 @@ const heroStyle = computed(() => {
   return {}
 })
 
-const load = async () => {
-  loading.value = true
+const setupObserver = () => {
+  if (typeof IntersectionObserver !== 'undefined') {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target) }
+      })
+    }, { threshold: 0.1 })
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el))
+  } else {
+    document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible'))
+  }
+}
+
+const load = async (id) => {
+  loading.value   = true
+  categorie.value = null
+  openFaq.value   = null
+  window.scrollTo({ top: 0, behavior: 'smooth' })
   try {
-    const res = await axios.get(`${apiBase}/public/categories-evenements/${route.params.id}`)
+    const res = await axios.get(`${apiBase}/public/categories-evenements/${id}`)
     categorie.value = res.data
   } catch (e) {
     console.error(e)
   } finally {
     loading.value = false
+    await nextTick()
+    setupObserver()
   }
 }
+
+// Rechargement quand le paramètre :id change (réutilisation du composant par Vue Router)
+watch(() => route.params.id, (newId) => {
+  if (newId) load(newId)
+})
 
 const formatDateRange = (debut, fin) => {
   const fmt = (s) => new Date(s).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
@@ -210,18 +233,7 @@ const formatDateRange = (debut, fin) => {
 
 const truncate = (str, len) => !str ? '' : str.length > len ? str.slice(0, len) + '…' : str
 
-onMounted(async () => {
-  await load()
-  // Activer les animations fade-in après chargement des données
-  if (typeof IntersectionObserver !== 'undefined') {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target) } })
-    }, { threshold: 0.1 })
-    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el))
-  } else {
-    document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible'))
-  }
-})
+onMounted(() => load(route.params.id))
 </script>
 
 <style scoped>
