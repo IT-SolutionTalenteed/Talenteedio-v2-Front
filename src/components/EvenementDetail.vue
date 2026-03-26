@@ -47,7 +47,7 @@
               </template>
               <template v-else>
                 <router-link to="/register" class="btn btn--orange btn--lg">
-                  <i class="fa-solid fa-user-plus" style="margin-right:6px;"></i>S'inscrire pour participer
+                  <i class="fa-solid fa-user-plus" style="margin-right:6px;"></i>Souscrire pour participer
                 </router-link>
                 <router-link to="/login" class="btn btn--outline-white btn--lg">
                   Se connecter
@@ -320,7 +320,7 @@
                 <template v-else>
                   <p>Rejoignez la communauté des talents africains</p>
                   <router-link to="/register" class="btn btn--orange" style="display:block;text-align:center;">
-                    S'inscrire gratuitement
+                    Souscrire gratuitement
                   </router-link>
                 </template>
               </div>

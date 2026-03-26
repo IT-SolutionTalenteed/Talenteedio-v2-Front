@@ -26,7 +26,7 @@
 
     <p>
       Pas de compte ?
-      <router-link to="/register">S'inscrire</router-link>
+      <router-link to="/register">Souscrire</router-link>
     </p>
 
     <div v-if="error" style="color: red;">{{ error }}</div>

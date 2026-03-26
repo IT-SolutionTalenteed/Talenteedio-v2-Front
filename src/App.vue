@@ -102,12 +102,6 @@ select[multiple] {
   height: 100px;
 }
 
-/* Navigation tabs */
-nav {
-  margin-bottom: 20px;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 10px;
-}
 
 nav button {
   margin-right: 10px;
@@ -137,12 +131,9 @@ nav button:hover {
 }
 
 ul {
-  list-style-type: disc;
-  padding-left: 20px;
-}
-
-nav {
-  margin-bottom: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 nav button {

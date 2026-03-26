@@ -124,9 +124,9 @@
               {{ event.ville }}{{ event.pays ? ', ' + event.pays : '' }}
             </p>
             <p class="hero-desc" v-else>La première plateforme européenne qui mobilise le Talent africain pour accélérer la performance des entreprises en Afrique.</p>
-            <p class="hero-cta-label">LES INSCRIPTIONS SONT OUVERTES – RÉSERVEZ VOTRE PLACE</p>
+            <p class="hero-cta-label">LES SOUSCRIPTIONS SONT OUVERTES – RÉSERVEZ VOTRE PLACE</p>
             <router-link to="/register" class="btn btn--blue btn--lg hero-btn">
-              S'inscrire <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
+              Souscrire <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
             </router-link>
             <!-- Countdown -->
             <div class="countdown-inner" id="countdown">

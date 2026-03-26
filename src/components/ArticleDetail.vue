@@ -91,7 +91,7 @@
               <div class="artd-side-card artd-side-cta">
                 <p>Rejoignez notre communauté de talents africains</p>
                 <router-link to="/register" class="btn btn--blue" style="display:block;text-align:center;">
-                  S'inscrire gratuitement
+                  Souscrire gratuitement
                 </router-link>
               </div>
 

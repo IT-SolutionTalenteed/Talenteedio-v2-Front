@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Inscription</h1>
+    <h1>Souscription</h1>
     
     <form @submit.prevent="handleRegister">
       <div>
@@ -53,12 +53,12 @@
       </div>
       
       <button type="submit" :disabled="loading">
-        {{ loading ? 'Inscription...' : 'S\'inscrire' }}
+        {{ loading ? 'Souscription...' : 'Souscrire' }}
       </button>
     </form>
     
     <hr />
-    <button type="button" @click="loginWithGoogle">S'inscrire / Se connecter avec Google</button>
+    <button type="button" @click="loginWithGoogle">Souscrire / Se connecter avec Google</button>
 
     <p>
       Déjà un compte ?
@@ -104,7 +104,7 @@ const handleRegister = async () => {
   try {
     const response = await authService.register(form.value)
     
-    success.value = 'Inscription réussie ! Redirection vers la connexion...'
+    success.value = 'Souscription réussie ! Redirection vers la connexion...'
     
     // Rediriger vers la page de connexion après 2 secondes
     setTimeout(() => {
@@ -117,7 +117,7 @@ const handleRegister = async () => {
       const errors = Object.values(err.response.data.errors).flat()
       error.value = errors.join(', ')
     } else {
-      error.value = err.response?.data?.message || 'Erreur lors de l\'inscription'
+      error.value = err.response?.data?.message || 'Erreur lors de la souscription'
     }
   } finally {
     loading.value = false

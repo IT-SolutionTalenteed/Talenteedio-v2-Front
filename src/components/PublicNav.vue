@@ -113,7 +113,7 @@
                 <i class="fa-solid fa-chevron-down" style="font-size:9px;"></i>
               </button>
               <template v-if="!isLoggedIn">
-                <router-link to="/register" class="btn btn--outline-white" @click="closeAll">Inscription</router-link>
+                <router-link to="/register" class="btn btn--outline-white" @click="closeAll">Souscription</router-link>
                 <router-link to="/login"    class="btn btn--orange-solid"  @click="closeAll">Connexion</router-link>
               </template>
               <template v-else>
@@ -192,7 +192,7 @@
 
             <!-- Non-connecté -->
             <template v-if="!isLoggedIn">
-              <router-link to="/register" class="btn btn--outline">Inscription</router-link>
+              <router-link to="/register" class="btn btn--outline">Souscription</router-link>
               <router-link to="/login"    class="btn btn--orange">Connexion</router-link>
             </template>
 
@@ -273,7 +273,12 @@ function toggleLocale() { setLocale(locale.value === 'fr' ? 'en' : 'fr') }
 function toggleDrop(name) { activeDrop.value = activeDrop.value === name ? null : name }
 function closeAll() { activeDrop.value = null; menuOpen.value = false; favoriOpen.value = false; langOpen.value = false; userOpen.value = false }
 
-watch(() => route.fullPath, () => closeAll())
+watch(() => route.fullPath, () => {
+  isLoggedIn.value = !!localStorage.getItem('token')
+  userRole.value   = localStorage.getItem('userRole') || ''
+  if (isLoggedIn.value && userRole.value === 'talent') loadFavoris()
+  closeAll()
+})
 
 // ── User dropdown ────────────────────────────────────────
 const userOpen    = ref(false)
