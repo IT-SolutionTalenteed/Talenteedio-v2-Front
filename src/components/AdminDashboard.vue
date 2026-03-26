@@ -17,8 +17,14 @@
       <button @click="activeTab = 'articles'">Articles</button>
 
       <!-- Entreprises & Talents -->
-      <button @click="activeTab = 'entreprises'">Entreprises</button>
-      <button @click="activeTab = 'talents'">Talents</button>
+      <button @click="activeTab = 'entreprises'">
+        Entreprises
+        <span v-if="totalEntreprises !== null" style="background:#2687e9;color:#fff;font-size:11px;font-weight:700;padding:1px 7px;border-radius:50px;margin-left:6px;">{{ totalEntreprises }}</span>
+      </button>
+      <button @click="activeTab = 'talents'">
+        Talents
+        <span v-if="totalTalents !== null" style="background:#2687e9;color:#fff;font-size:11px;font-weight:700;padding:1px 7px;border-radius:50px;margin-left:6px;">{{ totalTalents }}</span>
+      </button>
       <button @click="activeTab = 'entretiens'">Entretiens par stand</button>
       <button @click="activeTab = 'feedbacks'">Feedbacks</button>
       <button @click="activeTab = 'import-candidats'">Import XLS</button>
@@ -75,9 +81,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { authService } from '../services/api.js'
+import api, { authService } from '../services/api.js'
 
 import CategorieEvenementList from './admin/CategorieEvenementList.vue'
 import EvenementList from './admin/EvenementList.vue'
@@ -101,6 +107,20 @@ import SyncCrm from './admin/SyncCrm.vue'
 
 const router = useRouter()
 const activeTab = ref('overview')
+const totalTalents    = ref(null)
+const totalEntreprises = ref(null)
+
+onMounted(async () => {
+  try {
+    const [talentsRes, entreprisesRes] = await Promise.all([
+      api.get('/admin/talents?page=1&per_page=1'),
+      api.get('/admin/entreprises'),
+    ])
+    totalTalents.value     = talentsRes.data.total ?? null
+    const ents = entreprisesRes.data
+    totalEntreprises.value = Array.isArray(ents) ? ents.length : (ents.total ?? null)
+  } catch {}
+})
 
 const logout = async () => {
   try {
