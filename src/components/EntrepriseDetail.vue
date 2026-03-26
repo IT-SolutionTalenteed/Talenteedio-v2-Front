@@ -162,7 +162,7 @@
                 <router-link to="/register" class="btn btn--blue" style="display:block;text-align:center;">
                   Créer un compte
                 </router-link>
-                <router-link to="/login" class="btn btn--outline" style="display:block;text-align:center;margin-top:8px;">
+                <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--outline" style="display:block;text-align:center;margin-top:8px;">
                   Se connecter
                 </router-link>
               </div>

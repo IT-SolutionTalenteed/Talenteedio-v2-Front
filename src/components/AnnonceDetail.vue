@@ -69,7 +69,7 @@
                 <p class="od-cta-note">Seuls les talents peuvent postuler.</p>
               </template>
               <template v-else>
-                <router-link to="/login" class="btn btn--blue btn--lg">
+                <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--blue btn--lg">
                   <i class="fa-solid fa-lock" style="margin-right:6px;"></i>Se connecter pour postuler
                 </router-link>
                 <router-link to="/register" class="btn btn--orange btn--lg" style="margin-top:8px;">
@@ -203,7 +203,7 @@
                   <button class="btn btn--blue" style="width:100%;" @click="postuler">Postuler maintenant</button>
                 </template>
                 <template v-else>
-                  <router-link to="/login" class="btn btn--blue" style="display:block;text-align:center;">
+                  <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--blue" style="display:block;text-align:center;">
                     Se connecter pour postuler
                   </router-link>
                 </template>
