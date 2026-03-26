@@ -290,6 +290,13 @@
                 <li><a href="mailto:contact@africatalentsummit.com"><i class="fa-solid fa-chevron-right"></i> Partenariats</a></li>
               </ul>
             </div>
+            <div class="footer-col">
+              <h4>Informations légales</h4>
+              <ul>
+                <li><router-link to="/terms-and-conditions"><i class="fa-solid fa-chevron-right"></i> Conditions générales</router-link></li>
+                <li><router-link to="/privacy-policy"><i class="fa-solid fa-chevron-right"></i> Confidentialité</router-link></li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
