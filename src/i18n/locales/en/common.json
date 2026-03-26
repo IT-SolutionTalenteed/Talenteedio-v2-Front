@@ -1,0 +1,48 @@
+{
+  "nav": {
+    "home": "HOME",
+    "announcements": "JOBS",
+    "events": "EVENTS",
+    "articles": "ARTICLES",
+    "jobs": "Jobs",
+    "jobsDesc": "All job offers",
+    "companies": "Companies",
+    "companiesDesc": "Partner companies",
+    "noEvents": "No events available",
+    "subscription": "SUBSCRIBE",
+    "login": "LOGIN",
+    "dashboard": "Dashboard",
+    "logout": "Logout",
+    "myAccount": "MY ACCOUNT",
+    "learnMore": "Learn more"
+  },
+  "favorites": {
+    "title": "My favorites",
+    "empty": "No favorites yet",
+    "viewAll": "View all my favorites"
+  },
+  "language": {
+    "french": "Français",
+    "english": "English"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "apply": "Apply",
+    "viewDetails": "View details",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No"
+  }
+}

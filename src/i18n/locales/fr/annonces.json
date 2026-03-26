@@ -1,0 +1,43 @@
+{
+  "hero": {
+    "label": "Opportunités",
+    "title": "Offres d'emploi",
+    "description": "Découvrez toutes les opportunités disponibles sur la plateforme"
+  },
+  "filters": {
+    "title": "Filtres",
+    "keywords": "Mots-clés",
+    "keywordsPlaceholder": "Titre du poste...",
+    "location": "Localisation",
+    "locationPlaceholder": "Ville, pays...",
+    "jobType": "Type d'emploi",
+    "publicationDate": "Date de publication",
+    "studyLevel": "Niveau d'études",
+    "reset": "Réinitialiser"
+  },
+  "dateRanges": {
+    "all": "Tous",
+    "lastHour": "Dernière heure",
+    "last24h": "Dernières 24h",
+    "last7d": "7 derniers jours",
+    "last14d": "14 derniers jours",
+    "last30d": "30 derniers jours"
+  },
+  "results": {
+    "count": "offre",
+    "countPlural": "offres",
+    "found": "trouvée",
+    "foundPlural": "trouvées",
+    "loading": "Chargement..."
+  },
+  "card": {
+    "companyNotSpecified": "Entreprise non précisée",
+    "addToFavorites": "Ajouter aux favoris",
+    "removeFromFavorites": "Retirer des favoris",
+    "viewOffer": "Voir l'offre"
+  },
+  "empty": {
+    "title": "Aucune offre ne correspond à vos critères.",
+    "action": "Réinitialiser les filtres"
+  }
+}

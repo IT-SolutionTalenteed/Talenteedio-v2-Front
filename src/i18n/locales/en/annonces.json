@@ -1,0 +1,43 @@
+{
+  "hero": {
+    "label": "Opportunities",
+    "title": "Job offers",
+    "description": "Discover all opportunities available on the platform"
+  },
+  "filters": {
+    "title": "Filters",
+    "keywords": "Keywords",
+    "keywordsPlaceholder": "Job title...",
+    "location": "Location",
+    "locationPlaceholder": "City, country...",
+    "jobType": "Job type",
+    "publicationDate": "Publication date",
+    "studyLevel": "Education level",
+    "reset": "Reset"
+  },
+  "dateRanges": {
+    "all": "All",
+    "lastHour": "Last hour",
+    "last24h": "Last 24h",
+    "last7d": "Last 7 days",
+    "last14d": "Last 14 days",
+    "last30d": "Last 30 days"
+  },
+  "results": {
+    "count": "offer",
+    "countPlural": "offers",
+    "found": "found",
+    "foundPlural": "found",
+    "loading": "Loading..."
+  },
+  "card": {
+    "companyNotSpecified": "Company not specified",
+    "addToFavorites": "Add to favorites",
+    "removeFromFavorites": "Remove from favorites",
+    "viewOffer": "View offer"
+  },
+  "empty": {
+    "title": "No offers match your criteria.",
+    "action": "Reset filters"
+  }
+}

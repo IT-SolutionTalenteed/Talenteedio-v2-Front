@@ -5,9 +5,9 @@
     <!-- ══ HERO ══ -->
     <section class="annonces-hero">
       <div class="container">
-        <span class="label-white">Opportunités</span>
-        <h1>Offres d'emploi</h1>
-        <p>Découvrez toutes les opportunités disponibles sur la plateforme</p>
+        <span class="label-white">{{ t('annonces.hero.label') }}</span>
+        <h1>{{ t('annonces.hero.title') }}</h1>
+        <p>{{ t('annonces.hero.description') }}</p>
       </div>
     </section>
 
@@ -19,29 +19,29 @@
           <!-- ── Sidebar filtres ── -->
           <aside class="annonces-sidebar">
             <div class="filter-card">
-              <h3 class="filter-title"><i class="fa-solid fa-sliders"></i> Filtres</h3>
+              <h3 class="filter-title"><i class="fa-solid fa-sliders"></i> {{ t('annonces.filters.title') }}</h3>
 
               <!-- Keywords -->
               <div class="filter-group">
-                <label class="filter-label">Mots-clés</label>
+                <label class="filter-label">{{ t('annonces.filters.keywords') }}</label>
                 <div class="filter-input-wrap">
                   <i class="fa-solid fa-magnifying-glass"></i>
-                  <input v-model="filters.search" type="text" placeholder="Titre du poste..." @input="debouncedSearch" />
+                  <input v-model="filters.search" type="text" :placeholder="t('annonces.filters.keywordsPlaceholder')" @input="debouncedSearch" />
                 </div>
               </div>
 
               <!-- Localisation -->
               <div class="filter-group">
-                <label class="filter-label">Localisation</label>
+                <label class="filter-label">{{ t('annonces.filters.location') }}</label>
                 <div class="filter-input-wrap">
                   <i class="fa-solid fa-location-dot"></i>
-                  <input v-model="filters.localisation" type="text" placeholder="Ville, pays..." @input="debouncedSearch" />
+                  <input v-model="filters.localisation" type="text" :placeholder="t('annonces.filters.locationPlaceholder')" @input="debouncedSearch" />
                 </div>
               </div>
 
               <!-- Type de contrat -->
               <div class="filter-group">
-                <label class="filter-label">Type d'emploi</label>
+                <label class="filter-label">{{ t('annonces.filters.jobType') }}</label>
                 <div class="filter-checkboxes">
                   <label v-for="c in referentiels.job_contracts" :key="c.id" class="filter-check">
                     <input type="checkbox" :value="c.id" v-model="filters.job_contract_ids" @change="applyFilters" />
@@ -52,7 +52,7 @@
 
               <!-- Date de publication -->
               <div class="filter-group">
-                <label class="filter-label">Date de publication</label>
+                <label class="filter-label">{{ t('annonces.filters.publicationDate') }}</label>
                 <div class="filter-radios">
                   <label v-for="d in dateRanges" :key="d.value" class="filter-radio">
                     <input type="radio" :value="d.value" v-model="filters.date_range" @change="applyFilters" />
@@ -63,7 +63,7 @@
 
               <!-- Niveau d'expérience -->
               <div class="filter-group">
-                <label class="filter-label">Niveau d'études</label>
+                <label class="filter-label">{{ t('annonces.filters.studyLevel') }}</label>
                 <div class="filter-checkboxes">
                   <label v-for="s in referentiels.study_levels" :key="s.id" class="filter-check">
                     <input type="checkbox" :value="s.id" v-model="filters.study_level_ids" @change="applyFilters" />
@@ -74,7 +74,7 @@
 
               <!-- Reset -->
               <button class="btn-reset" @click="resetFilters">
-                <i class="fa-solid fa-rotate-left"></i> Réinitialiser
+                <i class="fa-solid fa-rotate-left"></i> {{ t('annonces.filters.reset') }}
               </button>
             </div>
           </aside>
@@ -85,9 +85,9 @@
             <!-- Barre résultats -->
             <div class="annonces-bar">
               <span class="annonces-count" v-if="!loading">
-                <strong>{{ pagination.total }}</strong> offre{{ pagination.total !== 1 ? 's' : '' }} trouvée{{ pagination.total !== 1 ? 's' : '' }}
+                <strong>{{ pagination.total }}</strong> {{ pagination.total !== 1 ? t('annonces.results.countPlural') : t('annonces.results.count') }} {{ pagination.total !== 1 ? t('annonces.results.foundPlural') : t('annonces.results.found') }}
               </span>
-              <span class="annonces-count" v-else>Chargement...</span>
+              <span class="annonces-count" v-else>{{ t('annonces.results.loading') }}</span>
             </div>
 
             <!-- Skeleton loader -->
@@ -118,7 +118,7 @@
                     <span v-for="c in offre.job_contracts" :key="c.id" class="tag tag--blue">{{ c.name }}</span>
                   </div>
                   <h3 class="offre-title">{{ offre.titre }}</h3>
-                  <p class="offre-entreprise">{{ offre.entreprise?.nom || 'Entreprise non précisée' }}</p>
+                  <p class="offre-entreprise">{{ offre.entreprise?.nom || t('annonces.card.companyNotSpecified') }}</p>
                   <p class="offre-desc">{{ truncate(stripHtml(offre.mission), 110) }}</p>
                   <div class="offre-meta">
                     <span v-if="offre.localisation">
@@ -134,12 +134,12 @@
                   <button
                     class="btn-favori"
                     :class="{ 'btn-favori--active': isFavoriId(offre.id) }"
-                    :title="isFavoriId(offre.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'"
+                    :title="isFavoriId(offre.id) ? t('annonces.card.removeFromFavorites') : t('annonces.card.addToFavorites')"
                     @click.stop.prevent="toggleFavori(offre.id)"
                   >
                     <i :class="isFavoriId(offre.id) ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
                   </button>
-                  <span class="btn btn--blue btn--sm">Voir l'offre</span>
+                  <span class="btn btn--blue btn--sm">{{ t('annonces.card.viewOffer') }}</span>
                 </div>
               </router-link>
             </div>
@@ -147,8 +147,8 @@
             <!-- Vide -->
             <div v-else class="annonces-empty">
               <i class="fa-solid fa-folder-open"></i>
-              <p>Aucune offre ne correspond à vos critères.</p>
-              <button class="btn-reset" @click="resetFilters">Réinitialiser les filtres</button>
+              <p>{{ t('annonces.empty.title') }}</p>
+              <button class="btn-reset" @click="resetFilters">{{ t('annonces.empty.action') }}</button>
             </div>
 
             <!-- Pagination -->
@@ -171,11 +171,13 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
 import { useFavoris } from '../composables/useFavoris.js'
 
+const { t, locale } = useI18n()
 const apiBase    = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
 const offres       = ref([])
@@ -185,14 +187,14 @@ const pagination   = ref({ current_page: 1, last_page: 1, total: 0 })
 
 const { favoris, loadFavoris, toggleFavori: _toggleFavori, isFavoriId } = useFavoris()
 
-const dateRanges = [
-  { value: '',          label: 'Tous' },
-  { value: 'last_hour', label: 'Dernière heure' },
-  { value: 'last_24h',  label: 'Dernières 24h' },
-  { value: 'last_7d',   label: '7 derniers jours' },
-  { value: 'last_14d',  label: '14 derniers jours' },
-  { value: 'last_30d',  label: '30 derniers jours' },
-]
+const dateRanges = computed(() => [
+  { value: '',          label: t('annonces.dateRanges.all') },
+  { value: 'last_hour', label: t('annonces.dateRanges.lastHour') },
+  { value: 'last_24h',  label: t('annonces.dateRanges.last24h') },
+  { value: 'last_7d',   label: t('annonces.dateRanges.last7d') },
+  { value: 'last_14d',  label: t('annonces.dateRanges.last14d') },
+  { value: 'last_30d',  label: t('annonces.dateRanges.last30d') },
+])
 
 const filters = reactive({
   search:           '',
@@ -277,7 +279,11 @@ const paginationPages = () => {
 // ── Utilitaires ────────────────────────────────────────────
 const truncate = (str, len) => !str ? '' : str.length > len ? str.slice(0, len) + '…' : str
 const stripHtml = (html) => !html ? '' : html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
-const formatDate = (str) => !str ? '' : new Date(str).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })
+const formatDate = (str) => {
+  if (!str) return ''
+  const lang = locale.value === 'en' ? 'en-US' : 'fr-FR'
+  return new Date(str).toLocaleDateString(lang, { day: 'numeric', month: 'short', year: 'numeric' })
+}
 
 const toggleFavori = async (offreId) => {
   const offre = offres.value.find(o => o.id === offreId)

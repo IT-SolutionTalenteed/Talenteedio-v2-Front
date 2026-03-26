@@ -1,6 +1,35 @@
 import { createI18n } from 'vue-i18n'
-import fr from './locales/fr.json'
-import en from './locales/en.json'
+
+// Import French translations
+import frCommon from './locales/fr/common.json'
+import frHome from './locales/fr/home.json'
+import frAnnonces from './locales/fr/annonces.json'
+import frAuth from './locales/fr/auth.json'
+import frFooter from './locales/fr/footer.json'
+
+// Import English translations
+import enCommon from './locales/en/common.json'
+import enHome from './locales/en/home.json'
+import enAnnonces from './locales/en/annonces.json'
+import enAuth from './locales/en/auth.json'
+import enFooter from './locales/en/footer.json'
+
+// Merge translations
+const fr = {
+  ...frCommon,
+  home: frHome,
+  annonces: frAnnonces,
+  auth: frAuth,
+  footer: frFooter
+}
+
+const en = {
+  ...enCommon,
+  home: enHome,
+  annonces: enAnnonces,
+  auth: enAuth,
+  footer: enFooter
+}
 
 const i18n = createI18n({
   legacy: false,

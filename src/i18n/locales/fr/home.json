@@ -1,0 +1,77 @@
+{
+  "hero": {
+    "defaultTitle": "Africa Talent Summit",
+    "defaultLocation": "Luxembourg",
+    "defaultDescription": "La première plateforme européenne qui mobilise le Talent africain pour accélérer la performance des entreprises en Afrique.",
+    "subscriptionsOpen": "LES SOUSCRIPTIONS SONT OUVERTES – RÉSERVEZ VOTRE PLACE",
+    "subscribe": "Souscrire",
+    "days": "Jours",
+    "hours": "Heures",
+    "minutes": "Minutes",
+    "seconds": "Secondes"
+  },
+  "quicklinks": {
+    "findJob": {
+      "title": "Trouver un emploi",
+      "description": "Votre porte d'entrée vers des possibilités infinies et des opportunités de carrière passionnantes",
+      "action": "Parcourir les emplois"
+    },
+    "events": {
+      "title": "Événements",
+      "description": "Participez aux événements RH et développez votre réseau professionnel",
+      "action": "Découvrir"
+    },
+    "articles": {
+      "title": "Articles",
+      "description": "Actualités RH, conseils carrière et tendances du marché du travail africain",
+      "action": "Lire"
+    },
+    "matching": {
+      "title": "Matching Profile",
+      "description": "Trouvez les opportunités qui correspondent parfaitement à votre profil et vos compétences",
+      "action": "Découvrir mon match"
+    }
+  },
+  "partners": {
+    "label": "Ils recrutent",
+    "title": "Entreprises Participantes",
+    "description": "Les entreprises qui recrutent lors de cet événement",
+    "viewAll": "Voir toutes les entreprises"
+  },
+  "triple": {
+    "watermark": "Impact Systémique",
+    "title": "Triple Ancrage Stratégique",
+    "description": "Pour garantir un impact systémique et durable, le sommet repose sur trois piliers indissociables, pensés pour transformer l'intention en action :",
+    "readMore": "Lire la suite",
+    "thinkTank": {
+      "title": "Think Tank",
+      "description": "Un Comité Scientifique international composé de chercheurs, experts RH et décideurs produit chaque année un Livre Blanc de référence."
+    },
+    "recruitmentHub": {
+      "title": "Hub de Recrutement Premium",
+      "description": "Une plateforme de matching direct entre les entreprises en quête de compétences critiques et les talents de la diaspora."
+    },
+    "diplomacy": {
+      "title": "Levier de Diplomatie Économique",
+      "description": "Un cadre privilégié pour la signature d'accords bilatéraux et le renforcement des partenariats institutionnels Europe-Afrique."
+    }
+  },
+  "jobOffers": {
+    "label": "Opportunités",
+    "title": "Offres d'emploi récentes",
+    "description": "Découvrez les dernières opportunités disponibles sur la plateforme",
+    "apply": "Postuler",
+    "noOffers": "Aucune offre disponible pour le moment.",
+    "viewAll": "Voir toutes les offres"
+  },
+  "eventSection": {
+    "participate": "Participez"
+  },
+  "cta": {
+    "watermark": "Participez",
+    "label": "Rejoignez-nous",
+    "title": "Entreprises, talents, institutions,<br>partenaires",
+    "action": "Participez"
+  },
+  "tagline": "Le média alternatif pour les RH"
+}
