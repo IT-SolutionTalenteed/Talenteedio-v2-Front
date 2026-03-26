@@ -302,23 +302,78 @@
                   <div
                     v-for="ent in mesEntretiens"
                     :key="ent.id"
-                    class="evd-entretien-item"
+                    class="evd-entretien-card"
                   >
-                    <div class="evd-entretien-logo">
-                      <img v-if="ent.entreprise?.logo_url" :src="ent.entreprise.logo_url" :alt="ent.entreprise?.nom" />
-                      <span v-else>{{ ent.entreprise?.nom?.charAt(0) || '?' }}</span>
+                    <!-- Ligne principale -->
+                    <div class="evd-entretien-row">
+                      <div class="evd-entretien-logo">
+                        <img v-if="ent.entreprise?.logo_url" :src="ent.entreprise.logo_url" :alt="ent.entreprise?.nom" />
+                        <span v-else>{{ ent.entreprise?.nom?.charAt(0) || '?' }}</span>
+                      </div>
+                      <div class="evd-entretien-info">
+                        <div class="evd-entretien-company">{{ ent.entreprise?.nom || '—' }}</div>
+                        <div class="evd-entretien-datetime">
+                          <i class="fa-solid fa-calendar"></i> {{ ent.date }}
+                          &nbsp;·&nbsp;
+                          <i class="fa-solid fa-clock"></i> {{ ent.heure_debut?.substring(0,5) }}
+                        </div>
+                      </div>
+                      <span :class="['evd-entretien-badge', `status--${ent.statut}`]">
+                        {{ ent.statut === 'confirme' ? 'Confirmé' : ent.statut === 'refuse' ? 'Refusé' : 'En attente' }}
+                      </span>
                     </div>
-                    <div class="evd-entretien-info">
-                      <div class="evd-entretien-company">{{ ent.entreprise?.nom || '—' }}</div>
-                      <div class="evd-entretien-datetime">
-                        <i class="fa-solid fa-calendar"></i> {{ ent.date }}
-                        &nbsp;·&nbsp;
-                        <i class="fa-solid fa-clock"></i> {{ ent.heure_debut?.substring(0,5) }}
+
+                    <!-- Feedback existant -->
+                    <div v-if="getFeedback(ent.id)" class="evd-feedback-display">
+                      <div class="evd-feedback-stars">
+                        <i
+                          v-for="s in 5" :key="s"
+                          :class="['fa-star', s <= getFeedback(ent.id).note ? 'fa-solid' : 'fa-regular']"
+                        ></i>
+                        <span class="evd-feedback-note">{{ getFeedback(ent.id).note }}/5</span>
+                      </div>
+                      <p v-if="getFeedback(ent.id).commentaire" class="evd-feedback-comment">
+                        "{{ getFeedback(ent.id).commentaire }}"
+                      </p>
+                      <button class="evd-feedback-edit-btn" @click="ouvrirFeedback(ent)">
+                        <i class="fa-solid fa-pen"></i> Modifier
+                      </button>
+                    </div>
+
+                    <!-- Bouton donner feedback (entretien confirmé sans feedback) -->
+                    <div v-else-if="ent.statut === 'confirme' && feedbackOpen !== ent.id" class="evd-feedback-cta">
+                      <button class="btn btn--outline-nav btn--sm" @click="ouvrirFeedback(ent)">
+                        <i class="fa-solid fa-star"></i> Donner un feedback
+                      </button>
+                    </div>
+
+                    <!-- Formulaire feedback inline -->
+                    <div v-if="feedbackOpen === ent.id" class="evd-feedback-form">
+                      <div class="evd-stars-input">
+                        <button
+                          v-for="s in 5" :key="s"
+                          :class="['evd-star-btn', { active: s <= feedbackForm.note }]"
+                          @click="feedbackForm.note = s"
+                          type="button"
+                        ><i class="fa-solid fa-star"></i></button>
+                        <span class="evd-star-label">{{ feedbackForm.note ? feedbackForm.note + '/5' : 'Choisir une note' }}</span>
+                      </div>
+                      <textarea
+                        v-model="feedbackForm.commentaire"
+                        class="evd-feedback-textarea"
+                        placeholder="Votre commentaire (optionnel)..."
+                        rows="3"
+                      ></textarea>
+                      <div v-if="feedbackError" class="evd-error" style="margin-bottom:8px;">{{ feedbackError }}</div>
+                      <div class="evd-feedback-form-btns">
+                        <button class="btn btn--ghost" @click="feedbackOpen = null">Annuler</button>
+                        <button class="btn btn--blue btn--sm" :disabled="feedbackSaving" @click="soumettreF(ent)">
+                          <i class="fa-solid fa-paper-plane"></i>
+                          {{ feedbackSaving ? 'Envoi…' : (getFeedback(ent.id) ? 'Mettre à jour' : 'Envoyer') }}
+                        </button>
                       </div>
                     </div>
-                    <span :class="['evd-entretien-badge', `status--${ent.statut}`]">
-                      {{ ent.statut === 'confirme' ? 'Confirmé' : ent.statut === 'refuse' ? 'Refusé' : 'En attente' }}
-                    </span>
+
                   </div>
                 </div>
               </div>
@@ -557,15 +612,56 @@ const demanderParticipation = async () => {
   }
 }
 
-// ── Mes entretiens (talent) ────────────────────────────────────
-const mesEntretiens = ref([])
+// ── Mes entretiens + feedbacks (talent) ───────────────────────
+const mesEntretiens  = ref([])
+const mesFeedbacks   = ref([])   // { entretien_id, note, commentaire, id }
+const feedbackOpen   = ref(null) // entretien.id dont le formulaire est ouvert
+const feedbackForm   = ref({ note: 0, commentaire: '' })
+const feedbackSaving = ref(false)
+const feedbackError  = ref('')
+
 const loadMesEntretiens = async () => {
   if (!isTalent.value || !evenement.value) return
   try {
-    const res = await api.get('/talent/mes-entretiens')
-    const all = Array.isArray(res.data) ? res.data : (res.data.data || [])
-    mesEntretiens.value = all.filter(e => e.evenement_id === evenement.value.id)
+    const [entRes, fbRes] = await Promise.all([
+      api.get('/talent/mes-entretiens'),
+      api.get('/talent/mes-feedbacks'),
+    ])
+    const allEnt = Array.isArray(entRes.data) ? entRes.data : (entRes.data.data || [])
+    mesEntretiens.value = allEnt.filter(e => e.evenement_id === evenement.value.id)
+    const allFb = Array.isArray(fbRes.data) ? fbRes.data : (fbRes.data.data || [])
+    // Garder uniquement les feedbacks liés à cet événement
+    mesFeedbacks.value = allFb.filter(f => f.entretien?.evenement_id === evenement.value.id)
   } catch {}
+}
+
+const getFeedback = (entretienId) => mesFeedbacks.value.find(f => f.entretien_id === entretienId)
+
+const ouvrirFeedback = (entretien) => {
+  const existing = getFeedback(entretien.id)
+  feedbackForm.value = { note: existing?.note || 0, commentaire: existing?.commentaire || '' }
+  feedbackError.value = ''
+  feedbackOpen.value = entretien.id
+}
+
+const soumettreF = async (entretien) => {
+  if (!feedbackForm.value.note) { feedbackError.value = 'Veuillez choisir une note.'; return }
+  feedbackSaving.value = true
+  feedbackError.value  = ''
+  try {
+    const existing = getFeedback(entretien.id)
+    if (existing) {
+      await api.put(`/talent/feedbacks/${existing.id}`, feedbackForm.value)
+    } else {
+      await api.post(`/talent/entretiens/${entretien.id}/feedback`, feedbackForm.value)
+    }
+    await loadMesEntretiens()
+    feedbackOpen.value = null
+  } catch (e) {
+    feedbackError.value = e.response?.data?.message || 'Erreur lors de la soumission.'
+  } finally {
+    feedbackSaving.value = false
+  }
 }
 
 // ── Computed style héro ───────────────────────────────────────
@@ -1111,29 +1207,69 @@ onMounted(async () => {
 .evd-part-cta p { font-size: 14px; color: var(--body-text); margin: 0; line-height: 1.6; }
 
 /* ── Mes entretiens ── */
-.evd-entretiens-list { display: flex; flex-direction: column; gap: 10px; }
-.evd-entretien-item {
+.evd-entretiens-list { display: flex; flex-direction: column; gap: 12px; }
+
+.evd-entretien-card {
+  border-radius: 12px; border: 1px solid #e8edf5;
+  background: #f8fafc; overflow: hidden;
+}
+.evd-entretien-row {
   display: flex; align-items: center; gap: 10px;
-  padding: 10px 12px; border-radius: 10px;
-  background: #f8fafc; border: 1px solid #e8edf5;
+  padding: 12px 14px;
 }
 .evd-entretien-logo {
-  width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
+  width: 38px; height: 38px; border-radius: 8px; flex-shrink: 0;
   background: #fff; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 1px 4px rgba(0,0,0,.08);
 }
 .evd-entretien-logo img { width: 100%; height: 100%; object-fit: contain; padding: 3px; }
-.evd-entretien-logo span { font-size: 14px; font-weight: 800; color: var(--blue); }
+.evd-entretien-logo span { font-size: 15px; font-weight: 800; color: var(--blue); }
 .evd-entretien-info { flex: 1; min-width: 0; }
 .evd-entretien-company { font-size: 13px; font-weight: 700; color: var(--navy); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .evd-entretien-datetime { font-size: 11px; color: var(--body-text); margin-top: 2px; display: flex; align-items: center; gap: 3px; flex-wrap: wrap; }
 .evd-entretien-datetime i { color: var(--blue); font-size: 10px; }
-.evd-entretien-badge {
-  font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 50px;
-  white-space: nowrap; flex-shrink: 0;
-}
+.evd-entretien-badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 50px; white-space: nowrap; flex-shrink: 0; }
 .status--confirme  { background: #dcfce7; color: #16a34a; }
 .status--refuse    { background: #fee2e2; color: #dc2626; }
 .status--en_attente, .status--pending { background: #fef9c3; color: #b45309; }
+
+/* Feedback affiché */
+.evd-feedback-display {
+  padding: 10px 14px 12px; border-top: 1px solid #e8edf5;
+  background: #fff;
+}
+.evd-feedback-stars { display: flex; align-items: center; gap: 4px; margin-bottom: 4px; }
+.evd-feedback-stars i { font-size: 14px; color: #f59e0b; }
+.evd-feedback-note { font-size: 12px; font-weight: 700; color: var(--navy); margin-left: 4px; }
+.evd-feedback-comment { font-size: 12px; color: var(--body-text); font-style: italic; margin: 4px 0 8px; line-height: 1.5; }
+.evd-feedback-edit-btn {
+  background: none; border: none; cursor: pointer; font-size: 11px;
+  color: var(--blue); font-weight: 600; padding: 0; display: flex; align-items: center; gap: 4px;
+}
+.evd-feedback-edit-btn:hover { text-decoration: underline; }
+
+/* Bouton donner feedback */
+.evd-feedback-cta { padding: 0 14px 12px; }
+
+/* Formulaire inline */
+.evd-feedback-form {
+  padding: 12px 14px 14px; border-top: 1px solid #e8edf5;
+  background: #fff; display: flex; flex-direction: column; gap: 10px;
+}
+.evd-stars-input { display: flex; align-items: center; gap: 6px; }
+.evd-star-btn {
+  background: none; border: none; cursor: pointer; padding: 2px;
+  font-size: 22px; color: #d1d5db; transition: color .1s, transform .1s;
+}
+.evd-star-btn.active, .evd-star-btn:hover { color: #f59e0b; }
+.evd-star-btn:hover { transform: scale(1.15); }
+.evd-star-label { font-size: 12px; color: var(--body-text); margin-left: 4px; }
+.evd-feedback-textarea {
+  width: 100%; padding: 10px 12px; border-radius: 8px;
+  border: 1.5px solid #e2e8f0; font-size: 13px; color: var(--navy);
+  resize: vertical; outline: none; font-family: inherit; box-sizing: border-box;
+}
+.evd-feedback-textarea:focus { border-color: var(--blue); }
+.evd-feedback-form-btns { display: flex; gap: 8px; justify-content: flex-end; }
 </style>
