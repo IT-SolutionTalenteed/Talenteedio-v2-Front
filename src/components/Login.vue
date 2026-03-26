@@ -35,10 +35,11 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { authService } from '../services/api.js'
 
 const router = useRouter()
+const route  = useRoute()
 
 const form             = ref({ email: '', password: '' })
 const loading          = ref(false)
@@ -106,12 +107,18 @@ const handleLogin = async () => {
 
     localStorage.setItem('token', response.data.access_token)
     localStorage.setItem('userRole', response.data.user.role)
+    localStorage.setItem('userId', response.data.user.id)
 
-    switch (response.data.user.role) {
-      case 'admin':      router.push('/admin');      break
-      case 'talent':     router.push('/talent');     break
-      case 'entreprise': router.push('/entreprise'); break
-      default: error.value = 'Rôle utilisateur non reconnu'
+    const redirect = route.query.redirect
+    if (redirect) {
+      router.push(decodeURIComponent(redirect))
+    } else {
+      switch (response.data.user.role) {
+        case 'admin':      router.push('/admin');      break
+        case 'talent':     router.push('/talent');     break
+        case 'entreprise': router.push('/entreprise'); break
+        default: error.value = 'Rôle utilisateur non reconnu'
+      }
     }
   } catch (err) {
     error.value = err.response?.data?.message

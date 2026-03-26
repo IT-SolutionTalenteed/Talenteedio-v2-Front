@@ -26,6 +26,7 @@ onMounted(() => {
 
   localStorage.setItem('token', token)
   localStorage.setItem('userRole', role)
+  if (route.query.user_id) localStorage.setItem('userId', route.query.user_id)
 
   switch (role) {
     case 'admin':      router.push('/admin');      break
