@@ -1,5 +1,4 @@
 <template>
-  <VerticalLayout>
     <v-card rounded="xl" border elevation="0">
       <v-toolbar color="primary" density="compact">
         <v-btn icon="mdi-arrow-left" variant="text" color="white" @click="goBack" />
@@ -29,13 +28,11 @@
       </v-card-text>
     </v-card>
     <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">{{ snackMsg }}</v-snackbar>
-  </VerticalLayout>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import VerticalLayout from '../layout/VerticalLayout.vue'
 import WysiwygEditor from '../WysiwygEditor.vue'
 import legalPageService from '../../services/legalPageService.js'
 

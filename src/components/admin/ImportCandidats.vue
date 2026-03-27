@@ -1,182 +1,202 @@
 <template>
-  <div class="container-xl">
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">
-          <i class="bi bi-upload me-2"></i>
-          Import Candidats (XLS)
-        </h3>
-      </div>
-
-      <div class="card-body">
-        <div class="alert alert-info mb-4">
-          <i class="bi bi-info-circle me-2"></i>
-          Importez le fichier <strong>candidats.xls</strong> de l'ancien CRM pour créer les comptes talents dans Talenteed.
+  <v-container fluid class="pa-6">
+    <v-row>
+      <v-col cols="12" lg="10" xl="8" class="mx-auto">
+        
+        <!-- Header -->
+        <div class="mb-6">
+          <h1 class="text-h4 font-weight-bold mb-2">
+            <v-icon icon="mdi-upload" size="32" class="mr-2"></v-icon>
+            Import Candidats
+          </h1>
+          <p class="text-body-1 text-medium-emphasis">
+            Importez le fichier XLS de l'ancien CRM pour créer les comptes talents
+          </p>
         </div>
 
-        <form @submit.prevent="launch">
-          <div class="mb-3">
-            <label class="form-label required">Fichier XLS</label>
-            <input 
-              type="file" 
-              class="form-control" 
-              accept=".xls,.xlsx" 
-              @change="e => file = e.target.files[0]" 
-              required 
-            />
-            <small class="form-hint">Formats acceptés : .xls, .xlsx</small>
-          </div>
+        <!-- Formulaire -->
+        <v-card elevation="2" class="mb-6">
+          <v-card-text class="pa-6">
+            <v-alert
+              type="info"
+              variant="tonal"
+              class="mb-6"
+              icon="mdi-information"
+            >
+              Importez le fichier <strong>candidats.xls</strong> de l'ancien CRM pour créer les comptes talents dans Talenteed.
+            </v-alert>
 
-          <div class="mb-3">
-            <label class="form-check">
-              <input type="checkbox" class="form-check-input" v-model="dryRun" />
-              <span class="form-check-label">
-                <strong>Simulation (dry-run)</strong> — ne crée rien, affiche seulement les résultats
-              </span>
-            </label>
-          </div>
+            <v-form @submit.prevent="launch">
+              <v-file-input
+                v-model="fileArray"
+                label="Fichier XLS"
+                accept=".xls,.xlsx"
+                prepend-icon="mdi-file-excel"
+                variant="outlined"
+                hint="Formats acceptés : .xls, .xlsx"
+                persistent-hint
+                required
+                class="mb-4"
+                :disabled="loading"
+              ></v-file-input>
 
-          <button 
-            type="submit" 
-            class="btn btn-primary" 
-            :disabled="!file || loading"
-          >
-            <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
-            <i v-else class="bi bi-upload me-2"></i>
-            {{ loading ? 'Import en cours...' : (dryRun ? 'Simuler l\'import' : 'Lancer l\'import') }}
-          </button>
-        </form>
-      </div>
-
-      <!-- Résultats -->
-      <div v-if="result" class="card-body border-top">
-        <h4 class="mb-3">
-          <i class="bi bi-check-circle text-success me-2"></i>
-          Résultats {{ result.dry_run ? '(simulation)' : '' }}
-        </h4>
-
-        <div class="row mb-3">
-          <div class="col-sm-6 col-lg-3">
-            <div class="card card-sm">
-              <div class="card-body">
-                <div class="row align-items-center">
-                  <div class="col-auto">
-                    <span class="bg-success text-white avatar">
-                      <i class="bi bi-check-lg"></i>
-                    </span>
-                  </div>
-                  <div class="col">
-                    <div class="font-weight-medium">{{ result.stats.created }}</div>
-                    <div class="text-secondary">Créés</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-sm-6 col-lg-3">
-            <div class="card card-sm">
-              <div class="card-body">
-                <div class="row align-items-center">
-                  <div class="col-auto">
-                    <span class="bg-secondary text-white avatar">
-                      <i class="bi bi-dash-circle"></i>
-                    </span>
-                  </div>
-                  <div class="col">
-                    <div class="font-weight-medium">{{ result.stats.skipped }}</div>
-                    <div class="text-secondary">Ignorés (internes)</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-sm-6 col-lg-3">
-            <div class="card card-sm">
-              <div class="card-body">
-                <div class="row align-items-center">
-                  <div class="col-auto">
-                    <span class="bg-warning text-white avatar">
-                      <i class="bi bi-exclamation-triangle"></i>
-                    </span>
-                  </div>
-                  <div class="col">
-                    <div class="font-weight-medium">{{ result.stats.existing }}</div>
-                    <div class="text-secondary">Déjà existants</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-sm-6 col-lg-3">
-            <div class="card card-sm">
-              <div class="card-body">
-                <div class="row align-items-center">
-                  <div class="col-auto">
-                    <span class="bg-danger text-white avatar">
-                      <i class="bi bi-x-circle"></i>
-                    </span>
-                  </div>
-                  <div class="col">
-                    <div class="font-weight-medium">{{ result.stats.errors }}</div>
-                    <div class="text-secondary">Erreurs</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div v-if="result.dry_run" class="alert alert-warning">
-          <i class="bi bi-info-circle me-2"></i>
-          Mode simulation — aucun compte créé. Relancez sans "Simulation" pour importer réellement.
-        </div>
-
-        <div class="accordion" id="accordionOutput">
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button 
-                class="accordion-button collapsed" 
-                type="button" 
-                data-bs-toggle="collapse" 
-                data-bs-target="#collapseOutput"
+              <v-checkbox
+                v-model="dryRun"
+                color="primary"
+                class="mb-4"
               >
-                <i class="bi bi-code-square me-2"></i>
-                Voir la sortie complète
-              </button>
-            </h2>
-            <div id="collapseOutput" class="accordion-collapse collapse">
-              <div class="accordion-body">
-                <pre class="bg-light p-3" style="font-size:12px;overflow:auto;max-height:400px;">{{ result.output }}</pre>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+                <template v-slot:label>
+                  <div>
+                    <strong>Simulation (dry-run)</strong>
+                    <div class="text-caption text-medium-emphasis">
+                      Ne crée rien, affiche seulement les résultats
+                    </div>
+                  </div>
+                </template>
+              </v-checkbox>
 
-      <div v-if="error" class="card-footer">
-        <div class="alert alert-danger mb-0">
-          <i class="bi bi-exclamation-triangle me-2"></i>
+              <v-btn
+                type="submit"
+                color="primary"
+                size="large"
+                :disabled="!fileArray.length || loading"
+                :loading="loading"
+              >
+                <v-icon start>{{ dryRun ? 'mdi-play-circle-outline' : 'mdi-upload' }}</v-icon>
+                {{ loading ? 'Import en cours...' : (dryRun ? 'Simuler l\'import' : 'Lancer l\'import') }}
+              </v-btn>
+            </v-form>
+          </v-card-text>
+        </v-card>
+
+        <!-- Résultats -->
+        <v-card v-if="result" elevation="2" class="mb-6">
+          <v-card-title class="d-flex align-center pa-6 bg-success-lighten">
+            <v-icon icon="mdi-check-circle" color="success" class="mr-2"></v-icon>
+            <span>Résultats {{ result.dry_run ? '(simulation)' : '' }}</span>
+          </v-card-title>
+
+          <v-card-text class="pa-6">
+            <v-row>
+              <v-col cols="12" sm="6" md="3">
+                <v-card variant="tonal" color="success">
+                  <v-card-text>
+                    <div class="d-flex align-center">
+                      <v-avatar color="success" size="48" class="mr-3">
+                        <v-icon icon="mdi-check" color="white"></v-icon>
+                      </v-avatar>
+                      <div>
+                        <div class="text-h5 font-weight-bold">{{ result.stats.created }}</div>
+                        <div class="text-caption">Créés</div>
+                      </div>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+
+              <v-col cols="12" sm="6" md="3">
+                <v-card variant="tonal" color="grey">
+                  <v-card-text>
+                    <div class="d-flex align-center">
+                      <v-avatar color="grey" size="48" class="mr-3">
+                        <v-icon icon="mdi-minus-circle" color="white"></v-icon>
+                      </v-avatar>
+                      <div>
+                        <div class="text-h5 font-weight-bold">{{ result.stats.skipped }}</div>
+                        <div class="text-caption">Ignorés</div>
+                      </div>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+
+              <v-col cols="12" sm="6" md="3">
+                <v-card variant="tonal" color="warning">
+                  <v-card-text>
+                    <div class="d-flex align-center">
+                      <v-avatar color="warning" size="48" class="mr-3">
+                        <v-icon icon="mdi-alert" color="white"></v-icon>
+                      </v-avatar>
+                      <div>
+                        <div class="text-h5 font-weight-bold">{{ result.stats.existing }}</div>
+                        <div class="text-caption">Existants</div>
+                      </div>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+
+              <v-col cols="12" sm="6" md="3">
+                <v-card variant="tonal" color="error">
+                  <v-card-text>
+                    <div class="d-flex align-center">
+                      <v-avatar color="error" size="48" class="mr-3">
+                        <v-icon icon="mdi-close-circle" color="white"></v-icon>
+                      </v-avatar>
+                      <div>
+                        <div class="text-h5 font-weight-bold">{{ result.stats.errors }}</div>
+                        <div class="text-caption">Erreurs</div>
+                      </div>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+
+            <v-alert
+              v-if="result.dry_run"
+              type="warning"
+              variant="tonal"
+              class="mt-6"
+              icon="mdi-information"
+            >
+              Mode simulation — aucun compte créé. Relancez sans "Simulation" pour importer réellement.
+            </v-alert>
+
+            <v-expansion-panels class="mt-6">
+              <v-expansion-panel>
+                <v-expansion-panel-title>
+                  <v-icon icon="mdi-code-braces" class="mr-2"></v-icon>
+                  Voir la sortie complète
+                </v-expansion-panel-title>
+                <v-expansion-panel-text>
+                  <pre class="pa-4 bg-grey-lighten-4 rounded" style="font-size:12px;overflow:auto;max-height:400px;">{{ result.output }}</pre>
+                </v-expansion-panel-text>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </v-card-text>
+        </v-card>
+
+        <!-- Erreur -->
+        <v-alert
+          v-if="error"
+          type="error"
+          variant="tonal"
+          closable
+          @click:close="error = ''"
+        >
           {{ error }}
-        </div>
-      </div>
-    </div>
-  </div>
+        </v-alert>
+
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import api from '../../services/api.js'
 
-const file    = ref(null)
+const fileArray = ref([])
+const file = computed(() => fileArray.value[0] || null)
 const dryRun  = ref(true)
 const loading = ref(false)
 const result  = ref(null)
 const error   = ref('')
 
 const launch = async () => {
+  if (!file.value) return
+  
   loading.value = true
   error.value   = ''
   result.value  = null
@@ -188,7 +208,7 @@ const launch = async () => {
 
     const res = await api.post('/admin/import/candidats', fd, {
       headers: { 'Content-Type': 'multipart/form-data' },
-      timeout: 300000, // 5 minutes — l'import peut être long
+      timeout: 300000,
     })
     result.value = res.data
   } catch (err) {
@@ -198,3 +218,9 @@ const launch = async () => {
   }
 }
 </script>
+
+<style scoped>
+.bg-success-lighten {
+  background-color: rgba(76, 175, 80, 0.1);
+}
+</style>

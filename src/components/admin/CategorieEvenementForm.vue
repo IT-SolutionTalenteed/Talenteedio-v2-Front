@@ -1,5 +1,4 @@
 <template>
-  <VerticalLayout>
     <v-card rounded="xl" border elevation="0">
       <v-toolbar color="primary" density="compact">
         <v-btn icon="mdi-arrow-left" variant="text" color="white" @click="goBack" />
@@ -164,13 +163,11 @@
     </v-card>
     <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">{{ snackMsg }}</v-snackbar>
     <ConfirmDialog ref="confirmRef" />
-  </VerticalLayout>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import VerticalLayout from '../layout/VerticalLayout.vue'
 import categorieEvenementService from '../../services/categorieEvenementService.js'
 import temoignageService from '../../services/temoignageService.js'
 import ConfirmDialog from '../shared/ConfirmDialog.vue'

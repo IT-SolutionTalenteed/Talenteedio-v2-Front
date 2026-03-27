@@ -1,179 +1,205 @@
 <template>
-  <div class="container-xl">
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">
-          <i class="bi bi-arrow-repeat me-2"></i>
-          Synchronisation HubSpot CRM
-        </h3>
-      </div>
-
-      <div class="card-body">
-        <!-- Statut configuration -->
-        <div v-if="status !== null" class="mb-4">
-          <div v-if="!status.configured" class="alert alert-warning">
-            <i class="bi bi-exclamation-triangle me-2"></i>
-            HubSpot non configuré — renseignez <strong>HUBSPOT_TOKEN</strong> dans le <code>.env</code> backend.
-          </div>
-          <div v-else class="alert alert-success">
-            <i class="bi bi-check-circle me-2"></i>
-            HubSpot connecté
-          </div>
+  <v-container fluid class="pa-6">
+    <v-row>
+      <v-col cols="12" lg="10" xl="8" class="mx-auto">
+        
+        <!-- Header -->
+        <div class="mb-6">
+          <h1 class="text-h4 font-weight-bold mb-2">
+            <v-icon icon="mdi-sync" size="32" class="mr-2"></v-icon>
+            Synchronisation HubSpot CRM
+          </h1>
+          <p class="text-body-1 text-medium-emphasis">
+            Gérez la synchronisation bidirectionnelle avec HubSpot
+          </p>
         </div>
+
+        <!-- Statut configuration -->
+        <v-alert
+          v-if="status !== null && !status.configured"
+          type="warning"
+          variant="tonal"
+          class="mb-6"
+          icon="mdi-alert"
+        >
+          HubSpot non configuré — renseignez <strong>HUBSPOT_TOKEN</strong> dans le <code>.env</code> backend.
+        </v-alert>
+
+        <v-alert
+          v-else-if="status !== null && status.configured"
+          type="success"
+          variant="tonal"
+          class="mb-6"
+          icon="mdi-check-circle"
+        >
+          HubSpot connecté et prêt
+        </v-alert>
 
         <!-- Dernière synchronisation -->
-        <div v-if="status?.last_sync" class="card card-sm mb-4">
-          <div class="card-header">
-            <h4 class="card-title">
-              <i class="bi bi-clock-history me-2"></i>
-              Dernière synchronisation
-            </h4>
-          </div>
-          <div class="card-body">
-            <div class="mb-3">
+        <v-card v-if="status?.last_sync" elevation="2" class="mb-6">
+          <v-card-title class="pa-6 bg-blue-lighten-5">
+            <v-icon icon="mdi-clock-outline" class="mr-2"></v-icon>
+            Dernière synchronisation
+          </v-card-title>
+          
+          <v-card-text class="pa-6">
+            <div class="text-subtitle-1 mb-4">
               <strong>Date :</strong> {{ formatDate(status.last_sync.at) }}
             </div>
-            <div class="row">
-              <div class="col-md-4">
-                <div class="card card-sm">
-                  <div class="card-body">
-                    <div class="row align-items-center">
-                      <div class="col-auto">
-                        <span class="bg-success text-white avatar avatar-sm">
-                          <i class="bi bi-person"></i>
-                        </span>
-                      </div>
-                      <div class="col">
-                        <div class="font-weight-medium">{{ status.last_sync.contacts }}</div>
-                        <div class="text-secondary small">Contacts synchés</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="card card-sm">
-                  <div class="card-body">
-                    <div class="row align-items-center">
-                      <div class="col-auto">
-                        <span class="bg-info text-white avatar avatar-sm">
-                          <i class="bi bi-building"></i>
-                        </span>
-                      </div>
-                      <div class="col">
-                        <div class="font-weight-medium">{{ status.last_sync.companies }}</div>
-                        <div class="text-secondary small">Companies synchées</div>
+
+            <v-row>
+              <v-col cols="12" md="4">
+                <v-card variant="tonal" color="success">
+                  <v-card-text>
+                    <div class="d-flex align-center">
+                      <v-avatar color="success" size="56" class="mr-4">
+                        <v-icon icon="mdi-account" size="32" color="white"></v-icon>
+                      </v-avatar>
+                      <div>
+                        <div class="text-h4 font-weight-bold">{{ status.last_sync.contacts }}</div>
+                        <div class="text-caption">Contacts synchés</div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="card card-sm">
-                  <div class="card-body">
-                    <div class="row align-items-center">
-                      <div class="col-auto">
-                        <span class="bg-danger text-white avatar avatar-sm">
-                          <i class="bi bi-x-circle"></i>
-                        </span>
-                      </div>
-                      <div class="col">
-                        <div class="font-weight-medium">{{ status.last_sync.errors }}</div>
-                        <div class="text-secondary small">Erreurs</div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+
+              <v-col cols="12" md="4">
+                <v-card variant="tonal" color="info">
+                  <v-card-text>
+                    <div class="d-flex align-center">
+                      <v-avatar color="info" size="56" class="mr-4">
+                        <v-icon icon="mdi-office-building" size="32" color="white"></v-icon>
+                      </v-avatar>
+                      <div>
+                        <div class="text-h4 font-weight-bold">{{ status.last_sync.companies }}</div>
+                        <div class="text-caption">Companies synchées</div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div v-else-if="status !== null" class="alert alert-info mb-4">
-          <i class="bi bi-info-circle me-2"></i>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+
+              <v-col cols="12" md="4">
+                <v-card variant="tonal" color="error">
+                  <v-card-text>
+                    <div class="d-flex align-center">
+                      <v-avatar color="error" size="56" class="mr-4">
+                        <v-icon icon="mdi-alert-circle" size="32" color="white"></v-icon>
+                      </v-avatar>
+                      <div>
+                        <div class="text-h4 font-weight-bold">{{ status.last_sync.errors }}</div>
+                        <div class="text-caption">Erreurs</div>
+                      </div>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+
+        <v-alert
+          v-else-if="status !== null"
+          type="info"
+          variant="tonal"
+          class="mb-6"
+          icon="mdi-information"
+        >
           Aucune synchronisation effectuée pour le moment.
-        </div>
+        </v-alert>
 
-        <!-- Setup (1 seule fois) -->
-        <div class="alert alert-warning mb-4">
-          <div class="d-flex align-items-center">
-            <div class="flex-fill">
-              <h4 class="alert-title">
-                <i class="bi bi-gear me-2"></i>
-                Première utilisation
-              </h4>
-              <div class="text-secondary">
-                Créer les propriétés personnalisées dans HubSpot (à faire une seule fois)
+        <!-- Setup -->
+        <v-card elevation="2" class="mb-6" color="warning-lighten-5">
+          <v-card-text class="pa-6">
+            <div class="d-flex align-center">
+              <v-avatar color="warning" size="56" class="mr-4">
+                <v-icon icon="mdi-cog" size="32" color="white"></v-icon>
+              </v-avatar>
+              <div class="flex-grow-1">
+                <h3 class="text-h6 font-weight-bold mb-1">Première utilisation</h3>
+                <p class="text-body-2 text-medium-emphasis mb-0">
+                  Créer les propriétés personnalisées dans HubSpot (à faire une seule fois)
+                </p>
               </div>
-            </div>
-            <div class="ms-3">
-              <button 
-                class="btn btn-warning" 
-                @click="runSetup" 
+              <v-btn
+                color="warning"
+                size="large"
+                @click="runSetup"
                 :disabled="settingUp || !status?.configured"
+                :loading="settingUp"
               >
-                <span v-if="settingUp" class="spinner-border spinner-border-sm me-2"></span>
-                <i v-else class="bi bi-gear-fill me-2"></i>
-                {{ settingUp ? 'Création en cours...' : 'Setup HubSpot' }}
-              </button>
+                <v-icon start>mdi-cog</v-icon>
+                Setup HubSpot
+              </v-btn>
             </div>
-          </div>
-        </div>
+          </v-card-text>
+        </v-card>
 
-        <!-- Bouton sync manuelle -->
-        <div class="d-flex align-items-center gap-3">
-          <button 
-            class="btn btn-primary" 
-            @click="runSync" 
-            :disabled="syncing || !status?.configured"
-          >
-            <span v-if="syncing" class="spinner-border spinner-border-sm me-2"></span>
-            <i v-else class="bi bi-arrow-repeat me-2"></i>
-            {{ syncing ? 'Synchronisation en cours...' : 'Synchroniser maintenant' }}
-          </button>
-          <span class="text-muted small">
-            <i class="bi bi-moon me-1"></i>
-            La sync automatique tourne chaque nuit à 02h00
-          </span>
-        </div>
+        <!-- Actions de synchronisation -->
+        <v-card elevation="2" class="mb-6">
+          <v-card-text class="pa-6">
+            <div class="d-flex align-center flex-wrap ga-4">
+              <v-btn
+                color="primary"
+                size="x-large"
+                @click="runSync"
+                :disabled="syncing || !status?.configured"
+                :loading="syncing"
+              >
+                <v-icon start>mdi-sync</v-icon>
+                Synchroniser maintenant
+              </v-btn>
 
-        <!-- Sortie de la dernière sync manuelle -->
-        <div v-if="syncOutput" class="mt-4">
-          <div class="accordion" id="accordionSync">
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button 
-                  class="accordion-button collapsed" 
-                  type="button" 
-                  data-bs-toggle="collapse" 
-                  data-bs-target="#collapseSyncOutput"
-                >
-                  <i class="bi bi-code-square me-2"></i>
+              <v-chip
+                prepend-icon="mdi-moon-waning-crescent"
+                color="info"
+                variant="tonal"
+              >
+                Sync automatique chaque nuit à 02h00
+              </v-chip>
+            </div>
+
+            <!-- Sortie de la dernière sync -->
+            <v-expansion-panels v-if="syncOutput" class="mt-6">
+              <v-expansion-panel>
+                <v-expansion-panel-title>
+                  <v-icon icon="mdi-code-braces" class="mr-2"></v-icon>
                   Sortie de la synchronisation
-                </button>
-              </h2>
-              <div id="collapseSyncOutput" class="accordion-collapse collapse">
-                <div class="accordion-body">
-                  <pre class="bg-light p-3" style="font-size:12px;overflow:auto;max-height:300px;">{{ syncOutput }}</pre>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+                </v-expansion-panel-title>
+                <v-expansion-panel-text>
+                  <pre class="pa-4 bg-grey-lighten-4 rounded" style="font-size:12px;overflow:auto;max-height:300px;">{{ syncOutput }}</pre>
+                </v-expansion-panel-text>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </v-card-text>
+        </v-card>
 
-      <!-- Messages -->
-      <div v-if="error || successMsg" class="card-footer">
-        <div v-if="error" class="alert alert-danger mb-0">
-          <i class="bi bi-exclamation-triangle me-2"></i>
+        <!-- Messages -->
+        <v-alert
+          v-if="error"
+          type="error"
+          variant="tonal"
+          closable
+          class="mb-4"
+          @click:close="error = ''"
+        >
           {{ error }}
-        </div>
-        <div v-if="successMsg" class="alert alert-success mb-0">
-          <i class="bi bi-check-circle me-2"></i>
+        </v-alert>
+
+        <v-alert
+          v-if="successMsg"
+          type="success"
+          variant="tonal"
+          closable
+          @click:close="successMsg = ''"
+        >
           {{ successMsg }}
-        </div>
-      </div>
-    </div>
-  </div>
+        </v-alert>
+
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script setup>
@@ -234,3 +260,12 @@ const runSync = async () => {
 
 onMounted(loadStatus)
 </script>
+
+<style scoped>
+.bg-blue-lighten-5 {
+  background-color: rgba(33, 150, 243, 0.08);
+}
+.warning-lighten-5 {
+  background-color: rgba(255, 152, 0, 0.08);
+}
+</style>
