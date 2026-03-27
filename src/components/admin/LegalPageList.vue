@@ -16,6 +16,10 @@
       hover
       density="comfortable"
     >
+      <template #item.slug="{ item }">
+        <a :href="`/legal/${item.slug}`" target="_blank" class="text-caption text-primary">/legal/{{ item.slug }}</a>
+      </template>
+
       <template #item.actions="{ item }">
         <v-btn icon="mdi-pencil" size="small" color="primary" variant="text" @click="router.push({ name: 'AdminLegalPageEdit', params: { id: item.id } })" />
         <v-btn icon="mdi-trash-can" size="small" color="error" variant="text" @click="deleteItem(item.id)" />
@@ -48,6 +52,7 @@ const showSnack = (msg, color = 'success') => {
 const headers = [
   { title: 'ID', key: 'id', width: '80px' },
   { title: 'Titre', key: 'title' },
+  { title: 'URL publique', key: 'slug', sortable: false },
   { title: '', key: 'actions', sortable: false, width: '100px', align: 'end' },
 ]
 

@@ -25,56 +25,51 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import axios from 'axios'
+import api from '../services/api.js'
 import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
 
 const route = useRoute()
-const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
 const page = ref(null)
 const loading = ref(true)
 const error = ref('')
 
-// Mapping des slugs vers les titres de pages
-const slugToTitle = {
-  'terms-and-conditions': 'Conditions générales',
-  'privacy-policy': 'Confidentialité'
+const legacySlugMap = {
+  '/terms-and-conditions': 'conditions-generales',
+  '/privacy-policy': 'confidentialite',
 }
 
 const load = async () => {
   loading.value = true
   error.value = ''
-  
+  page.value = null
+
   try {
-    const slug = route.params.slug
-    const expectedTitle = slugToTitle[slug]
-    
-    if (!expectedTitle) {
-      error.value = 'Page non trouvée'
-      loading.value = false
+    const slug = route.params.slug || legacySlugMap[route.path]
+
+    if (!slug) {
+      error.value = 'Page non trouvée.'
       return
     }
-    
-    const response = await axios.get(`${apiBase}/legal-pages`)
-    const pages = response.data
-    
-    // Trouver la page par titre exact
-    page.value = pages.find(p => p.title === expectedTitle)
-    
-    if (!page.value) {
-      error.value = `La page "${expectedTitle}" n'a pas encore été créée par l'administrateur.`
-    }
+
+    const response = await api.get(`/legal-pages/${slug}`)
+    page.value = response.data
   } catch (err) {
-    error.value = 'Erreur lors du chargement de la page'
+    if (err.response?.status === 404) {
+      error.value = 'Page non trouvée. Elle n\'a peut-être pas encore été créée.'
+    } else {
+      error.value = 'Erreur lors du chargement de la page.'
+    }
   } finally {
     loading.value = false
   }
 }
 
 onMounted(load)
+watch(() => route.fullPath, load)
 </script>
 
 
