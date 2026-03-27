@@ -1,155 +1,157 @@
-/* Style personnalisé pour l'admin - Boutons carrés et couleurs */
+/* Style personnalisé pour l'admin uniquement - Boutons carrés et couleurs */
 
-/* Enlever tous les border-radius des boutons */
-.btn,
-.btn-sm,
-.btn-lg,
-.btn-primary,
-.btn-secondary,
-.btn-success,
-.btn-danger,
-.btn-warning,
-.btn-info,
-.btn-light,
-.btn-dark,
-.form-control,
-.form-select,
-.input-group,
-.card,
-.avatar,
-.badge,
-.alert,
-.pagination .page-link,
-.dropdown-menu,
-.modal-content,
-.list-group-item {
+/* 
+ * IMPORTANT: Ces styles sont scopés à .page-wrapper qui n'existe QUE dans VerticalLayout.vue
+ * VerticalLayout est utilisé uniquement pour les routes /admin/*
+ * Les pages publiques (/home, /annonces, etc.) ne sont PAS affectées
+ * Les boutons arrondis et icônes sont préservés sur tout le site public
+ */
+
+/* Appliquer les styles carrés uniquement dans les pages admin */
+.page-wrapper .btn,
+.page-wrapper .btn-sm,
+.page-wrapper .btn-lg,
+.page-wrapper .btn-primary,
+.page-wrapper .btn-secondary,
+.page-wrapper .btn-success,
+.page-wrapper .btn-danger,
+.page-wrapper .btn-warning,
+.page-wrapper .btn-info,
+.page-wrapper .btn-light,
+.page-wrapper .btn-dark,
+.page-wrapper .form-control,
+.page-wrapper .form-select,
+.page-wrapper .input-group,
+.page-wrapper .card,
+.page-wrapper .avatar,
+.page-wrapper .badge,
+.page-wrapper .alert,
+.page-wrapper .pagination .page-link,
+.page-wrapper .dropdown-menu,
+.page-wrapper .modal-content,
+.page-wrapper .list-group-item {
   border-radius: 0 !important;
 }
 
-/* Forcer les boutons carrés partout */
-* {
-  border-radius: 0 !important;
-}
-
-/* Remettre les couleurs sur les avatars des stats */
-.avatar.bg-primary-stat {
+/* Remettre les couleurs sur les avatars des stats - admin uniquement */
+.page-wrapper .avatar.bg-primary-stat {
   background-color: var(--tblr-primary) !important;
   color: white !important;
 }
 
-.avatar.bg-success-stat {
+.page-wrapper .avatar.bg-success-stat {
   background-color: var(--tblr-success) !important;
   color: white !important;
 }
 
-.avatar.bg-info-stat {
+.page-wrapper .avatar.bg-info-stat {
   background-color: var(--tblr-info) !important;
   color: white !important;
 }
 
-.avatar.bg-warning-stat {
+.page-wrapper .avatar.bg-warning-stat {
   background-color: var(--tblr-warning) !important;
   color: white !important;
 }
 
-.avatar.bg-danger-stat {
+.page-wrapper .avatar.bg-danger-stat {
   background-color: var(--tblr-danger) !important;
   color: white !important;
 }
 
-/* Couleurs pour les avatars des actions rapides */
-.avatar.bg-primary-lt {
+/* Couleurs pour les avatars des actions rapides - admin uniquement */
+.page-wrapper .avatar.bg-primary-lt {
   background-color: rgba(32, 107, 196, 0.1) !important;
   color: var(--tblr-primary) !important;
 }
 
-.avatar.bg-success-lt {
+.page-wrapper .avatar.bg-success-lt {
   background-color: rgba(47, 179, 68, 0.1) !important;
   color: var(--tblr-success) !important;
 }
 
-.avatar.bg-info-lt {
+.page-wrapper .avatar.bg-info-lt {
   background-color: rgba(66, 153, 225, 0.1) !important;
   color: var(--tblr-info) !important;
 }
 
-.avatar.bg-warning-lt {
+.page-wrapper .avatar.bg-warning-lt {
   background-color: rgba(247, 103, 7, 0.1) !important;
   color: var(--tblr-warning) !important;
 }
 
-.avatar.bg-purple-lt {
+.page-wrapper .avatar.bg-purple-lt {
   background-color: rgba(174, 62, 201, 0.1) !important;
   color: #ae3ec9 !important;
 }
 
-.avatar.bg-pink-lt {
+.page-wrapper .avatar.bg-pink-lt {
   background-color: rgba(214, 51, 132, 0.1) !important;
   color: #d63384 !important;
 }
 
-.avatar.bg-cyan-lt {
+.page-wrapper .avatar.bg-cyan-lt {
   background-color: rgba(23, 162, 184, 0.1) !important;
   color: #17a2b8 !important;
 }
 
-.avatar.bg-teal-lt {
+.page-wrapper .avatar.bg-teal-lt {
   background-color: rgba(32, 201, 151, 0.1) !important;
   color: #20c997 !important;
 }
 
-/* Boutons colorés pour les référentiels */
-.btn-outline-primary,
-.btn-outline-success,
-.btn-outline-info,
-.btn-outline-warning,
-.btn-outline-danger,
-.btn-outline-purple,
-.btn-outline-pink,
-.btn-outline-cyan,
-.btn-outline-teal {
+/* Boutons colorés pour les référentiels - admin uniquement */
+.page-wrapper .btn-outline-primary,
+.page-wrapper .btn-outline-success,
+.page-wrapper .btn-outline-info,
+.page-wrapper .btn-outline-warning,
+.page-wrapper .btn-outline-danger,
+.page-wrapper .btn-outline-purple,
+.page-wrapper .btn-outline-pink,
+.page-wrapper .btn-outline-cyan,
+.page-wrapper .btn-outline-teal {
   border-radius: 0 !important;
 }
 
-.btn-outline-purple {
+.page-wrapper .btn-outline-purple {
   color: #ae3ec9;
   border-color: #ae3ec9;
 }
 
-.btn-outline-purple:hover {
+.page-wrapper .btn-outline-purple:hover {
   background-color: #ae3ec9;
   border-color: #ae3ec9;
   color: white;
 }
 
-.btn-outline-pink {
+.page-wrapper .btn-outline-pink {
   color: #d63384;
   border-color: #d63384;
 }
 
-.btn-outline-pink:hover {
+.page-wrapper .btn-outline-pink:hover {
   background-color: #d63384;
   border-color: #d63384;
   color: white;
 }
 
-.btn-outline-cyan {
+.page-wrapper .btn-outline-cyan {
   color: #17a2b8;
   border-color: #17a2b8;
 }
 
-.btn-outline-cyan:hover {
+.page-wrapper .btn-outline-cyan:hover {
   background-color: #17a2b8;
   border-color: #17a2b8;
   color: white;
 }
 
-.btn-outline-teal {
+.page-wrapper .btn-outline-teal {
   color: #20c997;
   border-color: #20c997;
 }
 
-.btn-outline-teal:hover {
+.page-wrapper .btn-outline-teal:hover {
   background-color: #20c997;
   border-color: #20c997;
   color: white;
