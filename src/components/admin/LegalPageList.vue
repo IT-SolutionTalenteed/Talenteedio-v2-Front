@@ -4,18 +4,26 @@
       <v-icon icon="mdi-file-document-outline" class="mr-2" />
       <v-toolbar-title>Gestion des CGU / Mentions légales</v-toolbar-title>
       <v-spacer />
-      <v-btn color="primary" prepend-icon="mdi-plus" @click="showForm = true">
+      <v-btn color="primary" prepend-icon="mdi-plus" @click="dialog = true">
         Ajouter une page légale
       </v-btn>
     </v-toolbar>
 
-    <!-- Formulaire -->
-    <v-expand-transition>
-      <div v-if="showForm || editingItem">
-        <v-card-text class="border-b">
-          <div class="text-subtitle-1 font-weight-bold mb-4">
+    <!-- Dialog formulaire (fullscreen — contient WysiwygEditor) -->
+    <v-dialog v-model="dialog" fullscreen transition="dialog-bottom-transition" scrollable>
+      <v-card>
+        <v-toolbar color="primary" density="compact">
+          <v-btn icon="mdi-arrow-left" variant="text" color="white" @click="cancelForm" />
+          <v-toolbar-title class="text-body-1 font-weight-medium">
             {{ editingItem ? 'Modifier' : 'Créer' }} une page légale
-          </div>
+          </v-toolbar-title>
+          <template #append>
+            <v-btn variant="flat" color="white" class="text-primary" :loading="loading" @click="save">
+              Enregistrer
+            </v-btn>
+          </template>
+        </v-toolbar>
+        <v-card-text class="pa-6">
           <form @submit.prevent="save">
             <v-text-field
               v-model="form.title"
@@ -29,16 +37,10 @@
               <div class="text-body-2 mb-1">Contenu</div>
               <WysiwygEditor v-model="form.description" />
             </div>
-            <div class="d-flex gap-2">
-              <v-btn type="submit" color="primary" :loading="loading">
-                Enregistrer
-              </v-btn>
-              <v-btn type="button" variant="text" @click="cancelForm">Annuler</v-btn>
-            </div>
           </form>
         </v-card-text>
-      </div>
-    </v-expand-transition>
+      </v-card>
+    </v-dialog>
 
     <!-- Table -->
     <v-data-table
@@ -57,6 +59,8 @@
     <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">
       {{ snackMsg }}
     </v-snackbar>
+
+    <ConfirmDialog ref="confirmRef" />
   </v-card>
 </template>
 
@@ -64,6 +68,7 @@
 import { ref, onMounted } from 'vue'
 import legalPageService from '../../services/legalPageService.js'
 import WysiwygEditor from '../WysiwygEditor.vue'
+import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
 const items = ref([])
 const loading = ref(false)
@@ -72,6 +77,9 @@ const success = ref('')
 const showForm = ref(false)
 const editingItem = ref(null)
 const form = ref({ title: '', description: '' })
+const dialog = ref(false)
+
+const confirmRef = ref(null)
 
 const snackbar = ref(false)
 const snackMsg = ref('')
@@ -127,10 +135,12 @@ const editItem = (item) => {
   editingItem.value = item
   form.value = { title: item.title, description: item.description }
   showForm.value = false
+  dialog.value = true
 }
 
 const deleteItem = async (id) => {
-  if (!confirm('Supprimer cette page légale ?')) return
+  const ok = await confirmRef.value.open({ message: 'Supprimer cette page légale ?' })
+  if (!ok) return
   loading.value = true
   error.value = ''
   try {
@@ -148,6 +158,7 @@ const cancelForm = () => {
   showForm.value = false
   editingItem.value = null
   form.value = { title: '', description: '' }
+  dialog.value = false
 }
 
 onMounted(load)

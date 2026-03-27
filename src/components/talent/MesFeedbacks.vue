@@ -4,6 +4,37 @@
 
     <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">{{ snackMsg }}</v-snackbar>
 
+    <!-- Dialog édition feedback -->
+    <v-dialog v-model="dialog" max-width="500" scrollable>
+      <v-card rounded="xl">
+        <v-toolbar color="primary" density="compact">
+          <v-toolbar-title class="text-body-1">Modifier le feedback</v-toolbar-title>
+          <template #append><v-btn icon="mdi-close" variant="text" color="white" @click="cancelForm" /></template>
+        </v-toolbar>
+        <v-card-text class="pa-4">
+          <div class="mb-4">
+            <div class="text-body-2 font-weight-medium mb-2">Note</div>
+            <v-rating v-model="editForm.note" :length="5" color="warning" hover density="compact" />
+          </div>
+          <v-textarea
+            v-model="editForm.commentaire"
+            label="Commentaire"
+            rows="4"
+            variant="outlined"
+            density="comfortable"
+            hide-details
+          />
+        </v-card-text>
+        <v-card-actions class="pa-4 pt-0">
+          <v-spacer />
+          <v-btn variant="text" @click="cancelForm">Annuler</v-btn>
+          <v-btn color="primary" variant="flat" :loading="saving" @click="sauvegarder">Enregistrer</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <ConfirmDialog ref="confirmRef" />
+
     <v-data-table
       :headers="headers"
       :items="items"
@@ -13,34 +44,16 @@
     >
       <template #item.note="{ item }">
         <v-rating
-          v-if="editingId !== item.id"
           :model-value="item.note"
           readonly
           density="compact"
           size="small"
           color="warning"
         />
-        <v-rating
-          v-else
-          v-model="editForm.note"
-          :length="5"
-          color="warning"
-          hover
-          density="compact"
-        />
       </template>
 
       <template #item.commentaire="{ item }">
-        <span v-if="editingId !== item.id">{{ item.commentaire || '—' }}</span>
-        <v-textarea
-          v-else
-          v-model="editForm.commentaire"
-          rows="2"
-          variant="outlined"
-          density="compact"
-          hide-details
-          style="min-width:200px;"
-        />
+        <span>{{ item.commentaire || '—' }}</span>
       </template>
 
       <template #item.entretien.date="{ item }">
@@ -48,16 +61,8 @@
       </template>
 
       <template #item.actions="{ item }">
-        <template v-if="editingId !== item.id">
-          <v-btn size="small" variant="text" icon="mdi-pencil-outline" color="primary" class="mr-1" @click="startEdit(item)" />
-          <v-btn size="small" variant="text" icon="mdi-delete-outline" color="error" @click="supprimer(item)" />
-        </template>
-        <template v-else>
-          <v-btn size="small" color="success" variant="tonal" :disabled="saving" :loading="saving" class="mr-1" @click="sauvegarder(item)">
-            Sauvegarder
-          </v-btn>
-          <v-btn size="small" variant="text" @click="editingId = null">Annuler</v-btn>
-        </template>
+        <v-btn size="small" variant="text" icon="mdi-pencil-outline" color="primary" class="mr-1" @click="startEdit(item)" />
+        <v-btn size="small" variant="text" icon="mdi-delete-outline" color="error" @click="supprimer(item)" />
       </template>
 
       <template #no-data>
@@ -70,14 +75,16 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import feedbackService from '../../services/talent/feedbackService.js'
+import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
 const items = ref([])
 const loading = ref(false)
 const error = ref('')
 const success = ref('')
-const editingId = ref(null)
+const editingItem = ref(null)
 const editForm = ref({ note: 1, commentaire: '' })
 const saving = ref(false)
+const dialog = ref(false)
 
 const snackbar = ref(false)
 const snackColor = ref('success')
@@ -85,6 +92,8 @@ const snackMsg = ref('')
 const showSnack = (msg, color = 'success') => {
   snackMsg.value = msg; snackColor.value = color; snackbar.value = true
 }
+
+const confirmRef = ref(null)
 
 const headers = [
   { title: 'Entreprise', key: 'entretien.entreprise.nom' },
@@ -109,20 +118,27 @@ const load = async () => {
 }
 
 const startEdit = (fb) => {
-  editingId.value = fb.id
+  editingItem.value = fb
   editForm.value = { note: fb.note, commentaire: fb.commentaire || '' }
   error.value = ''
   success.value = ''
+  dialog.value = true
 }
 
-const sauvegarder = async (fb) => {
+const cancelForm = () => {
+  dialog.value = false
+  editingItem.value = null
+}
+
+const sauvegarder = async () => {
   saving.value = true
   error.value = ''
   try {
-    const res = await feedbackService.update(fb.id, editForm.value)
-    const idx = items.value.findIndex(f => f.id === fb.id)
+    const res = await feedbackService.update(editingItem.value.id, editForm.value)
+    const idx = items.value.findIndex(f => f.id === editingItem.value.id)
     if (idx !== -1) items.value[idx] = res.data
-    editingId.value = null
+    dialog.value = false
+    editingItem.value = null
     success.value = 'Feedback modifié.'
     showSnack('Feedback modifié.')
   } catch (err) {
@@ -134,7 +150,8 @@ const sauvegarder = async (fb) => {
 }
 
 const supprimer = async (fb) => {
-  if (!confirm('Supprimer ce feedback ?')) return
+  const ok = await confirmRef.value.open({ message: 'Supprimer ce feedback ?' })
+  if (!ok) return
   error.value = ''
   try {
     await feedbackService.destroy(fb.id)

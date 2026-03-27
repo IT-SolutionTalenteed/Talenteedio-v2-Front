@@ -9,13 +9,18 @@
       </v-btn>
     </v-toolbar>
 
-    <!-- Formulaire -->
-    <v-expand-transition>
-      <div v-if="showForm || editingItem">
-        <v-card-text class="border-b">
-          <div class="text-subtitle-1 font-weight-bold mb-4">
+    <!-- Dialog formulaire -->
+    <v-dialog v-model="dialog" max-width="860" scrollable>
+      <v-card rounded="xl">
+        <v-toolbar color="primary" density="compact">
+          <v-toolbar-title class="text-body-1 font-weight-medium">
             {{ editingItem ? 'Modifier' : 'Créer' }} une entreprise
-          </div>
+          </v-toolbar-title>
+          <template #append>
+            <v-btn icon="mdi-close" variant="text" color="white" @click="cancelForm" />
+          </template>
+        </v-toolbar>
+        <v-card-text class="pa-4">
           <form @submit.prevent="save">
             <v-row>
               <v-col cols="12" md="6">
@@ -110,16 +115,15 @@
                 />
               </v-col>
             </v-row>
-            <div class="d-flex gap-2 mt-2">
-              <v-btn type="submit" color="primary" :loading="loading">
-                Enregistrer
-              </v-btn>
-              <v-btn type="button" variant="text" @click="cancelForm">Annuler</v-btn>
-            </div>
           </form>
         </v-card-text>
-      </div>
-    </v-expand-transition>
+        <v-card-actions class="pa-4 pt-0">
+          <v-spacer />
+          <v-btn variant="text" @click="cancelForm">Annuler</v-btn>
+          <v-btn color="primary" variant="flat" :loading="loading" @click="save">Enregistrer</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <!-- Table -->
     <v-data-table
@@ -162,12 +166,15 @@
     <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">
       {{ snackMsg }}
     </v-snackbar>
+
+    <ConfirmDialog ref="confirmRef" />
   </v-card>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import entrepriseService from '../../services/entrepriseService.js'
+import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
 const items = ref([])
 const referentiels = ref({ activity_sectors: [] })
@@ -177,6 +184,9 @@ const success = ref('')
 const showForm = ref(false)
 const editingItem = ref(null)
 const logoFile = ref(null)
+const dialog = ref(false)
+
+const confirmRef = ref(null)
 
 const snackbar = ref(false)
 const snackMsg = ref('')
@@ -241,6 +251,7 @@ const openCreate = () => {
   form.value = emptyForm()
   logoFile.value = null
   showForm.value = true
+  dialog.value = true
 }
 
 const editItem = (item) => {
@@ -258,6 +269,7 @@ const editItem = (item) => {
   }
   logoFile.value = null
   showForm.value = false
+  dialog.value = true
 }
 
 const save = async () => {
@@ -285,7 +297,8 @@ const save = async () => {
 }
 
 const deleteItem = async (id) => {
-  if (!confirm('Supprimer cette entreprise et son compte utilisateur ?')) return
+  const ok = await confirmRef.value.open({ message: 'Supprimer cette entreprise et son compte utilisateur ?' })
+  if (!ok) return
   loading.value = true
   error.value = ''
   try {
@@ -304,6 +317,7 @@ const cancelForm = () => {
   editingItem.value = null
   form.value = emptyForm()
   logoFile.value = null
+  dialog.value = false
 }
 
 onMounted(() => {

@@ -23,96 +23,96 @@
       Aucune catégorie d'événement disponible. Créez-en une d'abord dans "Catégories d'événement".
     </v-alert>
 
-    <!-- Formulaire -->
-    <v-expand-transition>
-      <div v-if="showForm || editingItem">
-        <v-card variant="outlined" class="ma-4 mb-0">
-          <v-card-title class="text-subtitle-1 pa-4 pb-2">
+    <!-- Fullscreen dialog formulaire événement -->
+    <v-dialog v-model="dialog" fullscreen transition="dialog-bottom-transition" scrollable>
+      <v-card>
+        <v-toolbar color="primary" density="compact">
+          <v-btn icon="mdi-arrow-left" variant="text" color="white" @click="cancelForm" />
+          <v-toolbar-title class="text-body-1 font-weight-medium">
             {{ editingItem ? 'Modifier' : 'Créer' }} un événement
-          </v-card-title>
-          <v-card-text>
-            <form @submit.prevent="save">
-              <v-row>
-                <v-col cols="12" md="8">
-                  <v-text-field v-model="form.titre" label="Titre *" variant="outlined" density="compact" required />
-                </v-col>
-                <v-col cols="12" md="4">
-                  <v-select
-                    v-model="form.categorie_evenement_id"
-                    label="Catégorie"
-                    variant="outlined"
-                    density="compact"
-                    :items="[{titre:'-- Aucune --',id:''},...referentiels.categories]"
-                    item-title="titre"
-                    item-value="id"
-                  />
-                </v-col>
+          </v-toolbar-title>
+          <template #append>
+            <v-btn variant="flat" color="white" class="text-primary" :loading="loading" @click="save">
+              <v-icon start>mdi-content-save-outline</v-icon>
+              Enregistrer
+            </v-btn>
+          </template>
+        </v-toolbar>
+        <v-card-text class="pa-6">
+          <v-row>
+            <v-col cols="12" md="8">
+              <v-text-field v-model="form.titre" label="Titre *" variant="outlined" density="compact" required />
+            </v-col>
+            <v-col cols="12" md="4">
+              <v-select
+                v-model="form.categorie_evenement_id"
+                label="Catégorie"
+                variant="outlined"
+                density="compact"
+                :items="[{titre:'-- Aucune --',id:''},...referentiels.categories]"
+                item-title="titre"
+                item-value="id"
+              />
+            </v-col>
 
-                <v-col cols="12">
-                  <div class="text-caption text-medium-emphasis mb-1">Image mise en avant</div>
-                  <input type="file" accept="image/*" @change="e => imageFile = e.target.files[0]" style="display:block;width:100%;" />
-                  <v-avatar v-if="imagePreview" size="80" rounded="lg" class="mt-2">
-                    <img :src="imagePreview" style="object-fit:cover;width:100%;height:100%" />
-                  </v-avatar>
-                  <v-avatar v-else-if="editingItem?.image_mise_en_avant_url" size="80" rounded="lg" class="mt-2">
-                    <img :src="editingItem.image_mise_en_avant_url" style="object-fit:cover;width:100%;height:100%" />
-                  </v-avatar>
-                </v-col>
+            <v-col cols="12">
+              <div class="text-caption text-medium-emphasis mb-1">Image mise en avant</div>
+              <input type="file" accept="image/*" @change="e => imageFile = e.target.files[0]" style="display:block;width:100%;" />
+              <v-avatar v-if="imagePreview" size="80" rounded="lg" class="mt-2">
+                <img :src="imagePreview" style="object-fit:cover;width:100%;height:100%" />
+              </v-avatar>
+              <v-avatar v-else-if="editingItem?.image_mise_en_avant_url" size="80" rounded="lg" class="mt-2">
+                <img :src="editingItem.image_mise_en_avant_url" style="object-fit:cover;width:100%;height:100%" />
+              </v-avatar>
+            </v-col>
 
-                <v-col cols="12" md="3">
-                  <v-text-field v-model="form.date_debut" label="Date début *" type="date" variant="outlined" density="compact" required />
-                </v-col>
-                <v-col cols="12" md="3">
-                  <v-text-field v-model="form.date_fin" label="Date fin *" type="date" variant="outlined" density="compact" required />
-                </v-col>
-                <v-col cols="12" md="3">
-                  <v-text-field v-model="form.heure_debut_journee" label="Heure début *" type="time" variant="outlined" density="compact" required />
-                </v-col>
-                <v-col cols="12" md="3">
-                  <v-text-field v-model="form.heure_fin_journee" label="Heure fin *" type="time" variant="outlined" density="compact" required />
-                </v-col>
+            <v-col cols="12" md="3">
+              <v-text-field v-model="form.date_debut" label="Date début *" type="date" variant="outlined" density="compact" required />
+            </v-col>
+            <v-col cols="12" md="3">
+              <v-text-field v-model="form.date_fin" label="Date fin *" type="date" variant="outlined" density="compact" required />
+            </v-col>
+            <v-col cols="12" md="3">
+              <v-text-field v-model="form.heure_debut_journee" label="Heure début *" type="time" variant="outlined" density="compact" required />
+            </v-col>
+            <v-col cols="12" md="3">
+              <v-text-field v-model="form.heure_fin_journee" label="Heure fin *" type="time" variant="outlined" density="compact" required />
+            </v-col>
 
-                <v-col cols="12" md="4">
-                  <v-text-field v-model="form.pays" label="Pays" variant="outlined" density="compact" />
-                </v-col>
-                <v-col cols="12" md="4">
-                  <v-text-field v-model="form.ville" label="Ville" variant="outlined" density="compact" />
-                </v-col>
-                <v-col cols="12" md="4">
-                  <v-text-field v-model="form.adresse" label="Adresse" variant="outlined" density="compact" />
-                </v-col>
+            <v-col cols="12" md="4">
+              <v-text-field v-model="form.pays" label="Pays" variant="outlined" density="compact" />
+            </v-col>
+            <v-col cols="12" md="4">
+              <v-text-field v-model="form.ville" label="Ville" variant="outlined" density="compact" />
+            </v-col>
+            <v-col cols="12" md="4">
+              <v-text-field v-model="form.adresse" label="Adresse" variant="outlined" density="compact" />
+            </v-col>
 
-                <v-col cols="12">
-                  <div class="text-caption text-medium-emphasis mb-1">Description</div>
-                  <WysiwygEditor v-model="form.description" />
-                </v-col>
-                <v-col cols="12">
-                  <div class="text-caption text-medium-emphasis mb-1">Détails supplémentaires</div>
-                  <WysiwygEditor v-model="form.details_supplementaires" />
-                </v-col>
+            <v-col cols="12">
+              <div class="text-caption text-medium-emphasis mb-1">Description</div>
+              <WysiwygEditor v-model="form.description" />
+            </v-col>
+            <v-col cols="12">
+              <div class="text-caption text-medium-emphasis mb-1">Détails supplémentaires</div>
+              <WysiwygEditor v-model="form.details_supplementaires" />
+            </v-col>
 
-                <v-col cols="12" md="6">
-                  <div class="text-caption text-medium-emphasis mb-1">Entreprises participantes</div>
-                  <select v-model="form.entreprise_ids" multiple size="5" style="width:100%;padding:8px;border:1px solid rgba(0,0,0,0.23);border-radius:4px;">
-                    <option v-for="e in referentiels.entreprises" :key="e.id" :value="e.id">{{ e.nom }}</option>
-                  </select>
-                  <div class="text-caption text-medium-emphasis mt-1">Maintenez Ctrl/Cmd pour sélectionner plusieurs</div>
-                </v-col>
+            <v-col cols="12" md="6">
+              <div class="text-caption text-medium-emphasis mb-1">Entreprises participantes</div>
+              <select v-model="form.entreprise_ids" multiple size="5" style="width:100%;padding:8px;border:1px solid rgba(0,0,0,0.23);border-radius:4px;">
+                <option v-for="e in referentiels.entreprises" :key="e.id" :value="e.id">{{ e.nom }}</option>
+              </select>
+              <div class="text-caption text-medium-emphasis mt-1">Maintenez Ctrl/Cmd pour sélectionner plusieurs</div>
+            </v-col>
 
-                <v-col cols="12" md="6" class="d-flex align-center">
-                  <v-checkbox v-model="form.is_featured" label="Mise en avant" density="compact" hide-details />
-                </v-col>
-              </v-row>
-
-              <div class="d-flex gap-2 mt-2">
-                <v-btn type="submit" color="primary" :loading="loading">Enregistrer</v-btn>
-                <v-btn variant="tonal" @click="cancelForm">Annuler</v-btn>
-              </div>
-            </form>
-          </v-card-text>
-        </v-card>
-      </div>
-    </v-expand-transition>
+            <v-col cols="12" md="6" class="d-flex align-center">
+              <v-checkbox v-model="form.is_featured" label="Mise en avant" density="compact" hide-details />
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
 
     <!-- Tableau -->
     <v-data-table
@@ -167,6 +167,8 @@
       @update:model-value="loadPage"
       class="mt-2"
     />
+
+    <ConfirmDialog ref="confirmRef" />
   </v-card>
 </template>
 
@@ -174,6 +176,7 @@
 import { ref, onMounted } from 'vue'
 import evenementService from '../../services/evenementService.js'
 import WysiwygEditor from '../WysiwygEditor.vue'
+import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
 const evenements = ref([])
 const referentiels = ref({ categories: [], entreprises: [] })
@@ -185,6 +188,8 @@ const editingItem = ref(null)
 const imageFile = ref(null)
 const imagePreview = ref(null)
 const pagination = ref({ current_page: 1, last_page: 1 })
+const dialog = ref(false)
+const confirmRef = ref(null)
 
 const snackbar  = ref(false)
 const snackMsg  = ref('')
@@ -256,6 +261,7 @@ const openCreate = () => {
   imageFile.value = null
   imagePreview.value = null
   showForm.value = true
+  dialog.value = true
 }
 
 const save = async () => {
@@ -303,6 +309,7 @@ const editItem = (ev) => {
   imageFile.value = null
   imagePreview.value = null
   showForm.value = false
+  dialog.value = true
 }
 
 const toggleFeatured = async (ev) => {
@@ -316,7 +323,8 @@ const toggleFeatured = async (ev) => {
 }
 
 const deleteItem = async (id) => {
-  if (!confirm('Supprimer cet événement ?')) return
+  const ok = await confirmRef.value.open({ message: 'Supprimer cet événement ?' })
+  if (!ok) return
   loading.value = true
   error.value = ''
   try {
@@ -334,6 +342,7 @@ const deleteItem = async (id) => {
 
 const cancelForm = () => {
   showForm.value = false
+  dialog.value = false
   editingItem.value = null
   form.value = emptyForm()
   imageFile.value = null

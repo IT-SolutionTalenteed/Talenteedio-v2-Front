@@ -9,156 +9,156 @@
       <v-toolbar-title>Gestion des Talents &amp; Consultants</v-toolbar-title>
     </v-toolbar>
 
-    <!-- Formulaire édition profil -->
-    <v-expand-transition>
-      <div v-if="editingTalent">
-        <v-card variant="outlined" class="ma-4 mb-0">
-          <v-card-title class="text-subtitle-1 pa-4 pb-2">
-            Modifier le profil — {{ editingTalent.name }}
-          </v-card-title>
-          <v-card-text>
-            <form @submit.prevent="saveProfil">
-              <v-row>
-                <v-col cols="12" md="3">
-                  <v-select
-                    v-model="profilForm.civilite"
-                    label="Civilité"
-                    variant="outlined"
-                    density="compact"
-                    :items="[{title:'—',value:''},{title:'M.',value:'M.'},{title:'Mme.',value:'Mme.'}]"
-                    item-title="title"
-                    item-value="value"
-                  />
-                </v-col>
-                <v-col cols="12" md="9">
-                  <v-text-field v-model="profilForm.titre_poste" label="Titre / Poste" variant="outlined" density="compact" />
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-text-field v-model="profilForm.telephone" label="Téléphone" variant="outlined" density="compact" />
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-text-field v-model="profilForm.date_naissance" label="Date de naissance" type="date" variant="outlined" density="compact" />
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-text-field v-model="profilForm.nationalite" label="Nationalité" variant="outlined" density="compact" />
-                </v-col>
-                <v-col cols="12" md="3">
-                  <v-text-field v-model="profilForm.ville" label="Ville" variant="outlined" density="compact" />
-                </v-col>
-                <v-col cols="12" md="3">
-                  <v-text-field v-model="profilForm.pays" label="Pays" variant="outlined" density="compact" />
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-text-field v-model="profilForm.disponibilite" label="Disponibilité" variant="outlined" density="compact" />
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-text-field v-model="profilForm.mobilite" label="Mobilité" variant="outlined" density="compact" />
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-select
-                    v-model="profilForm.situation_familiale"
-                    label="Situation familiale"
-                    variant="outlined"
-                    density="compact"
-                    :items="[
-                      {title:'—',value:''},
-                      {title:'Célibataire',value:'celibataire'},
-                      {title:'Marié(e)',value:'marie'},
-                      {title:'Pacsé(e)',value:'pacse'},
-                      {title:'Divorcé(e)',value:'divorce'},
-                      {title:'Veuf / Veuve',value:'veuf'},
-                    ]"
-                    item-title="title"
-                    item-value="value"
-                  />
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-text-field v-model="profilForm.source_provenance" label="Source / Provenance" variant="outlined" density="compact" />
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-select
-                    v-model="profilForm.study_level_id"
-                    label="Niveau d'étude"
-                    variant="outlined"
-                    density="compact"
-                    :items="[{name:'—',id:''},...referentiels.studyLevels]"
-                    item-title="name"
-                    item-value="id"
-                  />
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-select
-                    v-model="profilForm.experience_id"
-                    label="Expérience"
-                    variant="outlined"
-                    density="compact"
-                    :items="[{name:'—',id:''},...referentiels.experiences]"
-                    item-title="name"
-                    item-value="id"
-                  />
-                </v-col>
-              </v-row>
+    <!-- Fullscreen dialog édition profil -->
+    <v-dialog v-model="dialog" fullscreen transition="dialog-bottom-transition" scrollable>
+      <v-card>
+        <v-toolbar color="primary" density="compact">
+          <v-btn icon="mdi-arrow-left" variant="text" color="white" @click="editingTalent = null; dialog = false" />
+          <v-toolbar-title class="text-body-1 font-weight-medium">
+            {{ editingTalent?.name }}
+          </v-toolbar-title>
+          <template #append>
+            <v-btn variant="flat" color="white" class="text-primary" :loading="savingProfil" @click="saveProfil">
+              <v-icon start>mdi-content-save-outline</v-icon>
+              Enregistrer
+            </v-btn>
+          </template>
+        </v-toolbar>
+        <v-card-text class="pa-6">
+          <v-row>
+            <v-col cols="12" md="3">
+              <v-select
+                v-model="profilForm.civilite"
+                label="Civilité"
+                variant="outlined"
+                density="compact"
+                :items="[{title:'—',value:''},{title:'M.',value:'M.'},{title:'Mme.',value:'Mme.'}]"
+                item-title="title"
+                item-value="value"
+              />
+            </v-col>
+            <v-col cols="12" md="9">
+              <v-text-field v-model="profilForm.titre_poste" label="Titre / Poste" variant="outlined" density="compact" />
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-text-field v-model="profilForm.telephone" label="Téléphone" variant="outlined" density="compact" />
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-text-field v-model="profilForm.date_naissance" label="Date de naissance" type="date" variant="outlined" density="compact" />
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-text-field v-model="profilForm.nationalite" label="Nationalité" variant="outlined" density="compact" />
+            </v-col>
+            <v-col cols="12" md="3">
+              <v-text-field v-model="profilForm.ville" label="Ville" variant="outlined" density="compact" />
+            </v-col>
+            <v-col cols="12" md="3">
+              <v-text-field v-model="profilForm.pays" label="Pays" variant="outlined" density="compact" />
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-text-field v-model="profilForm.disponibilite" label="Disponibilité" variant="outlined" density="compact" />
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-text-field v-model="profilForm.mobilite" label="Mobilité" variant="outlined" density="compact" />
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-select
+                v-model="profilForm.situation_familiale"
+                label="Situation familiale"
+                variant="outlined"
+                density="compact"
+                :items="[
+                  {title:'—',value:''},
+                  {title:'Célibataire',value:'celibataire'},
+                  {title:'Marié(e)',value:'marie'},
+                  {title:'Pacsé(e)',value:'pacse'},
+                  {title:'Divorcé(e)',value:'divorce'},
+                  {title:'Veuf / Veuve',value:'veuf'},
+                ]"
+                item-title="title"
+                item-value="value"
+              />
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-text-field v-model="profilForm.source_provenance" label="Source / Provenance" variant="outlined" density="compact" />
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-select
+                v-model="profilForm.study_level_id"
+                label="Niveau d'étude"
+                variant="outlined"
+                density="compact"
+                :items="[{name:'—',id:''},...referentiels.studyLevels]"
+                item-title="name"
+                item-value="id"
+              />
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-select
+                v-model="profilForm.experience_id"
+                label="Expérience"
+                variant="outlined"
+                density="compact"
+                :items="[{name:'—',id:''},...referentiels.experiences]"
+                item-title="name"
+                item-value="id"
+              />
+            </v-col>
 
-              <!-- Secteurs d'activité -->
-              <div class="mb-3">
-                <div class="text-caption text-medium-emphasis mb-1">Secteurs d'activité</div>
-                <div class="d-flex flex-wrap gap-1">
-                  <v-checkbox
-                    v-for="sec in referentiels.activitySectors"
-                    :key="sec.id"
-                    :label="sec.name"
-                    :value="sec.id"
-                    v-model="profilForm.activity_sector_ids"
-                    density="compact"
-                    hide-details
-                    class="mr-2"
-                  />
-                </div>
+            <!-- Secteurs d'activité -->
+            <v-col cols="12">
+              <div class="text-caption text-medium-emphasis mb-1">Secteurs d'activité</div>
+              <div class="d-flex flex-wrap gap-1">
+                <v-checkbox
+                  v-for="sec in referentiels.activitySectors"
+                  :key="sec.id"
+                  :label="sec.name"
+                  :value="sec.id"
+                  v-model="profilForm.activity_sector_ids"
+                  density="compact"
+                  hide-details
+                  class="mr-2"
+                />
               </div>
+            </v-col>
 
-              <!-- Langues -->
-              <div class="mb-3">
-                <div class="text-caption text-medium-emphasis mb-1">Langues</div>
-                <div class="d-flex flex-wrap gap-1">
-                  <v-checkbox
-                    v-for="lang in referentiels.languages"
-                    :key="lang.id"
-                    :label="lang.name"
-                    :value="lang.id"
-                    v-model="profilForm.language_ids"
-                    density="compact"
-                    hide-details
-                    class="mr-2"
-                  />
-                </div>
+            <!-- Langues -->
+            <v-col cols="12">
+              <div class="text-caption text-medium-emphasis mb-1">Langues</div>
+              <div class="d-flex flex-wrap gap-1">
+                <v-checkbox
+                  v-for="lang in referentiels.languages"
+                  :key="lang.id"
+                  :label="lang.name"
+                  :value="lang.id"
+                  v-model="profilForm.language_ids"
+                  density="compact"
+                  hide-details
+                  class="mr-2"
+                />
               </div>
+            </v-col>
 
-              <!-- Skills -->
-              <div class="mb-4">
-                <div class="text-caption text-medium-emphasis mb-1">Compétences</div>
-                <div class="d-flex flex-wrap gap-1">
-                  <v-checkbox
-                    v-for="skill in referentiels.skills"
-                    :key="skill.id"
-                    :label="skill.name"
-                    :value="skill.id"
-                    v-model="profilForm.skill_ids"
-                    density="compact"
-                    hide-details
-                    class="mr-2"
-                  />
-                </div>
+            <!-- Skills -->
+            <v-col cols="12">
+              <div class="text-caption text-medium-emphasis mb-1">Compétences</div>
+              <div class="d-flex flex-wrap gap-1">
+                <v-checkbox
+                  v-for="skill in referentiels.skills"
+                  :key="skill.id"
+                  :label="skill.name"
+                  :value="skill.id"
+                  v-model="profilForm.skill_ids"
+                  density="compact"
+                  hide-details
+                  class="mr-2"
+                />
               </div>
-
-              <div class="d-flex gap-2">
-                <v-btn type="submit" color="primary" :loading="savingProfil">Enregistrer</v-btn>
-                <v-btn variant="tonal" @click="editingTalent = null">Annuler</v-btn>
-              </div>
-            </form>
-          </v-card-text>
-        </v-card>
-      </div>
-    </v-expand-transition>
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
 
     <!-- Tableau -->
     <v-data-table
@@ -239,6 +239,8 @@
       @update:model-value="loadPage"
       class="mt-2"
     />
+
+    <ConfirmDialog ref="confirmRef" />
   </v-card>
 </template>
 
@@ -246,6 +248,7 @@
 import { ref, onMounted } from 'vue'
 import talentService from '../../services/talentService.js'
 import api from '../../services/api.js'
+import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
 const talents      = ref([])
 const loading      = ref(false)
@@ -255,6 +258,8 @@ const success      = ref('')
 const pagination   = ref({ current_page: 1, last_page: 1 })
 const editingTalent = ref(null)
 const profilForm   = ref({})
+const dialog       = ref(false)
+const confirmRef   = ref(null)
 
 const snackbar  = ref(false)
 const snackMsg  = ref('')
@@ -330,6 +335,7 @@ const openEdit = async (talent) => {
     const res = await talentService.getOne(talent.id)
     const t   = res.data
     editingTalent.value = t
+    dialog.value = true
     profilForm.value = {
       civilite:            t.civilite         || '',
       titre_poste:         t.titre_poste      || '',
@@ -362,6 +368,7 @@ const saveProfil = async () => {
     success.value = 'Profil mis à jour'
     showSnack('Profil mis à jour')
     editingTalent.value = null
+    dialog.value = false
     await loadPage(pagination.value.current_page)
   } catch (err) {
     const errs = err.response?.data?.errors
@@ -410,7 +417,8 @@ const updateStatutCrm = async (talent, statut) => {
 }
 
 const deleteItem = async (id) => {
-  if (!confirm('Supprimer définitivement ce talent ?')) return
+  const ok = await confirmRef.value.open({ message: 'Supprimer définitivement ce talent ?' })
+  if (!ok) return
   loading.value = true
   error.value   = ''
   try {

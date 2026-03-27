@@ -9,109 +9,112 @@
 
     <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">{{ snackMsg }}</v-snackbar>
 
-    <!-- Formulaire inline (avec WysiwygEditor) -->
-    <v-expand-transition>
-      <v-card v-if="showForm || editingItem" rounded="lg" border elevation="0" class="mb-6 pa-4">
-        <v-card-title class="text-h6 pa-0 mb-4">{{ editingItem ? 'Modifier' : 'Nouvelle' }} offre</v-card-title>
-        <form @submit.prevent="save">
-          <v-row>
-            <v-col cols="12">
-              <v-text-field
-                v-model="form.titre"
-                label="Titre *"
-                variant="outlined"
-                density="comfortable"
-                required
-              />
-            </v-col>
-            <v-col cols="12" md="6">
-              <v-text-field
-                v-model="form.localisation"
-                label="Localisation"
-                variant="outlined"
-                density="comfortable"
-              />
-            </v-col>
-            <v-col cols="12" md="6">
-              <v-text-field
-                v-model="form.fourchette_salariale"
-                label="Fourchette salariale"
-                variant="outlined"
-                density="comfortable"
-              />
-            </v-col>
-            <v-col cols="12" md="6">
-              <v-text-field
-                v-model="form.date_limite"
-                label="Date limite"
-                type="date"
-                variant="outlined"
-                density="comfortable"
-              />
-            </v-col>
-          </v-row>
+    <ConfirmDialog ref="confirmRef" />
 
-          <div class="mb-4">
-            <div class="text-body-2 font-weight-medium mb-1">Mission</div>
-            <WysiwygEditor v-model="form.mission" />
-          </div>
-          <div class="mb-4">
-            <div class="text-body-2 font-weight-medium mb-1">Profil recherché</div>
-            <WysiwygEditor v-model="form.profil_recherche" />
-          </div>
-          <div class="mb-4">
-            <div class="text-body-2 font-weight-medium mb-1">Description</div>
-            <WysiwygEditor v-model="form.description" />
-          </div>
+    <!-- Fullscreen dialog (avec WysiwygEditor) -->
+    <v-dialog v-model="dialog" fullscreen transition="dialog-bottom-transition" scrollable>
+      <v-card>
+        <v-toolbar color="primary" density="compact">
+          <v-btn icon="mdi-arrow-left" variant="text" color="white" @click="cancelForm" />
+          <v-toolbar-title class="text-body-1">{{ editingItem ? 'Modifier' : 'Créer' }} une offre</v-toolbar-title>
+          <template #append>
+            <v-btn variant="flat" color="white" class="text-primary" :loading="loading" @click="save">Enregistrer</v-btn>
+          </template>
+        </v-toolbar>
+        <v-card-text class="pa-6">
+          <form @submit.prevent="save">
+            <v-row>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="form.titre"
+                  label="Titre *"
+                  variant="outlined"
+                  density="comfortable"
+                  required
+                />
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-text-field
+                  v-model="form.localisation"
+                  label="Localisation"
+                  variant="outlined"
+                  density="comfortable"
+                />
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-text-field
+                  v-model="form.fourchette_salariale"
+                  label="Fourchette salariale"
+                  variant="outlined"
+                  density="comfortable"
+                />
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-text-field
+                  v-model="form.date_limite"
+                  label="Date limite"
+                  type="date"
+                  variant="outlined"
+                  density="comfortable"
+                />
+              </v-col>
+            </v-row>
 
-          <v-row>
-            <v-col cols="12" md="4">
-              <div class="text-body-2 font-weight-medium mb-2">Contrats de travail</div>
-              <v-checkbox
-                v-for="c in referentiels.job_contracts"
-                :key="c.id"
-                :label="c.name"
-                :value="c.id"
-                v-model="form.job_contract_ids"
-                density="compact"
-                hide-details
-              />
-            </v-col>
-            <v-col cols="12" md="4">
-              <div class="text-body-2 font-weight-medium mb-2">Modes de travail</div>
-              <v-checkbox
-                v-for="m in referentiels.job_modes"
-                :key="m.id"
-                :label="m.name"
-                :value="m.id"
-                v-model="form.job_mode_ids"
-                density="compact"
-                hide-details
-              />
-            </v-col>
-            <v-col cols="12" md="4">
-              <div class="text-body-2 font-weight-medium mb-2">Compétences</div>
-              <v-checkbox
-                v-for="s in referentiels.skills"
-                :key="s.id"
-                :label="s.name"
-                :value="s.id"
-                v-model="form.skill_ids"
-                density="compact"
-                hide-details
-              />
-            </v-col>
-          </v-row>
+            <div class="mb-4">
+              <div class="text-body-2 font-weight-medium mb-1">Mission</div>
+              <WysiwygEditor v-model="form.mission" />
+            </div>
+            <div class="mb-4">
+              <div class="text-body-2 font-weight-medium mb-1">Profil recherché</div>
+              <WysiwygEditor v-model="form.profil_recherche" />
+            </div>
+            <div class="mb-4">
+              <div class="text-body-2 font-weight-medium mb-1">Description</div>
+              <WysiwygEditor v-model="form.description" />
+            </div>
 
-          <div class="d-flex justify-end gap-2 mt-4">
-            <v-btn variant="text" @click="cancelForm">Annuler</v-btn>
-            <v-btn type="submit" color="primary" variant="tonal" :disabled="loading" :loading="loading">
-              Enregistrer
-            </v-btn>
-          </div>
-        </form>
+            <v-row>
+              <v-col cols="12" md="4">
+                <div class="text-body-2 font-weight-medium mb-2">Contrats de travail</div>
+                <v-checkbox
+                  v-for="c in referentiels.job_contracts"
+                  :key="c.id"
+                  :label="c.name"
+                  :value="c.id"
+                  v-model="form.job_contract_ids"
+                  density="compact"
+                  hide-details
+                />
+              </v-col>
+              <v-col cols="12" md="4">
+                <div class="text-body-2 font-weight-medium mb-2">Modes de travail</div>
+                <v-checkbox
+                  v-for="m in referentiels.job_modes"
+                  :key="m.id"
+                  :label="m.name"
+                  :value="m.id"
+                  v-model="form.job_mode_ids"
+                  density="compact"
+                  hide-details
+                />
+              </v-col>
+              <v-col cols="12" md="4">
+                <div class="text-body-2 font-weight-medium mb-2">Compétences</div>
+                <v-checkbox
+                  v-for="s in referentiels.skills"
+                  :key="s.id"
+                  :label="s.name"
+                  :value="s.id"
+                  v-model="form.skill_ids"
+                  density="compact"
+                  hide-details
+                />
+              </v-col>
+            </v-row>
+          </form>
+        </v-card-text>
       </v-card>
-    </v-expand-transition>
+    </v-dialog>
 
     <!-- Table -->
     <v-data-table
@@ -137,13 +140,14 @@
 import { ref, onMounted } from 'vue'
 import offreService from '../../services/entreprise/offreService.js'
 import WysiwygEditor from '../WysiwygEditor.vue'
+import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
 const items = ref([])
 const referentiels = ref({ job_contracts: [], job_modes: [], skills: [], study_levels: [], experiences: [] })
 const loading = ref(false)
 const error = ref('')
 const success = ref('')
-const showForm = ref(false)
+const dialog = ref(false)
 const editingItem = ref(null)
 
 const snackbar = ref(false)
@@ -152,6 +156,8 @@ const snackMsg = ref('')
 const showSnack = (msg, color = 'success') => {
   snackMsg.value = msg; snackColor.value = color; snackbar.value = true
 }
+
+const confirmRef = ref(null)
 
 const headers = [
   { title: 'Titre', key: 'titre' },
@@ -183,7 +189,7 @@ const loadRef = async () => {
   } catch {}
 }
 
-const openCreate = () => { editingItem.value = null; form.value = emptyForm(); showForm.value = true }
+const openCreate = () => { editingItem.value = null; form.value = emptyForm(); dialog.value = true }
 
 const editItem = (item) => {
   editingItem.value = { ...item }
@@ -197,7 +203,7 @@ const editItem = (item) => {
     study_level_ids: item.study_levels?.map(s => s.id) || [],
     experience_ids: item.experiences?.map(e => e.id) || [],
   }
-  showForm.value = false
+  dialog.value = true
 }
 
 const save = async () => {
@@ -221,7 +227,8 @@ const save = async () => {
 }
 
 const deleteItem = async (id) => {
-  if (!confirm('Supprimer cette offre ?')) return
+  const ok = await confirmRef.value.open({ message: 'Supprimer cette offre ?' })
+  if (!ok) return
   loading.value = true
   try {
     await offreService.delete(id); success.value = 'Offre supprimée'; showSnack('Offre supprimée'); await load()
@@ -229,7 +236,7 @@ const deleteItem = async (id) => {
   finally { loading.value = false }
 }
 
-const cancelForm = () => { showForm.value = false; editingItem.value = null; form.value = emptyForm() }
+const cancelForm = () => { dialog.value = false; editingItem.value = null; form.value = emptyForm() }
 
 onMounted(() => { load(); loadRef() })
 </script>

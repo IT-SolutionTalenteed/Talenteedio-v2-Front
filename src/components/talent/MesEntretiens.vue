@@ -4,6 +4,8 @@
 
     <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">{{ snackMsg }}</v-snackbar>
 
+    <ConfirmDialog ref="confirmRef" />
+
     <!-- Dialog feedback -->
     <v-dialog v-model="feedbackDialog" max-width="480" persistent>
       <v-card rounded="xl">
@@ -87,11 +89,14 @@
 import { ref, onMounted } from 'vue'
 import entretienService from '../../services/talent/entretienService.js'
 import feedbackService from '../../services/talent/feedbackService.js'
+import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
 const items = ref([])
 const loading = ref(false)
 const error = ref('')
 const success = ref('')
+
+const confirmRef = ref(null)
 
 // Feedback state
 const feedbackEntretien = ref(null)
@@ -130,7 +135,8 @@ const load = async () => {
 }
 
 const annuler = async (item) => {
-  if (!confirm('Annuler cet entretien ?')) return
+  const ok = await confirmRef.value.open({ message: 'Annuler cet entretien ?' })
+  if (!ok) return
   try {
     await entretienService.annuler(item.id)
     item.statut = 'annule'

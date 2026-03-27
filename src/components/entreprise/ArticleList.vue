@@ -9,71 +9,74 @@
 
     <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">{{ snackMsg }}</v-snackbar>
 
-    <!-- Formulaire inline (avec WysiwygEditor) -->
-    <v-expand-transition>
-      <v-card v-if="showForm || editingItem" rounded="lg" border elevation="0" class="mb-6 pa-4">
-        <v-card-title class="text-h6 pa-0 mb-4">{{ editingItem ? 'Modifier' : 'Nouvel' }} article</v-card-title>
-        <form @submit.prevent="save">
-          <v-text-field
-            v-model="form.title"
-            label="Titre *"
-            variant="outlined"
-            density="comfortable"
-            required
-            class="mb-4"
-          />
+    <ConfirmDialog ref="confirmRef" />
 
-          <div class="mb-4">
-            <div class="text-body-2 font-weight-medium mb-1">Contenu *</div>
-            <WysiwygEditor v-model="form.content" />
-          </div>
+    <!-- Fullscreen dialog (avec WysiwygEditor) -->
+    <v-dialog v-model="dialog" fullscreen transition="dialog-bottom-transition" scrollable>
+      <v-card>
+        <v-toolbar color="primary" density="compact">
+          <v-btn icon="mdi-arrow-left" variant="text" color="white" @click="cancelForm" />
+          <v-toolbar-title class="text-body-1">{{ editingItem ? 'Modifier' : 'Créer' }} un article</v-toolbar-title>
+          <template #append>
+            <v-btn variant="flat" color="white" class="text-primary" :loading="loading" @click="save">Enregistrer</v-btn>
+          </template>
+        </v-toolbar>
+        <v-card-text class="pa-6">
+          <form @submit.prevent="save">
+            <v-text-field
+              v-model="form.title"
+              label="Titre *"
+              variant="outlined"
+              density="comfortable"
+              required
+              class="mb-4"
+            />
 
-          <div class="mb-4">
-            <div class="text-body-2 font-weight-medium mb-1">Image</div>
-            <input type="file" accept="image/*" @change="e => imageFile = e.target.files[0]" />
-            <div v-if="editingItem?.image_url" class="mt-2">
-              <img :src="editingItem.image_url" style="max-width:120px; border-radius:8px;" />
+            <div class="mb-4">
+              <div class="text-body-2 font-weight-medium mb-1">Contenu *</div>
+              <WysiwygEditor v-model="form.content" />
             </div>
-          </div>
 
-          <v-checkbox
-            v-model="form.is_published"
-            label="Publier"
-            density="compact"
-            hide-details
-            class="mb-4"
-          />
+            <div class="mb-4">
+              <div class="text-body-2 font-weight-medium mb-1">Image</div>
+              <input type="file" accept="image/*" @change="e => imageFile = e.target.files[0]" />
+              <div v-if="editingItem?.image_url" class="mt-2">
+                <img :src="editingItem.image_url" style="max-width:120px; border-radius:8px;" />
+              </div>
+            </div>
 
-          <div class="mb-4">
-            <div class="text-body-2 font-weight-medium mb-2">Catégories</div>
-            <v-row>
-              <v-col
-                v-for="c in referentiels.media_categories"
-                :key="c.id"
-                cols="12"
-                sm="6"
-                md="4"
-              >
-                <v-checkbox
-                  :label="c.name"
-                  :value="c.id"
-                  v-model="form.category_ids"
-                  density="compact"
-                  hide-details
-                />
-              </v-col>
-            </v-row>
-          </div>
+            <v-checkbox
+              v-model="form.is_published"
+              label="Publier"
+              density="compact"
+              hide-details
+              class="mb-4"
+            />
 
-          <div class="d-flex justify-end gap-2 mt-2">
-            <v-btn variant="text" @click="cancelForm">Annuler</v-btn>
-            <v-btn type="submit" color="primary" variant="tonal" :disabled="loading" :loading="loading">
-              Enregistrer
-            </v-btn>
-          </div>
-        </form>
+            <div class="mb-4">
+              <div class="text-body-2 font-weight-medium mb-2">Catégories</div>
+              <v-row>
+                <v-col
+                  v-for="c in referentiels.media_categories"
+                  :key="c.id"
+                  cols="12"
+                  sm="6"
+                  md="4"
+                >
+                  <v-checkbox
+                    :label="c.name"
+                    :value="c.id"
+                    v-model="form.category_ids"
+                    density="compact"
+                    hide-details
+                  />
+                </v-col>
+              </v-row>
+            </div>
+          </form>
+        </v-card-text>
       </v-card>
-    </v-expand-transition>
+    </v-dialog>
 
     <!-- Table -->
     <v-data-table
@@ -110,13 +113,14 @@
 import { ref, onMounted } from 'vue'
 import articleService from '../../services/entreprise/articleService.js'
 import WysiwygEditor from '../WysiwygEditor.vue'
+import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
 const items = ref([])
 const referentiels = ref({ media_categories: [] })
 const loading = ref(false)
 const error = ref('')
 const success = ref('')
-const showForm = ref(false)
+const dialog = ref(false)
 const editingItem = ref(null)
 const imageFile = ref(null)
 
@@ -126,6 +130,8 @@ const snackMsg = ref('')
 const showSnack = (msg, color = 'success') => {
   snackMsg.value = msg; snackColor.value = color; snackbar.value = true
 }
+
+const confirmRef = ref(null)
 
 const headers = [
   { title: 'Image', key: 'image_url', sortable: false },
@@ -159,7 +165,7 @@ const buildFormData = () => {
   return fd
 }
 
-const openCreate = () => { editingItem.value = null; form.value = emptyForm(); imageFile.value = null; showForm.value = true }
+const openCreate = () => { editingItem.value = null; form.value = emptyForm(); imageFile.value = null; dialog.value = true }
 
 const editItem = (item) => {
   editingItem.value = { ...item }
@@ -168,7 +174,7 @@ const editItem = (item) => {
     is_published: item.is_published,
     category_ids: item.media_categories?.map(c => c.id) || [],
   }
-  imageFile.value = null; showForm.value = false
+  imageFile.value = null; dialog.value = true
 }
 
 const save = async () => {
@@ -194,14 +200,15 @@ const save = async () => {
 }
 
 const deleteItem = async (id) => {
-  if (!confirm('Supprimer cet article ?')) return
+  const ok = await confirmRef.value.open({ message: 'Supprimer cet article ?' })
+  if (!ok) return
   loading.value = true
   try { await articleService.delete(id); success.value = 'Article supprimé'; showSnack('Article supprimé'); await load() }
   catch { error.value = 'Erreur suppression'; showSnack('Erreur suppression', 'error') }
   finally { loading.value = false }
 }
 
-const cancelForm = () => { showForm.value = false; editingItem.value = null; form.value = emptyForm(); imageFile.value = null }
+const cancelForm = () => { dialog.value = false; editingItem.value = null; form.value = emptyForm(); imageFile.value = null }
 
 onMounted(() => { load(); loadRef() })
 </script>

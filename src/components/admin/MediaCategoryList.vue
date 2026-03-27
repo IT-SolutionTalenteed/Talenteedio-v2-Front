@@ -4,18 +4,23 @@
       <v-icon icon="mdi-folder" class="mr-2" />
       <v-toolbar-title>Gestion des Catégories Média</v-toolbar-title>
       <v-spacer />
-      <v-btn color="primary" prepend-icon="mdi-plus" @click="showCreateForm = true">
+      <v-btn color="primary" prepend-icon="mdi-plus" @click="dialog = true">
         Ajouter une catégorie
       </v-btn>
     </v-toolbar>
 
-    <!-- Formulaire -->
-    <v-expand-transition>
-      <div v-if="showCreateForm || editingCategory">
-        <v-card-text class="border-b">
-          <div class="text-subtitle-1 font-weight-bold mb-4">
+    <!-- Dialog formulaire -->
+    <v-dialog v-model="dialog" max-width="600" scrollable>
+      <v-card rounded="xl">
+        <v-toolbar color="primary" density="compact">
+          <v-toolbar-title class="text-body-1 font-weight-medium">
             {{ editingCategory ? 'Modifier' : 'Créer' }} une catégorie
-          </div>
+          </v-toolbar-title>
+          <template #append>
+            <v-btn icon="mdi-close" variant="text" color="white" @click="cancelForm" />
+          </template>
+        </v-toolbar>
+        <v-card-text class="pa-4">
           <form @submit.prevent="saveCategory">
             <v-row>
               <v-col cols="12" md="6">
@@ -45,16 +50,15 @@
                 />
               </v-col>
             </v-row>
-            <div class="d-flex gap-2 mt-2">
-              <v-btn type="submit" color="primary" :loading="loading">
-                Enregistrer
-              </v-btn>
-              <v-btn type="button" variant="text" @click="cancelForm">Annuler</v-btn>
-            </div>
           </form>
         </v-card-text>
-      </div>
-    </v-expand-transition>
+        <v-card-actions class="pa-4 pt-0">
+          <v-spacer />
+          <v-btn variant="text" @click="cancelForm">Annuler</v-btn>
+          <v-btn color="primary" variant="flat" :loading="loading" @click="saveCategory">Enregistrer</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <!-- Table -->
     <v-data-table
@@ -77,12 +81,15 @@
     <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">
       {{ snackMsg }}
     </v-snackbar>
+
+    <ConfirmDialog ref="confirmRef" />
   </v-card>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import mediaCategoryService from '../../services/mediaCategoryService.js'
+import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
 const categories = ref([])
 const loading = ref(false)
@@ -90,6 +97,9 @@ const error = ref('')
 const success = ref('')
 const showCreateForm = ref(false)
 const editingCategory = ref(null)
+const dialog = ref(false)
+
+const confirmRef = ref(null)
 
 const snackbar = ref(false)
 const snackMsg = ref('')
@@ -162,12 +172,12 @@ const editCategory = (category) => {
     is_active: category.is_active
   }
   showCreateForm.value = false
+  dialog.value = true
 }
 
 const deleteCategory = async (id) => {
-  if (!confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?')) {
-    return
-  }
+  const ok = await confirmRef.value.open({ message: 'Êtes-vous sûr de vouloir supprimer cette catégorie ?' })
+  if (!ok) return
 
   loading.value = true
   error.value = ''
@@ -191,6 +201,7 @@ const cancelForm = () => {
     description: '',
     is_active: true
   }
+  dialog.value = false
 }
 
 onMounted(() => {

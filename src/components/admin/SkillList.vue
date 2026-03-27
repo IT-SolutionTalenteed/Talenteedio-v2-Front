@@ -22,9 +22,14 @@
     </v-data-table>
   </v-card>
 
-  <v-dialog v-model="dialog" max-width="480">
+  <v-dialog v-model="dialog" max-width="500">
     <v-card rounded="xl">
-      <v-card-title class="pa-4 pb-2">{{ editingItem ? 'Modifier' : 'Créer' }} une compétence</v-card-title>
+      <v-toolbar color="primary" density="compact">
+        <v-toolbar-title class="text-body-1">{{ editingItem ? 'Modifier' : 'Créer' }} une compétence</v-toolbar-title>
+        <template #append>
+          <v-btn icon="mdi-close" variant="text" color="white" @click="cancelForm" />
+        </template>
+      </v-toolbar>
       <v-card-text class="pa-4">
         <v-text-field v-model="form.name" label="Nom" required variant="outlined" density="compact" autofocus />
       </v-card-text>
@@ -37,11 +42,14 @@
   </v-dialog>
 
   <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">{{ snackMsg }}</v-snackbar>
+
+  <ConfirmDialog ref="confirmRef" />
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import skillService from '../../services/skillService.js'
+import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
 const headers = [
   { title: 'ID', key: 'id', width: '80px' },
@@ -57,6 +65,7 @@ const form = ref({ name: '' })
 const snackbar = ref(false)
 const snackMsg = ref('')
 const snackColor = ref('success')
+const confirmRef = ref(null)
 
 const showSnack = (msg, color = 'success') => {
   snackMsg.value = msg; snackColor.value = color; snackbar.value = true
@@ -100,7 +109,8 @@ const editItem = (item) => {
 }
 
 const deleteItem = async (id) => {
-  if (!confirm('Supprimer cette compétence ?')) return
+  const ok = await confirmRef.value.open({ message: 'Supprimer cette compétence ?' })
+  if (!ok) return
   loading.value = true
   try {
     await skillService.delete(id)

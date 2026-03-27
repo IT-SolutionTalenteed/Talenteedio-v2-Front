@@ -4,6 +4,8 @@
 
     <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">{{ snackMsg }}</v-snackbar>
 
+    <ConfirmDialog ref="confirmRef" />
+
     <div v-if="loading" class="d-flex justify-center py-8">
       <v-progress-circular indeterminate color="primary" />
     </div>
@@ -58,11 +60,13 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import offreService from '../../services/talent/offreService.js'
+import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
 const offres = ref([])
 const loading = ref(false)
 const error = ref('')
 const success = ref('')
+const confirmRef = ref(null)
 
 const snackbar = ref(false)
 const snackColor = ref('success')
@@ -79,6 +83,8 @@ const load = async () => {
 }
 
 const retirer = async (offre) => {
+  const ok = await confirmRef.value.open({ message: 'Retirer cette offre des favoris ?' })
+  if (!ok) return
   try {
     await offreService.toggleFavori(offre.id)
     offres.value = offres.value.filter(o => o.id !== offre.id)

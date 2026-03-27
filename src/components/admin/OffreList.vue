@@ -12,98 +12,98 @@
       </template>
     </v-toolbar>
 
-    <!-- Formulaire -->
-    <v-expand-transition>
-      <div v-if="showForm || editingItem">
-        <v-card variant="outlined" class="ma-4 mb-0">
-          <v-card-title class="text-subtitle-1 pa-4 pb-2">
+    <!-- Fullscreen dialog formulaire offre -->
+    <v-dialog v-model="dialog" fullscreen transition="dialog-bottom-transition" scrollable>
+      <v-card>
+        <v-toolbar color="primary" density="compact">
+          <v-btn icon="mdi-arrow-left" variant="text" color="white" @click="cancelForm" />
+          <v-toolbar-title class="text-body-1 font-weight-medium">
             {{ editingItem ? 'Modifier' : 'Créer' }} une offre
-          </v-card-title>
-          <v-card-text>
-            <form @submit.prevent="save">
-              <v-row>
-                <v-col cols="12" md="6">
-                  <v-text-field v-model="form.titre" label="Titre *" variant="outlined" density="compact" required />
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-text-field v-model="form.client" label="Client" variant="outlined" density="compact" />
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-text-field v-model="form.localisation" label="Localisation" variant="outlined" density="compact" />
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-text-field v-model="form.fourchette_salariale" label="Fourchette salariale" placeholder="ex: 35k€ - 45k€" variant="outlined" density="compact" />
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-text-field v-model="form.date_mise_en_ligne" label="Date de mise en ligne" type="date" variant="outlined" density="compact" />
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-text-field v-model="form.date_limite" label="Date limite" type="date" variant="outlined" density="compact" />
-                </v-col>
+          </v-toolbar-title>
+          <template #append>
+            <v-btn variant="flat" color="white" class="text-primary" :loading="loading" @click="save">
+              <v-icon start>mdi-content-save-outline</v-icon>
+              Enregistrer
+            </v-btn>
+          </template>
+        </v-toolbar>
+        <v-card-text class="pa-6">
+          <v-row>
+            <v-col cols="12" md="6">
+              <v-text-field v-model="form.titre" label="Titre *" variant="outlined" density="compact" required />
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-text-field v-model="form.client" label="Client" variant="outlined" density="compact" />
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-text-field v-model="form.localisation" label="Localisation" variant="outlined" density="compact" />
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-text-field v-model="form.fourchette_salariale" label="Fourchette salariale" placeholder="ex: 35k€ - 45k€" variant="outlined" density="compact" />
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-text-field v-model="form.date_mise_en_ligne" label="Date de mise en ligne" type="date" variant="outlined" density="compact" />
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-text-field v-model="form.date_limite" label="Date limite" type="date" variant="outlined" density="compact" />
+            </v-col>
 
-                <v-col cols="12">
-                  <div class="text-caption text-medium-emphasis mb-1">Mission</div>
-                  <WysiwygEditor v-model="form.mission" />
-                </v-col>
-                <v-col cols="12">
-                  <div class="text-caption text-medium-emphasis mb-1">Profil recherché</div>
-                  <WysiwygEditor v-model="form.profil_recherche" />
-                </v-col>
-                <v-col cols="12">
-                  <div class="text-caption text-medium-emphasis mb-1">À propos</div>
-                  <WysiwygEditor v-model="form.a_propos" />
-                </v-col>
-                <v-col cols="12">
-                  <div class="text-caption text-medium-emphasis mb-1">Description</div>
-                  <WysiwygEditor v-model="form.description" />
-                </v-col>
+            <v-col cols="12">
+              <div class="text-caption text-medium-emphasis mb-1">Mission</div>
+              <WysiwygEditor v-model="form.mission" />
+            </v-col>
+            <v-col cols="12">
+              <div class="text-caption text-medium-emphasis mb-1">Profil recherché</div>
+              <WysiwygEditor v-model="form.profil_recherche" />
+            </v-col>
+            <v-col cols="12">
+              <div class="text-caption text-medium-emphasis mb-1">À propos</div>
+              <WysiwygEditor v-model="form.a_propos" />
+            </v-col>
+            <v-col cols="12">
+              <div class="text-caption text-medium-emphasis mb-1">Description</div>
+              <WysiwygEditor v-model="form.description" />
+            </v-col>
 
-                <v-col cols="12" md="6">
-                  <div class="text-caption text-medium-emphasis mb-1">Contrats de travail</div>
-                  <select class="w-100 pa-2 border rounded" v-model="form.job_contract_ids" multiple size="4" style="width:100%;padding:8px;border:1px solid rgba(0,0,0,0.23);border-radius:4px;">
-                    <option v-for="item in referentiels.job_contracts" :key="item.id" :value="item.id">{{ item.name }}</option>
-                  </select>
-                  <div class="text-caption text-medium-emphasis mt-1">Maintenez Ctrl/Cmd pour sélectionner plusieurs</div>
-                </v-col>
+            <v-col cols="12" md="6">
+              <div class="text-caption text-medium-emphasis mb-1">Contrats de travail</div>
+              <select class="w-100 pa-2 border rounded" v-model="form.job_contract_ids" multiple size="4" style="width:100%;padding:8px;border:1px solid rgba(0,0,0,0.23);border-radius:4px;">
+                <option v-for="item in referentiels.job_contracts" :key="item.id" :value="item.id">{{ item.name }}</option>
+              </select>
+              <div class="text-caption text-medium-emphasis mt-1">Maintenez Ctrl/Cmd pour sélectionner plusieurs</div>
+            </v-col>
 
-                <v-col cols="12" md="6">
-                  <div class="text-caption text-medium-emphasis mb-1">Modes de travail</div>
-                  <select v-model="form.job_mode_ids" multiple size="4" style="width:100%;padding:8px;border:1px solid rgba(0,0,0,0.23);border-radius:4px;">
-                    <option v-for="item in referentiels.job_modes" :key="item.id" :value="item.id">{{ item.name }}</option>
-                  </select>
-                </v-col>
+            <v-col cols="12" md="6">
+              <div class="text-caption text-medium-emphasis mb-1">Modes de travail</div>
+              <select v-model="form.job_mode_ids" multiple size="4" style="width:100%;padding:8px;border:1px solid rgba(0,0,0,0.23);border-radius:4px;">
+                <option v-for="item in referentiels.job_modes" :key="item.id" :value="item.id">{{ item.name }}</option>
+              </select>
+            </v-col>
 
-                <v-col cols="12" md="4">
-                  <div class="text-caption text-medium-emphasis mb-1">Compétences requises</div>
-                  <select v-model="form.skill_ids" multiple size="4" style="width:100%;padding:8px;border:1px solid rgba(0,0,0,0.23);border-radius:4px;">
-                    <option v-for="item in referentiels.skills" :key="item.id" :value="item.id">{{ item.name }}</option>
-                  </select>
-                </v-col>
+            <v-col cols="12" md="4">
+              <div class="text-caption text-medium-emphasis mb-1">Compétences requises</div>
+              <select v-model="form.skill_ids" multiple size="4" style="width:100%;padding:8px;border:1px solid rgba(0,0,0,0.23);border-radius:4px;">
+                <option v-for="item in referentiels.skills" :key="item.id" :value="item.id">{{ item.name }}</option>
+              </select>
+            </v-col>
 
-                <v-col cols="12" md="4">
-                  <div class="text-caption text-medium-emphasis mb-1">Formations requises</div>
-                  <select v-model="form.study_level_ids" multiple size="4" style="width:100%;padding:8px;border:1px solid rgba(0,0,0,0.23);border-radius:4px;">
-                    <option v-for="item in referentiels.study_levels" :key="item.id" :value="item.id">{{ item.name }}</option>
-                  </select>
-                </v-col>
+            <v-col cols="12" md="4">
+              <div class="text-caption text-medium-emphasis mb-1">Formations requises</div>
+              <select v-model="form.study_level_ids" multiple size="4" style="width:100%;padding:8px;border:1px solid rgba(0,0,0,0.23);border-radius:4px;">
+                <option v-for="item in referentiels.study_levels" :key="item.id" :value="item.id">{{ item.name }}</option>
+              </select>
+            </v-col>
 
-                <v-col cols="12" md="4">
-                  <div class="text-caption text-medium-emphasis mb-1">Expériences requises</div>
-                  <select v-model="form.experience_ids" multiple size="4" style="width:100%;padding:8px;border:1px solid rgba(0,0,0,0.23);border-radius:4px;">
-                    <option v-for="item in referentiels.experiences" :key="item.id" :value="item.id">{{ item.name }}</option>
-                  </select>
-                </v-col>
-              </v-row>
-
-              <div class="d-flex gap-2 mt-2">
-                <v-btn type="submit" color="primary" :loading="loading">Enregistrer</v-btn>
-                <v-btn variant="tonal" @click="cancelForm">Annuler</v-btn>
-              </div>
-            </form>
-          </v-card-text>
-        </v-card>
-      </div>
-    </v-expand-transition>
+            <v-col cols="12" md="4">
+              <div class="text-caption text-medium-emphasis mb-1">Expériences requises</div>
+              <select v-model="form.experience_ids" multiple size="4" style="width:100%;padding:8px;border:1px solid rgba(0,0,0,0.23);border-radius:4px;">
+                <option v-for="item in referentiels.experiences" :key="item.id" :value="item.id">{{ item.name }}</option>
+              </select>
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
 
     <!-- Tableau -->
     <v-data-table
@@ -145,6 +145,8 @@
       @update:model-value="loadPage"
       class="mt-2"
     />
+
+    <ConfirmDialog ref="confirmRef" />
   </v-card>
 </template>
 
@@ -152,6 +154,7 @@
 import { ref, onMounted } from 'vue'
 import offreService from '../../services/offreService.js'
 import WysiwygEditor from '../WysiwygEditor.vue'
+import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
 const offres = ref([])
 const referentiels = ref({ job_contracts: [], job_modes: [], skills: [], study_levels: [], experiences: [] })
@@ -161,6 +164,8 @@ const success = ref('')
 const showForm = ref(false)
 const editingItem = ref(null)
 const pagination = ref({ current_page: 1, last_page: 1 })
+const dialog = ref(false)
+const confirmRef = ref(null)
 
 const snackbar  = ref(false)
 const snackMsg  = ref('')
@@ -219,6 +224,7 @@ const openCreate = () => {
   editingItem.value = null
   form.value = emptyForm()
   showForm.value = true
+  dialog.value = true
 }
 
 const save = async () => {
@@ -270,10 +276,12 @@ const editItem = (offre) => {
     experience_ids: offre.experiences?.map(c => c.id) || [],
   }
   showForm.value = false
+  dialog.value = true
 }
 
 const deleteItem = async (id) => {
-  if (!confirm('Supprimer cette offre ?')) return
+  const ok = await confirmRef.value.open({ message: 'Supprimer cette offre ?' })
+  if (!ok) return
   loading.value = true
   error.value = ''
   try {
@@ -291,6 +299,7 @@ const deleteItem = async (id) => {
 
 const cancelForm = () => {
   showForm.value = false
+  dialog.value = false
   editingItem.value = null
   form.value = emptyForm()
 }

@@ -8,62 +8,62 @@
       <v-icon class="mr-2">mdi-file-document-outline</v-icon>
       <v-toolbar-title>Gestion des Articles</v-toolbar-title>
       <template #append>
-        <v-btn color="primary" prepend-icon="mdi-plus" @click="showCreateForm = true">Ajouter un article</v-btn>
+        <v-btn color="primary" prepend-icon="mdi-plus" @click="showCreateForm = true; dialog = true">Ajouter un article</v-btn>
       </template>
     </v-toolbar>
 
-    <!-- Formulaire -->
-    <v-expand-transition>
-      <div v-if="showCreateForm || editingArticle">
-        <v-card variant="outlined" class="ma-4 mb-0">
-          <v-card-title class="text-subtitle-1 pa-4 pb-2">
+    <!-- Fullscreen dialog formulaire article -->
+    <v-dialog v-model="dialog" fullscreen transition="dialog-bottom-transition" scrollable>
+      <v-card>
+        <v-toolbar color="primary" density="compact">
+          <v-btn icon="mdi-arrow-left" variant="text" color="white" @click="cancelForm" />
+          <v-toolbar-title class="text-body-1 font-weight-medium">
             {{ editingArticle ? 'Modifier' : 'Créer' }} un article
-          </v-card-title>
-          <v-card-text>
-            <form @submit.prevent="saveArticle">
-              <v-row>
-                <v-col cols="12">
-                  <v-text-field v-model="form.title" label="Titre *" variant="outlined" density="compact" required />
-                </v-col>
+          </v-toolbar-title>
+          <template #append>
+            <v-btn variant="flat" color="white" class="text-primary" :loading="loading" @click="saveArticle">
+              <v-icon start>mdi-content-save-outline</v-icon>
+              Enregistrer
+            </v-btn>
+          </template>
+        </v-toolbar>
+        <v-card-text class="pa-6">
+          <v-row>
+            <v-col cols="12">
+              <v-text-field v-model="form.title" label="Titre *" variant="outlined" density="compact" required />
+            </v-col>
 
-                <v-col cols="12">
-                  <div class="text-caption text-medium-emphasis mb-1">Contenu</div>
-                  <WysiwygEditor v-model="form.content" />
-                </v-col>
+            <v-col cols="12">
+              <div class="text-caption text-medium-emphasis mb-1">Contenu</div>
+              <WysiwygEditor v-model="form.content" />
+            </v-col>
 
-                <v-col cols="12" md="6">
-                  <div class="text-caption text-medium-emphasis mb-1">Catégories Média</div>
-                  <select v-model="form.media_category_ids" multiple size="5" style="width:100%;padding:8px;border:1px solid rgba(0,0,0,0.23);border-radius:4px;">
-                    <option v-for="category in mediaCategories" :key="category.id" :value="category.id">{{ category.name }}</option>
-                  </select>
-                  <div class="text-caption text-medium-emphasis mt-1">Maintenez Ctrl/Cmd pour sélectionner plusieurs</div>
-                </v-col>
+            <v-col cols="12" md="6">
+              <div class="text-caption text-medium-emphasis mb-1">Catégories Média</div>
+              <select v-model="form.media_category_ids" multiple size="5" style="width:100%;padding:8px;border:1px solid rgba(0,0,0,0.23);border-radius:4px;">
+                <option v-for="category in mediaCategories" :key="category.id" :value="category.id">{{ category.name }}</option>
+              </select>
+              <div class="text-caption text-medium-emphasis mt-1">Maintenez Ctrl/Cmd pour sélectionner plusieurs</div>
+            </v-col>
 
-                <v-col cols="12" md="6">
-                  <div class="text-caption text-medium-emphasis mb-1">Image</div>
-                  <input type="file" accept="image/*" @change="onImageChange" style="display:block;width:100%;" />
-                  <v-avatar v-if="imagePreview" size="80" rounded="lg" class="mt-2">
-                    <img :src="imagePreview" style="object-fit:cover;width:100%;height:100%" />
-                  </v-avatar>
-                  <v-avatar v-else-if="editingArticle?.image_url" size="80" rounded="lg" class="mt-2">
-                    <img :src="editingArticle.image_url" style="object-fit:cover;width:100%;height:100%" />
-                  </v-avatar>
-                </v-col>
+            <v-col cols="12" md="6">
+              <div class="text-caption text-medium-emphasis mb-1">Image</div>
+              <input type="file" accept="image/*" @change="onImageChange" style="display:block;width:100%;" />
+              <v-avatar v-if="imagePreview" size="80" rounded="lg" class="mt-2">
+                <img :src="imagePreview" style="object-fit:cover;width:100%;height:100%" />
+              </v-avatar>
+              <v-avatar v-else-if="editingArticle?.image_url" size="80" rounded="lg" class="mt-2">
+                <img :src="editingArticle.image_url" style="object-fit:cover;width:100%;height:100%" />
+              </v-avatar>
+            </v-col>
 
-                <v-col cols="12">
-                  <v-checkbox v-model="form.is_published" label="Publié" density="compact" hide-details />
-                </v-col>
-              </v-row>
-
-              <div class="d-flex gap-2 mt-2">
-                <v-btn type="submit" color="primary" :loading="loading">Enregistrer</v-btn>
-                <v-btn variant="tonal" @click="cancelForm">Annuler</v-btn>
-              </div>
-            </form>
-          </v-card-text>
-        </v-card>
-      </div>
-    </v-expand-transition>
+            <v-col cols="12">
+              <v-checkbox v-model="form.is_published" label="Publié" density="compact" hide-details />
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
 
     <!-- Tableau -->
     <v-data-table
@@ -113,6 +113,8 @@
         </div>
       </template>
     </v-data-table>
+
+    <ConfirmDialog ref="confirmRef" />
   </v-card>
 </template>
 
@@ -121,6 +123,7 @@ import { ref, onMounted } from 'vue'
 import articleService from '../../services/articleService.js'
 import mediaCategoryService from '../../services/mediaCategoryService.js'
 import WysiwygEditor from '../WysiwygEditor.vue'
+import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
 const articles = ref([])
 const mediaCategories = ref([])
@@ -131,6 +134,8 @@ const showCreateForm = ref(false)
 const editingArticle = ref(null)
 const imageFile = ref(null)
 const imagePreview = ref(null)
+const dialog = ref(false)
+const confirmRef = ref(null)
 
 const snackbar  = ref(false)
 const snackMsg  = ref('')
@@ -243,12 +248,12 @@ const editArticle = (article) => {
   imageFile.value = null
   imagePreview.value = null
   showCreateForm.value = false
+  dialog.value = true
 }
 
 const deleteArticle = async (id) => {
-  if (!confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) {
-    return
-  }
+  const ok = await confirmRef.value.open({ message: 'Êtes-vous sûr de vouloir supprimer cet article ?' })
+  if (!ok) return
 
   loading.value = true
   error.value = ''
@@ -268,6 +273,7 @@ const deleteArticle = async (id) => {
 
 const cancelForm = () => {
   showCreateForm.value = false
+  dialog.value = false
   editingArticle.value = null
   imageFile.value = null
   imagePreview.value = null
