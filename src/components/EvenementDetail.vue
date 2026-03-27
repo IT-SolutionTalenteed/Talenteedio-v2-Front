@@ -454,7 +454,7 @@
                   </button>
                 </template>
                 <template v-else>
-                  <p>Rejoignez la communauté des talents africains</p>
+                  <p>Rejoignez la communauté des talents</p>
                   <router-link to="/register" class="btn btn--orange" style="display:block;text-align:center;">
                     Souscrire gratuitement
                   </router-link>

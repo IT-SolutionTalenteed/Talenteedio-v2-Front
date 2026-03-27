@@ -146,7 +146,7 @@
     <section class="cat-cta">
       <div class="container">
         <h2>Prêt à participer ?</h2>
-        <p>Souscrivez dès maintenant et rejoignez la communauté des talents africains.</p>
+        <p>Souscrivez dès maintenant et rejoignez la communauté des talents.</p>
         <router-link to="/register" class="btn btn--blue btn--lg">
           Souscrire <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
         </router-link>

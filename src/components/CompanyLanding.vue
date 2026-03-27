@@ -8,7 +8,7 @@
       <div class="container">
         <div class="hero-content">
           <span class="hero-badge">Recruteurs</span>
-          <h1 class="hero-title">Trouvez les talents africains qui feront grandir votre entreprise</h1>
+          <h1 class="hero-title">Trouvez les talents qui feront grandir votre entreprise</h1>
           <p class="hero-subtitle">
             Accédez à un vivier de candidats qualifiés et motivés. Participez à nos événements de recrutement et développez votre marque employeur en Afrique.
           </p>

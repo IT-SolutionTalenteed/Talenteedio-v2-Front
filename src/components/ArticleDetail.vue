@@ -89,7 +89,7 @@
 
               <!-- CTA -->
               <div class="artd-side-card artd-side-cta">
-                <p>Rejoignez notre communauté de talents africains</p>
+                <p>Rejoignez notre communauté de talents</p>
                 <router-link to="/register" class="btn btn--blue" style="display:block;text-align:center;">
                   Souscrire gratuitement
                 </router-link>
