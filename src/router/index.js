@@ -18,6 +18,7 @@ import ArticleDetail from '../components/ArticleDetail.vue'
 import EvenementDetail from '../components/EvenementDetail.vue'
 import MesFavoris from '../components/MesFavoris.vue'
 import LegalPage from '../components/LegalPage.vue'
+import EditProfile from '../components/EditProfile.vue'
 import CompanyLanding from '../components/CompanyLanding.vue'
 
 // Admin form pages
@@ -200,6 +201,7 @@ const routes = [
       { path: 'legal-pages', name: 'AdminLegalPages', component: AdminDashboard, meta: adminMeta },
       { path: 'legal-pages/create', name: 'AdminLegalPageCreate', component: LegalPageForm, meta: adminMeta },
       { path: 'legal-pages/:id/edit', name: 'AdminLegalPageEdit', component: LegalPageForm, meta: adminMeta },
+      { path: 'profile', name: 'AdminProfile', component: EditProfile, meta: adminMeta },
     ]
   },
   {
@@ -212,6 +214,12 @@ const routes = [
     path: '/talent/feedbacks/:id/edit',
     name: 'TalentFeedbackEdit',
     component: FeedbackForm,
+    meta: talentMeta
+  },
+  {
+    path: '/talent/profile',
+    name: 'TalentProfile',
+    component: EditProfile,
     meta: talentMeta
   },
   {
@@ -242,6 +250,12 @@ const routes = [
     path: '/entreprise/articles/:id/edit',
     name: 'EntrepriseArticleEdit',
     component: EntrepriseArticleForm,
+    meta: entrepriseMeta
+  },
+  {
+    path: '/entreprise/profile',
+    name: 'EntrepriseProfile',
+    component: EditProfile,
     meta: entrepriseMeta
   },
 ]
