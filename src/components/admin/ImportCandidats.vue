@@ -1,62 +1,168 @@
 <template>
-  <div>
-    <h2>Import Candidats (XLS)</h2>
-    <p>Importez le fichier <strong>candidats.xls</strong> de l'ancien CRM pour créer les comptes talents dans Talenteed.</p>
-
-    <form @submit.prevent="launch">
-      <div>
-        <label>Fichier XLS *</label>
-        <input type="file" accept=".xls,.xlsx" @change="e => file = e.target.files[0]" required />
+  <div class="container-xl">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="bi bi-upload me-2"></i>
+          Import Candidats (XLS)
+        </h3>
       </div>
 
-      <div>
-        <label>
-          <input type="checkbox" v-model="dryRun" />
-          Simulation (dry-run) — ne crée rien, affiche seulement les résultats
-        </label>
+      <div class="card-body">
+        <div class="alert alert-info mb-4">
+          <i class="bi bi-info-circle me-2"></i>
+          Importez le fichier <strong>candidats.xls</strong> de l'ancien CRM pour créer les comptes talents dans Talenteed.
+        </div>
+
+        <form @submit.prevent="launch">
+          <div class="mb-3">
+            <label class="form-label required">Fichier XLS</label>
+            <input 
+              type="file" 
+              class="form-control" 
+              accept=".xls,.xlsx" 
+              @change="e => file = e.target.files[0]" 
+              required 
+            />
+            <small class="form-hint">Formats acceptés : .xls, .xlsx</small>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-check">
+              <input type="checkbox" class="form-check-input" v-model="dryRun" />
+              <span class="form-check-label">
+                <strong>Simulation (dry-run)</strong> — ne crée rien, affiche seulement les résultats
+              </span>
+            </label>
+          </div>
+
+          <button 
+            type="submit" 
+            class="btn btn-primary" 
+            :disabled="!file || loading"
+          >
+            <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
+            <i v-else class="bi bi-upload me-2"></i>
+            {{ loading ? 'Import en cours...' : (dryRun ? 'Simuler l\'import' : 'Lancer l\'import') }}
+          </button>
+        </form>
       </div>
 
-      <div>
-        <button type="submit" :disabled="!file || loading">
-          {{ loading ? 'Import en cours...' : (dryRun ? 'Simuler' : 'Lancer l\'import') }}
-        </button>
+      <!-- Résultats -->
+      <div v-if="result" class="card-body border-top">
+        <h4 class="mb-3">
+          <i class="bi bi-check-circle text-success me-2"></i>
+          Résultats {{ result.dry_run ? '(simulation)' : '' }}
+        </h4>
+
+        <div class="row mb-3">
+          <div class="col-sm-6 col-lg-3">
+            <div class="card card-sm">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-auto">
+                    <span class="bg-success text-white avatar">
+                      <i class="bi bi-check-lg"></i>
+                    </span>
+                  </div>
+                  <div class="col">
+                    <div class="font-weight-medium">{{ result.stats.created }}</div>
+                    <div class="text-secondary">Créés</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-lg-3">
+            <div class="card card-sm">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-auto">
+                    <span class="bg-secondary text-white avatar">
+                      <i class="bi bi-dash-circle"></i>
+                    </span>
+                  </div>
+                  <div class="col">
+                    <div class="font-weight-medium">{{ result.stats.skipped }}</div>
+                    <div class="text-secondary">Ignorés (internes)</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-lg-3">
+            <div class="card card-sm">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-auto">
+                    <span class="bg-warning text-white avatar">
+                      <i class="bi bi-exclamation-triangle"></i>
+                    </span>
+                  </div>
+                  <div class="col">
+                    <div class="font-weight-medium">{{ result.stats.existing }}</div>
+                    <div class="text-secondary">Déjà existants</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-lg-3">
+            <div class="card card-sm">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-auto">
+                    <span class="bg-danger text-white avatar">
+                      <i class="bi bi-x-circle"></i>
+                    </span>
+                  </div>
+                  <div class="col">
+                    <div class="font-weight-medium">{{ result.stats.errors }}</div>
+                    <div class="text-secondary">Erreurs</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="result.dry_run" class="alert alert-warning">
+          <i class="bi bi-info-circle me-2"></i>
+          Mode simulation — aucun compte créé. Relancez sans "Simulation" pour importer réellement.
+        </div>
+
+        <div class="accordion" id="accordionOutput">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button 
+                class="accordion-button collapsed" 
+                type="button" 
+                data-bs-toggle="collapse" 
+                data-bs-target="#collapseOutput"
+              >
+                <i class="bi bi-code-square me-2"></i>
+                Voir la sortie complète
+              </button>
+            </h2>
+            <div id="collapseOutput" class="accordion-collapse collapse">
+              <div class="accordion-body">
+                <pre class="bg-light p-3" style="font-size:12px;overflow:auto;max-height:400px;">{{ result.output }}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </form>
 
-    <!-- Résultats -->
-    <div v-if="result" style="margin-top:24px;border-top:1px solid #ccc;padding-top:16px;">
-      <h3>Résultats {{ result.dry_run ? '(simulation)' : '' }}</h3>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Créés</th>
-            <th>Ignorés (internes)</th>
-            <th>Déjà existants</th>
-            <th>Erreurs</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="color:green;font-weight:bold;">{{ result.stats.created }}</td>
-            <td>{{ result.stats.skipped }}</td>
-            <td style="color:orange;">{{ result.stats.existing }}</td>
-            <td style="color:red;">{{ result.stats.errors }}</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div v-if="result.dry_run" style="color:orange;margin-top:8px;">
-        Mode simulation — aucun compte créé. Relancez sans "Simulation" pour importer réellement.
+      <div v-if="error" class="card-footer">
+        <div class="alert alert-danger mb-0">
+          <i class="bi bi-exclamation-triangle me-2"></i>
+          {{ error }}
+        </div>
       </div>
-
-      <details style="margin-top:16px;">
-        <summary>Voir la sortie complète</summary>
-        <pre style="background:#f5f5f5;padding:12px;font-size:12px;overflow:auto;max-height:400px;">{{ result.output }}</pre>
-      </details>
     </div>
-
-    <div v-if="error" style="color:red;margin-top:12px;">{{ error }}</div>
   </div>
 </template>
 
