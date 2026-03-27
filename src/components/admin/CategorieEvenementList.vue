@@ -1,151 +1,139 @@
 <template>
-  <div>
-    <h2>Gestion des Catégories d'événement</h2>
+  <div class="container-xl">
+    <div class="card flex-grow-1">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="bi bi-tags me-2"></i>
+          Gestion des Catégories d'événement
+        </h3>
+      <div class="card-actions">
+        <button class="btn btn-primary" @click="openCreate">
+          <i class="bi bi-plus"></i>
+          Ajouter une catégorie
+        </button>
+      </div>
+    </div>
 
-    <button @click="openCreate">Ajouter une catégorie</button>
+    <!-- Formulaire de création/édition -->
+    <div v-if="showForm || editingItem" class="card-body border-bottom">
+      <h4 class="mb-3">{{ editingItem ? 'Modifier' : 'Créer' }} une catégorie</h4>
 
-    <div v-if="showForm || editingItem">
-      <h3>{{ editingItem ? 'Modifier' : 'Créer' }} une catégorie</h3>
-
-      <form @submit.prevent="save" enctype="multipart/form-data">
-
-        <div>
-          <label>Titre *</label>
-          <input type="text" v-model="form.titre" required />
-        </div>
-
-        <div>
-          <label>Description</label>
-          <textarea v-model="form.description" rows="4"></textarea>
-        </div>
-
-        <div>
-          <label>Image</label>
-          <input type="file" accept="image/*" @change="e => imageFile = e.target.files[0]" />
-          <img v-if="imagePreview" :src="imagePreview" style="max-width:150px;max-height:150px;" />
-          <img v-else-if="editingItem?.image_url" :src="editingItem.image_url" style="max-width:150px;max-height:150px;" />
-        </div>
-
-        <div>
-          <label>Vidéo principale</label>
-          <input type="file" accept="video/*" @change="e => videoFile = e.target.files[0]" />
-          <p v-if="editingItem?.video_url">Vidéo actuelle : <a :href="editingItem.video_url" target="_blank">voir</a></p>
-        </div>
-
-        <!-- Témoignages (style Liste FAQs) -->
-        <div>
-          <label>Témoignages</label>
-
-          <!-- datalist pour autocomplete auteur -->
-          <datalist id="auteurs-list">
-            <option v-for="t in allTemoignages" :key="t.id" :value="t.auteur" />
-          </datalist>
-
-          <div
-            v-for="(tem, i) in form.liste_temoignages"
-            :key="i"
-            style="border:1px solid #ccc;padding:8px;margin:4px 0;"
-          >
-            <div>
-              <label>Auteur *</label>
-              <input
-                type="text"
-                v-model="tem.auteur"
-                list="auteurs-list"
-                placeholder="Nom de l'auteur"
-                style="width:100%;"
-                @change="onAuteurChange(tem)"
-              />
-            </div>
-            <div>
-              <label>Poste</label>
-              <input type="text" v-model="tem.poste" placeholder="Poste / titre" style="width:100%;" />
-            </div>
-            <div>
-              <label>Avatar</label>
-              <input type="file" accept="image/*" @change="e => onAvatarChange(tem, e)" />
-              <img v-if="tem.avatarPreview" :src="tem.avatarPreview" style="width:48px;height:48px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-left:8px;" />
-              <img v-else-if="tem.existingAvatarUrl" :src="tem.existingAvatarUrl" style="width:48px;height:48px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-left:8px;" />
-            </div>
-            <div>
-              <label>Témoignage *</label>
-              <textarea v-model="tem.contenu" rows="3" placeholder="Contenu du témoignage" style="width:100%;"></textarea>
-            </div>
-            <button type="button" @click="form.liste_temoignages.splice(i, 1)">✕ Supprimer</button>
+      <form @submit.prevent="save">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label required">Titre</label>
+            <input type="text" class="form-control" v-model="form.titre" required />
           </div>
 
-          <button type="button" @click="form.liste_temoignages.push(emptyTem())">+ Ajouter un témoignage</button>
+          <div class="col-md-12 mb-3">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" v-model="form.description" rows="4"></textarea>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Image</label>
+            <input type="file" class="form-control" accept="image/*" @change="e => imageFile = e.target.files[0]" />
+            <img v-if="imagePreview" :src="imagePreview" class="mt-2" style="max-width:150px;max-height:150px;" />
+            <img v-else-if="editingItem?.image_url" :src="editingItem.image_url" class="mt-2" style="max-width:150px;max-height:150px;" />
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Vidéo principale</label>
+            <input type="file" class="form-control" accept="video/*" @change="e => videoFile = e.target.files[0]" />
+            <p v-if="editingItem?.video_url" class="text-muted mt-1">
+              Vidéo actuelle : <a :href="editingItem.video_url" target="_blank">voir</a>
+            </p>
+          </div>
         </div>
 
-        <div>
-          <label>Galerie (images / vidéos)</label>
-          <input type="file" accept="image/*,video/*" multiple @change="e => galerieFiles = Array.from(e.target.files)" />
-          <div v-if="editingItem?.galerie?.length">
-            <p>Galerie actuelle :</p>
-            <div v-for="(path, i) in editingItem.galerie" :key="i" style="display:inline-block;margin:4px;">
-              <img v-if="isImage(path)" :src="storageUrl(path)" style="max-width:80px;max-height:80px;" />
-              <span v-else>🎬 {{ path.split('/').pop() }}</span>
-              <button type="button" @click="removeGalerieItem(path)">✕</button>
+        <div class="mb-3">
+          <label class="form-label">Galerie (images / vidéos)</label>
+          <input type="file" class="form-control" accept="image/*,video/*" multiple @change="e => galerieFiles = Array.from(e.target.files)" />
+          <div v-if="editingItem?.galerie?.length" class="mt-2">
+            <p class="text-muted">Galerie actuelle :</p>
+            <div class="d-flex flex-wrap gap-2">
+              <div v-for="(path, i) in editingItem.galerie" :key="i" class="position-relative">
+                <img v-if="isImage(path)" :src="storageUrl(path)" class="rounded" style="max-width:80px;max-height:80px;" />
+                <span v-else class="badge bg-secondary">🎬 {{ path.split('/').pop() }}</span>
+                <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0" @click="removeGalerieItem(path)">
+                  <i class="bi bi-x"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Liste détails -->
-        <div>
-          <label>Liste détails</label>
-          <div v-for="(item, i) in form.liste_details" :key="i" style="margin:4px 0;">
-            <input type="text" v-model="form.liste_details[i]" placeholder="Détail..." style="width:calc(100% - 44px);" />
-            <button type="button" @click="form.liste_details.splice(i,1)" style="margin-left:4px;">✕</button>
-          </div>
-          <button type="button" @click="form.liste_details.push('')">+ Ajouter un détail</button>
-        </div>
-
-        <!-- Liste FAQs -->
-        <div>
-          <label>Liste FAQs</label>
-          <div v-for="(faq, i) in form.liste_faqs" :key="i" style="border:1px solid #ccc;padding:8px;margin:4px 0;">
-            <input type="text" v-model="form.liste_faqs[i].question" placeholder="Question" style="width:100%;margin-bottom:4px;" />
-            <textarea v-model="form.liste_faqs[i].reponse" placeholder="Réponse" rows="2" style="width:100%;"></textarea>
-            <button type="button" @click="form.liste_faqs.splice(i,1)">✕ Supprimer</button>
-          </div>
-          <button type="button" @click="form.liste_faqs.push({question:'',reponse:''})">+ Ajouter une FAQ</button>
-        </div>
-
-        <div>
-          <button type="submit" :disabled="loading">{{ loading ? 'Enregistrement...' : 'Enregistrer' }}</button>
-          <button type="button" @click="cancelForm">Annuler</button>
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary" :disabled="loading">
+            <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
+            {{ loading ? 'Enregistrement...' : 'Enregistrer' }}
+          </button>
+          <button type="button" class="btn btn-secondary" @click="cancelForm">Annuler</button>
         </div>
       </form>
     </div>
 
-    <!-- Liste -->
-    <div v-if="items.length > 0">
-      <table>
+    <!-- Liste des catégories -->
+
+    <div class="table-responsive">
+      <table class="table table-vcenter card-table">
         <thead>
-          <tr><th>ID</th><th>Image</th><th>Titre</th><th>Galerie</th><th>Témoignages</th><th>Actions</th></tr>
+          <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Titre</th>
+            <th>Galerie</th>
+            <th>Témoignages</th>
+            <th class="w-1"></th>
+          </tr>
         </thead>
         <tbody>
-          <tr v-for="item in items" :key="item.id">
-            <td>{{ item.id }}</td>
+          <tr v-if="loading">
+            <td colspan="6" class="text-center">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Chargement...</span>
+              </div>
+            </td>
+          </tr>
+          <tr v-else-if="items.length === 0">
+            <td colspan="6" class="text-center text-muted">Aucune catégorie trouvée.</td>
+          </tr>
+          <tr v-else v-for="item in items" :key="item.id">
+            <td class="text-muted">{{ item.id }}</td>
             <td>
-              <img v-if="item.image_url" :src="item.image_url" style="max-width:60px;max-height:60px;" />
-              <span v-else>-</span>
+              <img v-if="item.image_url" :src="item.image_url" class="avatar avatar-sm" />
+              <span v-else class="text-muted">-</span>
             </td>
             <td>{{ item.titre }}</td>
-            <td>{{ item.galerie?.length || 0 }} fichier(s)</td>
-            <td>{{ item.temoignages?.length || 0 }}</td>
             <td>
-              <button @click="editItem(item)">Modifier</button>
-              <button @click="deleteItem(item.id)">Supprimer</button>
+              <span class="badge bg-azure">{{ item.galerie?.length || 0 }} fichier(s)</span>
+            </td>
+            <td>
+              <span class="badge bg-purple">{{ item.temoignages?.length || 0 }}</span>
+            </td>
+            <td>
+              <div class="btn-list">
+                <button class="btn btn-sm btn-primary" @click="editItem(item)">
+                  <i class="bi bi-pencil"></i>
+                  Modifier
+                </button>
+                <button class="btn btn-sm btn-danger" @click="deleteItem(item.id)">
+                  <i class="bi bi-trash"></i>
+                  Supprimer
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <div v-else-if="!loading"><p>Aucune catégorie trouvée.</p></div>
 
-    <div v-if="error" style="color:red;">{{ error }}</div>
-    <div v-if="success" style="color:green;">{{ success }}</div>
+    <!-- Messages -->
+    <div v-if="error || success" class="card-footer">
+      <div v-if="error" class="alert alert-danger mb-0">{{ error }}</div>
+      <div v-if="success" class="alert alert-success mb-0">{{ success }}</div>
+    </div>
+    </div>
   </div>
 </template>
 
@@ -168,8 +156,6 @@ const imagePreview   = ref(null)
 const videoFile      = ref(null)
 const galerieFiles   = ref([])
 
-const emptyTem = () => ({ auteur: '', poste: '', contenu: '', id: null, avatarFile: null, avatarPreview: null, existingAvatarUrl: null })
-
 const emptyForm = () => ({
   titre: '', description: '',
   liste_details: [], liste_faqs: [], liste_temoignages: []
@@ -178,24 +164,6 @@ const form = ref(emptyForm())
 
 const storageUrl = (path) => `${API_BASE}/storage/${path}`
 const isImage    = (path) => /\.(jpg|jpeg|png|gif|webp)$/i.test(path)
-
-// Quand l'auteur est choisi depuis la datalist → pré-remplit les champs
-const onAuteurChange = (tem) => {
-  const existing = allTemoignages.value.find(t => t.auteur === tem.auteur)
-  if (existing) {
-    tem.id               = existing.id
-    tem.poste            = existing.poste || ''
-    tem.contenu          = tem.contenu || existing.contenu  // ne pas écraser si déjà rempli
-    tem.existingAvatarUrl = existing.avatar_url || null
-  }
-}
-
-const onAvatarChange = (tem, e) => {
-  const file = e.target.files[0]
-  if (!file) return
-  tem.avatarFile    = file
-  tem.avatarPreview = URL.createObjectURL(file)
-}
 
 const load = async () => {
   loading.value = true
@@ -213,6 +181,7 @@ const load = async () => {
     loading.value = false
   }
 }
+
 
 const buildFormData = () => {
   const fd = new FormData()
@@ -332,3 +301,9 @@ const cancelForm = () => {
 
 onMounted(load)
 </script>
+
+<style scoped>
+.avatar {
+  object-fit: cover;
+}
+</style>
