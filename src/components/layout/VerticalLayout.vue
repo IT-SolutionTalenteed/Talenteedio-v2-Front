@@ -221,6 +221,7 @@ const PAGE_TITLES = {
   'import-candidats': 'Import candidats',
   'sync-crm': 'Sync CRM',
   candidatures: 'Candidatures',
+  'evenement-participations': 'Demandes de participation',
   favoris: 'Mes favoris',
 }
 
@@ -292,7 +293,7 @@ const sideNav = computed(() => {
         children: [
           { label: 'Catégories', route: { name: 'AdminCategorieEvenements' }, icon: 'mdi-tag-multiple-outline' },
           { label: 'Événements', route: { name: 'AdminEvenements' }, icon: 'mdi-calendar-month-outline' },
-          { label: 'Participation', route: { name: 'AdminEvenements' }, icon: 'mdi-domain' },
+          { label: 'Participation', route: { name: 'AdminParticipations' }, icon: 'mdi-domain' },
           { label: 'Entretiens par stand', route: { name: 'AdminEntretiens' }, icon: 'mdi-calendar-account-outline' },
           { label: 'Feedbacks', route: { name: 'AdminFeedbacks' }, icon: 'mdi-message-text-outline' },
         ],

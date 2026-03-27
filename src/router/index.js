@@ -165,6 +165,7 @@ const routes = [
       { path: 'offres/create', name: 'AdminOffreCreate', component: OffreAdminForm, meta: adminMeta },
       { path: 'offres/:id/edit', name: 'AdminOffreEdit', component: OffreAdminForm, meta: adminMeta },
       { path: 'candidatures', name: 'AdminCandidatures', component: AdminDashboard, meta: adminMeta },
+      { path: 'evenement-participations', name: 'AdminParticipations', component: AdminDashboard, meta: adminMeta },
       { path: 'categorie-evenements', name: 'AdminCategorieEvenements', component: AdminDashboard, meta: adminMeta },
       { path: 'categorie-evenements/create', name: 'AdminCategorieEvenementCreate', component: CategorieEvenementForm, meta: adminMeta },
       { path: 'categorie-evenements/:id/edit', name: 'AdminCategorieEvenementEdit', component: CategorieEvenementForm, meta: adminMeta },
