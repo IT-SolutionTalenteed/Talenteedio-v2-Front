@@ -1,348 +1,217 @@
 <template>
-  <PageHeader
-    title="Dashboard Administrateur"
-    page="Dashboard"
-    :breadcrumbs="breadcrumbs"
-  />
+  <!-- Vue d'ensemble -->
+  <div v-if="activeTab === 'overview'">
+    <!-- Bannière bienvenue -->
+    <v-card
+      class="mb-6 overflow-hidden"
+      color="primary"
+      rounded="xl"
+      elevation="0"
+    >
+      <v-card-text class="pa-6">
+        <div class="d-flex align-center justify-space-between flex-wrap ga-4">
+          <div>
+            <div class="text-h5 font-weight-bold text-white mb-1">
+              Bienvenue dans l'espace administrateur 👋
+            </div>
+            <div class="text-body-2" style="color:rgba(255,255,255,0.75)">
+              Gérez les utilisateurs, les offres, les candidatures et bien plus.
+            </div>
+          </div>
+          <v-icon size="72" style="color:rgba(255,255,255,0.15)">mdi-shield-crown</v-icon>
+        </div>
+      </v-card-text>
+    </v-card>
 
-  <div class="page-body">
-    <!-- Vue d'ensemble -->
-    <div v-if="activeTab === 'overview'" class="container-xl">
-      <!-- Message de bienvenue -->
-      <div class="row mb-3">
-        <div class="col-12">
-          <div class="card card-md">
-            <div class="card-stamp card-stamp-lg">
-              <div class="card-stamp-icon bg-primary">
-                <i class="bi bi-shield-check"></i>
+    <!-- Stats cards -->
+    <v-row class="mb-6" dense>
+      <v-col cols="12" sm="6" lg="3">
+        <v-card rounded="xl" elevation="0" border>
+          <v-card-text class="pa-5">
+            <div class="d-flex align-center justify-space-between">
+              <div>
+                <div class="text-h4 font-weight-bold text-primary">
+                  {{ totalTalents !== null ? totalTalents : '—' }}
+                </div>
+                <div class="text-body-2 text-medium-emphasis mt-1">Talents inscrits</div>
               </div>
+              <v-avatar color="primary" variant="tonal" size="52" rounded="lg">
+                <v-icon size="26">mdi-account-tie-outline</v-icon>
+              </v-avatar>
             </div>
-            <div class="card-body">
-              <div class="row align-items-center">
-                <div class="col-10">
-                  <h3 class="h1">Bienvenue dans l'espace administrateur</h3>
-                  <div class="markdown text-secondary">
-                    Vous avez accès à toutes les fonctionnalités d'administration.
-                    Gérez les utilisateurs, les offres d'emploi, les candidatures et bien plus encore.
-                  </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+
+      <v-col cols="12" sm="6" lg="3">
+        <v-card rounded="xl" elevation="0" border>
+          <v-card-text class="pa-5">
+            <div class="d-flex align-center justify-space-between">
+              <div>
+                <div class="text-h4 font-weight-bold text-success">
+                  {{ totalEntreprises !== null ? totalEntreprises : '—' }}
                 </div>
+                <div class="text-body-2 text-medium-emphasis mt-1">Entreprises actives</div>
               </div>
+              <v-avatar color="success" variant="tonal" size="52" rounded="lg">
+                <v-icon size="26">mdi-office-building-outline</v-icon>
+              </v-avatar>
             </div>
-          </div>
-        </div>
-      </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
 
-      <div class="row row-deck row-cards">
-        <!-- Stats Cards avec icônes -->
-        <div class="col-sm-6 col-lg-3">
-          <div class="card">
-            <div class="card-body">
-              <div class="row align-items-center">
-                <div class="col-auto">
-                  <span class="avatar bg-primary-stat">
-                    <i class="bi bi-people-fill"></i>
-                  </span>
-                </div>
-                <div class="col">
-                  <div class="font-weight-medium">
-                    {{ totalTalents !== null ? totalTalents : '...' }} Talents
-                  </div>
-                  <div class="text-secondary">Inscrits</div>
-                </div>
+      <v-col cols="12" sm="6" lg="3">
+        <v-card rounded="xl" elevation="0" border>
+          <v-card-text class="pa-5">
+            <div class="d-flex align-center justify-space-between">
+              <div>
+                <div class="text-h4 font-weight-bold text-warning">—</div>
+                <div class="text-body-2 text-medium-emphasis mt-1">Offres publiées</div>
               </div>
+              <v-avatar color="warning" variant="tonal" size="52" rounded="lg">
+                <v-icon size="26">mdi-briefcase-outline</v-icon>
+              </v-avatar>
             </div>
-          </div>
-        </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
 
-        <div class="col-sm-6 col-lg-3">
-          <div class="card">
-            <div class="card-body">
-              <div class="row align-items-center">
-                <div class="col-auto">
-                  <span class="avatar bg-success-stat">
-                    <i class="bi bi-building"></i>
-                  </span>
-                </div>
-                <div class="col">
-                  <div class="font-weight-medium">
-                    {{ totalEntreprises !== null ? totalEntreprises : '...' }} Entreprises
-                  </div>
-                  <div class="text-secondary">Actives</div>
-                </div>
+      <v-col cols="12" sm="6" lg="3">
+        <v-card rounded="xl" elevation="0" border>
+          <v-card-text class="pa-5">
+            <div class="d-flex align-center justify-space-between">
+              <div>
+                <div class="text-h4 font-weight-bold text-info">—</div>
+                <div class="text-body-2 text-medium-emphasis mt-1">Événements à venir</div>
               </div>
+              <v-avatar color="info" variant="tonal" size="52" rounded="lg">
+                <v-icon size="26">mdi-calendar-star</v-icon>
+              </v-avatar>
             </div>
-          </div>
-        </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
 
-        <div class="col-sm-6 col-lg-3">
-          <div class="card">
-            <div class="card-body">
-              <div class="row align-items-center">
-                <div class="col-auto">
-                  <span class="avatar bg-info-stat">
-                    <i class="bi bi-briefcase-fill"></i>
-                  </span>
-                </div>
-                <div class="col">
-                  <div class="font-weight-medium">Offres d'emploi</div>
-                  <div class="text-secondary">Publiées</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+    <!-- Actions rapides + Contenu -->
+    <v-row class="mb-6" dense>
+      <v-col cols="12" md="6">
+        <v-card rounded="xl" elevation="0" border height="100%">
+          <v-card-title class="pa-5 pb-2 text-body-1 font-weight-semibold">
+            <v-icon class="mr-2" color="primary" size="20">mdi-lightning-bolt</v-icon>
+            Actions rapides
+          </v-card-title>
+          <v-list lines="two" class="py-0">
+            <v-list-item
+              v-for="action in quickActions"
+              :key="action.title"
+              :prepend-icon="action.icon"
+              :title="action.title"
+              :subtitle="action.subtitle"
+              :base-color="action.color"
+              rounded="0"
+              append-icon="mdi-chevron-right"
+              @click="router.push(action.route)"
+            >
+              <template #prepend>
+                <v-avatar :color="action.color" variant="tonal" size="38" rounded="lg" class="mr-3">
+                  <v-icon size="18">{{ action.icon }}</v-icon>
+                </v-avatar>
+              </template>
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-col>
 
-        <div class="col-sm-6 col-lg-3">
-          <div class="card">
-            <div class="card-body">
-              <div class="row align-items-center">
-                <div class="col-auto">
-                  <span class="avatar bg-warning-stat">
-                    <i class="bi bi-calendar-event-fill"></i>
-                  </span>
-                </div>
-                <div class="col">
-                  <div class="font-weight-medium">Événements</div>
-                  <div class="text-secondary">À venir</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Actions rapides -->
-        <div class="col-lg-6">
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Actions rapides</h3>
-            </div>
-            <div class="list-group list-group-flush">
-              <router-link 
-                :to="{ name: 'AdminTalents' }" 
-                class="list-group-item list-group-item-action d-flex align-items-center"
-              >
-                <span class="avatar avatar-sm me-3 bg-primary-lt">
-                  <i class="bi bi-people-fill"></i>
-                </span>
-                <div class="flex-fill">
-                  <div class="font-weight-medium">Gérer les talents</div>
-                  <div class="text-secondary small">Voir et modifier les profils</div>
-                </div>
-                <i class="bi bi-chevron-right text-secondary"></i>
-              </router-link>
-              
-              <router-link 
-                :to="{ name: 'AdminEntreprises' }" 
-                class="list-group-item list-group-item-action d-flex align-items-center"
-              >
-                <span class="avatar avatar-sm me-3 bg-success-lt">
-                  <i class="bi bi-building"></i>
-                </span>
-                <div class="flex-fill">
-                  <div class="font-weight-medium">Gérer les entreprises</div>
-                  <div class="text-secondary small">Administrer les comptes</div>
-                </div>
-                <i class="bi bi-chevron-right text-secondary"></i>
-              </router-link>
-              
-              <router-link 
-                :to="{ name: 'AdminOffres' }" 
-                class="list-group-item list-group-item-action d-flex align-items-center"
-              >
-                <span class="avatar avatar-sm me-3 bg-info-lt">
-                  <i class="bi bi-briefcase-fill"></i>
-                </span>
-                <div class="flex-fill">
-                  <div class="font-weight-medium">Offres d'emploi</div>
-                  <div class="text-secondary small">Gérer les publications</div>
-                </div>
-                <i class="bi bi-chevron-right text-secondary"></i>
-              </router-link>
-              
-              <router-link 
-                :to="{ name: 'AdminEvenements' }" 
-                class="list-group-item list-group-item-action d-flex align-items-center"
-              >
-                <span class="avatar avatar-sm me-3 bg-warning-lt">
-                  <i class="bi bi-calendar-event-fill"></i>
-                </span>
-                <div class="flex-fill">
-                  <div class="font-weight-medium">Événements</div>
-                  <div class="text-secondary small">Planifier et organiser</div>
-                </div>
-                <i class="bi bi-chevron-right text-secondary"></i>
-              </router-link>
-            </div>
-          </div>
-        </div>
-
-        <!-- Gestion du contenu -->
-        <div class="col-lg-6">
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Gestion du contenu</h3>
-            </div>
-            <div class="list-group list-group-flush">
-              <router-link 
-                :to="{ name: 'AdminArticles' }" 
-                class="list-group-item list-group-item-action d-flex align-items-center"
-              >
-                <span class="avatar avatar-sm me-3 bg-purple-lt">
-                  <i class="bi bi-file-earmark-text-fill"></i>
-                </span>
-                <div class="flex-fill">
-                  <div class="font-weight-medium">Articles</div>
-                  <div class="text-secondary small">Gérer les publications</div>
-                </div>
-                <i class="bi bi-chevron-right text-secondary"></i>
-              </router-link>
-              
-              <router-link 
-                :to="{ name: 'AdminMediaCategories' }" 
-                class="list-group-item list-group-item-action d-flex align-items-center"
-              >
-                <span class="avatar avatar-sm me-3 bg-pink-lt">
-                  <i class="bi bi-folder-fill"></i>
-                </span>
-                <div class="flex-fill">
-                  <div class="font-weight-medium">Catégories média</div>
-                  <div class="text-secondary small">Organiser les contenus</div>
-                </div>
-                <i class="bi bi-chevron-right text-secondary"></i>
-              </router-link>
-              
-              <router-link 
-                :to="{ name: 'AdminLegalPages' }" 
-                class="list-group-item list-group-item-action d-flex align-items-center"
-              >
-                <span class="avatar avatar-sm me-3 bg-cyan-lt">
-                  <i class="bi bi-file-earmark-ruled-fill"></i>
-                </span>
-                <div class="flex-fill">
-                  <div class="font-weight-medium">Pages légales</div>
-                  <div class="text-secondary small">CGU, mentions légales</div>
-                </div>
-                <i class="bi bi-chevron-right text-secondary"></i>
-              </router-link>
-              
-              <router-link 
-                :to="{ name: 'AdminImportCandidats' }" 
-                class="list-group-item list-group-item-action d-flex align-items-center"
-              >
-                <span class="avatar avatar-sm me-3 bg-teal-lt">
-                  <i class="bi bi-upload"></i>
-                </span>
-                <div class="flex-fill">
-                  <div class="font-weight-medium">Import candidats</div>
-                  <div class="text-secondary small">Importer en masse</div>
-                </div>
-                <i class="bi bi-chevron-right text-secondary"></i>
-              </router-link>
-            </div>
-          </div>
-        </div>
-
-        <!-- Référentiels -->
-        <div class="col-12">
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Référentiels</h3>
-              <div class="card-subtitle">Gérer les données de référence du système</div>
-            </div>
-            <div class="card-body">
-              <div class="row g-3">
-                <div class="col-md-3 col-sm-6">
-                  <router-link :to="{ name: 'AdminJobContracts' }" class="btn btn-outline-primary w-100">
-                    <i class="bi bi-file-text me-2"></i>
-                    Types de contrat
-                  </router-link>
-                </div>
-                <div class="col-md-3 col-sm-6">
-                  <router-link :to="{ name: 'AdminJobModes' }" class="btn btn-outline-success w-100">
-                    <i class="bi bi-laptop me-2"></i>
-                    Modes de travail
-                  </router-link>
-                </div>
-                <div class="col-md-3 col-sm-6">
-                  <router-link :to="{ name: 'AdminSkills' }" class="btn btn-outline-info w-100">
-                    <i class="bi bi-star me-2"></i>
-                    Compétences
-                  </router-link>
-                </div>
-                <div class="col-md-3 col-sm-6">
-                  <router-link :to="{ name: 'AdminStudyLevels' }" class="btn btn-outline-warning w-100">
-                    <i class="bi bi-mortarboard me-2"></i>
-                    Niveaux d'études
-                  </router-link>
-                </div>
-                <div class="col-md-3 col-sm-6">
-                  <router-link :to="{ name: 'AdminExperiences' }" class="btn btn-outline-purple w-100">
-                    <i class="bi bi-briefcase me-2"></i>
-                    Expériences
-                  </router-link>
-                </div>
-                <div class="col-md-3 col-sm-6">
-                  <router-link :to="{ name: 'AdminLanguages' }" class="btn btn-outline-pink w-100">
-                    <i class="bi bi-translate me-2"></i>
-                    Langues
-                  </router-link>
-                </div>
-                <div class="col-md-3 col-sm-6">
-                  <router-link :to="{ name: 'AdminActivitySectors' }" class="btn btn-outline-cyan w-100">
-                    <i class="bi bi-diagram-3 me-2"></i>
-                    Secteurs d'activité
-                  </router-link>
-                </div>
-                <div class="col-md-3 col-sm-6">
-                  <router-link :to="{ name: 'AdminCategorieEvenements' }" class="btn btn-outline-teal w-100">
-                    <i class="bi bi-tags me-2"></i>
-                    Catégories événements
-                  </router-link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Événements -->
-    <CategorieEvenementList v-if="activeTab === 'categorie-evenements'" />
-    <EvenementList v-if="activeTab === 'evenements'" />
-
-    <!-- Offres -->
-    <OffreList v-if="activeTab === 'offres'" />
-
-    <!-- Contenu -->
-    <MediaCategoryList v-if="activeTab === 'media-categories'" />
-    <ArticleList v-if="activeTab === 'articles'" />
-
-    <!-- Entreprises & Talents -->
-    <EntrepriseList v-if="activeTab === 'entreprises'" />
-    <TalentList v-if="activeTab === 'talents'" />
-    <EntretienList v-if="activeTab === 'entretiens'" />
-    <FeedbackList v-if="activeTab === 'feedbacks'" />
-    <ImportCandidats v-if="activeTab === 'import-candidats'" />
-    <SyncCrm v-if="activeTab === 'sync-crm'" />
+      <v-col cols="12" md="6">
+        <v-card rounded="xl" elevation="0" border height="100%">
+          <v-card-title class="pa-5 pb-2 text-body-1 font-weight-semibold">
+            <v-icon class="mr-2" color="secondary" size="20">mdi-newspaper-variant-outline</v-icon>
+            Gestion du contenu
+          </v-card-title>
+          <v-list lines="two" class="py-0">
+            <v-list-item
+              v-for="item in contentActions"
+              :key="item.title"
+              :prepend-icon="item.icon"
+              :title="item.title"
+              :subtitle="item.subtitle"
+              rounded="0"
+              append-icon="mdi-chevron-right"
+              @click="router.push(item.route)"
+            >
+              <template #prepend>
+                <v-avatar :color="item.color" variant="tonal" size="38" rounded="lg" class="mr-3">
+                  <v-icon size="18">{{ item.icon }}</v-icon>
+                </v-avatar>
+              </template>
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-col>
+    </v-row>
 
     <!-- Référentiels -->
-    <JobContractList v-if="activeTab === 'job-contracts'" />
-    <JobModeList v-if="activeTab === 'job-modes'" />
-    <SkillList v-if="activeTab === 'skills'" />
-    <StudyLevelList v-if="activeTab === 'study-levels'" />
-    <ExperienceList v-if="activeTab === 'experiences'" />
-    <LanguageList v-if="activeTab === 'languages'" />
-    <ActivitySectorList v-if="activeTab === 'activity-sectors'" />
-    <LegalPageList v-if="activeTab === 'legal-pages'" />
+    <v-card rounded="xl" elevation="0" border>
+      <v-card-title class="pa-5 pb-3 text-body-1 font-weight-semibold">
+        <v-icon class="mr-2" color="secondary" size="20">mdi-cog-outline</v-icon>
+        Référentiels
+        <span class="text-body-2 font-weight-regular text-medium-emphasis ml-2">
+          — Données de référence du système
+        </span>
+      </v-card-title>
+      <v-card-text class="pa-5 pt-0">
+        <v-row dense>
+          <v-col
+            v-for="ref in referentiels"
+            :key="ref.title"
+            cols="6" sm="4" md="3"
+          >
+            <v-btn
+              :prepend-icon="ref.icon"
+              :color="ref.color"
+              variant="tonal"
+              block
+              rounded="lg"
+              class="justify-start"
+              height="44"
+              @click="router.push(ref.route)"
+            >
+              {{ ref.title }}
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-card-text>
+    </v-card>
   </div>
+
+  <!-- Sous-sections admin (CRUD components) -->
+  <CategorieEvenementList v-if="activeTab === 'categorie-evenements'" />
+  <EvenementList          v-if="activeTab === 'evenements'" />
+  <OffreList              v-if="activeTab === 'offres'" />
+  <MediaCategoryList      v-if="activeTab === 'media-categories'" />
+  <ArticleList            v-if="activeTab === 'articles'" />
+  <EntrepriseList         v-if="activeTab === 'entreprises'" />
+  <TalentList             v-if="activeTab === 'talents'" />
+  <EntretienList          v-if="activeTab === 'entretiens'" />
+  <FeedbackList           v-if="activeTab === 'feedbacks'" />
+  <ImportCandidats        v-if="activeTab === 'import-candidats'" />
+  <SyncCrm               v-if="activeTab === 'sync-crm'" />
+  <JobContractList        v-if="activeTab === 'job-contracts'" />
+  <JobModeList            v-if="activeTab === 'job-modes'" />
+  <SkillList              v-if="activeTab === 'skills'" />
+  <StudyLevelList         v-if="activeTab === 'study-levels'" />
+  <ExperienceList         v-if="activeTab === 'experiences'" />
+  <LanguageList           v-if="activeTab === 'languages'" />
+  <ActivitySectorList     v-if="activeTab === 'activity-sectors'" />
+  <LegalPageList          v-if="activeTab === 'legal-pages'" />
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import api, { authService } from '../services/api.js'
-
-import PageHeader from './layout/PageHeader.vue'
+import api from '../services/api.js'
 
 import CategorieEvenementList from './admin/CategorieEvenementList.vue'
 import EvenementList from './admin/EvenementList.vue'
@@ -367,18 +236,10 @@ import SyncCrm from './admin/SyncCrm.vue'
 const router = useRouter()
 const route = useRoute()
 
-// Déterminer l'onglet actif basé sur la route
-const activeTab = computed(() => {
-  const path = route.path.split('/').pop()
-  return path || 'overview'
-})
+const activeTab = computed(() => route.path.split('/').pop() || 'overview')
 
 const totalTalents    = ref(null)
 const totalEntreprises = ref(null)
-
-const breadcrumbs = ref([
-  { label: 'Accueil', route: { name: 'Home' } }
-])
 
 onMounted(async () => {
   try {
@@ -386,21 +247,82 @@ onMounted(async () => {
       api.get('/admin/talents?page=1&per_page=1'),
       api.get('/admin/entreprises'),
     ])
-    totalTalents.value     = talentsRes.data.total ?? null
+    totalTalents.value = talentsRes.data.total ?? null
     const ents = entreprisesRes.data
     totalEntreprises.value = Array.isArray(ents) ? ents.length : (ents.total ?? null)
   } catch {}
 })
 
-const logout = async () => {
-  try {
-    await authService.logout()
-  } catch (error) {
-    console.error('Erreur lors de la déconnexion:', error)
-  } finally {
-    localStorage.removeItem('token')
-    localStorage.removeItem('userRole')
-    router.push('/login')
-  }
-}
+const quickActions = [
+  {
+    title: 'Gérer les talents',
+    subtitle: 'Voir et modifier les profils',
+    icon: 'mdi-account-tie-outline',
+    color: 'primary',
+    route: { name: 'AdminTalents' },
+  },
+  {
+    title: 'Gérer les entreprises',
+    subtitle: 'Administrer les comptes',
+    icon: 'mdi-office-building-outline',
+    color: 'success',
+    route: { name: 'AdminEntreprises' },
+  },
+  {
+    title: "Offres d'emploi",
+    subtitle: 'Gérer les publications',
+    icon: 'mdi-briefcase-outline',
+    color: 'info',
+    route: { name: 'AdminOffres' },
+  },
+  {
+    title: 'Événements',
+    subtitle: 'Planifier et organiser',
+    icon: 'mdi-calendar-star',
+    color: 'warning',
+    route: { name: 'AdminEvenements' },
+  },
+]
+
+const contentActions = [
+  {
+    title: 'Articles',
+    subtitle: 'Gérer les publications',
+    icon: 'mdi-file-document-outline',
+    color: 'purple',
+    route: { name: 'AdminArticles' },
+  },
+  {
+    title: 'Catégories Média',
+    subtitle: 'Organiser les contenus',
+    icon: 'mdi-folder-multiple-outline',
+    color: 'pink',
+    route: { name: 'AdminMediaCategories' },
+  },
+  {
+    title: 'Pages légales',
+    subtitle: 'CGU, mentions légales',
+    icon: 'mdi-file-certificate-outline',
+    color: 'teal',
+    route: { name: 'AdminLegalPages' },
+  },
+  {
+    title: 'Import candidats',
+    subtitle: 'Importer en masse (XLS)',
+    icon: 'mdi-upload',
+    color: 'cyan',
+    route: { name: 'AdminImportCandidats' },
+  },
+]
+
+const referentiels = [
+  { title: 'Contrats', icon: 'mdi-file-sign', color: 'primary', route: { name: 'AdminJobContracts' } },
+  { title: 'Modes travail', icon: 'mdi-laptop', color: 'success', route: { name: 'AdminJobModes' } },
+  { title: 'Compétences', icon: 'mdi-star-outline', color: 'info', route: { name: 'AdminSkills' } },
+  { title: 'Niveaux étude', icon: 'mdi-school-outline', color: 'warning', route: { name: 'AdminStudyLevels' } },
+  { title: 'Expériences', icon: 'mdi-clock-outline', color: 'purple', route: { name: 'AdminExperiences' } },
+  { title: 'Langues', icon: 'mdi-translate', color: 'pink', route: { name: 'AdminLanguages' } },
+  { title: 'Secteurs', icon: 'mdi-sitemap-outline', color: 'teal', route: { name: 'AdminActivitySectors' } },
+  { title: 'Catég. événements', icon: 'mdi-tag-multiple-outline', color: 'cyan', route: { name: 'AdminCategorieEvenements' } },
+]
 </script>

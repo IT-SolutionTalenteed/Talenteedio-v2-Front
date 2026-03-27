@@ -1,9 +1,10 @@
 <template>
-  <GlobalLoader v-if="isLoading" />
-
-  <Suspense>
-    <RouterView />
-  </Suspense>
+  <v-app>
+    <GlobalLoader v-if="isLoading" />
+    <Suspense>
+      <RouterView />
+    </Suspense>
+  </v-app>
 </template>
 
 <script setup>

@@ -1,45 +1,44 @@
 <template>
   <VerticalLayout>
-    <div class="page-header d-print-none">
-      <div class="container-xl">
-        <PageHeader
-          title="Dashboard Talent"
-          page="Dashboard"
-          :breadcrumbs="breadcrumbs"
-        />
-      </div>
-    </div>
+    <OffreList           v-if="activeTab === 'offres'" />
+    <MesCandidatures     v-if="activeTab === 'candidatures'" />
+    <MesFavoris          v-if="activeTab === 'favoris'" />
+    <EvenementMatching
+      v-if="activeTab === 'evenements' && !rdvState"
+      @demanderRdv="ouvrirRdv"
+    />
+    <ReservationEntretien
+      v-if="activeTab === 'evenements' && rdvState"
+      :evenement="rdvState.evenement"
+      :entreprise-id="rdvState.entrepriseId"
+      :entreprise-nom="rdvState.entrepriseNom"
+      @fermer="rdvState = null"
+    />
+    <MesEntretiens  v-if="activeTab === 'entretiens'" />
+    <MesFeedbacks   v-if="activeTab === 'feedbacks'" />
 
-    <div class="page-body">
-      <div class="container-xl">
-        <OffreList v-if="activeTab === 'offres'" />
-        <MesCandidatures v-if="activeTab === 'candidatures'" />
-        <MesFavoris v-if="activeTab === 'favoris'" />
-        <EvenementMatching v-if="activeTab === 'evenements' && !rdvState" @demanderRdv="ouvrirRdv" />
-        <ReservationEntretien
-          v-if="activeTab === 'evenements' && rdvState"
-          :evenement="rdvState.evenement"
-          :entreprise-id="rdvState.entrepriseId"
-          :entreprise-nom="rdvState.entrepriseNom"
-          @fermer="rdvState = null"
-        />
-        <MesEntretiens v-if="activeTab === 'entretiens'" />
-        <MesFeedbacks v-if="activeTab === 'feedbacks'" />
-      </div>
+    <!-- Fallback si aucun onglet actif -->
+    <div
+      v-if="!['offres','candidatures','favoris','evenements','entretiens','feedbacks'].includes(activeTab)"
+      class="d-flex flex-column align-center justify-center ga-4"
+      style="min-height:320px"
+    >
+      <v-icon size="72" color="primary" style="opacity:.15">mdi-briefcase-search-outline</v-icon>
+      <div class="text-h6 text-medium-emphasis">Bienvenue dans votre espace Talent</div>
+      <div class="text-body-2 text-disabled">Sélectionnez une section dans le menu</div>
+      <v-btn color="primary" prepend-icon="mdi-briefcase-search-outline" @click="dashboardStore.setActiveTab('offres')">
+        Voir les offres
+      </v-btn>
     </div>
   </VerticalLayout>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import { authService } from '../services/api.js'
-
-import VerticalLayout from './layout/VerticalLayout.vue'
-import PageHeader from './layout/PageHeader.vue'
 import { useDashboardStore } from '@/stores/dashboard.store'
 
+import VerticalLayout from './layout/VerticalLayout.vue'
 import OffreList from './talent/OffreList.vue'
 import MesCandidatures from './talent/MesCandidatures.vue'
 import MesFavoris from './talent/MesFavoris.vue'
@@ -48,26 +47,20 @@ import ReservationEntretien from './talent/ReservationEntretien.vue'
 import MesEntretiens from './talent/MesEntretiens.vue'
 import MesFeedbacks from './talent/MesFeedbacks.vue'
 
-const router = useRouter()
 const dashboardStore = useDashboardStore()
 const { activeTab } = storeToRefs(dashboardStore)
 
-const rdvState = ref(null) // { entrepriseId, entrepriseNom, evenement }
+const rdvState = ref(null)
 
-const breadcrumbs = ref([
-  { label: 'Accueil', route: { name: 'Home' } }
-])
+onMounted(() => {
+  // Initialiser sur 'offres' si pas d'onglet talent valide
+  const validTabs = ['offres', 'candidatures', 'favoris', 'evenements', 'entretiens', 'feedbacks']
+  if (!validTabs.includes(activeTab.value)) {
+    dashboardStore.setActiveTab('offres')
+  }
+})
 
 const ouvrirRdv = (entrepriseId, entrepriseNom, evenement) => {
   rdvState.value = { entrepriseId, entrepriseNom, evenement }
-}
-
-const logout = async () => {
-  try { await authService.logout() } catch {}
-  finally {
-    localStorage.removeItem('token')
-    localStorage.removeItem('userRole')
-    router.push('/login')
-  }
 }
 </script>
