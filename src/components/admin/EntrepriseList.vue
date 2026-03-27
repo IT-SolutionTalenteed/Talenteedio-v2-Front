@@ -4,128 +4,11 @@
       <v-icon icon="mdi-domain" class="mr-2" />
       <v-toolbar-title>Gestion des Entreprises</v-toolbar-title>
       <v-spacer />
-      <v-btn color="primary" prepend-icon="mdi-plus" @click="openCreate">
+      <v-btn color="primary" prepend-icon="mdi-plus" @click="router.push({ name: 'AdminEntrepriseCreate' })">
         Ajouter une entreprise
       </v-btn>
     </v-toolbar>
 
-    <!-- Dialog formulaire -->
-    <v-dialog v-model="dialog" max-width="860" scrollable>
-      <v-card rounded="xl">
-        <v-toolbar color="primary" density="compact">
-          <v-toolbar-title class="text-body-1 font-weight-medium">
-            {{ editingItem ? 'Modifier' : 'Créer' }} une entreprise
-          </v-toolbar-title>
-          <template #append>
-            <v-btn icon="mdi-close" variant="text" color="white" @click="cancelForm" />
-          </template>
-        </v-toolbar>
-        <v-card-text class="pa-4">
-          <form @submit.prevent="save">
-            <v-row>
-              <v-col cols="12" md="6">
-                <v-text-field
-                  v-model="form.nom"
-                  label="Nom *"
-                  variant="outlined"
-                  density="compact"
-                  required
-                />
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-text-field
-                  v-model="form.email"
-                  label="Email *"
-                  type="email"
-                  variant="outlined"
-                  density="compact"
-                  required
-                  :disabled="!!editingItem"
-                  :hint="!editingItem ? 'Un email avec les identifiants sera envoyé à cette adresse.' : ''"
-                  persistent-hint
-                />
-              </v-col>
-              <v-col cols="12" md="6">
-                <div class="text-body-2 mb-1">Logo</div>
-                <input type="file" accept="image/*" @change="e => logoFile = e.target.files[0]" style="display:block;margin-bottom:8px" />
-                <v-avatar v-if="editingItem?.logo_url" size="48" class="mt-1">
-                  <img :src="editingItem.logo_url" style="width:100%;height:100%;object-fit:cover" />
-                </v-avatar>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-select
-                  v-model="form.activity_sector_id"
-                  :items="referentiels.activity_sectors"
-                  item-title="name"
-                  item-value="id"
-                  label="Secteur d'activité"
-                  variant="outlined"
-                  density="compact"
-                  clearable
-                />
-              </v-col>
-              <v-col cols="12">
-                <v-textarea
-                  v-model="form.description"
-                  label="Description"
-                  variant="outlined"
-                  density="compact"
-                  rows="4"
-                />
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-text-field
-                  v-model="form.site_web"
-                  label="Site web"
-                  variant="outlined"
-                  density="compact"
-                  placeholder="https://..."
-                />
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-text-field
-                  v-model="form.telephone"
-                  label="Téléphone"
-                  variant="outlined"
-                  density="compact"
-                />
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="form.adresse"
-                  label="Adresse"
-                  variant="outlined"
-                  density="compact"
-                />
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-text-field
-                  v-model="form.ville"
-                  label="Ville"
-                  variant="outlined"
-                  density="compact"
-                />
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-text-field
-                  v-model="form.pays"
-                  label="Pays"
-                  variant="outlined"
-                  density="compact"
-                />
-              </v-col>
-            </v-row>
-          </form>
-        </v-card-text>
-        <v-card-actions class="pa-4 pt-0">
-          <v-spacer />
-          <v-btn variant="text" @click="cancelForm">Annuler</v-btn>
-          <v-btn color="primary" variant="flat" :loading="loading" @click="save">Enregistrer</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <!-- Table -->
     <v-data-table
       :headers="headers"
       :items="items"
@@ -158,44 +41,32 @@
         <span v-else class="text-medium-emphasis">-</span>
       </template>
       <template #item.actions="{ item }">
-        <v-btn icon="mdi-pencil" size="small" color="primary" variant="text" @click="editItem(item)" />
+        <v-btn icon="mdi-pencil" size="small" color="primary" variant="text" @click="router.push({ name: 'AdminEntrepriseEdit', params: { id: item.id } })" />
         <v-btn icon="mdi-trash-can" size="small" color="error" variant="text" @click="deleteItem(item.id)" />
       </template>
     </v-data-table>
 
-    <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">
-      {{ snackMsg }}
-    </v-snackbar>
-
+    <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">{{ snackMsg }}</v-snackbar>
     <ConfirmDialog ref="confirmRef" />
   </v-card>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import entrepriseService from '../../services/entrepriseService.js'
 import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
+const router = useRouter()
 const items = ref([])
-const referentiels = ref({ activity_sectors: [] })
 const loading = ref(false)
-const error = ref('')
-const success = ref('')
-const showForm = ref(false)
-const editingItem = ref(null)
-const logoFile = ref(null)
-const dialog = ref(false)
-
 const confirmRef = ref(null)
 
 const snackbar = ref(false)
 const snackMsg = ref('')
 const snackColor = ref('success')
-
 const showSnack = (msg, color = 'success') => {
-  snackMsg.value = msg
-  snackColor.value = color
-  snackbar.value = true
+  snackMsg.value = msg; snackColor.value = color; snackbar.value = true
 }
 
 const headers = [
@@ -207,90 +78,13 @@ const headers = [
   { title: '', key: 'actions', sortable: false, width: '100px', align: 'end' },
 ]
 
-const emptyForm = () => ({
-  nom: '', email: '', description: '', site_web: '',
-  telephone: '', adresse: '', ville: '', pays: '', activity_sector_id: ''
-})
-const form = ref(emptyForm())
-
 const load = async () => {
   loading.value = true
-  error.value = ''
   try {
     const res = await entrepriseService.getAll()
     items.value = res.data
-  } catch (err) {
+  } catch {
     showSnack('Erreur lors du chargement', 'error')
-  } finally {
-    loading.value = false
-  }
-}
-
-const loadReferentiels = async () => {
-  try {
-    const res = await entrepriseService.getReferentiels()
-    referentiels.value = res.data
-  } catch (err) {
-    console.error(err)
-  }
-}
-
-const buildFormData = () => {
-  const fd = new FormData()
-  fd.append('nom', form.value.nom)
-  fd.append('email', form.value.email)
-  const textFields = ['description', 'site_web', 'telephone', 'adresse', 'ville', 'pays']
-  textFields.forEach(f => { if (form.value[f]) fd.append(f, form.value[f]) })
-  if (form.value.activity_sector_id) fd.append('activity_sector_id', form.value.activity_sector_id)
-  if (logoFile.value) fd.append('logo', logoFile.value)
-  return fd
-}
-
-const openCreate = () => {
-  editingItem.value = null
-  form.value = emptyForm()
-  logoFile.value = null
-  showForm.value = true
-  dialog.value = true
-}
-
-const editItem = (item) => {
-  editingItem.value = { ...item }
-  form.value = {
-    nom: item.nom,
-    email: item.user?.email || '',
-    description: item.description || '',
-    site_web: item.site_web || '',
-    telephone: item.telephone || '',
-    adresse: item.adresse || '',
-    ville: item.ville || '',
-    pays: item.pays || '',
-    activity_sector_id: item.activity_sector_id || '',
-  }
-  logoFile.value = null
-  showForm.value = false
-  dialog.value = true
-}
-
-const save = async () => {
-  loading.value = true
-  error.value = ''
-  success.value = ''
-  try {
-    const fd = buildFormData()
-    if (editingItem.value) {
-      fd.append('_method', 'PUT')
-      await entrepriseService.updateFormData(editingItem.value.id, fd)
-      showSnack('Entreprise modifiée avec succès')
-    } else {
-      await entrepriseService.create(fd)
-      showSnack('Entreprise créée — identifiants envoyés par email')
-    }
-    await load()
-    cancelForm()
-  } catch (err) {
-    const errs = err.response?.data?.errors
-    showSnack(errs ? Object.values(errs).flat().join(' | ') : "Erreur lors de l'enregistrement", 'error')
   } finally {
     loading.value = false
   }
@@ -300,7 +94,6 @@ const deleteItem = async (id) => {
   const ok = await confirmRef.value.open({ message: 'Supprimer cette entreprise et son compte utilisateur ?' })
   if (!ok) return
   loading.value = true
-  error.value = ''
   try {
     await entrepriseService.delete(id)
     showSnack('Entreprise supprimée avec succès')
@@ -312,22 +105,5 @@ const deleteItem = async (id) => {
   }
 }
 
-const cancelForm = () => {
-  showForm.value = false
-  editingItem.value = null
-  form.value = emptyForm()
-  logoFile.value = null
-  dialog.value = false
-}
-
-onMounted(() => {
-  load()
-  loadReferentiels()
-})
+onMounted(load)
 </script>
-
-<style scoped>
-.avatar {
-  object-fit: cover;
-}
-</style>
