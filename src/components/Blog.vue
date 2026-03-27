@@ -205,15 +205,56 @@ onMounted(async () => {
 
 /* ── Hero ── */
 .blog-hero {
-  background: linear-gradient(135deg, #192bc2 0%, #2687e9 100%);
-  padding: 60px 0 50px; color: #fff;
+  background: url('/images/Gemini_Generated_Image_2i225i2i225i2i22.png') center/cover no-repeat;
+  padding: 0; 
+  color: #fff;
+  position: relative;
+  height: 80vh;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
 }
-.blog-hero h1 { font-size: 36px; font-weight: 800; margin: 8px 0 10px; }
-.blog-hero p  { font-size: 16px; opacity: .85; }
+.blog-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 0;
+}
+.blog-hero .container {
+  position: relative;
+  z-index: 1;
+}
+.blog-hero h1 { 
+  font-size: 56px; 
+  font-weight: 800; 
+  margin: 12px 0 20px;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+  line-height: 1.2;
+}
+.blog-hero p  { 
+  font-size: 22px; 
+  opacity: .95;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
+  max-width: 650px;
+  line-height: 1.5;
+}
 .label-white {
-  display: inline-block; background: rgba(255,255,255,.18); color: #fff;
-  font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
-  padding: 4px 14px; border-radius: 50px; margin-bottom: 12px;
+  display: inline-block; 
+  background: rgba(255,255,255,.25); 
+  color: #fff;
+  font-size: 12px; 
+  font-weight: 700; 
+  letter-spacing: 1.2px; 
+  text-transform: uppercase;
+  padding: 6px 18px; 
+  border-radius: 50px; 
+  margin-bottom: 16px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
 /* ── Tabs ── */

@@ -302,23 +302,56 @@ onMounted(() => {
 
 /* ── Hero ── */
 .annonces-hero {
-  background: linear-gradient(135deg, #040a5d 0%, #192bc2 100%);
-  padding: 60px 0 50px;
+  background: url('/images/Gemini_Generated_Image_xyh87qxyh87qxyh8.png') center/cover no-repeat;
+  padding: 0;
   color: #fff;
+  position: relative;
+  height: 80vh;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
 }
-.annonces-hero h1 { font-size: 36px; font-weight: 800; margin: 8px 0 10px; }
-.annonces-hero p  { font-size: 16px; opacity: .85; }
+.annonces-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 0;
+}
+.annonces-hero .container {
+  position: relative;
+  z-index: 1;
+}
+.annonces-hero h1 { 
+  font-size: 56px; 
+  font-weight: 800; 
+  margin: 12px 0 20px;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+  line-height: 1.2;
+}
+.annonces-hero p  { 
+  font-size: 22px; 
+  opacity: .95;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
+  max-width: 650px;
+  line-height: 1.5;
+}
 .label-white {
   display: inline-block;
-  background: rgba(255,255,255,.18);
+  background: rgba(255,255,255,.25);
   color: #fff;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
   text-transform: uppercase;
-  padding: 4px 14px;
+  padding: 6px 18px;
   border-radius: 50px;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
 /* ── Layout ── */

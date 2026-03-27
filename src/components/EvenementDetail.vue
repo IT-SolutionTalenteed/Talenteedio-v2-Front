@@ -69,7 +69,7 @@
               <!-- Description -->
               <div v-if="evenement.description" class="evd-block">
                 <h2 class="evd-block-title"><i class="fa-solid fa-circle-info"></i> À propos de cet événement</h2>
-                <p class="evd-description">{{ evenement.description }}</p>
+                <div class="evd-description" v-html="evenement.description"></div>
               </div>
 
               <!-- ══ PARTICIPATION ENTREPRISE ══ -->
@@ -335,15 +335,26 @@
                       <p v-if="getFeedback(ent.id).commentaire" class="evd-feedback-comment">
                         "{{ getFeedback(ent.id).commentaire }}"
                       </p>
-                      <button class="evd-feedback-edit-btn" @click="ouvrirFeedback(ent)">
+                      <button 
+                        class="evd-feedback-edit-btn" 
+                        @click="ouvrirFeedback(ent)"
+                        :disabled="!isEntretienTermine(ent)"
+                        :title="!isEntretienTermine(ent) ? 'Vous pourrez modifier après l\'entretien' : ''"
+                      >
                         <i class="fa-solid fa-pen"></i> Modifier
                       </button>
                     </div>
 
                     <!-- Bouton donner feedback (entretien confirmé sans feedback) -->
                     <div v-else-if="ent.statut === 'confirme' && feedbackOpen !== ent.id" class="evd-feedback-cta">
-                      <button class="btn btn--outline-nav btn--sm" @click="ouvrirFeedback(ent)">
-                        <i class="fa-solid fa-star"></i> Donner un feedback
+                      <button 
+                        class="btn btn--outline-nav btn--sm" 
+                        @click="ouvrirFeedback(ent)"
+                        :disabled="!isEntretienTermine(ent)"
+                        :title="!isEntretienTermine(ent) ? 'Disponible après l\'entretien' : ''"
+                      >
+                        <i class="fa-solid fa-star"></i> 
+                        {{ isEntretienTermine(ent) ? 'Donner un feedback' : 'Feedback disponible après l\'entretien' }}
                       </button>
                     </div>
 
@@ -637,6 +648,13 @@ const loadMesEntretiens = async () => {
 
 const getFeedback = (entretienId) => mesFeedbacks.value.find(f => f.entretien_id === entretienId)
 
+// Vérifier si l'entretien est terminé (date + heure passées)
+const isEntretienTermine = (entretien) => {
+  if (!entretien.date || !entretien.heure_fin) return false
+  const entretienDateTime = new Date(`${entretien.date}T${entretien.heure_fin}`)
+  return entretienDateTime < new Date()
+}
+
 const ouvrirFeedback = (entretien) => {
   const existing = getFeedback(entretien.id)
   feedbackForm.value = { note: existing?.note || 0, commentaire: existing?.commentaire || '' }
@@ -824,27 +842,64 @@ onMounted(async () => {
 
 /* ══ HERO ══ */
 .evd-hero {
-  position: relative; padding: 90px 0 70px;
+  position: relative; 
+  padding: 0;
   background: linear-gradient(135deg, #040a5d 0%, #192bc2 100%);
-  background-size: cover; background-position: center;
-  min-height: 400px; display: flex; align-items: flex-end;
+  background-size: cover; 
+  background-position: center;
+  height: 80vh;
+  min-height: 500px; 
+  display: flex; 
+  align-items: center;
 }
 .evd-hero-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(to bottom, rgba(4,10,93,.55) 0%, rgba(4,10,93,.88) 100%);
+  background: linear-gradient(to bottom, rgba(4,10,93,.4) 0%, rgba(4,10,93,.6) 100%);
 }
-.evd-hero-content { position: relative; z-index: 1; max-width: 800px; }
+.evd-hero-content { 
+  position: relative; 
+  z-index: 1; 
+  max-width: 800px; 
+}
 .label-white {
-  display: inline-block; background: rgba(255,255,255,.2); color: #fff;
-  font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
-  padding: 4px 14px; border-radius: 50px; margin-bottom: 14px;
+  display: inline-block; 
+  background: rgba(255,255,255,.25); 
+  color: #fff;
+  font-size: 12px; 
+  font-weight: 700; 
+  letter-spacing: 1.2px; 
+  text-transform: uppercase;
+  padding: 6px 18px; 
+  border-radius: 50px; 
+  margin-bottom: 16px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
-.evd-hero-title { font-size: 38px; font-weight: 800; color: #fff; margin: 0 0 16px; line-height: 1.15; }
-@media (max-width: 600px) { .evd-hero-title { font-size: 26px; } }
-.evd-hero-meta { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 28px; }
-.evd-hero-meta span { font-size: 14px; color: rgba(255,255,255,.88); display: flex; align-items: center; gap: 7px; }
-.evd-hero-meta i    { color: var(--orange, #f07c00); }
-.evd-hero-cta { display: flex; flex-wrap: wrap; gap: 10px; }
+.evd-hero-title { 
+  font-size: 52px; 
+  font-weight: 800; 
+  color: #fff; 
+  margin: 0 0 20px; 
+  line-height: 1.2;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+}
+@media (max-width: 600px) { .evd-hero-title { font-size: 32px; } }
+.evd-hero-meta { 
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 20px; 
+  margin-bottom: 32px; 
+}
+.evd-hero-meta span { 
+  font-size: 16px; 
+  color: rgba(255,255,255,.95); 
+  display: flex; 
+  align-items: center; 
+  gap: 8px;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
+}
+.evd-hero-meta i { color: var(--orange, #f07c00); }
+.evd-hero-cta { display: flex; flex-wrap: wrap; gap: 12px; }
 
 .btn--outline-white {
   border: 2px solid rgba(255,255,255,.5); background: transparent; color: #fff;
@@ -881,7 +936,37 @@ onMounted(async () => {
   font-size: 12px; font-weight: 700; color: #fff;
   background: var(--blue); padding: 2px 9px; border-radius: 50px; margin-left: auto;
 }
-.evd-description { font-size: 15px; color: var(--navy); line-height: 1.7; margin: 0; }
+.evd-description { 
+  font-size: 15px; 
+  color: var(--navy); 
+  line-height: 1.7; 
+  margin: 0; 
+}
+.evd-description p {
+  margin: 0 0 16px;
+}
+.evd-description p:last-child {
+  margin-bottom: 0;
+}
+.evd-description strong {
+  font-weight: 700;
+  color: var(--navy);
+}
+.evd-description ul, .evd-description ol {
+  margin: 12px 0;
+  padding-left: 24px;
+}
+.evd-description li {
+  margin-bottom: 8px;
+}
+.evd-description h1, .evd-description h2, .evd-description h3 {
+  margin: 20px 0 12px;
+  color: var(--navy);
+}
+.evd-description a {
+  color: var(--blue);
+  text-decoration: underline;
+}
 .evd-empty { text-align: center; padding: 32px; color: var(--body-text); }
 .evd-empty i { font-size: 36px; opacity: .25; margin-bottom: 12px; display: block; }
 

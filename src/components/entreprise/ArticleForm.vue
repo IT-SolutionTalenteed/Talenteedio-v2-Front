@@ -1,18 +1,15 @@
 <template>
   <VerticalLayout>
+    <div class="d-flex align-center justify-space-between mb-5">
+      <div class="d-flex align-center ga-2">
+        <v-btn icon="mdi-arrow-left" variant="text" density="comfortable" @click="goBack" />
+        <span class="text-h6 font-weight-bold">{{ isEdit ? 'Modifier un article' : 'Rédiger un article' }}</span>
+      </div>
+      <v-btn color="primary" :loading="saving" @click="save" prepend-icon="mdi-content-save-outline">
+        Enregistrer
+      </v-btn>
+    </div>
     <v-card rounded="xl" border elevation="0">
-      <v-toolbar color="primary" density="compact">
-        <v-btn icon="mdi-arrow-left" variant="text" color="white" @click="goBack" />
-        <v-toolbar-title class="text-body-1 font-weight-medium">
-          {{ isEdit ? 'Modifier un article' : 'Rédiger un article' }}
-        </v-toolbar-title>
-        <template #append>
-          <v-btn variant="flat" color="white" class="text-primary" :loading="saving" @click="save">
-            <v-icon start>mdi-content-save-outline</v-icon>
-            Enregistrer
-          </v-btn>
-        </template>
-      </v-toolbar>
       <v-card-text class="pa-6" style="min-height:100vh">
         <v-text-field v-model="form.title" label="Titre *" variant="outlined" density="compact" required class="mb-4" />
 
