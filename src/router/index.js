@@ -18,6 +18,35 @@ import ArticleDetail from '../components/ArticleDetail.vue'
 import EvenementDetail from '../components/EvenementDetail.vue'
 import MesFavoris from '../components/MesFavoris.vue'
 import LegalPage from '../components/LegalPage.vue'
+import CompanyLanding from '../components/CompanyLanding.vue'
+
+// Admin form pages
+import JobContractForm from '../components/admin/JobContractForm.vue'
+import JobModeForm from '../components/admin/JobModeForm.vue'
+import SkillForm from '../components/admin/SkillForm.vue'
+import StudyLevelForm from '../components/admin/StudyLevelForm.vue'
+import ExperienceForm from '../components/admin/ExperienceForm.vue'
+import LanguageForm from '../components/admin/LanguageForm.vue'
+import ActivitySectorForm from '../components/admin/ActivitySectorForm.vue'
+import MediaCategoryForm from '../components/admin/MediaCategoryForm.vue'
+import LegalPageForm from '../components/admin/LegalPageForm.vue'
+import AdminArticleForm from '../components/admin/ArticleForm.vue'
+import EntrepriseForm from '../components/admin/EntrepriseForm.vue'
+import OffreAdminForm from '../components/admin/OffreForm.vue'
+import EvenementForm from '../components/admin/EvenementForm.vue'
+import CategorieEvenementForm from '../components/admin/CategorieEvenementForm.vue'
+import TalentForm from '../components/admin/TalentForm.vue'
+
+// Entreprise form pages
+import EntrepriseOffreForm from '../components/entreprise/OffreForm.vue'
+import EntrepriseArticleForm from '../components/entreprise/ArticleForm.vue'
+
+// Talent form pages
+import FeedbackForm from '../components/talent/FeedbackForm.vue'
+
+const adminMeta = { requiresAuth: true, role: 'admin' }
+const entrepriseMeta = { requiresAuth: true, role: 'entreprise' }
+const talentMeta = { requiresAuth: true, role: 'talent' }
 
 const routes = [
   {
@@ -28,6 +57,11 @@ const routes = [
     path: '/home',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/company',
+    name: 'CompanyLanding',
+    component: CompanyLanding
   },
   {
     path: '/annonces',
@@ -113,9 +147,10 @@ const routes = [
   {
     path: '/admin',
     component: VerticalLayout,
-    meta: { requiresAuth: true, role: 'admin' },
+    meta: adminMeta,
     redirect: '/admin/overview',
     children: [
+<<<<<<< HEAD
       { path: 'overview', name: 'AdminOverview', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
       { path: 'entreprises', name: 'AdminEntreprises', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
       { path: 'talents', name: 'AdminTalents', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
@@ -137,20 +172,101 @@ const routes = [
       { path: 'languages', name: 'AdminLanguages', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
       { path: 'activity-sectors', name: 'AdminActivitySectors', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
       { path: 'legal-pages', name: 'AdminLegalPages', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } }
+=======
+      { path: 'overview', name: 'AdminOverview', component: AdminDashboard, meta: adminMeta },
+      { path: 'entreprises', name: 'AdminEntreprises', component: AdminDashboard, meta: adminMeta },
+      { path: 'entreprises/create', name: 'AdminEntrepriseCreate', component: EntrepriseForm, meta: adminMeta },
+      { path: 'entreprises/:id/edit', name: 'AdminEntrepriseEdit', component: EntrepriseForm, meta: adminMeta },
+      { path: 'talents', name: 'AdminTalents', component: AdminDashboard, meta: adminMeta },
+      { path: 'talents/:id/edit', name: 'AdminTalentEdit', component: TalentForm, meta: adminMeta },
+      { path: 'entretiens', name: 'AdminEntretiens', component: AdminDashboard, meta: adminMeta },
+      { path: 'feedbacks', name: 'AdminFeedbacks', component: AdminDashboard, meta: adminMeta },
+      { path: 'import-candidats', name: 'AdminImportCandidats', component: AdminDashboard, meta: adminMeta },
+      { path: 'sync-crm', name: 'AdminSyncCrm', component: AdminDashboard, meta: adminMeta },
+      { path: 'offres', name: 'AdminOffres', component: AdminDashboard, meta: adminMeta },
+      { path: 'offres/create', name: 'AdminOffreCreate', component: OffreAdminForm, meta: adminMeta },
+      { path: 'offres/:id/edit', name: 'AdminOffreEdit', component: OffreAdminForm, meta: adminMeta },
+      { path: 'categorie-evenements', name: 'AdminCategorieEvenements', component: AdminDashboard, meta: adminMeta },
+      { path: 'categorie-evenements/create', name: 'AdminCategorieEvenementCreate', component: CategorieEvenementForm, meta: adminMeta },
+      { path: 'categorie-evenements/:id/edit', name: 'AdminCategorieEvenementEdit', component: CategorieEvenementForm, meta: adminMeta },
+      { path: 'evenements', name: 'AdminEvenements', component: AdminDashboard, meta: adminMeta },
+      { path: 'evenements/create', name: 'AdminEvenementCreate', component: EvenementForm, meta: adminMeta },
+      { path: 'evenements/:id/edit', name: 'AdminEvenementEdit', component: EvenementForm, meta: adminMeta },
+      { path: 'media-categories', name: 'AdminMediaCategories', component: AdminDashboard, meta: adminMeta },
+      { path: 'media-categories/create', name: 'AdminMediaCategoryCreate', component: MediaCategoryForm, meta: adminMeta },
+      { path: 'media-categories/:id/edit', name: 'AdminMediaCategoryEdit', component: MediaCategoryForm, meta: adminMeta },
+      { path: 'articles', name: 'AdminArticles', component: AdminDashboard, meta: adminMeta },
+      { path: 'articles/create', name: 'AdminArticleCreate', component: AdminArticleForm, meta: adminMeta },
+      { path: 'articles/:id/edit', name: 'AdminArticleEdit', component: AdminArticleForm, meta: adminMeta },
+      { path: 'job-contracts', name: 'AdminJobContracts', component: AdminDashboard, meta: adminMeta },
+      { path: 'job-contracts/create', name: 'AdminJobContractCreate', component: JobContractForm, meta: adminMeta },
+      { path: 'job-contracts/:id/edit', name: 'AdminJobContractEdit', component: JobContractForm, meta: adminMeta },
+      { path: 'job-modes', name: 'AdminJobModes', component: AdminDashboard, meta: adminMeta },
+      { path: 'job-modes/create', name: 'AdminJobModeCreate', component: JobModeForm, meta: adminMeta },
+      { path: 'job-modes/:id/edit', name: 'AdminJobModeEdit', component: JobModeForm, meta: adminMeta },
+      { path: 'skills', name: 'AdminSkills', component: AdminDashboard, meta: adminMeta },
+      { path: 'skills/create', name: 'AdminSkillCreate', component: SkillForm, meta: adminMeta },
+      { path: 'skills/:id/edit', name: 'AdminSkillEdit', component: SkillForm, meta: adminMeta },
+      { path: 'study-levels', name: 'AdminStudyLevels', component: AdminDashboard, meta: adminMeta },
+      { path: 'study-levels/create', name: 'AdminStudyLevelCreate', component: StudyLevelForm, meta: adminMeta },
+      { path: 'study-levels/:id/edit', name: 'AdminStudyLevelEdit', component: StudyLevelForm, meta: adminMeta },
+      { path: 'experiences', name: 'AdminExperiences', component: AdminDashboard, meta: adminMeta },
+      { path: 'experiences/create', name: 'AdminExperienceCreate', component: ExperienceForm, meta: adminMeta },
+      { path: 'experiences/:id/edit', name: 'AdminExperienceEdit', component: ExperienceForm, meta: adminMeta },
+      { path: 'languages', name: 'AdminLanguages', component: AdminDashboard, meta: adminMeta },
+      { path: 'languages/create', name: 'AdminLanguageCreate', component: LanguageForm, meta: adminMeta },
+      { path: 'languages/:id/edit', name: 'AdminLanguageEdit', component: LanguageForm, meta: adminMeta },
+      { path: 'activity-sectors', name: 'AdminActivitySectors', component: AdminDashboard, meta: adminMeta },
+      { path: 'activity-sectors/create', name: 'AdminActivitySectorCreate', component: ActivitySectorForm, meta: adminMeta },
+      { path: 'activity-sectors/:id/edit', name: 'AdminActivitySectorEdit', component: ActivitySectorForm, meta: adminMeta },
+      { path: 'legal-pages', name: 'AdminLegalPages', component: AdminDashboard, meta: adminMeta },
+      { path: 'legal-pages/create', name: 'AdminLegalPageCreate', component: LegalPageForm, meta: adminMeta },
+      { path: 'legal-pages/:id/edit', name: 'AdminLegalPageEdit', component: LegalPageForm, meta: adminMeta },
+>>>>>>> 1fbf803 (feat(router): ajout des routes pour toutes les pages d'édition)
     ]
   },
   {
     path: '/talent',
     name: 'TalentDashboard',
     component: TalentDashboard,
-    meta: { requiresAuth: true, role: 'talent' }
+    meta: talentMeta
+  },
+  {
+    path: '/talent/feedbacks/:id/edit',
+    name: 'TalentFeedbackEdit',
+    component: FeedbackForm,
+    meta: talentMeta
   },
   {
     path: '/entreprise',
     name: 'EntrepriseDashboard',
     component: EntrepriseDashboard,
-    meta: { requiresAuth: true, role: 'entreprise' }
-  }
+    meta: entrepriseMeta
+  },
+  {
+    path: '/entreprise/offres/create',
+    name: 'EntrepriseOffreCreate',
+    component: EntrepriseOffreForm,
+    meta: entrepriseMeta
+  },
+  {
+    path: '/entreprise/offres/:id/edit',
+    name: 'EntrepriseOffreEdit',
+    component: EntrepriseOffreForm,
+    meta: entrepriseMeta
+  },
+  {
+    path: '/entreprise/articles/create',
+    name: 'EntrepriseArticleCreate',
+    component: EntrepriseArticleForm,
+    meta: entrepriseMeta
+  },
+  {
+    path: '/entreprise/articles/:id/edit',
+    name: 'EntrepriseArticleEdit',
+    component: EntrepriseArticleForm,
+    meta: entrepriseMeta
+  },
 ]
 
 const router = createRouter({
@@ -162,7 +278,7 @@ const router = createRouter({
 router.beforeEach((to, _from, next) => {
   const token = localStorage.getItem('token')
   const userRole = localStorage.getItem('userRole')
-  
+
   if (to.meta.requiresAuth) {
     if (!token) {
       next('/login')
