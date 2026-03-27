@@ -199,6 +199,7 @@
   <ImportCandidats        v-if="activeTab === 'import-candidats'" />
   <SyncCrm               v-if="activeTab === 'sync-crm'" />
   <CandidatureList       v-if="activeTab === 'candidatures'" />
+  <ParticipationList     v-if="activeTab === 'evenement-participations'" />
   <JobContractList        v-if="activeTab === 'job-contracts'" />
   <JobModeList            v-if="activeTab === 'job-modes'" />
   <SkillList              v-if="activeTab === 'skills'" />
@@ -234,6 +235,7 @@ import FeedbackList from './admin/FeedbackList.vue'
 import ImportCandidats from './admin/ImportCandidats.vue'
 import SyncCrm from './admin/SyncCrm.vue'
 import CandidatureList from './admin/CandidatureList.vue'
+import ParticipationList from './admin/ParticipationList.vue'
 
 const router = useRouter()
 const route = useRoute()
