@@ -276,7 +276,7 @@ const sideNav = computed(() => {
         icon: 'mdi-briefcase-outline',
         children: [
           { label: "Offres d'emploi", route: { name: 'AdminOffres' }, icon: 'mdi-briefcase-search-outline' },
-          { label: 'Candidatures', route: { name: 'AdminOffres' }, icon: 'mdi-file-account-outline' },
+          { label: 'Candidatures', route: { name: 'AdminCandidatures' }, icon: 'mdi-file-account-outline' },
           { label: 'Contrats de travail', route: { name: 'AdminJobContracts' }, icon: 'mdi-file-sign' },
           { label: 'Modes de travail', route: { name: 'AdminJobModes' }, icon: 'mdi-laptop' },
           { label: 'Compétences', route: { name: 'AdminSkills' }, icon: 'mdi-star-outline' },

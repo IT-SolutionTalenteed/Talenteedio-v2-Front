@@ -124,6 +124,7 @@ const routes = [
       { path: 'import-candidats', name: 'AdminImportCandidats', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
       { path: 'sync-crm', name: 'AdminSyncCrm', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
       { path: 'offres', name: 'AdminOffres', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
+      { path: 'candidatures', name: 'AdminCandidatures', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
       { path: 'categorie-evenements', name: 'AdminCategorieEvenements', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
       { path: 'evenements', name: 'AdminEvenements', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
       { path: 'media-categories', name: 'AdminMediaCategories', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
