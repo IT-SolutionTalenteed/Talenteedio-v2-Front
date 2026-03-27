@@ -221,6 +221,7 @@ const PAGE_TITLES = {
   'import-candidats': 'Import candidats',
   'sync-crm': 'Sync CRM',
   candidatures: 'Candidatures',
+  profile: 'Mon profil',
   'evenement-participations': 'Demandes de participation',
   favoris: 'Mes favoris',
 }
@@ -340,7 +341,7 @@ const sideNav = computed(() => {
       { label: 'Événements', tab: 'evenements', icon: 'mdi-calendar-star' },
       { label: 'Articles', tab: 'articles', icon: 'mdi-newspaper-variant-outline' },
       { label: 'Entretiens', tab: 'entretiens', icon: 'mdi-calendar-account-outline' },
-      { label: 'Mon profil', route: { name: 'EntrepriseProfile' }, icon: 'mdi-account-circle-outline' },
+      { label: 'Mon profil', tab: 'profile', icon: 'mdi-account-circle-outline' },
     ]
   }
 
@@ -352,7 +353,7 @@ const sideNav = computed(() => {
       { label: 'Événements & Matching', tab: 'evenements', icon: 'mdi-calendar-star' },
       { label: 'Mes entretiens', tab: 'entretiens', icon: 'mdi-calendar-account-outline' },
       { label: 'Mes feedbacks', tab: 'feedbacks', icon: 'mdi-message-text-outline' },
-      { label: 'Mon profil', route: { name: 'TalentProfile' }, icon: 'mdi-account-circle-outline' },
+      { label: 'Mon profil', tab: 'profile', icon: 'mdi-account-circle-outline' },
     ]
   }
 

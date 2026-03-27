@@ -16,10 +16,11 @@
     />
     <MesEntretiens  v-if="activeTab === 'entretiens'" />
     <MesFeedbacks   v-if="activeTab === 'feedbacks'" />
+    <EditProfile    v-if="activeTab === 'profile'" />
 
     <!-- Fallback si aucun onglet actif -->
     <div
-      v-if="!['offres','candidatures','favoris','evenements','entretiens','feedbacks'].includes(activeTab)"
+      v-if="!['offres','candidatures','favoris','evenements','entretiens','feedbacks','profile'].includes(activeTab)"
       class="d-flex flex-column align-center justify-center ga-4"
       style="min-height:320px"
     >
@@ -46,6 +47,7 @@ import EvenementMatching from './talent/EvenementMatching.vue'
 import ReservationEntretien from './talent/ReservationEntretien.vue'
 import MesEntretiens from './talent/MesEntretiens.vue'
 import MesFeedbacks from './talent/MesFeedbacks.vue'
+import EditProfile from './EditProfile.vue'
 
 const dashboardStore = useDashboardStore()
 const { activeTab } = storeToRefs(dashboardStore)
@@ -54,7 +56,7 @@ const rdvState = ref(null)
 
 onMounted(() => {
   // Initialiser sur 'offres' si pas d'onglet talent valide
-  const validTabs = ['offres', 'candidatures', 'favoris', 'evenements', 'entretiens', 'feedbacks']
+  const validTabs = ['offres', 'candidatures', 'favoris', 'evenements', 'entretiens', 'feedbacks', 'profile']
   if (!validTabs.includes(activeTab.value)) {
     dashboardStore.setActiveTab('offres')
   }
