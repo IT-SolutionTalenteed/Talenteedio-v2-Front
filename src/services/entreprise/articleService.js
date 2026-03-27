@@ -2,6 +2,7 @@ import api from '../api.js'
 
 export const articleService = {
   getAll: () => api.get('/entreprise/articles'),
+  getOne: (id) => api.get(`/entreprise/articles/${id}`),
   getReferentiels: () => api.get('/entreprise/articles-referentiels'),
   create: (formData) => api.post('/entreprise/articles', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }

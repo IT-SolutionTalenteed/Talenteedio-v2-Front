@@ -210,8 +210,9 @@ p { margin-bottom: 1em; }
   background-repeat: no-repeat;
 }
 .hero-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(to right, rgba(4,10,93,0.88) 0%, rgba(4,10,93,0.70) 50%, rgba(4,10,93,0.15) 100%);
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(4, 10, 93, 0.70) 0%, rgba(4, 10, 93, 0.70) 50%, rgba(4, 10, 93, 0.15) 102%);
 }
 .hero .container {
   position: relative; z-index: 2;

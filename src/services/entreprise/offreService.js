@@ -2,6 +2,7 @@ import api from '../api.js'
 
 export const offreService = {
   getAll: () => api.get('/entreprise/offres'),
+  getOne: (id) => api.get(`/entreprise/offres/${id}`),
   getReferentiels: () => api.get('/entreprise/offres-referentiels'),
   create: (data) => api.post('/entreprise/offres', data),
   update: (id, data) => api.put(`/entreprise/offres/${id}`, data),

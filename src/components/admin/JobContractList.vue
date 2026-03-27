@@ -4,7 +4,7 @@
       <v-icon class="mr-2" color="primary">mdi-file-sign</v-icon>
       <v-toolbar-title class="text-body-1 font-weight-semibold">Gestion des Contrats de travail</v-toolbar-title>
       <template #append>
-        <v-btn color="primary" prepend-icon="mdi-plus" size="small" @click="dialog = true">Ajouter</v-btn>
+        <v-btn color="primary" prepend-icon="mdi-plus" size="small" @click="router.push({ name: 'AdminJobContractCreate' })">Ajouter</v-btn>
       </template>
     </v-toolbar>
 
@@ -16,30 +16,11 @@
       density="comfortable"
     >
       <template #item.actions="{ item }">
-        <v-btn icon="mdi-pencil" size="small" color="primary" variant="text" @click="editItem(item)" />
+        <v-btn icon="mdi-pencil" size="small" color="primary" variant="text" @click="router.push({ name: 'AdminJobContractEdit', params: { id: item.id } })" />
         <v-btn icon="mdi-delete" size="small" color="error" variant="text" @click="deleteItem(item.id)" />
       </template>
     </v-data-table>
   </v-card>
-
-  <v-dialog v-model="dialog" max-width="500">
-    <v-card rounded="xl">
-      <v-toolbar color="primary" density="compact">
-        <v-toolbar-title class="text-body-1">{{ editingItem ? 'Modifier' : 'Créer' }} un contrat</v-toolbar-title>
-        <template #append>
-          <v-btn icon="mdi-close" variant="text" color="white" @click="cancelForm" />
-        </template>
-      </v-toolbar>
-      <v-card-text class="pa-4">
-        <v-text-field v-model="form.name" label="Nom" required variant="outlined" density="compact" autofocus />
-      </v-card-text>
-      <v-card-actions class="pa-4 pt-0">
-        <v-spacer />
-        <v-btn variant="text" @click="cancelForm">Annuler</v-btn>
-        <v-btn color="primary" variant="flat" :loading="loading" @click="save">Enregistrer</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
 
   <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">{{ snackMsg }}</v-snackbar>
 
@@ -48,8 +29,11 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import jobContractService from '../../services/jobContractService.js'
 import ConfirmDialog from '../shared/ConfirmDialog.vue'
+
+const router = useRouter()
 
 const headers = [
   { title: 'ID', key: 'id', width: '80px' },
@@ -59,9 +43,6 @@ const headers = [
 
 const items = ref([])
 const loading = ref(false)
-const dialog = ref(false)
-const editingItem = ref(null)
-const form = ref({ name: '' })
 const snackbar = ref(false)
 const snackMsg = ref('')
 const snackColor = ref('success')
@@ -83,31 +64,6 @@ const load = async () => {
   }
 }
 
-const save = async () => {
-  loading.value = true
-  try {
-    if (editingItem.value) {
-      await jobContractService.update(editingItem.value.id, form.value)
-      showSnack('un contrat modifié(e) avec succès')
-    } else {
-      await jobContractService.create(form.value)
-      showSnack('un contrat créé(e) avec succès')
-    }
-    await load()
-    cancelForm()
-  } catch (err) {
-    showSnack(err.response?.data?.message || "Erreur lors de l'enregistrement", 'error')
-  } finally {
-    loading.value = false
-  }
-}
-
-const editItem = (item) => {
-  editingItem.value = item
-  form.value = { name: item.name }
-  dialog.value = true
-}
-
 const deleteItem = async (id) => {
   const ok = await confirmRef.value.open({ message: 'Supprimer ce contrat de travail ?' })
   if (!ok) return
@@ -121,12 +77,6 @@ const deleteItem = async (id) => {
   } finally {
     loading.value = false
   }
-}
-
-const cancelForm = () => {
-  dialog.value = false
-  editingItem.value = null
-  form.value = { name: '' }
 }
 
 onMounted(load)
