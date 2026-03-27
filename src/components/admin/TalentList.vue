@@ -7,12 +7,17 @@
       <v-toolbar-title>Gestion des Talents &amp; Consultants</v-toolbar-title>
     </v-toolbar>
 
-    <v-data-table
+    <v-data-table-server
       :headers="headers"
       :items="talents"
+      :items-length="pagination.total"
       :loading="loading"
+      :items-per-page="perPage"
+      :page="pagination.current_page"
       hover
       density="comfortable"
+      @update:items-per-page="onPerPageChange"
+      @update:page="loadPage"
     >
       <template #item.name="{ item }">
         <div class="font-weight-bold">{{ item.name }}</div>
@@ -75,15 +80,7 @@
           <v-btn icon="mdi-delete" size="small" color="error" variant="tonal" @click="deleteItem(item.id)" title="Supprimer" />
         </div>
       </template>
-    </v-data-table>
-
-    <v-pagination
-      v-if="pagination.last_page > 1"
-      v-model="pagination.current_page"
-      :length="pagination.last_page"
-      @update:model-value="loadPage"
-      class="mt-2"
-    />
+    </v-data-table-server>
 
     <ConfirmDialog ref="confirmRef" />
   </v-card>
@@ -98,7 +95,8 @@ import ConfirmDialog from '../shared/ConfirmDialog.vue'
 const router = useRouter()
 const talents = ref([])
 const loading = ref(false)
-const pagination = ref({ current_page: 1, last_page: 1 })
+const perPage = ref(20)
+const pagination = ref({ current_page: 1, last_page: 1, total: 0 })
 const confirmRef = ref(null)
 
 const snackbar = ref(false)
@@ -133,14 +131,23 @@ const statutOptions = [
 const loadPage = async (page = 1) => {
   loading.value = true
   try {
-    const res = await talentService.getAll(page)
+    const res = await talentService.getAll(page, perPage.value)
     talents.value = res.data.data
-    pagination.value = { current_page: res.data.current_page, last_page: res.data.last_page }
+    pagination.value = {
+      current_page: res.data.current_page,
+      last_page: res.data.last_page,
+      total: res.data.total,
+    }
   } catch {
     showSnack('Erreur lors du chargement', 'error')
   } finally {
     loading.value = false
   }
+}
+
+const onPerPageChange = (val) => {
+  perPage.value = val
+  loadPage(1)
 }
 
 const toggleSuspend = async (talent) => {
