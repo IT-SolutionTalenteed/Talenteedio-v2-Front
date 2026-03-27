@@ -166,12 +166,13 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useDisplay } from 'vuetify'
 import { storeToRefs } from 'pinia'
 import { useDashboardStore } from '@/stores/dashboard.store'
 import { authService } from '@/services/api'
+import api from '@/services/api'
 
 const router = useRouter()
 const route = useRoute()
@@ -181,12 +182,21 @@ const { activeTab } = storeToRefs(dashboardStore)
 
 const drawer = ref(true)
 const rail = ref(false)
+const userNameStored = ref(localStorage.getItem('userName') || '')
 
 const userRole = computed(() => localStorage.getItem('userRole') || 'admin')
-const userName = computed(() => {
-  return localStorage.getItem('userName')
-    || localStorage.getItem('userEmail')
-    || 'Utilisateur'
+const userName = computed(() => userNameStored.value || localStorage.getItem('userEmail') || 'Utilisateur')
+
+onMounted(async () => {
+  if (!userNameStored.value) {
+    try {
+      const res = await api.get('/user')
+      const u = res.data
+      const name = [u.first_name, u.last_name].filter(Boolean).join(' ') || u.name || ''
+      localStorage.setItem('userName', name)
+      userNameStored.value = name
+    } catch {}
+  }
 })
 
 const roleLabel = computed(() => {
