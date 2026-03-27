@@ -1,144 +1,140 @@
 <template>
-  <div>
-    <h2>Gestion des Articles</h2>
-
-    <button @click="showCreateForm = true">Ajouter un article</button>
-
-    <!-- Formulaire de création/édition -->
-    <div v-if="showCreateForm || editingArticle">
-      <h3>{{ editingArticle ? 'Modifier' : 'Créer' }} un article</h3>
-
-      <form @submit.prevent="saveArticle" enctype="multipart/form-data">
-        <div>
-          <label for="title">Titre:</label>
-          <input
-            type="text"
-            id="title"
-            v-model="form.title"
-            required
-          />
+  <div class="container-xl">
+    <div class="card flex-grow-1">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="bi bi-file-earmark-text me-2"></i>
+          Gestion des Articles
+        </h3>
+        <div class="card-actions">
+          <button class="btn btn-primary" @click="showCreateForm = true">
+            <i class="bi bi-plus"></i>
+            Ajouter un article
+          </button>
         </div>
+      </div>
 
-        <div>
-          <label for="content">Contenu:</label>
-          <WysiwygEditor v-model="form.content" />
-        </div>
+      <!-- Formulaire -->
+      <div v-if="showCreateForm || editingArticle" class="card-body border-bottom">
+        <h4 class="mb-3">{{ editingArticle ? 'Modifier' : 'Créer' }} un article</h4>
 
-        <div>
-          <label for="media_categories">Catégories Média:</label>
-          <select
-            id="media_categories"
-            v-model="form.media_category_ids"
-            multiple
-          >
-            <option
-              v-for="category in mediaCategories"
-              :key="category.id"
-              :value="category.id"
-            >
-              {{ category.name }}
-            </option>
-          </select>
-          <small>Maintenez Ctrl/Cmd pour sélectionner plusieurs catégories</small>
-        </div>
+        <form @submit.prevent="saveArticle">
+          <div class="row">
+            <div class="col-12 mb-3">
+              <label class="form-label required">Titre</label>
+              <input type="text" class="form-control" v-model="form.title" required />
+            </div>
 
-        <div>
-          <label for="image">Image:</label>
-          <input
-            type="file"
-            id="image"
-            accept="image/jpg,image/jpeg,image/png,image/gif,image/webp"
-            @change="onImageChange"
-          />
-          <div v-if="imagePreview">
-            <img :src="imagePreview" alt="Aperçu" style="max-width: 200px; max-height: 200px;" />
+            <div class="col-12 mb-3">
+              <label class="form-label">Contenu</label>
+              <WysiwygEditor v-model="form.content" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Catégories Média</label>
+              <select class="form-select" v-model="form.media_category_ids" multiple size="5">
+                <option v-for="category in mediaCategories" :key="category.id" :value="category.id">
+                  {{ category.name }}
+                </option>
+              </select>
+              <small class="form-hint">Maintenez Ctrl/Cmd pour sélectionner plusieurs</small>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Image</label>
+              <input type="file" class="form-control" accept="image/*" @change="onImageChange" />
+              <img v-if="imagePreview" :src="imagePreview" class="mt-2 avatar avatar-xl" />
+              <img v-else-if="editingArticle?.image_url" :src="editingArticle.image_url" class="mt-2 avatar avatar-xl" />
+            </div>
+
+            <div class="col-12 mb-3">
+              <label class="form-check">
+                <input type="checkbox" class="form-check-input" v-model="form.is_published" />
+                <span class="form-check-label">Publié</span>
+              </label>
+            </div>
           </div>
-          <div v-else-if="editingArticle && editingArticle.image_url">
-            <p>Image actuelle :</p>
-            <img :src="editingArticle.image_url" alt="Image actuelle" style="max-width: 200px; max-height: 200px;" />
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary" :disabled="loading">
+              <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
+              {{ loading ? 'Enregistrement...' : 'Enregistrer' }}
+            </button>
+            <button type="button" class="btn" @click="cancelForm">Annuler</button>
           </div>
-        </div>
+        </form>
+      </div>
 
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              v-model="form.is_published"
-            />
-            Publié
-          </label>
-        </div>
+      <!-- Liste -->
+      <div class="table-responsive">
+        <table class="table table-vcenter card-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Image</th>
+              <th>Titre</th>
+              <th>Slug</th>
+              <th>Statut</th>
+              <th>Catégories</th>
+              <th>Auteur</th>
+              <th>Date</th>
+              <th class="w-1"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="loading">
+              <td colspan="9" class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Chargement...</span>
+                </div>
+              </td>
+            </tr>
+            <tr v-else-if="articles.length === 0">
+              <td colspan="9" class="text-center text-muted">Aucun article trouvé.</td>
+            </tr>
+            <tr v-else v-for="article in articles" :key="article.id">
+              <td class="text-muted">{{ article.id }}</td>
+              <td>
+                <img v-if="article.image_url" :src="article.image_url" class="avatar" />
+                <span v-else class="avatar">?</span>
+              </td>
+              <td>
+                <div class="fw-bold">{{ article.title }}</div>
+                <div class="text-muted small">{{ article.slug }}</div>
+              </td>
+              <td class="text-muted">{{ article.slug }}</td>
+              <td>
+                <span v-if="article.is_published" class="badge bg-success">Publié</span>
+                <span v-else class="badge">Brouillon</span>
+              </td>
+              <td>
+                <span v-if="article.media_categories?.length" class="badge">
+                  {{ article.media_categories.map(cat => cat.name).join(', ') }}
+                </span>
+                <span v-else class="text-muted">-</span>
+              </td>
+              <td>{{ article.user?.name || '-' }}</td>
+              <td class="text-muted">{{ formatDate(article.created_at) }}</td>
+              <td>
+                <div class="btn-list">
+                  <button class="btn btn-sm btn-primary" @click="editArticle(article)">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger" @click="deleteArticle(article.id)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-        <button type="submit" :disabled="loading">
-          {{ loading ? 'Enregistrement...' : 'Enregistrer' }}
-        </button>
-
-        <button type="button" @click="cancelForm">Annuler</button>
-      </form>
-    </div>
-
-    <!-- Liste des articles -->
-    <div v-if="articles.length > 0">
-      <h3>Liste des articles</h3>
-
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Image</th>
-            <th>Titre</th>
-            <th>Slug</th>
-            <th>Statut</th>
-            <th>Catégories</th>
-            <th>Auteur</th>
-            <th>Date</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="article in articles" :key="article.id">
-            <td>{{ article.id }}</td>
-            <td>
-              <img
-                v-if="article.image_url"
-                :src="article.image_url"
-                alt="Image"
-                style="max-width: 60px; max-height: 60px;"
-              />
-              <span v-else>-</span>
-            </td>
-            <td>{{ article.title }}</td>
-            <td>{{ article.slug }}</td>
-            <td>{{ article.is_published ? 'Publié' : 'Brouillon' }}</td>
-            <td>
-              <span v-if="article.media_categories && article.media_categories.length > 0">
-                {{ article.media_categories.map(cat => cat.name).join(', ') }}
-              </span>
-              <span v-else>-</span>
-            </td>
-            <td>{{ article.user?.name || '-' }}</td>
-            <td>{{ formatDate(article.created_at) }}</td>
-            <td>
-              <button @click="editArticle(article)">Modifier</button>
-              <button @click="deleteArticle(article.id)" style="background-color: #dc3545;">
-                Supprimer
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div v-else-if="!loading">
-      <p>Aucun article trouvé.</p>
-    </div>
-
-    <div v-if="error" style="color: red;">
-      {{ error }}
-    </div>
-
-    <div v-if="success" style="color: green;">
-      {{ success }}
+      <!-- Messages -->
+      <div v-if="error || success" class="card-footer">
+        <div v-if="error" class="alert alert-danger mb-0">{{ error }}</div>
+        <div v-if="success" class="alert alert-success mb-0">{{ success }}</div>
+      </div>
     </div>
   </div>
 </template>

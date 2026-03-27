@@ -1,48 +1,89 @@
 <template>
-  <div>
-    <h2>Gestion des CGU / Mentions légales</h2>
-
-    <button @click="showForm = true">Ajouter une page légale</button>
-
-    <div v-if="showForm || editingItem">
-      <h3>{{ editingItem ? 'Modifier' : 'Créer' }} une page légale</h3>
-      <form @submit.prevent="save">
-        <div>
-          <label for="title">Titre:</label>
-          <input type="text" id="title" v-model="form.title" required />
+  <div class="container-xl">
+    <div class="card flex-grow-1">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="bi bi-file-earmark-ruled me-2"></i>
+          Gestion des CGU / Mentions légales
+        </h3>
+        <div class="card-actions">
+          <button class="btn btn-primary" @click="showForm = true">
+            <i class="bi bi-plus"></i>
+            Ajouter une page légale
+          </button>
         </div>
-        <div>
-          <label for="description">Contenu:</label>
-          <WysiwygEditor v-model="form.description" />
-        </div>
-        <button type="submit" :disabled="loading">
-          {{ loading ? 'Enregistrement...' : 'Enregistrer' }}
-        </button>
-        <button type="button" @click="cancelForm">Annuler</button>
-      </form>
-    </div>
+      </div>
 
-    <div v-if="items.length > 0">
-      <table>
-        <thead>
-          <tr><th>ID</th><th>Titre</th><th>Actions</th></tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in items" :key="item.id">
-            <td>{{ item.id }}</td>
-            <td>{{ item.title }}</td>
-            <td>
-              <button @click="editItem(item)">Modifier</button>
-              <button @click="deleteItem(item.id)">Supprimer</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div v-else-if="!loading"><p>Aucune page légale trouvée.</p></div>
+      <!-- Formulaire -->
+      <div v-if="showForm || editingItem" class="card-body border-bottom">
+        <h4 class="mb-3">{{ editingItem ? 'Modifier' : 'Créer' }} une page légale</h4>
 
-    <div v-if="error" style="color: red;">{{ error }}</div>
-    <div v-if="success" style="color: green;">{{ success }}</div>
+        <form @submit.prevent="save">
+          <div class="mb-3">
+            <label class="form-label required">Titre</label>
+            <input type="text" class="form-control" v-model="form.title" required />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Contenu</label>
+            <WysiwygEditor v-model="form.description" />
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary" :disabled="loading">
+              <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
+              {{ loading ? 'Enregistrement...' : 'Enregistrer' }}
+            </button>
+            <button type="button" class="btn" @click="cancelForm">Annuler</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Liste -->
+      <div class="table-responsive">
+        <table class="table table-vcenter card-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Titre</th>
+              <th class="w-1"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="loading">
+              <td colspan="3" class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Chargement...</span>
+                </div>
+              </td>
+            </tr>
+            <tr v-else-if="items.length === 0">
+              <td colspan="3" class="text-center text-muted">Aucune page légale trouvée.</td>
+            </tr>
+            <tr v-else v-for="item in items" :key="item.id">
+              <td class="text-muted">{{ item.id }}</td>
+              <td class="fw-bold">{{ item.title }}</td>
+              <td>
+                <div class="btn-list">
+                  <button class="btn btn-sm btn-primary" @click="editItem(item)">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger" @click="deleteItem(item.id)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Messages -->
+      <div v-if="error || success" class="card-footer">
+        <div v-if="error" class="alert alert-danger mb-0">{{ error }}</div>
+        <div v-if="success" class="alert alert-success mb-0">{{ success }}</div>
+      </div>
+    </div>
   </div>
 </template>
 
