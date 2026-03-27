@@ -11,10 +11,9 @@
       :headers="headers"
       :items="talents"
       :loading="loading"
-      :items-per-page="perPage"
+      :items-per-page="-1"
       hover
       density="comfortable"
-      @update:items-per-page="onPerPageChange"
     >
       <template #item.name="{ item }">
         <div class="font-weight-bold">{{ item.name }}</div>
@@ -79,14 +78,6 @@
       </template>
     </v-data-table>
 
-    <v-pagination
-      v-if="pagination.last_page > 1"
-      v-model="pagination.current_page"
-      :length="pagination.last_page"
-      @update:model-value="loadPage"
-      class="mt-2"
-    />
-
     <ConfirmDialog ref="confirmRef" />
   </v-card>
 </template>
@@ -100,8 +91,6 @@ import ConfirmDialog from '../shared/ConfirmDialog.vue'
 const router = useRouter()
 const talents = ref([])
 const loading = ref(false)
-const pagination = ref({ current_page: 1, last_page: 1 })
-const perPage = ref(20)
 const confirmRef = ref(null)
 
 const snackbar = ref(false)
@@ -133,22 +122,16 @@ const statutOptions = [
   { value: 'ne_plus_contacter', label: 'Ne plus contacter' },
 ]
 
-const loadPage = async (page = 1) => {
+const loadPage = async () => {
   loading.value = true
   try {
-    const res = await talentService.getAll(page, perPage.value)
-    talents.value = res.data.data
-    pagination.value = { current_page: res.data.current_page, last_page: res.data.last_page }
+    const res = await talentService.getAll(1, 1000)
+    talents.value = res.data.data ?? res.data
   } catch {
     showSnack('Erreur lors du chargement', 'error')
   } finally {
     loading.value = false
   }
-}
-
-const onPerPageChange = (val) => {
-  perPage.value = val
-  loadPage(1)
 }
 
 const toggleSuspend = async (talent) => {
@@ -189,7 +172,7 @@ const deleteItem = async (id) => {
   try {
     await talentService.delete(id)
     showSnack('Talent supprimé')
-    await loadPage(pagination.value.current_page)
+    await loadPage()
   } catch (err) {
     showSnack(err.response?.data?.message || 'Erreur lors de la suppression', 'error')
   } finally {

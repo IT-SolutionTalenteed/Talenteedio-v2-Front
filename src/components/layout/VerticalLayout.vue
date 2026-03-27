@@ -166,12 +166,13 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useDisplay } from 'vuetify'
 import { storeToRefs } from 'pinia'
 import { useDashboardStore } from '@/stores/dashboard.store'
 import { authService } from '@/services/api'
+import api from '@/services/api'
 
 const router = useRouter()
 const route = useRoute()
@@ -181,12 +182,21 @@ const { activeTab } = storeToRefs(dashboardStore)
 
 const drawer = ref(true)
 const rail = ref(false)
+const userNameStored = ref(localStorage.getItem('userName') || '')
 
 const userRole = computed(() => localStorage.getItem('userRole') || 'admin')
-const userName = computed(() => {
-  return localStorage.getItem('userName')
-    || localStorage.getItem('userEmail')
-    || 'Utilisateur'
+const userName = computed(() => userNameStored.value || localStorage.getItem('userEmail') || 'Utilisateur')
+
+onMounted(async () => {
+  if (!userNameStored.value) {
+    try {
+      const res = await api.get('/user')
+      const u = res.data
+      const name = [u.first_name, u.last_name].filter(Boolean).join(' ') || u.name || ''
+      localStorage.setItem('userName', name)
+      userNameStored.value = name
+    } catch {}
+  }
 })
 
 const roleLabel = computed(() => {
@@ -221,6 +231,7 @@ const PAGE_TITLES = {
   'import-candidats': 'Import candidats',
   'sync-crm': 'Sync CRM',
   candidatures: 'Candidatures',
+  profile: 'Mon profil',
   'evenement-participations': 'Demandes de participation',
   favoris: 'Mes favoris',
 }
@@ -340,7 +351,7 @@ const sideNav = computed(() => {
       { label: 'Événements', tab: 'evenements', icon: 'mdi-calendar-star' },
       { label: 'Articles', tab: 'articles', icon: 'mdi-newspaper-variant-outline' },
       { label: 'Entretiens', tab: 'entretiens', icon: 'mdi-calendar-account-outline' },
-      { label: 'Mon profil', route: { name: 'EntrepriseProfile' }, icon: 'mdi-account-circle-outline' },
+      { label: 'Mon profil', tab: 'profile', icon: 'mdi-account-circle-outline' },
     ]
   }
 
@@ -352,7 +363,7 @@ const sideNav = computed(() => {
       { label: 'Événements & Matching', tab: 'evenements', icon: 'mdi-calendar-star' },
       { label: 'Mes entretiens', tab: 'entretiens', icon: 'mdi-calendar-account-outline' },
       { label: 'Mes feedbacks', tab: 'feedbacks', icon: 'mdi-message-text-outline' },
-      { label: 'Mon profil', route: { name: 'TalentProfile' }, icon: 'mdi-account-circle-outline' },
+      { label: 'Mon profil', tab: 'profile', icon: 'mdi-account-circle-outline' },
     ]
   }
 

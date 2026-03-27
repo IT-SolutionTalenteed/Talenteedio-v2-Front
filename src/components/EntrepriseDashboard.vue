@@ -5,10 +5,11 @@
     <EvenementList    v-if="activeTab === 'evenements'" />
     <ArticleList      v-if="activeTab === 'articles'" />
     <EntretienList    v-if="activeTab === 'entretiens'" />
+    <EditProfile      v-if="activeTab === 'profile'" />
 
     <!-- Fallback si aucun onglet actif -->
     <div
-      v-if="!['offres','candidatures','evenements','articles','entretiens'].includes(activeTab)"
+      v-if="!['offres','candidatures','evenements','articles','entretiens','profile'].includes(activeTab)"
       class="d-flex flex-column align-center justify-center ga-4"
       style="min-height:320px"
     >
@@ -33,12 +34,13 @@ import CandidatureList from './entreprise/CandidatureList.vue'
 import EvenementList from './entreprise/EvenementList.vue'
 import ArticleList from './entreprise/ArticleList.vue'
 import EntretienList from './entreprise/EntretienList.vue'
+import EditProfile from './EditProfile.vue'
 
 const dashboardStore = useDashboardStore()
 const { activeTab } = storeToRefs(dashboardStore)
 
 onMounted(() => {
-  const validTabs = ['offres', 'candidatures', 'evenements', 'articles', 'entretiens']
+  const validTabs = ['offres', 'candidatures', 'evenements', 'articles', 'entretiens', 'profile']
   if (!validTabs.includes(activeTab.value)) {
     dashboardStore.setActiveTab('offres')
   }

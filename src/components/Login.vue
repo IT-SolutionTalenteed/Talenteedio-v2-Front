@@ -108,6 +108,8 @@ const handleLogin = async () => {
     localStorage.setItem('token', response.data.access_token)
     localStorage.setItem('userRole', response.data.user.role)
     localStorage.setItem('userId', response.data.user.id)
+    const u = response.data.user
+    localStorage.setItem('userName', [u.first_name, u.last_name].filter(Boolean).join(' ') || u.name || '')
 
     const redirect = route.query.redirect
     if (redirect) {
