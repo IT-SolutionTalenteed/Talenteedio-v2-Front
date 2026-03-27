@@ -1,173 +1,214 @@
 <template>
-  <div>
-    <h2>Gestion des Offres d'emploi</h2>
-
-    <button @click="openCreate">Ajouter une offre</button>
-
-    <!-- Formulaire création/édition -->
-    <div v-if="showForm || editingItem">
-      <h3>{{ editingItem ? 'Modifier' : 'Créer' }} une offre</h3>
-
-      <form @submit.prevent="save">
-        <div>
-          <label>Titre *</label>
-          <input type="text" v-model="form.titre" required />
-        </div>
-
-        <div>
-          <label>Client</label>
-          <input type="text" v-model="form.client" />
-        </div>
-
-        <div>
-          <label>Localisation</label>
-          <input type="text" v-model="form.localisation" />
-        </div>
-
-        <div>
-          <label>Salaire</label>
-          <input type="number" step="0.01" v-model="form.salaire" />
-        </div>
-
-        <div>
-          <label>Fourchette salariale</label>
-          <input type="text" v-model="form.fourchette_salariale" placeholder="ex: 35k€ - 45k€" />
-        </div>
-
-        <div>
-          <label>Date de mise en ligne</label>
-          <input type="date" v-model="form.date_mise_en_ligne" />
-        </div>
-
-        <div>
-          <label>Date limite</label>
-          <input type="date" v-model="form.date_limite" />
-        </div>
-
-        <div>
-          <label>Mission</label>
-          <WysiwygEditor v-model="form.mission" />
-        </div>
-
-        <div>
-          <label>Profil recherché</label>
-          <WysiwygEditor v-model="form.profil_recherche" />
-        </div>
-
-        <div>
-          <label>À propos</label>
-          <WysiwygEditor v-model="form.a_propos" />
-        </div>
-
-        <div>
-          <label>Liste offre</label>
-          <WysiwygEditor v-model="form.liste_offre" />
-        </div>
-
-        <div>
-          <label>Description</label>
-          <WysiwygEditor v-model="form.description" />
-        </div>
-
-        <!-- Relations -->
-        <div>
-          <label>Contrats de travail</label>
-          <select v-model="form.job_contract_ids" multiple>
-            <option v-for="item in referentiels.job_contracts" :key="item.id" :value="item.id">
-              {{ item.name }}
-            </option>
-          </select>
-        </div>
-
-        <div>
-          <label>Modes de travail</label>
-          <select v-model="form.job_mode_ids" multiple>
-            <option v-for="item in referentiels.job_modes" :key="item.id" :value="item.id">
-              {{ item.name }}
-            </option>
-          </select>
-        </div>
-
-        <div>
-          <label>Compétences requises</label>
-          <select v-model="form.skill_ids" multiple>
-            <option v-for="item in referentiels.skills" :key="item.id" :value="item.id">
-              {{ item.name }}
-            </option>
-          </select>
-        </div>
-
-        <div>
-          <label>Formations requises</label>
-          <select v-model="form.study_level_ids" multiple>
-            <option v-for="item in referentiels.study_levels" :key="item.id" :value="item.id">
-              {{ item.name }}
-            </option>
-          </select>
-        </div>
-
-        <div>
-          <label>Expériences requises</label>
-          <select v-model="form.experience_ids" multiple>
-            <option v-for="item in referentiels.experiences" :key="item.id" :value="item.id">
-              {{ item.name }}
-            </option>
-          </select>
-        </div>
-
-        <small>Maintenez Ctrl/Cmd pour sélectionner plusieurs éléments</small>
-
-        <div>
-          <button type="submit" :disabled="loading">
-            {{ loading ? 'Enregistrement...' : 'Enregistrer' }}
+  <div class="container-xl">
+    <div class="card flex-grow-1">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="bi bi-briefcase me-2"></i>
+          Gestion des Offres d'emploi
+        </h3>
+        <div class="card-actions">
+          <button class="btn btn-primary" @click="openCreate">
+            <i class="bi bi-plus"></i>
+            Ajouter une offre
           </button>
-          <button type="button" @click="cancelForm">Annuler</button>
         </div>
-      </form>
-    </div>
+      </div>
 
-    <!-- Liste -->
-    <div v-if="offres.length > 0">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Titre</th>
-            <th>Client</th>
-            <th>Localisation</th>
-            <th>Date limite</th>
-            <th>Contrats</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="offre in offres" :key="offre.id">
-            <td>{{ offre.id }}</td>
-            <td>{{ offre.titre }}</td>
-            <td>{{ offre.client || '-' }}</td>
-            <td>{{ offre.localisation || '-' }}</td>
-            <td>{{ offre.date_limite ? formatDate(offre.date_limite) : '-' }}</td>
-            <td>{{ offre.job_contracts?.map(c => c.name).join(', ') || '-' }}</td>
-            <td>
-              <button @click="editItem(offre)">Modifier</button>
-              <button @click="deleteItem(offre.id)">Supprimer</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <!-- Formulaire -->
+      <div v-if="showForm || editingItem" class="card-body border-bottom">
+        <h4 class="mb-3">{{ editingItem ? 'Modifier' : 'Créer' }} une offre</h4>
+
+        <form @submit.prevent="save">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label required">Titre</label>
+              <input type="text" class="form-control" v-model="form.titre" required />
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Client</label>
+              <input type="text" class="form-control" v-model="form.client" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Localisation</label>
+              <input type="text" class="form-control" v-model="form.localisation" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Fourchette salariale</label>
+              <input type="text" class="form-control" v-model="form.fourchette_salariale" placeholder="ex: 35k€ - 45k€" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Date de mise en ligne</label>
+              <input type="date" class="form-control" v-model="form.date_mise_en_ligne" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Date limite</label>
+              <input type="date" class="form-control" v-model="form.date_limite" />
+            </div>
+
+            <div class="col-12 mb-3">
+              <label class="form-label">Mission</label>
+              <WysiwygEditor v-model="form.mission" />
+            </div>
+
+            <div class="col-12 mb-3">
+              <label class="form-label">Profil recherché</label>
+              <WysiwygEditor v-model="form.profil_recherche" />
+            </div>
+
+            <div class="col-12 mb-3">
+              <label class="form-label">À propos</label>
+              <WysiwygEditor v-model="form.a_propos" />
+            </div>
+
+            <div class="col-12 mb-3">
+              <label class="form-label">Description</label>
+              <WysiwygEditor v-model="form.description" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Contrats de travail</label>
+              <select class="form-select" v-model="form.job_contract_ids" multiple size="4">
+                <option v-for="item in referentiels.job_contracts" :key="item.id" :value="item.id">
+                  {{ item.name }}
+                </option>
+              </select>
+              <small class="form-hint">Maintenez Ctrl/Cmd pour sélectionner plusieurs</small>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Modes de travail</label>
+              <select class="form-select" v-model="form.job_mode_ids" multiple size="4">
+                <option v-for="item in referentiels.job_modes" :key="item.id" :value="item.id">
+                  {{ item.name }}
+                </option>
+              </select>
+            </div>
+
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Compétences requises</label>
+              <select class="form-select" v-model="form.skill_ids" multiple size="4">
+                <option v-for="item in referentiels.skills" :key="item.id" :value="item.id">
+                  {{ item.name }}
+                </option>
+              </select>
+            </div>
+
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Formations requises</label>
+              <select class="form-select" v-model="form.study_level_ids" multiple size="4">
+                <option v-for="item in referentiels.study_levels" :key="item.id" :value="item.id">
+                  {{ item.name }}
+                </option>
+              </select>
+            </div>
+
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Expériences requises</label>
+              <select class="form-select" v-model="form.experience_ids" multiple size="4">
+                <option v-for="item in referentiels.experiences" :key="item.id" :value="item.id">
+                  {{ item.name }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary" :disabled="loading">
+              <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
+              {{ loading ? 'Enregistrement...' : 'Enregistrer' }}
+            </button>
+            <button type="button" class="btn" @click="cancelForm">Annuler</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Liste -->
+      <div class="table-responsive">
+        <table class="table table-vcenter card-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Titre</th>
+              <th>Client</th>
+              <th>Localisation</th>
+              <th>Date limite</th>
+              <th>Contrats</th>
+              <th class="w-1"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="loading">
+              <td colspan="7" class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Chargement...</span>
+                </div>
+              </td>
+            </tr>
+            <tr v-else-if="offres.length === 0">
+              <td colspan="7" class="text-center text-muted">Aucune offre trouvée.</td>
+            </tr>
+            <tr v-else v-for="offre in offres" :key="offre.id">
+              <td class="text-muted">{{ offre.id }}</td>
+              <td>
+                <div class="fw-bold">{{ offre.titre }}</div>
+                <div v-if="offre.fourchette_salariale" class="text-muted small">{{ offre.fourchette_salariale }}</div>
+              </td>
+              <td>{{ offre.client || '-' }}</td>
+              <td>{{ offre.localisation || '-' }}</td>
+              <td>{{ offre.date_limite ? formatDate(offre.date_limite) : '-' }}</td>
+              <td>
+                <span v-if="offre.job_contracts?.length" class="badge">
+                  {{ offre.job_contracts.map(c => c.name).join(', ') }}
+                </span>
+                <span v-else class="text-muted">-</span>
+              </td>
+              <td>
+                <div class="btn-list">
+                  <button class="btn btn-sm btn-primary" @click="editItem(offre)">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger" @click="deleteItem(offre.id)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <!-- Pagination -->
-      <div v-if="pagination.last_page > 1">
-        <button :disabled="pagination.current_page <= 1" @click="loadPage(pagination.current_page - 1)">Précédent</button>
-        <span>Page {{ pagination.current_page }} / {{ pagination.last_page }}</span>
-        <button :disabled="pagination.current_page >= pagination.last_page" @click="loadPage(pagination.current_page + 1)">Suivant</button>
+      <div v-if="pagination.last_page > 1" class="card-footer d-flex align-items-center">
+        <p class="m-0 text-muted">
+          Page {{ pagination.current_page }} sur {{ pagination.last_page }}
+        </p>
+        <ul class="pagination m-0 ms-auto">
+          <li class="page-item" :class="{ disabled: pagination.current_page <= 1 }">
+            <a class="page-link" href="#" @click.prevent="loadPage(pagination.current_page - 1)">
+              <i class="bi bi-chevron-left"></i>
+              Précédent
+            </a>
+          </li>
+          <li class="page-item" :class="{ disabled: pagination.current_page >= pagination.last_page }">
+            <a class="page-link" href="#" @click.prevent="loadPage(pagination.current_page + 1)">
+              Suivant
+              <i class="bi bi-chevron-right"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Messages -->
+      <div v-if="error || success" class="card-footer">
+        <div v-if="error" class="alert alert-danger mb-0">{{ error }}</div>
+        <div v-if="success" class="alert alert-success mb-0">{{ success }}</div>
       </div>
     </div>
-
-    <div v-else-if="!loading"><p>Aucune offre trouvée.</p></div>
-
-    <div v-if="error" style="color: red;">{{ error }}</div>
-    <div v-if="success" style="color: green;">{{ success }}</div>
   </div>
 </template>
 
