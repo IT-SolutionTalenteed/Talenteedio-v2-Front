@@ -6,7 +6,6 @@ import AdminDashboard from '../components/AdminDashboard.vue'
 import TalentDashboard from '../components/TalentDashboard.vue'
 import EntrepriseDashboard from '../components/EntrepriseDashboard.vue'
 import VerticalLayout from '../components/layout/VerticalLayout.vue'
-import TestAuth from '../components/TestAuth.vue'
 import GoogleCallback from '../components/GoogleCallback.vue'
 import Annonces from '../components/Annonces.vue'
 import AnnonceDetail from '../components/AnnonceDetail.vue'
@@ -134,11 +133,6 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: Register
-  },
-  {
-    path: '/test-auth',
-    name: 'TestAuth',
-    component: TestAuth
   },
   {
     path: '/auth/google/callback',
