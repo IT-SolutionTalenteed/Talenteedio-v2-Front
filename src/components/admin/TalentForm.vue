@@ -11,6 +11,15 @@
     <v-card rounded="xl" border elevation="0">
       <v-card-text class="pa-6">
         <v-row>
+          <v-col cols="12" md="6">
+            <v-text-field v-model="form.first_name" label="Prénom" variant="outlined" density="compact" />
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-text-field v-model="form.last_name" label="Nom de famille" variant="outlined" density="compact" />
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-text-field v-model="form.email" label="Email" type="email" variant="outlined" density="compact" />
+          </v-col>
           <v-col cols="12" md="3">
             <v-select
               v-model="form.civilite"
@@ -154,6 +163,7 @@ const router = useRouter()
 
 const talent = ref(null)
 const form = ref({
+  first_name: '', last_name: '', email: '',
   civilite: '', titre_poste: '', telephone: '', date_naissance: '',
   nationalite: '', ville: '', pays: '', disponibilite: '', mobilite: '',
   situation_familiale: '', source_provenance: '', study_level_id: '',
@@ -190,7 +200,16 @@ onMounted(async () => {
     }
     const t = talentRes.data
     talent.value = t
+
+    // Fallback: split name si first_name/last_name pas encore remplis
+    const nameParts = (t.name || '').trim().split(' ')
+    const fallbackFirst = nameParts[0] || ''
+    const fallbackLast  = nameParts.slice(1).join(' ') || ''
+
     form.value = {
+      first_name: t.first_name || fallbackFirst,
+      last_name: t.last_name || fallbackLast,
+      email: t.email || '',
       civilite: t.civilite || '',
       titre_poste: t.titre_poste || '',
       telephone: t.telephone || '',

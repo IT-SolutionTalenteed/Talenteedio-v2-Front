@@ -169,8 +169,9 @@ onMounted(async () => {
   try {
     const res = await api.get('/user')
     const u = res.data
-    form.value.first_name  = u.first_name  || ''
-    form.value.last_name   = u.last_name   || ''
+    const nameParts = (u.name || '').trim().split(' ')
+    form.value.first_name  = u.first_name  || nameParts[0] || ''
+    form.value.last_name   = u.last_name   || nameParts.slice(1).join(' ') || ''
     form.value.email       = u.email       || ''
     form.value.telephone   = u.telephone   || ''
     form.value.ville       = u.ville       || ''
