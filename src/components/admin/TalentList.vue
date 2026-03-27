@@ -1,56 +1,61 @@
 <template>
-  <div>
-    <h2>Gestion des Talents & Consultants</h2>
+  <div class="container-xl">
+    <div class="card flex-grow-1">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="bi bi-people me-2"></i>
+          Gestion des Talents & Consultants
+        </h3>
+      </div>
 
     <!-- Formulaire édition profil -->
-    <div v-if="editingTalent" style="border:1px solid #ccc;padding:16px;margin-bottom:16px;">
-      <h3>Modifier le profil — {{ editingTalent.name }}</h3>
+    <div v-if="editingTalent" class="card-body border-bottom">
+      <h4 class="mb-3">Modifier le profil — {{ editingTalent.name }}</h4>
       <form @submit.prevent="saveProfil">
-
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <div>
-            <label>Civilité</label>
-            <select v-model="profilForm.civilite">
+        <div class="row">
+          <div class="col-md-3 mb-3">
+            <label class="form-label">Civilité</label>
+            <select class="form-select" v-model="profilForm.civilite">
               <option value="">—</option>
               <option value="M.">M.</option>
               <option value="Mme.">Mme.</option>
             </select>
           </div>
-          <div>
-            <label>Titre / Poste</label>
-            <input type="text" v-model="profilForm.titre_poste" style="width:100%;" />
+          <div class="col-md-9 mb-3">
+            <label class="form-label">Titre / Poste</label>
+            <input type="text" class="form-control" v-model="profilForm.titre_poste" />
           </div>
-          <div>
-            <label>Téléphone</label>
-            <input type="text" v-model="profilForm.telephone" style="width:100%;" />
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Téléphone</label>
+            <input type="text" class="form-control" v-model="profilForm.telephone" />
           </div>
-          <div>
-            <label>Date de naissance</label>
-            <input type="date" v-model="profilForm.date_naissance" style="width:100%;" />
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Date de naissance</label>
+            <input type="date" class="form-control" v-model="profilForm.date_naissance" />
           </div>
-          <div>
-            <label>Nationalité</label>
-            <input type="text" v-model="profilForm.nationalite" style="width:100%;" />
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Nationalité</label>
+            <input type="text" class="form-control" v-model="profilForm.nationalite" />
           </div>
-          <div>
-            <label>Ville</label>
-            <input type="text" v-model="profilForm.ville" style="width:100%;" />
+          <div class="col-md-3 mb-3">
+            <label class="form-label">Ville</label>
+            <input type="text" class="form-control" v-model="profilForm.ville" />
           </div>
-          <div>
-            <label>Pays</label>
-            <input type="text" v-model="profilForm.pays" style="width:100%;" />
+          <div class="col-md-3 mb-3">
+            <label class="form-label">Pays</label>
+            <input type="text" class="form-control" v-model="profilForm.pays" />
           </div>
-          <div>
-            <label>Disponibilité</label>
-            <input type="text" v-model="profilForm.disponibilite" style="width:100%;" />
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Disponibilité</label>
+            <input type="text" class="form-control" v-model="profilForm.disponibilite" />
           </div>
-          <div>
-            <label>Mobilité</label>
-            <input type="text" v-model="profilForm.mobilite" style="width:100%;" />
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Mobilité</label>
+            <input type="text" class="form-control" v-model="profilForm.mobilite" />
           </div>
-          <div>
-            <label>Situation familiale</label>
-            <select v-model="profilForm.situation_familiale" style="width:100%;">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Situation familiale</label>
+            <select class="form-select" v-model="profilForm.situation_familiale">
               <option value="">—</option>
               <option value="celibataire">Célibataire</option>
               <option value="marie">Marié(e)</option>
@@ -59,20 +64,20 @@
               <option value="veuf">Veuf / Veuve</option>
             </select>
           </div>
-          <div>
-            <label>Source / Provenance</label>
-            <input type="text" v-model="profilForm.source_provenance" style="width:100%;" />
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Source / Provenance</label>
+            <input type="text" class="form-control" v-model="profilForm.source_provenance" />
           </div>
-          <div>
-            <label>Niveau d'étude</label>
-            <select v-model="profilForm.study_level_id" style="width:100%;">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Niveau d'étude</label>
+            <select class="form-select" v-model="profilForm.study_level_id">
               <option value="">—</option>
               <option v-for="sl in referentiels.studyLevels" :key="sl.id" :value="sl.id">{{ sl.name }}</option>
             </select>
           </div>
-          <div>
-            <label>Expérience</label>
-            <select v-model="profilForm.experience_id" style="width:100%;">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Expérience</label>
+            <select class="form-select" v-model="profilForm.experience_id">
               <option value="">—</option>
               <option v-for="ex in referentiels.experiences" :key="ex.id" :value="ex.id">{{ ex.name }}</option>
             </select>
@@ -80,73 +85,90 @@
         </div>
 
         <!-- Secteurs d'activité -->
-        <div style="margin-top:8px;">
-          <label>Secteurs d'activité</label>
-          <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;">
-            <label v-for="sec in referentiels.activitySectors" :key="sec.id" style="display:flex;align-items:center;gap:4px;margin-right:8px;">
-              <input type="checkbox" :value="sec.id" v-model="profilForm.activity_sector_ids" />
-              {{ sec.name }}
+        <div class="mb-3">
+          <label class="form-label">Secteurs d'activité</label>
+          <div class="d-flex flex-wrap gap-2">
+            <label v-for="sec in referentiels.activitySectors" :key="sec.id" class="form-check">
+              <input type="checkbox" class="form-check-input" :value="sec.id" v-model="profilForm.activity_sector_ids" />
+              <span class="form-check-label">{{ sec.name }}</span>
             </label>
           </div>
         </div>
 
         <!-- Langues -->
-        <div style="margin-top:8px;">
-          <label>Langues</label>
-          <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;">
-            <label v-for="lang in referentiels.languages" :key="lang.id" style="display:flex;align-items:center;gap:4px;margin-right:8px;">
-              <input type="checkbox" :value="lang.id" v-model="profilForm.language_ids" />
-              {{ lang.name }}
+        <div class="mb-3">
+          <label class="form-label">Langues</label>
+          <div class="d-flex flex-wrap gap-2">
+            <label v-for="lang in referentiels.languages" :key="lang.id" class="form-check">
+              <input type="checkbox" class="form-check-input" :value="lang.id" v-model="profilForm.language_ids" />
+              <span class="form-check-label">{{ lang.name }}</span>
             </label>
           </div>
         </div>
 
         <!-- Skills -->
-        <div style="margin-top:8px;">
-          <label>Compétences</label>
-          <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;">
-            <label v-for="skill in referentiels.skills" :key="skill.id" style="display:flex;align-items:center;gap:4px;margin-right:8px;">
-              <input type="checkbox" :value="skill.id" v-model="profilForm.skill_ids" />
-              {{ skill.name }}
+        <div class="mb-3">
+          <label class="form-label">Compétences</label>
+          <div class="d-flex flex-wrap gap-2">
+            <label v-for="skill in referentiels.skills" :key="skill.id" class="form-check">
+              <input type="checkbox" class="form-check-input" :value="skill.id" v-model="profilForm.skill_ids" />
+              <span class="form-check-label">{{ skill.name }}</span>
             </label>
           </div>
         </div>
 
-        <div style="margin-top:12px;">
-          <button type="submit" :disabled="savingProfil">{{ savingProfil ? 'Enregistrement...' : 'Enregistrer' }}</button>
-          <button type="button" @click="editingTalent = null" style="margin-left:8px;">Annuler</button>
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary" :disabled="savingProfil">
+            <span v-if="savingProfil" class="spinner-border spinner-border-sm me-2"></span>
+            {{ savingProfil ? 'Enregistrement...' : 'Enregistrer' }}
+          </button>
+          <button type="button" class="btn btn-secondary" @click="editingTalent = null">Annuler</button>
         </div>
       </form>
     </div>
 
     <!-- Tableau -->
-    <div v-if="talents.length > 0">
-      <table>
+
+    <div class="table-responsive">
+      <table class="table table-vcenter card-table table-sm">
         <thead>
           <tr>
             <th>Nom</th>
             <th>Email</th>
             <th>Rôle</th>
-            <th>Ville / Pays</th>
+            <th>Localisation</th>
             <th>Provenance</th>
             <th>Statut CRM</th>
-            <th>Suspendu</th>
-            <th>Banni</th>
-            <th>Actions</th>
+            <th>État</th>
+            <th class="w-1"></th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="talent in talents" :key="talent.id">
-            <td>
-              <div>{{ talent.name }}</div>
-              <small v-if="talent.titre_poste" style="color:#666;">{{ talent.titre_poste }}</small>
+          <tr v-if="loading">
+            <td colspan="8" class="text-center">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Chargement...</span>
+              </div>
             </td>
-            <td>{{ talent.email }}</td>
-            <td>{{ talent.role === 'consultant_externe' ? 'Consultant' : 'Talent' }}</td>
-            <td>{{ [talent.ville, talent.pays].filter(Boolean).join(', ') || '—' }}</td>
-            <td>{{ talent.source_provenance || '—' }}</td>
+          </tr>
+          <tr v-else-if="talents.length === 0">
+            <td colspan="8" class="text-center text-muted">Aucun talent trouvé.</td>
+          </tr>
+          <tr v-else v-for="talent in talents" :key="talent.id">
             <td>
-              <select @change="updateStatutCrm(talent, $event.target.value)" :value="talent.statut_crm || ''">
+              <div class="fw-bold">{{ talent.name }}</div>
+              <div v-if="talent.titre_poste" class="text-muted small">{{ talent.titre_poste }}</div>
+            </td>
+            <td class="text-muted">{{ talent.email }}</td>
+            <td>
+              <span class="badge" :class="talent.role === 'consultant_externe' ? 'bg-purple' : 'bg-blue'">
+                {{ talent.role === 'consultant_externe' ? 'Consultant' : 'Talent' }}
+              </span>
+            </td>
+            <td class="text-muted">{{ [talent.ville, talent.pays].filter(Boolean).join(', ') || '—' }}</td>
+            <td class="text-muted">{{ talent.source_provenance || '—' }}</td>
+            <td>
+              <select class="form-select form-select-sm" @change="updateStatutCrm(talent, $event.target.value)" :value="talent.statut_crm || ''">
                 <option value="">— Aucun —</option>
                 <option value="a_traiter">A traiter</option>
                 <option value="en_cours_qualif">En cours de qualif.</option>
@@ -157,32 +179,59 @@
                 <option value="ne_plus_contacter">Ne plus contacter</option>
               </select>
             </td>
-            <td>{{ talent.is_suspended ? 'Oui' : 'Non' }}</td>
-            <td>{{ talent.is_banned ? 'Oui' : 'Non' }}</td>
             <td>
-              <button @click="openEdit(talent)">Modifier profil</button>
-              <button @click="toggleSuspend(talent)">
-                {{ talent.is_suspended ? 'Réactiver' : 'Suspendre' }}
-              </button>
-              <button @click="toggleBan(talent)">
-                {{ talent.is_banned ? 'Débannir' : 'Bannir' }}
-              </button>
-              <button @click="deleteItem(talent.id)">Supprimer</button>
+              <span v-if="talent.is_suspended" class="badge bg-warning">Suspendu</span>
+              <span v-else-if="talent.is_banned" class="badge bg-danger">Banni</span>
+              <span v-else class="badge bg-success">Actif</span>
+            </td>
+            <td>
+              <div class="btn-list">
+                <button class="btn btn-sm btn-primary" @click="openEdit(talent)" title="Modifier profil">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm" :class="talent.is_suspended ? 'btn-success' : 'btn-warning'" @click="toggleSuspend(talent)" :title="talent.is_suspended ? 'Réactiver' : 'Suspendre'">
+                  <i :class="talent.is_suspended ? 'bi bi-check-circle' : 'bi bi-pause-circle'"></i>
+                </button>
+                <button class="btn btn-sm" :class="talent.is_banned ? 'btn-info' : 'btn-danger'" @click="toggleBan(talent)" :title="talent.is_banned ? 'Débannir' : 'Bannir'">
+                  <i :class="talent.is_banned ? 'bi bi-unlock' : 'bi bi-lock'"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" @click="deleteItem(talent.id)" title="Supprimer">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
       </table>
-
-      <div v-if="pagination.last_page > 1">
-        <button :disabled="pagination.current_page <= 1" @click="loadPage(pagination.current_page - 1)">Précédent</button>
-        <span>Page {{ pagination.current_page }} / {{ pagination.last_page }}</span>
-        <button :disabled="pagination.current_page >= pagination.last_page" @click="loadPage(pagination.current_page + 1)">Suivant</button>
-      </div>
     </div>
-    <div v-else-if="!loading"><p>Aucun talent trouvé.</p></div>
 
-    <div v-if="error" style="color:red;">{{ error }}</div>
-    <div v-if="success" style="color:green;">{{ success }}</div>
+    <!-- Pagination -->
+    <div v-if="pagination.last_page > 1" class="card-footer d-flex align-items-center">
+      <p class="m-0 text-muted">
+        Page {{ pagination.current_page }} sur {{ pagination.last_page }}
+      </p>
+      <ul class="pagination m-0 ms-auto">
+        <li class="page-item" :class="{ disabled: pagination.current_page <= 1 }">
+          <a class="page-link" href="#" @click.prevent="loadPage(pagination.current_page - 1)">
+            <i class="bi bi-chevron-left"></i>
+            Précédent
+          </a>
+        </li>
+        <li class="page-item" :class="{ disabled: pagination.current_page >= pagination.last_page }">
+          <a class="page-link" href="#" @click.prevent="loadPage(pagination.current_page + 1)">
+            Suivant
+            <i class="bi bi-chevron-right"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Messages -->
+    <div v-if="error || success" class="card-footer">
+      <div v-if="error" class="alert alert-danger mb-0">{{ error }}</div>
+      <div v-if="success" class="alert alert-success mb-0">{{ success }}</div>
+    </div>
+    </div>
   </div>
 </template>
 
