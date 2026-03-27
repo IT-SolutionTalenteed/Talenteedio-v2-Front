@@ -1,57 +1,44 @@
 <template>
-  <div class="container-xl">
-    <div class="card flex-grow-1">
-      <div class="card-header">
-        <h3 class="card-title">
-          <i class="bi bi-chat-square-text me-2"></i>
-          Feedbacks post-entretien
-        </h3>
-      </div>
+  <v-card rounded="xl" border elevation="0">
+    <v-toolbar color="transparent" border="b" density="compact" class="px-2">
+      <v-icon icon="mdi-chat-processing-outline" class="mr-2" />
+      <v-toolbar-title>Feedbacks post-entretien</v-toolbar-title>
+    </v-toolbar>
 
-      <div class="table-responsive">
-        <table class="table table-vcenter card-table">
-          <thead>
-            <tr>
-              <th>Talent</th>
-              <th>Entreprise</th>
-              <th>Événement</th>
-              <th>Date entretien</th>
-              <th>Note</th>
-              <th>Commentaire</th>
-              <th>Soumis le</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="loading">
-              <td colspan="7" class="text-center">
-                <div class="spinner-border text-primary" role="status">
-                  <span class="visually-hidden">Chargement...</span>
-                </div>
-              </td>
-            </tr>
-            <tr v-else-if="items.length === 0">
-              <td colspan="7" class="text-center text-muted">Aucun feedback soumis pour l'instant.</td>
-            </tr>
-            <tr v-else v-for="fb in items" :key="fb.id">
-              <td>{{ fb.talent?.name }}</td>
-              <td>{{ fb.entretien?.entreprise?.nom }}</td>
-              <td>{{ fb.entretien?.evenement?.titre }}</td>
-              <td>{{ fb.entretien?.date }}</td>
-              <td>
-                <span class="badge">{{ fb.note }} / 5</span>
-              </td>
-              <td>{{ fb.commentaire || '—' }}</td>
-              <td class="text-muted">{{ formatDate(fb.created_at) }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <v-data-table
+      :headers="headers"
+      :items="items"
+      :loading="loading"
+      hover
+      density="comfortable"
+    >
+      <template #item.talent="{ item }">
+        {{ item.talent?.name }}
+      </template>
+      <template #item.entreprise="{ item }">
+        {{ item.entretien?.entreprise?.nom }}
+      </template>
+      <template #item.evenement="{ item }">
+        {{ item.entretien?.evenement?.titre }}
+      </template>
+      <template #item.date_entretien="{ item }">
+        {{ item.entretien?.date }}
+      </template>
+      <template #item.note="{ item }">
+        <v-chip size="small" color="primary">{{ item.note }}/5</v-chip>
+      </template>
+      <template #item.commentaire="{ item }">
+        {{ item.commentaire || '—' }}
+      </template>
+      <template #item.created_at="{ item }">
+        {{ formatDate(item.created_at) }}
+      </template>
+    </v-data-table>
 
-      <div v-if="error" class="card-footer">
-        <div class="alert alert-danger mb-0">{{ error }}</div>
-      </div>
-    </div>
-  </div>
+    <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">
+      {{ snackMsg }}
+    </v-snackbar>
+  </v-card>
 </template>
 
 <script setup>
@@ -62,6 +49,26 @@ const items = ref([])
 const loading = ref(false)
 const error = ref('')
 
+const snackbar = ref(false)
+const snackMsg = ref('')
+const snackColor = ref('success')
+
+const showSnack = (msg, color = 'success') => {
+  snackMsg.value = msg
+  snackColor.value = color
+  snackbar.value = true
+}
+
+const headers = [
+  { title: 'Talent', key: 'talent', sortable: false },
+  { title: 'Entreprise', key: 'entreprise', sortable: false },
+  { title: 'Événement', key: 'evenement', sortable: false },
+  { title: 'Date entretien', key: 'date_entretien', sortable: false },
+  { title: 'Note', key: 'note', sortable: false, width: '100px' },
+  { title: 'Commentaire', key: 'commentaire', sortable: false },
+  { title: 'Soumis le', key: 'created_at', width: '130px' },
+]
+
 const formatDate = (str) => str ? new Date(str).toLocaleDateString('fr-FR') : '—'
 
 const load = async () => {
@@ -70,7 +77,7 @@ const load = async () => {
     const res = await api.get('/admin/feedbacks')
     items.value = res.data
   } catch {
-    error.value = 'Erreur chargement des feedbacks'
+    showSnack('Erreur chargement des feedbacks', 'error')
   } finally {
     loading.value = false
   }

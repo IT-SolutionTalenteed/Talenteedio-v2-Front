@@ -267,43 +267,15 @@ const sideNav = computed(() => {
         icon: 'mdi-view-dashboard-outline',
       },
       {
-        label: 'Événements',
-        icon: 'mdi-calendar-star',
-        children: [
-          { label: 'Catégories', route: { name: 'AdminCategorieEvenements' }, icon: 'mdi-tag-multiple-outline' },
-          { label: 'Événements', route: { name: 'AdminEvenements' }, icon: 'mdi-calendar-month-outline' },
-        ],
+        label: 'Profile',
+        icon: 'mdi-account-circle-outline',
+        route: { name: 'AdminOverview' },
       },
       {
-        label: "Offres d'emploi",
-        route: { name: 'AdminOffres' },
+        label: 'Jobs',
         icon: 'mdi-briefcase-outline',
-      },
-      {
-        label: 'Contenu',
-        icon: 'mdi-newspaper-variant-outline',
         children: [
-          { label: 'Catégories Média', route: { name: 'AdminMediaCategories' }, icon: 'mdi-folder-multiple-outline' },
-          { label: 'Articles', route: { name: 'AdminArticles' }, icon: 'mdi-file-document-outline' },
-          { label: 'Pages légales', route: { name: 'AdminLegalPages' }, icon: 'mdi-file-certificate-outline' },
-        ],
-      },
-      {
-        label: 'Utilisateurs',
-        icon: 'mdi-account-group-outline',
-        children: [
-          { label: 'Entreprises', route: { name: 'AdminEntreprises' }, icon: 'mdi-office-building-outline' },
-          { label: 'Talents', route: { name: 'AdminTalents' }, icon: 'mdi-account-tie-outline' },
-          { label: 'Entretiens par stand', route: { name: 'AdminEntretiens' }, icon: 'mdi-calendar-account-outline' },
-          { label: 'Feedbacks', route: { name: 'AdminFeedbacks' }, icon: 'mdi-message-text-outline' },
-          { label: 'Import XLS', route: { name: 'AdminImportCandidats' }, icon: 'mdi-upload' },
-          { label: 'Sync CRM HubSpot', route: { name: 'AdminSyncCrm' }, icon: 'mdi-sync' },
-        ],
-      },
-      {
-        label: 'Référentiels',
-        icon: 'mdi-cog-outline',
-        children: [
+          { label: "Offres d'emploi", route: { name: 'AdminOffres' }, icon: 'mdi-briefcase-search-outline' },
           { label: 'Contrats de travail', route: { name: 'AdminJobContracts' }, icon: 'mdi-file-sign' },
           { label: 'Modes de travail', route: { name: 'AdminJobModes' }, icon: 'mdi-laptop' },
           { label: 'Compétences', route: { name: 'AdminSkills' }, icon: 'mdi-star-outline' },
@@ -312,6 +284,48 @@ const sideNav = computed(() => {
           { label: 'Langues', route: { name: 'AdminLanguages' }, icon: 'mdi-translate' },
           { label: "Secteurs d'activité", route: { name: 'AdminActivitySectors' }, icon: 'mdi-sitemap-outline' },
         ],
+      },
+      {
+        label: 'Événements',
+        icon: 'mdi-calendar-star',
+        children: [
+          { label: 'Catégories', route: { name: 'AdminCategorieEvenements' }, icon: 'mdi-tag-multiple-outline' },
+          { label: 'Événements', route: { name: 'AdminEvenements' }, icon: 'mdi-calendar-month-outline' },
+          { label: 'Participation', route: { name: 'AdminEvenements' }, icon: 'mdi-domain' },
+          { label: 'Entretiens par stand', route: { name: 'AdminEntretiens' }, icon: 'mdi-calendar-account-outline' },
+          { label: 'Feedbacks', route: { name: 'AdminFeedbacks' }, icon: 'mdi-message-text-outline' },
+        ],
+      },
+      {
+        label: 'CRM HubSpot',
+        icon: 'mdi-hubspot',
+        children: [
+          { label: 'Import XLS', route: { name: 'AdminImportCandidats' }, icon: 'mdi-upload' },
+          { label: 'Sync CRM HubSpot', route: { name: 'AdminSyncCrm' }, icon: 'mdi-sync' },
+        ],
+      },
+      {
+        label: 'Talents',
+        route: { name: 'AdminTalents' },
+        icon: 'mdi-account-tie-outline',
+      },
+      {
+        label: 'Entreprises',
+        route: { name: 'AdminEntreprises' },
+        icon: 'mdi-office-building-outline',
+      },
+      {
+        label: 'Médias',
+        icon: 'mdi-newspaper-variant-outline',
+        children: [
+          { label: 'Catégories Média', route: { name: 'AdminMediaCategories' }, icon: 'mdi-folder-multiple-outline' },
+          { label: 'Articles', route: { name: 'AdminArticles' }, icon: 'mdi-file-document-outline' },
+        ],
+      },
+      {
+        label: 'Pages légales',
+        route: { name: 'AdminLegalPages' },
+        icon: 'mdi-file-certificate-outline',
       },
     ]
   }

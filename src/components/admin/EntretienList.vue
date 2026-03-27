@@ -1,77 +1,95 @@
 <template>
-  <div class="container-xl">
-    <div class="card flex-grow-1">
-      <div class="card-header">
-        <h3 class="card-title">
-          <i class="bi bi-calendar-check me-2"></i>
-          Entretiens par stand
-        </h3>
+  <v-card rounded="xl" border elevation="0">
+    <v-toolbar color="transparent" border="b" density="compact" class="px-2">
+      <v-icon icon="mdi-calendar-check" class="mr-2" />
+      <v-toolbar-title>Entretiens par stand</v-toolbar-title>
+    </v-toolbar>
+
+    <v-card-text>
+      <v-select
+        v-model="selectedEvenementId"
+        :items="evenements"
+        item-title="titre"
+        item-value="id"
+        label="Sélectionner un événement"
+        variant="outlined"
+        density="compact"
+        clearable
+        class="mb-4"
+        @update:model-value="load"
+      >
+        <template #item="{ item, props }">
+          <v-list-item v-bind="props" :title="`${item.raw.titre} (${item.raw.date_debut})`" />
+        </template>
+        <template #selection="{ item }">
+          {{ item.raw.titre }} ({{ item.raw.date_debut }})
+        </template>
+      </v-select>
+
+      <div v-if="stands.length > 0">
+        <v-card
+          v-for="stand in stands"
+          :key="stand.entreprise.id"
+          variant="outlined"
+          rounded="lg"
+          class="mb-4"
+        >
+          <v-toolbar color="transparent" border="b" density="compact" class="px-3">
+            <v-icon icon="mdi-domain" class="mr-2" />
+            <v-toolbar-title class="text-body-1 font-weight-bold">
+              Stand : {{ stand.entreprise.nom }}
+            </v-toolbar-title>
+          </v-toolbar>
+
+          <v-data-table
+            :headers="standHeaders"
+            :items="stand.entretiens"
+            density="comfortable"
+            hide-default-footer
+            :items-per-page="-1"
+          >
+            <template #item.talent="{ item }">
+              <div class="font-weight-bold">{{ item.talent?.name }}</div>
+              <div class="text-caption text-medium-emphasis">{{ item.talent?.email }}</div>
+            </template>
+            <template #item.heure="{ item }">
+              {{ item.heure_debut }} – {{ item.heure_fin }}
+            </template>
+            <template #item.statut="{ item }">
+              <v-chip
+                size="small"
+                :color="statutColor(item.statut)"
+              >
+                {{ statutLabel(item.statut) }}
+              </v-chip>
+            </template>
+          </v-data-table>
+        </v-card>
       </div>
 
-      <div class="card-body">
-        <div class="mb-4">
-          <label class="form-label">Sélectionner un événement</label>
-          <select class="form-select" v-model="selectedEvenementId" @change="load">
-            <option value="">-- Choisir un événement --</option>
-            <option v-for="ev in evenements" :key="ev.id" :value="ev.id">
-              {{ ev.titre }} ({{ ev.date_debut }})
-            </option>
-          </select>
-        </div>
+      <v-alert
+        v-else-if="selectedEvenementId && !loading"
+        type="info"
+        variant="tonal"
+        density="compact"
+      >
+        Aucun entretien pour cet événement.
+      </v-alert>
 
-        <div v-if="stands.length > 0">
-          <div v-for="stand in stands" :key="stand.entreprise.id" class="card mb-3">
-            <div class="card-header">
-              <h4 class="card-title">
-                <i class="bi bi-building me-2"></i>
-                Stand : {{ stand.entreprise.nom }}
-              </h4>
-            </div>
-            <div class="table-responsive">
-              <table class="table table-vcenter card-table">
-                <thead>
-                  <tr>
-                    <th>Talent</th>
-                    <th>Date</th>
-                    <th>Heure</th>
-                    <th>Statut</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="e in stand.entretiens" :key="e.id">
-                    <td>
-                      <div class="fw-bold">{{ e.talent?.name }}</div>
-                      <div class="text-muted small">{{ e.talent?.email }}</div>
-                    </td>
-                    <td>{{ e.date }}</td>
-                    <td class="text-muted">{{ e.heure_debut }} – {{ e.heure_fin }}</td>
-                    <td>
-                      <span v-if="e.statut === 'en_attente'" class="badge bg-secondary">En attente</span>
-                      <span v-else-if="e.statut === 'confirme'" class="badge bg-success">Confirmé</span>
-                      <span v-else-if="e.statut === 'refuse'" class="badge bg-danger">Refusé</span>
-                      <span v-else-if="e.statut === 'annule'" class="badge">Annulé</span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        <div v-else-if="selectedEvenementId && !loading" class="alert alert-info">
-          <i class="bi bi-info-circle me-2"></i>
-          Aucun entretien pour cet événement.
-        </div>
-        <div v-else-if="!selectedEvenementId" class="alert alert-info">
-          <i class="bi bi-info-circle me-2"></i>
-          Sélectionnez un événement pour voir les entretiens.
-        </div>
-      </div>
+      <v-alert
+        v-else-if="!selectedEvenementId"
+        type="info"
+        variant="tonal"
+        density="compact"
+      >
+        Sélectionnez un événement pour voir les entretiens.
+      </v-alert>
+    </v-card-text>
 
-      <div v-if="error" class="card-footer">
-        <div class="alert alert-danger mb-0">{{ error }}</div>
-      </div>
-    </div>
-  </div>
+    <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">
+      {{ snackMsg }}
+    </v-snackbar>
+  </v-card>
 </template>
 
 <script setup>
@@ -84,11 +102,43 @@ const selectedEvenementId = ref('')
 const loading = ref(false)
 const error = ref('')
 
+const snackbar = ref(false)
+const snackMsg = ref('')
+const snackColor = ref('success')
+
+const showSnack = (msg, color = 'success') => {
+  snackMsg.value = msg
+  snackColor.value = color
+  snackbar.value = true
+}
+
+const standHeaders = [
+  { title: 'Talent', key: 'talent', sortable: false },
+  { title: 'Date', key: 'date', width: '130px' },
+  { title: 'Heure', key: 'heure', sortable: false, width: '150px' },
+  { title: 'Statut', key: 'statut', width: '130px' },
+]
+
+const statutColor = (statut) => {
+  if (statut === 'confirme') return 'success'
+  if (statut === 'refuse') return 'error'
+  if (statut === 'en_attente') return 'secondary'
+  return 'default'
+}
+
+const statutLabel = (statut) => {
+  if (statut === 'en_attente') return 'En attente'
+  if (statut === 'confirme') return 'Confirmé'
+  if (statut === 'refuse') return 'Refusé'
+  if (statut === 'annule') return 'Annulé'
+  return statut
+}
+
 const loadEvenements = async () => {
   try {
     const res = await api.get('/admin/entretiens-evenements')
     evenements.value = res.data
-  } catch { error.value = 'Erreur chargement événements' }
+  } catch { showSnack('Erreur chargement événements', 'error') }
 }
 
 const load = async () => {
@@ -97,7 +147,7 @@ const load = async () => {
   try {
     const res = await api.get('/admin/entretiens', { params: { evenement_id: selectedEvenementId.value } })
     stands.value = res.data
-  } catch { error.value = 'Erreur chargement entretiens' }
+  } catch { showSnack('Erreur chargement entretiens', 'error') }
   finally { loading.value = false }
 }
 

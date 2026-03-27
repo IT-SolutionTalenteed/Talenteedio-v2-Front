@@ -1,105 +1,74 @@
 <template>
-  <div class="container-xl">
-    <div class="card flex-grow-1">
-      <div class="card-header">
-        <h3 class="card-title">
-          <i class="bi bi-diagram-3 me-2"></i>
-          Gestion des Secteurs d\'activité
-        </h3>
-      <div class="card-actions">
-        <button class="btn btn-primary" @click="showForm = true">
-          <i class="bi bi-plus"></i>
-          Ajouter
-        </button>
-      </div>
-    </div>
+  <v-card rounded="xl" border elevation="0">
+    <v-toolbar color="transparent" border="b" density="compact" class="px-2">
+      <v-icon class="mr-2" color="primary">mdi-sitemap-outline</v-icon>
+      <v-toolbar-title class="text-body-1 font-weight-semibold">Gestion des Secteurs d'activité</v-toolbar-title>
+      <template #append>
+        <v-btn color="primary" prepend-icon="mdi-plus" size="small" @click="dialog = true">Ajouter</v-btn>
+      </template>
+    </v-toolbar>
 
-    <!-- Formulaire -->
-    <div v-if="showForm || editingItem" class="card-body border-bottom">
-      <h4 class="mb-3">{{ editingItem ? 'Modifier' : 'Créer' }} un secteur d\'activité</h4>
-      <form @submit.prevent="save">
-        <div class="mb-3">
-          <label class="form-label required">Nom</label>
-          <input type="text" class="form-control" v-model="form.name" required />
-        </div>
-        <div class="d-flex gap-2">
-          <button type="submit" class="btn btn-primary" :disabled="loading">
-            <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
-            {{ loading ? 'Enregistrement...' : 'Enregistrer' }}
-          </button>
-          <button type="button" class="btn btn-secondary" @click="cancelForm">Annuler</button>
-        </div>
-      </form>
-    </div>
+    <v-data-table
+      :headers="headers"
+      :items="items"
+      :loading="loading"
+      hover
+      density="comfortable"
+    >
+      <template #item.actions="{ item }">
+        <v-btn icon="mdi-pencil" size="small" color="primary" variant="text" @click="editItem(item)" />
+        <v-btn icon="mdi-delete" size="small" color="error" variant="text" @click="deleteItem(item.id)" />
+      </template>
+    </v-data-table>
+  </v-card>
 
-    <!-- Liste -->
-    <div class="table-responsive">
-      <table class="table table-vcenter card-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nom</th>
-            <th class="w-1"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="loading">
-            <td colspan="3" class="text-center">
-              <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Chargement...</span>
-              </div>
-            </td>
-          </tr>
-          <tr v-else-if="items.length === 0">
-            <td colspan="3" class="text-center text-muted">Aucun secteur d\'activité trouvé.</td>
-          </tr>
-          <tr v-else v-for="item in items" :key="item.id">
-            <td class="text-muted">{{ item.id }}</td>
-            <td>{{ item.name }}</td>
-            <td>
-              <div class="btn-list">
-                <button class="btn btn-sm btn-primary" @click="editItem(item)">
-                  <i class="bi bi-pencil"></i>
-                </button>
-                <button class="btn btn-sm btn-danger" @click="deleteItem(item.id)">
-                  <i class="bi bi-trash"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <v-dialog v-model="dialog" max-width="480">
+    <v-card rounded="xl">
+      <v-card-title class="pa-4 pb-2">{{ editingItem ? 'Modifier' : 'Créer' }} un secteur</v-card-title>
+      <v-card-text class="pa-4">
+        <v-text-field v-model="form.name" label="Nom" required variant="outlined" density="compact" autofocus />
+      </v-card-text>
+      <v-card-actions class="pa-4 pt-0">
+        <v-spacer />
+        <v-btn variant="text" @click="cancelForm">Annuler</v-btn>
+        <v-btn color="primary" variant="flat" :loading="loading" @click="save">Enregistrer</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 
-    <!-- Messages -->
-    <div v-if="error || success" class="card-footer">
-      <div v-if="error" class="alert alert-danger mb-0">{{ error }}</div>
-      <div v-if="success" class="alert alert-success mb-0">{{ success }}</div>
-    </div>
-    </div>
-  </div>
+  <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">{{ snackMsg }}</v-snackbar>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import activitySectorService from '../../services/activitySectorService.js'
 
+const headers = [
+  { title: 'ID', key: 'id', width: '80px' },
+  { title: 'Nom', key: 'name' },
+  { title: 'Actions', key: 'actions', sortable: false, align: 'end', width: '120px' },
+]
+
 const items = ref([])
 const loading = ref(false)
-const error = ref('')
-const success = ref('')
-const showForm = ref(false)
+const dialog = ref(false)
 const editingItem = ref(null)
 const form = ref({ name: '' })
+const snackbar = ref(false)
+const snackMsg = ref('')
+const snackColor = ref('success')
+
+const showSnack = (msg, color = 'success') => {
+  snackMsg.value = msg; snackColor.value = color; snackbar.value = true
+}
 
 const load = async () => {
   loading.value = true
-  error.value = ''
   try {
-    const response = await activitySectorService.getAll()
-    items.value = response.data
-  } catch (err) {
-    error.value = 'Erreur lors du chargement'
+    const res = await activitySectorService.getAll()
+    items.value = res.data
+  } catch {
+    showSnack('Erreur lors du chargement', 'error')
   } finally {
     loading.value = false
   }
@@ -107,20 +76,18 @@ const load = async () => {
 
 const save = async () => {
   loading.value = true
-  error.value = ''
-  success.value = ''
   try {
     if (editingItem.value) {
       await activitySectorService.update(editingItem.value.id, form.value)
-      success.value = 'Secteur modifié avec succès'
+      showSnack('un secteur modifié(e) avec succès')
     } else {
       await activitySectorService.create(form.value)
-      success.value = 'Secteur créé avec succès'
+      showSnack('un secteur créé(e) avec succès')
     }
     await load()
     cancelForm()
   } catch (err) {
-    error.value = err.response?.data?.message || 'Erreur lors de l\'enregistrement'
+    showSnack(err.response?.data?.message || "Erreur lors de l'enregistrement", 'error')
   } finally {
     loading.value = false
   }
@@ -129,26 +96,25 @@ const save = async () => {
 const editItem = (item) => {
   editingItem.value = item
   form.value = { name: item.name }
-  showForm.value = false
+  dialog.value = true
 }
 
 const deleteItem = async (id) => {
   if (!confirm('Supprimer ce secteur d\'activité ?')) return
   loading.value = true
-  error.value = ''
   try {
     await activitySectorService.delete(id)
-    success.value = 'Secteur supprimé avec succès'
+    showSnack('Supprimé avec succès')
     await load()
   } catch (err) {
-    error.value = err.response?.data?.message || 'Erreur lors de la suppression'
+    showSnack(err.response?.data?.message || 'Erreur lors de la suppression', 'error')
   } finally {
     loading.value = false
   }
 }
 
 const cancelForm = () => {
-  showForm.value = false
+  dialog.value = false
   editingItem.value = null
   form.value = { name: '' }
 }

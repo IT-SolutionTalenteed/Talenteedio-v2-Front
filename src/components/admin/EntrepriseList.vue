@@ -1,157 +1,168 @@
 <template>
-  <div class="container-xl">
-    <div class="card flex-grow-1">
-      <div class="card-header">
-        <h3 class="card-title">
-          <i class="bi bi-building me-2"></i>
-          Gestion des Entreprises
-        </h3>
-        <div class="card-actions">
-          <button class="btn btn-primary" @click="openCreate">
-            <i class="bi bi-plus"></i>
-            Ajouter une entreprise
-          </button>
-        </div>
-      </div>
+  <v-card rounded="xl" border elevation="0">
+    <v-toolbar color="transparent" border="b" density="compact" class="px-2">
+      <v-icon icon="mdi-domain" class="mr-2" />
+      <v-toolbar-title>Gestion des Entreprises</v-toolbar-title>
+      <v-spacer />
+      <v-btn color="primary" prepend-icon="mdi-plus" @click="openCreate">
+        Ajouter une entreprise
+      </v-btn>
+    </v-toolbar>
 
     <!-- Formulaire -->
-    <div v-if="showForm || editingItem" class="card-body border-bottom">
-      <h4 class="mb-3">{{ editingItem ? 'Modifier' : 'Créer' }} une entreprise</h4>
-
-      <form @submit.prevent="save">
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <label class="form-label required">Nom</label>
-            <input type="text" class="form-control" v-model="form.nom" required />
+    <v-expand-transition>
+      <div v-if="showForm || editingItem">
+        <v-card-text class="border-b">
+          <div class="text-subtitle-1 font-weight-bold mb-4">
+            {{ editingItem ? 'Modifier' : 'Créer' }} une entreprise
           </div>
+          <form @submit.prevent="save">
+            <v-row>
+              <v-col cols="12" md="6">
+                <v-text-field
+                  v-model="form.nom"
+                  label="Nom *"
+                  variant="outlined"
+                  density="compact"
+                  required
+                />
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-text-field
+                  v-model="form.email"
+                  label="Email *"
+                  type="email"
+                  variant="outlined"
+                  density="compact"
+                  required
+                  :disabled="!!editingItem"
+                  :hint="!editingItem ? 'Un email avec les identifiants sera envoyé à cette adresse.' : ''"
+                  persistent-hint
+                />
+              </v-col>
+              <v-col cols="12" md="6">
+                <div class="text-body-2 mb-1">Logo</div>
+                <input type="file" accept="image/*" @change="e => logoFile = e.target.files[0]" style="display:block;margin-bottom:8px" />
+                <v-avatar v-if="editingItem?.logo_url" size="48" class="mt-1">
+                  <img :src="editingItem.logo_url" style="width:100%;height:100%;object-fit:cover" />
+                </v-avatar>
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-select
+                  v-model="form.activity_sector_id"
+                  :items="referentiels.activity_sectors"
+                  item-title="name"
+                  item-value="id"
+                  label="Secteur d'activité"
+                  variant="outlined"
+                  density="compact"
+                  clearable
+                />
+              </v-col>
+              <v-col cols="12">
+                <v-textarea
+                  v-model="form.description"
+                  label="Description"
+                  variant="outlined"
+                  density="compact"
+                  rows="4"
+                />
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-text-field
+                  v-model="form.site_web"
+                  label="Site web"
+                  variant="outlined"
+                  density="compact"
+                  placeholder="https://..."
+                />
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-text-field
+                  v-model="form.telephone"
+                  label="Téléphone"
+                  variant="outlined"
+                  density="compact"
+                />
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="form.adresse"
+                  label="Adresse"
+                  variant="outlined"
+                  density="compact"
+                />
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-text-field
+                  v-model="form.ville"
+                  label="Ville"
+                  variant="outlined"
+                  density="compact"
+                />
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-text-field
+                  v-model="form.pays"
+                  label="Pays"
+                  variant="outlined"
+                  density="compact"
+                />
+              </v-col>
+            </v-row>
+            <div class="d-flex gap-2 mt-2">
+              <v-btn type="submit" color="primary" :loading="loading">
+                Enregistrer
+              </v-btn>
+              <v-btn type="button" variant="text" @click="cancelForm">Annuler</v-btn>
+            </div>
+          </form>
+        </v-card-text>
+      </div>
+    </v-expand-transition>
 
-          <div class="col-md-6 mb-3">
-            <label class="form-label required">Email</label>
-            <input type="email" class="form-control" v-model="form.email" required :disabled="!!editingItem" />
-            <small v-if="!editingItem" class="form-hint">Un email avec les identifiants sera envoyé à cette adresse.</small>
-          </div>
-
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Logo</label>
-            <input type="file" class="form-control" accept="image/*" @change="e => logoFile = e.target.files[0]" />
-            <img v-if="editingItem?.logo_url" :src="editingItem.logo_url" class="mt-2 avatar avatar-lg" />
-          </div>
-
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Secteur d'activité</label>
-            <select class="form-select" v-model="form.activity_sector_id">
-              <option value="">-- Aucun --</option>
-              <option v-for="s in referentiels.activity_sectors" :key="s.id" :value="s.id">{{ s.name }}</option>
-            </select>
-          </div>
-
-          <div class="col-md-12 mb-3">
-            <label class="form-label">Description</label>
-            <textarea class="form-control" v-model="form.description" rows="4"></textarea>
-          </div>
-
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Site web</label>
-            <input type="text" class="form-control" v-model="form.site_web" placeholder="https://..." />
-          </div>
-
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Téléphone</label>
-            <input type="text" class="form-control" v-model="form.telephone" />
-          </div>
-
-          <div class="col-md-12 mb-3">
-            <label class="form-label">Adresse</label>
-            <input type="text" class="form-control" v-model="form.adresse" />
-          </div>
-
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Ville</label>
-            <input type="text" class="form-control" v-model="form.ville" />
-          </div>
-
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Pays</label>
-            <input type="text" class="form-control" v-model="form.pays" />
+    <!-- Table -->
+    <v-data-table
+      :headers="headers"
+      :items="items"
+      :loading="loading"
+      hover
+      density="comfortable"
+    >
+      <template #item.logo_nom="{ item }">
+        <div class="d-flex align-center gap-2">
+          <v-avatar size="32">
+            <img v-if="item.logo_url" :src="item.logo_url" style="width:100%;height:100%;object-fit:cover" />
+            <span v-else>{{ item.nom?.charAt(0) }}</span>
+          </v-avatar>
+          <div>
+            <div class="font-weight-bold">{{ item.nom }}</div>
+            <div v-if="item.ville" class="text-caption text-medium-emphasis">{{ item.ville }}</div>
           </div>
         </div>
+      </template>
+      <template #item.email="{ item }">
+        {{ item.user?.email || '-' }}
+      </template>
+      <template #item.ville="{ item }">
+        {{ item.ville || '-' }}
+      </template>
+      <template #item.activity_sector="{ item }">
+        <v-chip v-if="item.activity_sector" size="small" color="info">
+          {{ item.activity_sector.name }}
+        </v-chip>
+        <span v-else class="text-medium-emphasis">-</span>
+      </template>
+      <template #item.actions="{ item }">
+        <v-btn icon="mdi-pencil" size="small" color="primary" variant="text" @click="editItem(item)" />
+        <v-btn icon="mdi-trash-can" size="small" color="error" variant="text" @click="deleteItem(item.id)" />
+      </template>
+    </v-data-table>
 
-        <div class="d-flex gap-2">
-          <button type="submit" class="btn btn-primary" :disabled="loading">
-            <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
-            {{ loading ? 'Enregistrement...' : 'Enregistrer' }}
-          </button>
-          <button type="button" class="btn btn-secondary" @click="cancelForm">Annuler</button>
-        </div>
-      </form>
-    </div>
-
-    <!-- Liste -->
-
-    <div class="table-responsive">
-      <table class="table table-vcenter card-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Logo</th>
-            <th>Nom</th>
-            <th>Email</th>
-            <th>Ville</th>
-            <th>Secteur</th>
-            <th class="w-1"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="loading">
-            <td colspan="7" class="text-center">
-              <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Chargement...</span>
-              </div>
-            </td>
-          </tr>
-          <tr v-else-if="items.length === 0">
-            <td colspan="7" class="text-center text-muted">Aucune entreprise trouvée.</td>
-          </tr>
-          <tr v-else v-for="item in items" :key="item.id">
-            <td class="text-muted">{{ item.id }}</td>
-            <td>
-              <img v-if="item.logo_url" :src="item.logo_url" class="avatar avatar-sm" />
-              <span v-else class="avatar avatar-sm">{{ item.nom?.charAt(0) }}</span>
-            </td>
-            <td>
-              <div class="fw-bold">{{ item.nom }}</div>
-              <div class="text-muted" v-if="item.ville">{{ item.ville }}</div>
-            </td>
-            <td class="text-muted">{{ item.user?.email || '-' }}</td>
-            <td>{{ item.ville || '-' }}</td>
-            <td>
-              <span v-if="item.activity_sector" class="badge bg-azure">{{ item.activity_sector.name }}</span>
-              <span v-else class="text-muted">-</span>
-            </td>
-            <td>
-              <div class="btn-list">
-                <button class="btn btn-sm btn-primary" @click="editItem(item)">
-                  <i class="bi bi-pencil"></i>
-                  Modifier
-                </button>
-                <button class="btn btn-sm btn-danger" @click="deleteItem(item.id)">
-                  <i class="bi bi-trash"></i>
-                  Supprimer
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Messages -->
-    <div v-if="error || success" class="card-footer">
-      <div v-if="error" class="alert alert-danger mb-0">{{ error }}</div>
-      <div v-if="success" class="alert alert-success mb-0">{{ success }}</div>
-    </div>
-    </div>
-  </div>
+    <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">
+      {{ snackMsg }}
+    </v-snackbar>
+  </v-card>
 </template>
 
 <script setup>
@@ -167,6 +178,25 @@ const showForm = ref(false)
 const editingItem = ref(null)
 const logoFile = ref(null)
 
+const snackbar = ref(false)
+const snackMsg = ref('')
+const snackColor = ref('success')
+
+const showSnack = (msg, color = 'success') => {
+  snackMsg.value = msg
+  snackColor.value = color
+  snackbar.value = true
+}
+
+const headers = [
+  { title: 'ID', key: 'id', width: '80px' },
+  { title: 'Logo / Nom', key: 'logo_nom', sortable: false },
+  { title: 'Email', key: 'email', sortable: false },
+  { title: 'Ville', key: 'ville' },
+  { title: 'Secteur', key: 'activity_sector', sortable: false },
+  { title: '', key: 'actions', sortable: false, width: '100px', align: 'end' },
+]
+
 const emptyForm = () => ({
   nom: '', email: '', description: '', site_web: '',
   telephone: '', adresse: '', ville: '', pays: '', activity_sector_id: ''
@@ -180,7 +210,7 @@ const load = async () => {
     const res = await entrepriseService.getAll()
     items.value = res.data
   } catch (err) {
-    error.value = 'Erreur lors du chargement'
+    showSnack('Erreur lors du chargement', 'error')
   } finally {
     loading.value = false
   }
@@ -239,16 +269,16 @@ const save = async () => {
     if (editingItem.value) {
       fd.append('_method', 'PUT')
       await entrepriseService.updateFormData(editingItem.value.id, fd)
-      success.value = 'Entreprise modifiée avec succès'
+      showSnack('Entreprise modifiée avec succès')
     } else {
       await entrepriseService.create(fd)
-      success.value = 'Entreprise créée — identifiants envoyés par email'
+      showSnack('Entreprise créée — identifiants envoyés par email')
     }
     await load()
     cancelForm()
   } catch (err) {
     const errs = err.response?.data?.errors
-    error.value = errs ? Object.values(errs).flat().join(' | ') : "Erreur lors de l'enregistrement"
+    showSnack(errs ? Object.values(errs).flat().join(' | ') : "Erreur lors de l'enregistrement", 'error')
   } finally {
     loading.value = false
   }
@@ -260,10 +290,10 @@ const deleteItem = async (id) => {
   error.value = ''
   try {
     await entrepriseService.delete(id)
-    success.value = 'Entreprise supprimée avec succès'
+    showSnack('Entreprise supprimée avec succès')
     await load()
   } catch (err) {
-    error.value = err.response?.data?.message || 'Erreur lors de la suppression'
+    showSnack(err.response?.data?.message || 'Erreur lors de la suppression', 'error')
   } finally {
     loading.value = false
   }

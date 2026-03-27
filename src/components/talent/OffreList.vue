@@ -1,64 +1,96 @@
 <template>
-  <div>
-    <h2>Offres d'emploi</h2>
+  <v-card rounded="xl" border elevation="0" class="pa-4">
+    <v-card-title class="text-h5 mb-4">Offres d'emploi</v-card-title>
 
-    <!-- Formulaire de candidature -->
-    <div v-if="showCandidature && selectedOffre">
-      <h3>Postuler — {{ selectedOffre.titre }}</h3>
-      <form @submit.prevent="postuler">
-        <div>
-          <label>CV (PDF, DOC, DOCX) *</label>
-          <input type="file" accept=".pdf,.doc,.docx" @change="e => cvFile = e.target.files[0]" required />
-        </div>
-        <div>
-          <label>Message de motivation</label>
-          <textarea v-model="candidatureMessage" rows="5" placeholder="Présentez-vous brièvement..."></textarea>
-        </div>
-        <button type="submit" :disabled="loading || !cvFile">
-          {{ loading ? 'Envoi...' : 'Envoyer ma candidature' }}
-        </button>
-        <button type="button" @click="showCandidature = false">Annuler</button>
-      </form>
+    <!-- Snackbar -->
+    <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">{{ snackMsg }}</v-snackbar>
+
+    <!-- Dialog candidature -->
+    <v-dialog v-model="showCandidature" max-width="560" persistent>
+      <v-card rounded="xl">
+        <v-card-title class="text-h6 pa-4">
+          Postuler — {{ selectedOffre?.titre }}
+        </v-card-title>
+        <v-card-text>
+          <v-form @submit.prevent="postuler">
+            <div class="mb-4">
+              <label class="text-body-2 font-weight-medium mb-1 d-block">CV (PDF, DOC, DOCX) *</label>
+              <input type="file" accept=".pdf,.doc,.docx" @change="e => cvFile = e.target.files[0]" required />
+            </div>
+            <v-textarea
+              v-model="candidatureMessage"
+              label="Message de motivation"
+              rows="5"
+              placeholder="Présentez-vous brièvement..."
+              variant="outlined"
+              density="comfortable"
+            />
+          </v-form>
+        </v-card-text>
+        <v-card-actions class="pa-4 pt-0">
+          <v-spacer />
+          <v-btn variant="text" @click="showCandidature = false">Annuler</v-btn>
+          <v-btn color="primary" variant="tonal" :disabled="loading || !cvFile" :loading="loading" @click="postuler">
+            Envoyer ma candidature
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- Table des offres -->
+    <v-data-table
+      :headers="headers"
+      :items="offres"
+      :loading="loading"
+      hover
+      density="comfortable"
+      hide-default-footer
+    >
+      <template #item.job_contracts="{ item }">
+        <span v-if="item.job_contracts?.length">
+          <v-chip
+            v-for="c in item.job_contracts"
+            :key="c.id"
+            size="small"
+            class="mr-1"
+            color="primary"
+            variant="tonal"
+          >{{ c.name }}</v-chip>
+        </span>
+        <span v-else>-</span>
+      </template>
+
+      <template #item.actions="{ item }">
+        <v-btn
+          color="primary"
+          size="small"
+          variant="tonal"
+          class="mr-1"
+          @click="openCandidature(item)"
+        >Postuler</v-btn>
+        <v-btn
+          :icon="favorisIds.has(item.id) ? 'mdi-star' : 'mdi-star-outline'"
+          :color="favorisIds.has(item.id) ? 'warning' : 'default'"
+          size="small"
+          variant="text"
+          @click="toggleFavori(item)"
+        />
+      </template>
+
+      <template #no-data>
+        <div class="text-center py-6 text-medium-emphasis">Aucune offre disponible.</div>
+      </template>
+    </v-data-table>
+
+    <!-- Pagination -->
+    <div v-if="pagination.last_page > 1" class="d-flex justify-center mt-4">
+      <v-pagination
+        v-model="pagination.current_page"
+        :length="pagination.last_page"
+        @update:model-value="loadPage"
+      />
     </div>
-
-    <!-- Liste des offres -->
-    <div v-if="offres.length > 0">
-      <div v-for="offre in offres" :key="offre.id" style="border:1px solid #ccc; margin:8px; padding:12px;">
-        <h3>{{ offre.titre }}</h3>
-        <p v-if="offre.entreprise"><strong>Entreprise :</strong> {{ offre.entreprise.nom }}</p>
-        <p v-if="offre.localisation"><strong>Lieu :</strong> {{ offre.localisation }}</p>
-        <p v-if="offre.fourchette_salariale"><strong>Salaire :</strong> {{ offre.fourchette_salariale }}</p>
-        <p v-if="offre.date_limite"><strong>Date limite :</strong> {{ offre.date_limite }}</p>
-
-        <div v-if="offre.job_contracts?.length">
-          <strong>Contrats :</strong> {{ offre.job_contracts.map(c => c.name).join(', ') }}
-        </div>
-        <div v-if="offre.job_modes?.length">
-          <strong>Modes :</strong> {{ offre.job_modes.map(m => m.name).join(', ') }}
-        </div>
-        <div v-if="offre.skills?.length">
-          <strong>Compétences :</strong> {{ offre.skills.map(s => s.name).join(', ') }}
-        </div>
-
-        <p v-if="offre.description">{{ offre.description }}</p>
-
-        <button @click="openCandidature(offre)">Postuler</button>
-        <button @click="toggleFavori(offre)">
-          {{ favorisIds.has(offre.id) ? '★ Favori' : '☆ Ajouter aux favoris' }}
-        </button>
-      </div>
-
-      <div v-if="pagination.last_page > 1">
-        <button :disabled="pagination.current_page <= 1" @click="loadPage(pagination.current_page - 1)">Précédent</button>
-        <span>Page {{ pagination.current_page }} / {{ pagination.last_page }}</span>
-        <button :disabled="pagination.current_page >= pagination.last_page" @click="loadPage(pagination.current_page + 1)">Suivant</button>
-      </div>
-    </div>
-    <div v-else-if="!loading"><p>Aucune offre disponible.</p></div>
-
-    <div v-if="error" style="color:red;">{{ error }}</div>
-    <div v-if="success" style="color:green;">{{ success }}</div>
-  </div>
+  </v-card>
 </template>
 
 <script setup>
@@ -76,13 +108,30 @@ const selectedOffre = ref(null)
 const cvFile = ref(null)
 const candidatureMessage = ref('')
 
+const snackbar = ref(false)
+const snackColor = ref('success')
+const snackMsg = ref('')
+const showSnack = (msg, color = 'success') => {
+  snackMsg.value = msg; snackColor.value = color; snackbar.value = true
+}
+
+const headers = [
+  { title: 'Titre', key: 'titre' },
+  { title: 'Entreprise', key: 'entreprise.nom' },
+  { title: 'Lieu', key: 'localisation' },
+  { title: 'Salaire', key: 'fourchette_salariale' },
+  { title: 'Date limite', key: 'date_limite' },
+  { title: 'Contrats', key: 'job_contracts', sortable: false },
+  { title: 'Actions', key: 'actions', sortable: false, align: 'end' },
+]
+
 const loadPage = async (page = 1) => {
   loading.value = true; error.value = ''
   try {
     const res = await offreService.getAll(page)
     offres.value = res.data.data
     pagination.value = { current_page: res.data.current_page, last_page: res.data.last_page }
-  } catch { error.value = 'Erreur chargement des offres' }
+  } catch { error.value = 'Erreur chargement des offres'; showSnack('Erreur chargement des offres', 'error') }
   finally { loading.value = false }
 }
 
@@ -105,8 +154,10 @@ const postuler = async () => {
     await offreService.postuler(selectedOffre.value.id, fd)
     success.value = 'Candidature envoyée avec succès !'
     showCandidature.value = false
+    showSnack('Candidature envoyée avec succès !')
   } catch (err) {
     error.value = err.response?.data?.message || 'Erreur lors de la candidature'
+    showSnack(error.value, 'error')
   } finally { loading.value = false }
 }
 
@@ -127,7 +178,7 @@ const toggleFavori = async (offre) => {
     }
     // Trigger reactivity
     favorisIds.value = new Set(favorisIds.value)
-  } catch { error.value = 'Erreur favoris' }
+  } catch { error.value = 'Erreur favoris'; showSnack('Erreur favoris', 'error') }
 }
 
 onMounted(() => { loadPage(); loadFavoris() })

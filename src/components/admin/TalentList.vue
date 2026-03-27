@@ -1,238 +1,245 @@
 <template>
-  <div class="container-xl">
-    <div class="card flex-grow-1">
-      <div class="card-header">
-        <h3 class="card-title">
-          <i class="bi bi-people me-2"></i>
-          Gestion des Talents & Consultants
-        </h3>
-      </div>
+  <v-card rounded="xl" border elevation="0">
+    <!-- Snackbar -->
+    <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">{{ snackMsg }}</v-snackbar>
+
+    <!-- Header -->
+    <v-toolbar color="transparent" border="b" density="compact" class="px-2">
+      <v-icon class="mr-2">mdi-account-group</v-icon>
+      <v-toolbar-title>Gestion des Talents &amp; Consultants</v-toolbar-title>
+    </v-toolbar>
 
     <!-- Formulaire édition profil -->
-    <div v-if="editingTalent" class="card-body border-bottom">
-      <h4 class="mb-3">Modifier le profil — {{ editingTalent.name }}</h4>
-      <form @submit.prevent="saveProfil">
-        <div class="row">
-          <div class="col-md-3 mb-3">
-            <label class="form-label">Civilité</label>
-            <select class="form-select" v-model="profilForm.civilite">
-              <option value="">—</option>
-              <option value="M.">M.</option>
-              <option value="Mme.">Mme.</option>
-            </select>
-          </div>
-          <div class="col-md-9 mb-3">
-            <label class="form-label">Titre / Poste</label>
-            <input type="text" class="form-control" v-model="profilForm.titre_poste" />
-          </div>
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Téléphone</label>
-            <input type="text" class="form-control" v-model="profilForm.telephone" />
-          </div>
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Date de naissance</label>
-            <input type="date" class="form-control" v-model="profilForm.date_naissance" />
-          </div>
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Nationalité</label>
-            <input type="text" class="form-control" v-model="profilForm.nationalite" />
-          </div>
-          <div class="col-md-3 mb-3">
-            <label class="form-label">Ville</label>
-            <input type="text" class="form-control" v-model="profilForm.ville" />
-          </div>
-          <div class="col-md-3 mb-3">
-            <label class="form-label">Pays</label>
-            <input type="text" class="form-control" v-model="profilForm.pays" />
-          </div>
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Disponibilité</label>
-            <input type="text" class="form-control" v-model="profilForm.disponibilite" />
-          </div>
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Mobilité</label>
-            <input type="text" class="form-control" v-model="profilForm.mobilite" />
-          </div>
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Situation familiale</label>
-            <select class="form-select" v-model="profilForm.situation_familiale">
-              <option value="">—</option>
-              <option value="celibataire">Célibataire</option>
-              <option value="marie">Marié(e)</option>
-              <option value="pacse">Pacsé(e)</option>
-              <option value="divorce">Divorcé(e)</option>
-              <option value="veuf">Veuf / Veuve</option>
-            </select>
-          </div>
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Source / Provenance</label>
-            <input type="text" class="form-control" v-model="profilForm.source_provenance" />
-          </div>
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Niveau d'étude</label>
-            <select class="form-select" v-model="profilForm.study_level_id">
-              <option value="">—</option>
-              <option v-for="sl in referentiels.studyLevels" :key="sl.id" :value="sl.id">{{ sl.name }}</option>
-            </select>
-          </div>
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Expérience</label>
-            <select class="form-select" v-model="profilForm.experience_id">
-              <option value="">—</option>
-              <option v-for="ex in referentiels.experiences" :key="ex.id" :value="ex.id">{{ ex.name }}</option>
-            </select>
-          </div>
-        </div>
+    <v-expand-transition>
+      <div v-if="editingTalent">
+        <v-card variant="outlined" class="ma-4 mb-0">
+          <v-card-title class="text-subtitle-1 pa-4 pb-2">
+            Modifier le profil — {{ editingTalent.name }}
+          </v-card-title>
+          <v-card-text>
+            <form @submit.prevent="saveProfil">
+              <v-row>
+                <v-col cols="12" md="3">
+                  <v-select
+                    v-model="profilForm.civilite"
+                    label="Civilité"
+                    variant="outlined"
+                    density="compact"
+                    :items="[{title:'—',value:''},{title:'M.',value:'M.'},{title:'Mme.',value:'Mme.'}]"
+                    item-title="title"
+                    item-value="value"
+                  />
+                </v-col>
+                <v-col cols="12" md="9">
+                  <v-text-field v-model="profilForm.titre_poste" label="Titre / Poste" variant="outlined" density="compact" />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field v-model="profilForm.telephone" label="Téléphone" variant="outlined" density="compact" />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field v-model="profilForm.date_naissance" label="Date de naissance" type="date" variant="outlined" density="compact" />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field v-model="profilForm.nationalite" label="Nationalité" variant="outlined" density="compact" />
+                </v-col>
+                <v-col cols="12" md="3">
+                  <v-text-field v-model="profilForm.ville" label="Ville" variant="outlined" density="compact" />
+                </v-col>
+                <v-col cols="12" md="3">
+                  <v-text-field v-model="profilForm.pays" label="Pays" variant="outlined" density="compact" />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field v-model="profilForm.disponibilite" label="Disponibilité" variant="outlined" density="compact" />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field v-model="profilForm.mobilite" label="Mobilité" variant="outlined" density="compact" />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-select
+                    v-model="profilForm.situation_familiale"
+                    label="Situation familiale"
+                    variant="outlined"
+                    density="compact"
+                    :items="[
+                      {title:'—',value:''},
+                      {title:'Célibataire',value:'celibataire'},
+                      {title:'Marié(e)',value:'marie'},
+                      {title:'Pacsé(e)',value:'pacse'},
+                      {title:'Divorcé(e)',value:'divorce'},
+                      {title:'Veuf / Veuve',value:'veuf'},
+                    ]"
+                    item-title="title"
+                    item-value="value"
+                  />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field v-model="profilForm.source_provenance" label="Source / Provenance" variant="outlined" density="compact" />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-select
+                    v-model="profilForm.study_level_id"
+                    label="Niveau d'étude"
+                    variant="outlined"
+                    density="compact"
+                    :items="[{name:'—',id:''},...referentiels.studyLevels]"
+                    item-title="name"
+                    item-value="id"
+                  />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-select
+                    v-model="profilForm.experience_id"
+                    label="Expérience"
+                    variant="outlined"
+                    density="compact"
+                    :items="[{name:'—',id:''},...referentiels.experiences]"
+                    item-title="name"
+                    item-value="id"
+                  />
+                </v-col>
+              </v-row>
 
-        <!-- Secteurs d'activité -->
-        <div class="mb-3">
-          <label class="form-label">Secteurs d'activité</label>
-          <div class="d-flex flex-wrap gap-2">
-            <label v-for="sec in referentiels.activitySectors" :key="sec.id" class="form-check">
-              <input type="checkbox" class="form-check-input" :value="sec.id" v-model="profilForm.activity_sector_ids" />
-              <span class="form-check-label">{{ sec.name }}</span>
-            </label>
-          </div>
-        </div>
+              <!-- Secteurs d'activité -->
+              <div class="mb-3">
+                <div class="text-caption text-medium-emphasis mb-1">Secteurs d'activité</div>
+                <div class="d-flex flex-wrap gap-1">
+                  <v-checkbox
+                    v-for="sec in referentiels.activitySectors"
+                    :key="sec.id"
+                    :label="sec.name"
+                    :value="sec.id"
+                    v-model="profilForm.activity_sector_ids"
+                    density="compact"
+                    hide-details
+                    class="mr-2"
+                  />
+                </div>
+              </div>
 
-        <!-- Langues -->
-        <div class="mb-3">
-          <label class="form-label">Langues</label>
-          <div class="d-flex flex-wrap gap-2">
-            <label v-for="lang in referentiels.languages" :key="lang.id" class="form-check">
-              <input type="checkbox" class="form-check-input" :value="lang.id" v-model="profilForm.language_ids" />
-              <span class="form-check-label">{{ lang.name }}</span>
-            </label>
-          </div>
-        </div>
+              <!-- Langues -->
+              <div class="mb-3">
+                <div class="text-caption text-medium-emphasis mb-1">Langues</div>
+                <div class="d-flex flex-wrap gap-1">
+                  <v-checkbox
+                    v-for="lang in referentiels.languages"
+                    :key="lang.id"
+                    :label="lang.name"
+                    :value="lang.id"
+                    v-model="profilForm.language_ids"
+                    density="compact"
+                    hide-details
+                    class="mr-2"
+                  />
+                </div>
+              </div>
 
-        <!-- Skills -->
-        <div class="mb-3">
-          <label class="form-label">Compétences</label>
-          <div class="d-flex flex-wrap gap-2">
-            <label v-for="skill in referentiels.skills" :key="skill.id" class="form-check">
-              <input type="checkbox" class="form-check-input" :value="skill.id" v-model="profilForm.skill_ids" />
-              <span class="form-check-label">{{ skill.name }}</span>
-            </label>
-          </div>
-        </div>
+              <!-- Skills -->
+              <div class="mb-4">
+                <div class="text-caption text-medium-emphasis mb-1">Compétences</div>
+                <div class="d-flex flex-wrap gap-1">
+                  <v-checkbox
+                    v-for="skill in referentiels.skills"
+                    :key="skill.id"
+                    :label="skill.name"
+                    :value="skill.id"
+                    v-model="profilForm.skill_ids"
+                    density="compact"
+                    hide-details
+                    class="mr-2"
+                  />
+                </div>
+              </div>
 
-        <div class="d-flex gap-2">
-          <button type="submit" class="btn btn-primary" :disabled="savingProfil">
-            <span v-if="savingProfil" class="spinner-border spinner-border-sm me-2"></span>
-            {{ savingProfil ? 'Enregistrement...' : 'Enregistrer' }}
-          </button>
-          <button type="button" class="btn btn-secondary" @click="editingTalent = null">Annuler</button>
-        </div>
-      </form>
-    </div>
+              <div class="d-flex gap-2">
+                <v-btn type="submit" color="primary" :loading="savingProfil">Enregistrer</v-btn>
+                <v-btn variant="tonal" @click="editingTalent = null">Annuler</v-btn>
+              </div>
+            </form>
+          </v-card-text>
+        </v-card>
+      </div>
+    </v-expand-transition>
 
     <!-- Tableau -->
+    <v-data-table
+      :headers="headers"
+      :items="talents"
+      :loading="loading"
+      hover
+      density="comfortable"
+    >
+      <template #item.name="{ item }">
+        <div class="font-weight-bold">{{ item.name }}</div>
+        <div v-if="item.titre_poste" class="text-caption text-medium-emphasis">{{ item.titre_poste }}</div>
+      </template>
 
-    <div class="table-responsive">
-      <table class="table table-vcenter card-table table-sm">
-        <thead>
-          <tr>
-            <th>Nom</th>
-            <th>Email</th>
-            <th>Rôle</th>
-            <th>Localisation</th>
-            <th>Provenance</th>
-            <th>Statut CRM</th>
-            <th>État</th>
-            <th class="w-1"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="loading">
-            <td colspan="8" class="text-center">
-              <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Chargement...</span>
-              </div>
-            </td>
-          </tr>
-          <tr v-else-if="talents.length === 0">
-            <td colspan="8" class="text-center text-muted">Aucun talent trouvé.</td>
-          </tr>
-          <tr v-else v-for="talent in talents" :key="talent.id">
-            <td>
-              <div class="fw-bold">{{ talent.name }}</div>
-              <div v-if="talent.titre_poste" class="text-muted small">{{ talent.titre_poste }}</div>
-            </td>
-            <td class="text-muted">{{ talent.email }}</td>
-            <td>
-              <span class="badge" :class="talent.role === 'consultant_externe' ? 'bg-purple' : 'bg-blue'">
-                {{ talent.role === 'consultant_externe' ? 'Consultant' : 'Talent' }}
-              </span>
-            </td>
-            <td class="text-muted">{{ [talent.ville, talent.pays].filter(Boolean).join(', ') || '—' }}</td>
-            <td class="text-muted">{{ talent.source_provenance || '—' }}</td>
-            <td>
-              <select class="form-select form-select-sm" @change="updateStatutCrm(talent, $event.target.value)" :value="talent.statut_crm || ''">
-                <option value="">— Aucun —</option>
-                <option value="a_traiter">A traiter</option>
-                <option value="en_cours_qualif">En cours de qualif.</option>
-                <option value="vivier">Vivier</option>
-                <option value="top_profil">Top profil</option>
-                <option value="converti_ressource">Converti en ressource</option>
-                <option value="recrute_client">Recruté par client</option>
-                <option value="ne_plus_contacter">Ne plus contacter</option>
-              </select>
-            </td>
-            <td>
-              <span v-if="talent.is_suspended" class="badge bg-warning">Suspendu</span>
-              <span v-else-if="talent.is_banned" class="badge bg-danger">Banni</span>
-              <span v-else class="badge bg-success">Actif</span>
-            </td>
-            <td>
-              <div class="btn-list">
-                <button class="btn btn-sm btn-primary" @click="openEdit(talent)" title="Modifier profil">
-                  <i class="bi bi-pencil"></i>
-                </button>
-                <button class="btn btn-sm" :class="talent.is_suspended ? 'btn-success' : 'btn-warning'" @click="toggleSuspend(talent)" :title="talent.is_suspended ? 'Réactiver' : 'Suspendre'">
-                  <i :class="talent.is_suspended ? 'bi bi-check-circle' : 'bi bi-pause-circle'"></i>
-                </button>
-                <button class="btn btn-sm" :class="talent.is_banned ? 'btn-info' : 'btn-danger'" @click="toggleBan(talent)" :title="talent.is_banned ? 'Débannir' : 'Bannir'">
-                  <i :class="talent.is_banned ? 'bi bi-unlock' : 'bi bi-lock'"></i>
-                </button>
-                <button class="btn btn-sm btn-danger" @click="deleteItem(talent.id)" title="Supprimer">
-                  <i class="bi bi-trash"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      <template #item.role="{ item }">
+        <v-chip size="small" :color="item.role === 'consultant_externe' ? 'purple' : 'primary'">
+          {{ item.role === 'consultant_externe' ? 'Consultant' : 'Talent' }}
+        </v-chip>
+      </template>
+
+      <template #item.localisation="{ item }">
+        <span class="text-medium-emphasis">{{ [item.ville, item.pays].filter(Boolean).join(', ') || '—' }}</span>
+      </template>
+
+      <template #item.source_provenance="{ item }">
+        <span class="text-medium-emphasis">{{ item.source_provenance || '—' }}</span>
+      </template>
+
+      <template #item.statut_crm="{ item }">
+        <v-select
+          variant="outlined"
+          density="compact"
+          style="min-width:160px"
+          :items="statutOptions"
+          item-title="label"
+          item-value="value"
+          :model-value="item.statut_crm || ''"
+          @update:model-value="v => updateStatutCrm(item, v)"
+          hide-details
+        />
+      </template>
+
+      <template #item.etat="{ item }">
+        <v-chip size="small" :color="item.is_suspended ? 'warning' : item.is_banned ? 'error' : 'success'">
+          {{ item.is_suspended ? 'Suspendu' : item.is_banned ? 'Banni' : 'Actif' }}
+        </v-chip>
+      </template>
+
+      <template #item.actions="{ item }">
+        <div class="d-flex gap-1">
+          <v-btn icon="mdi-pencil" size="small" color="primary" variant="tonal" @click="openEdit(item)" title="Modifier profil" />
+          <v-btn
+            :icon="item.is_suspended ? 'mdi-check-circle' : 'mdi-pause-circle'"
+            size="small"
+            :color="item.is_suspended ? 'success' : 'warning'"
+            variant="tonal"
+            @click="toggleSuspend(item)"
+            :title="item.is_suspended ? 'Réactiver' : 'Suspendre'"
+          />
+          <v-btn
+            :icon="item.is_banned ? 'mdi-lock-open' : 'mdi-lock'"
+            size="small"
+            :color="item.is_banned ? 'info' : 'error'"
+            variant="tonal"
+            @click="toggleBan(item)"
+            :title="item.is_banned ? 'Débannir' : 'Bannir'"
+          />
+          <v-btn icon="mdi-delete" size="small" color="error" variant="tonal" @click="deleteItem(item.id)" title="Supprimer" />
+        </div>
+      </template>
+    </v-data-table>
 
     <!-- Pagination -->
-    <div v-if="pagination.last_page > 1" class="card-footer d-flex align-items-center">
-      <p class="m-0 text-muted">
-        Page {{ pagination.current_page }} sur {{ pagination.last_page }}
-      </p>
-      <ul class="pagination m-0 ms-auto">
-        <li class="page-item" :class="{ disabled: pagination.current_page <= 1 }">
-          <a class="page-link" href="#" @click.prevent="loadPage(pagination.current_page - 1)">
-            <i class="bi bi-chevron-left"></i>
-            Précédent
-          </a>
-        </li>
-        <li class="page-item" :class="{ disabled: pagination.current_page >= pagination.last_page }">
-          <a class="page-link" href="#" @click.prevent="loadPage(pagination.current_page + 1)">
-            Suivant
-            <i class="bi bi-chevron-right"></i>
-          </a>
-        </li>
-      </ul>
-    </div>
-
-    <!-- Messages -->
-    <div v-if="error || success" class="card-footer">
-      <div v-if="error" class="alert alert-danger mb-0">{{ error }}</div>
-      <div v-if="success" class="alert alert-success mb-0">{{ success }}</div>
-    </div>
-    </div>
-  </div>
+    <v-pagination
+      v-if="pagination.last_page > 1"
+      v-model="pagination.current_page"
+      :length="pagination.last_page"
+      @update:model-value="loadPage"
+      class="mt-2"
+    />
+  </v-card>
 </template>
 
 <script setup>
@@ -248,6 +255,37 @@ const success      = ref('')
 const pagination   = ref({ current_page: 1, last_page: 1 })
 const editingTalent = ref(null)
 const profilForm   = ref({})
+
+const snackbar  = ref(false)
+const snackMsg  = ref('')
+const snackColor = ref('success')
+const showSnack = (msg, color = 'success') => {
+  snackMsg.value   = msg
+  snackColor.value = color
+  snackbar.value   = true
+}
+
+const headers = [
+  { title: 'Nom / Titre', key: 'name', sortable: true },
+  { title: 'Email', key: 'email', sortable: true },
+  { title: 'Rôle', key: 'role', sortable: false },
+  { title: 'Localisation', key: 'localisation', sortable: false },
+  { title: 'Provenance', key: 'source_provenance', sortable: false },
+  { title: 'Statut CRM', key: 'statut_crm', sortable: false },
+  { title: 'État', key: 'etat', sortable: false },
+  { title: '', key: 'actions', sortable: false, align: 'end' },
+]
+
+const statutOptions = [
+  { value: '', label: '— Aucun —' },
+  { value: 'a_traiter', label: 'A traiter' },
+  { value: 'en_cours_qualif', label: 'En cours de qualif.' },
+  { value: 'vivier', label: 'Vivier' },
+  { value: 'top_profil', label: 'Top profil' },
+  { value: 'converti_ressource', label: 'Converti en ressource' },
+  { value: 'recrute_client', label: 'Recruté par client' },
+  { value: 'ne_plus_contacter', label: 'Ne plus contacter' },
+]
 
 const referentiels = ref({
   studyLevels: [], experiences: [], activitySectors: [], languages: [], skills: []
@@ -281,6 +319,7 @@ const loadPage = async (page = 1) => {
     pagination.value = { current_page: res.data.current_page, last_page: res.data.last_page }
   } catch {
     error.value = 'Erreur lors du chargement'
+    showSnack('Erreur lors du chargement', 'error')
   } finally {
     loading.value = false
   }
@@ -311,6 +350,7 @@ const openEdit = async (talent) => {
     }
   } catch {
     error.value = 'Erreur lors du chargement du profil'
+    showSnack('Erreur lors du chargement du profil', 'error')
   }
 }
 
@@ -320,11 +360,13 @@ const saveProfil = async () => {
   try {
     await talentService.updateProfil(editingTalent.value.id, profilForm.value)
     success.value = 'Profil mis à jour'
+    showSnack('Profil mis à jour')
     editingTalent.value = null
     await loadPage(pagination.value.current_page)
   } catch (err) {
     const errs = err.response?.data?.errors
     error.value = errs ? Object.values(errs).flat().join(' | ') : 'Erreur lors de la sauvegarde'
+    showSnack(error.value, 'error')
   } finally {
     savingProfil.value = false
   }
@@ -335,8 +377,10 @@ const toggleSuspend = async (talent) => {
     const res = await talentService.toggleSuspend(talent.id)
     talent.is_suspended = res.data.is_suspended
     success.value = talent.is_suspended ? 'Talent suspendu' : 'Talent réactivé'
+    showSnack(success.value)
   } catch {
     error.value = 'Erreur lors de la suspension'
+    showSnack('Erreur lors de la suspension', 'error')
   }
 }
 
@@ -345,8 +389,10 @@ const toggleBan = async (talent) => {
     const res = await talentService.toggleBan(talent.id)
     talent.is_banned = res.data.is_banned
     success.value = talent.is_banned ? 'Talent banni' : 'Talent débanni'
+    showSnack(success.value)
   } catch {
     error.value = 'Erreur lors du bannissement'
+    showSnack('Erreur lors du bannissement', 'error')
   }
 }
 
@@ -356,8 +402,10 @@ const updateStatutCrm = async (talent, statut) => {
     talent.statut_crm = res.data.statut_crm
     talent.is_banned  = res.data.is_banned
     success.value = 'Statut CRM mis à jour'
+    showSnack('Statut CRM mis à jour')
   } catch {
     error.value = 'Erreur lors de la mise à jour du statut'
+    showSnack('Erreur lors de la mise à jour du statut', 'error')
   }
 }
 
@@ -368,9 +416,11 @@ const deleteItem = async (id) => {
   try {
     await talentService.delete(id)
     success.value = 'Talent supprimé'
+    showSnack('Talent supprimé')
     await loadPage(pagination.value.current_page)
   } catch (err) {
     error.value = err.response?.data?.message || 'Erreur lors de la suppression'
+    showSnack(error.value, 'error')
   } finally {
     loading.value = false
   }

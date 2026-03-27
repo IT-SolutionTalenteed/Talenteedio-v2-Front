@@ -1,108 +1,83 @@
 <template>
-  <div class="container-xl">
-    <div class="card flex-grow-1">
-      <div class="card-header">
-        <h3 class="card-title">
-          <i class="bi bi-folder me-2"></i>
-          Gestion des Catégories Média
-        </h3>
-        <div class="card-actions">
-          <button class="btn btn-primary" @click="showCreateForm = true">
-            <i class="bi bi-plus"></i>
-            Ajouter une catégorie
-          </button>
-        </div>
-      </div>
+  <v-card rounded="xl" border elevation="0">
+    <v-toolbar color="transparent" border="b" density="compact" class="px-2">
+      <v-icon icon="mdi-folder" class="mr-2" />
+      <v-toolbar-title>Gestion des Catégories Média</v-toolbar-title>
+      <v-spacer />
+      <v-btn color="primary" prepend-icon="mdi-plus" @click="showCreateForm = true">
+        Ajouter une catégorie
+      </v-btn>
+    </v-toolbar>
 
-      <!-- Formulaire -->
-      <div v-if="showCreateForm || editingCategory" class="card-body border-bottom">
-        <h4 class="mb-3">{{ editingCategory ? 'Modifier' : 'Créer' }} une catégorie</h4>
-
-        <form @submit.prevent="saveCategory">
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label class="form-label required">Nom</label>
-              <input type="text" class="form-control" v-model="form.name" required />
-            </div>
-
-            <div class="col-md-6 mb-3">
-              <label class="form-check">
-                <input type="checkbox" class="form-check-input" v-model="form.is_active" />
-                <span class="form-check-label">Active</span>
-              </label>
-            </div>
-
-            <div class="col-12 mb-3">
-              <label class="form-label">Description</label>
-              <textarea class="form-control" v-model="form.description" rows="3"></textarea>
-            </div>
+    <!-- Formulaire -->
+    <v-expand-transition>
+      <div v-if="showCreateForm || editingCategory">
+        <v-card-text class="border-b">
+          <div class="text-subtitle-1 font-weight-bold mb-4">
+            {{ editingCategory ? 'Modifier' : 'Créer' }} une catégorie
           </div>
-
-          <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary" :disabled="loading">
-              <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
-              {{ loading ? 'Enregistrement...' : 'Enregistrer' }}
-            </button>
-            <button type="button" class="btn" @click="cancelForm">Annuler</button>
-          </div>
-        </form>
+          <form @submit.prevent="saveCategory">
+            <v-row>
+              <v-col cols="12" md="6">
+                <v-text-field
+                  v-model="form.name"
+                  label="Nom *"
+                  variant="outlined"
+                  density="compact"
+                  required
+                />
+              </v-col>
+              <v-col cols="12" md="6" class="d-flex align-center">
+                <v-checkbox
+                  v-model="form.is_active"
+                  label="Active"
+                  density="compact"
+                  hide-details
+                />
+              </v-col>
+              <v-col cols="12">
+                <v-textarea
+                  v-model="form.description"
+                  label="Description"
+                  variant="outlined"
+                  density="compact"
+                  rows="3"
+                />
+              </v-col>
+            </v-row>
+            <div class="d-flex gap-2 mt-2">
+              <v-btn type="submit" color="primary" :loading="loading">
+                Enregistrer
+              </v-btn>
+              <v-btn type="button" variant="text" @click="cancelForm">Annuler</v-btn>
+            </div>
+          </form>
+        </v-card-text>
       </div>
+    </v-expand-transition>
 
-      <!-- Liste -->
-      <div class="table-responsive">
-        <table class="table table-vcenter card-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nom</th>
-              <th>Description</th>
-              <th>Slug</th>
-              <th>Statut</th>
-              <th class="w-1"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="loading">
-              <td colspan="6" class="text-center">
-                <div class="spinner-border text-primary" role="status">
-                  <span class="visually-hidden">Chargement...</span>
-                </div>
-              </td>
-            </tr>
-            <tr v-else-if="categories.length === 0">
-              <td colspan="6" class="text-center text-muted">Aucune catégorie trouvée.</td>
-            </tr>
-            <tr v-else v-for="category in categories" :key="category.id">
-              <td class="text-muted">{{ category.id }}</td>
-              <td class="fw-bold">{{ category.name }}</td>
-              <td class="text-muted">{{ category.description || '-' }}</td>
-              <td class="text-muted">{{ category.slug }}</td>
-              <td>
-                <span v-if="category.is_active" class="badge bg-success">Active</span>
-                <span v-else class="badge">Inactive</span>
-              </td>
-              <td>
-                <div class="btn-list">
-                  <button class="btn btn-sm btn-primary" @click="editCategory(category)">
-                    <i class="bi bi-pencil"></i>
-                  </button>
-                  <button class="btn btn-sm btn-danger" @click="deleteCategory(category.id)">
-                    <i class="bi bi-trash"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <!-- Table -->
+    <v-data-table
+      :headers="headers"
+      :items="categories"
+      :loading="loading"
+      hover
+      density="comfortable"
+    >
+      <template #item.is_active="{ item }">
+        <v-chip v-if="item.is_active" size="small" color="success">Active</v-chip>
+        <v-chip v-else size="small">Inactive</v-chip>
+      </template>
+      <template #item.actions="{ item }">
+        <v-btn icon="mdi-pencil" size="small" color="primary" variant="text" @click="editCategory(item)" />
+        <v-btn icon="mdi-trash-can" size="small" color="error" variant="text" @click="deleteCategory(item.id)" />
+      </template>
+    </v-data-table>
 
-      <!-- Messages -->
-      <div v-if="error || success" class="card-footer">
-        <div v-if="error" class="alert alert-danger mb-0">{{ error }}</div>
-        <div v-if="success" class="alert alert-success mb-0">{{ success }}</div>
-      </div>
-    </div>
-  </div>
+    <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">
+      {{ snackMsg }}
+    </v-snackbar>
+  </v-card>
 </template>
 
 <script setup>
@@ -116,6 +91,25 @@ const success = ref('')
 const showCreateForm = ref(false)
 const editingCategory = ref(null)
 
+const snackbar = ref(false)
+const snackMsg = ref('')
+const snackColor = ref('success')
+
+const showSnack = (msg, color = 'success') => {
+  snackMsg.value = msg
+  snackColor.value = color
+  snackbar.value = true
+}
+
+const headers = [
+  { title: 'ID', key: 'id', width: '80px' },
+  { title: 'Nom', key: 'name' },
+  { title: 'Description', key: 'description' },
+  { title: 'Slug', key: 'slug' },
+  { title: 'Statut', key: 'is_active', width: '120px' },
+  { title: '', key: 'actions', sortable: false, width: '100px', align: 'end' },
+]
+
 const form = ref({
   name: '',
   description: '',
@@ -125,12 +119,12 @@ const form = ref({
 const loadCategories = async () => {
   loading.value = true
   error.value = ''
-  
+
   try {
     const response = await mediaCategoryService.getAll()
     categories.value = response.data.data || response.data
   } catch (err) {
-    error.value = 'Erreur lors du chargement des catégories'
+    showSnack('Erreur lors du chargement des catégories', 'error')
     console.error(err)
   } finally {
     loading.value = false
@@ -141,20 +135,20 @@ const saveCategory = async () => {
   loading.value = true
   error.value = ''
   success.value = ''
-  
+
   try {
     if (editingCategory.value) {
       await mediaCategoryService.update(editingCategory.value.id, form.value)
-      success.value = 'Catégorie modifiée avec succès'
+      showSnack('Catégorie modifiée avec succès')
     } else {
       await mediaCategoryService.create(form.value)
-      success.value = 'Catégorie créée avec succès'
+      showSnack('Catégorie créée avec succès')
     }
-    
+
     await loadCategories()
     cancelForm()
   } catch (err) {
-    error.value = err.response?.data?.message || 'Erreur lors de l\'enregistrement'
+    showSnack(err.response?.data?.message || "Erreur lors de l'enregistrement", 'error')
   } finally {
     loading.value = false
   }
@@ -174,16 +168,16 @@ const deleteCategory = async (id) => {
   if (!confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?')) {
     return
   }
-  
+
   loading.value = true
   error.value = ''
-  
+
   try {
     await mediaCategoryService.delete(id)
-    success.value = 'Catégorie supprimée avec succès'
+    showSnack('Catégorie supprimée avec succès')
     await loadCategories()
   } catch (err) {
-    error.value = err.response?.data?.message || 'Erreur lors de la suppression'
+    showSnack(err.response?.data?.message || 'Erreur lors de la suppression', 'error')
   } finally {
     loading.value = false
   }

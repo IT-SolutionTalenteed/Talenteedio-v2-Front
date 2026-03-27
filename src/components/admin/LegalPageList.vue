@@ -1,90 +1,63 @@
 <template>
-  <div class="container-xl">
-    <div class="card flex-grow-1">
-      <div class="card-header">
-        <h3 class="card-title">
-          <i class="bi bi-file-earmark-ruled me-2"></i>
-          Gestion des CGU / Mentions légales
-        </h3>
-        <div class="card-actions">
-          <button class="btn btn-primary" @click="showForm = true">
-            <i class="bi bi-plus"></i>
-            Ajouter une page légale
-          </button>
-        </div>
-      </div>
+  <v-card rounded="xl" border elevation="0">
+    <v-toolbar color="transparent" border="b" density="compact" class="px-2">
+      <v-icon icon="mdi-file-document-outline" class="mr-2" />
+      <v-toolbar-title>Gestion des CGU / Mentions légales</v-toolbar-title>
+      <v-spacer />
+      <v-btn color="primary" prepend-icon="mdi-plus" @click="showForm = true">
+        Ajouter une page légale
+      </v-btn>
+    </v-toolbar>
 
-      <!-- Formulaire -->
-      <div v-if="showForm || editingItem" class="card-body border-bottom">
-        <h4 class="mb-3">{{ editingItem ? 'Modifier' : 'Créer' }} une page légale</h4>
-
-        <form @submit.prevent="save">
-          <div class="mb-3">
-            <label class="form-label required">Titre</label>
-            <input type="text" class="form-control" v-model="form.title" required />
+    <!-- Formulaire -->
+    <v-expand-transition>
+      <div v-if="showForm || editingItem">
+        <v-card-text class="border-b">
+          <div class="text-subtitle-1 font-weight-bold mb-4">
+            {{ editingItem ? 'Modifier' : 'Créer' }} une page légale
           </div>
-
-          <div class="mb-3">
-            <label class="form-label">Contenu</label>
-            <WysiwygEditor v-model="form.description" />
-          </div>
-
-          <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary" :disabled="loading">
-              <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
-              {{ loading ? 'Enregistrement...' : 'Enregistrer' }}
-            </button>
-            <button type="button" class="btn" @click="cancelForm">Annuler</button>
-          </div>
-        </form>
+          <form @submit.prevent="save">
+            <v-text-field
+              v-model="form.title"
+              label="Titre *"
+              variant="outlined"
+              density="compact"
+              required
+              class="mb-4"
+            />
+            <div class="mb-4">
+              <div class="text-body-2 mb-1">Contenu</div>
+              <WysiwygEditor v-model="form.description" />
+            </div>
+            <div class="d-flex gap-2">
+              <v-btn type="submit" color="primary" :loading="loading">
+                Enregistrer
+              </v-btn>
+              <v-btn type="button" variant="text" @click="cancelForm">Annuler</v-btn>
+            </div>
+          </form>
+        </v-card-text>
       </div>
+    </v-expand-transition>
 
-      <!-- Liste -->
-      <div class="table-responsive">
-        <table class="table table-vcenter card-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Titre</th>
-              <th class="w-1"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="loading">
-              <td colspan="3" class="text-center">
-                <div class="spinner-border text-primary" role="status">
-                  <span class="visually-hidden">Chargement...</span>
-                </div>
-              </td>
-            </tr>
-            <tr v-else-if="items.length === 0">
-              <td colspan="3" class="text-center text-muted">Aucune page légale trouvée.</td>
-            </tr>
-            <tr v-else v-for="item in items" :key="item.id">
-              <td class="text-muted">{{ item.id }}</td>
-              <td class="fw-bold">{{ item.title }}</td>
-              <td>
-                <div class="btn-list">
-                  <button class="btn btn-sm btn-primary" @click="editItem(item)">
-                    <i class="bi bi-pencil"></i>
-                  </button>
-                  <button class="btn btn-sm btn-danger" @click="deleteItem(item.id)">
-                    <i class="bi bi-trash"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <!-- Table -->
+    <v-data-table
+      :headers="headers"
+      :items="items"
+      :loading="loading"
+      hover
+      density="comfortable"
+    >
+      <template #item.actions="{ item }">
+        <v-btn icon="mdi-pencil" size="small" color="primary" variant="text" @click="editItem(item)" />
+        <v-btn icon="mdi-trash-can" size="small" color="error" variant="text" @click="deleteItem(item.id)" />
+      </template>
+    </v-data-table>
 
-      <!-- Messages -->
-      <div v-if="error || success" class="card-footer">
-        <div v-if="error" class="alert alert-danger mb-0">{{ error }}</div>
-        <div v-if="success" class="alert alert-success mb-0">{{ success }}</div>
-      </div>
-    </div>
-  </div>
+    <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">
+      {{ snackMsg }}
+    </v-snackbar>
+  </v-card>
 </template>
 
 <script setup>
@@ -100,6 +73,22 @@ const showForm = ref(false)
 const editingItem = ref(null)
 const form = ref({ title: '', description: '' })
 
+const snackbar = ref(false)
+const snackMsg = ref('')
+const snackColor = ref('success')
+
+const showSnack = (msg, color = 'success') => {
+  snackMsg.value = msg
+  snackColor.value = color
+  snackbar.value = true
+}
+
+const headers = [
+  { title: 'ID', key: 'id', width: '80px' },
+  { title: 'Titre', key: 'title' },
+  { title: '', key: 'actions', sortable: false, width: '100px', align: 'end' },
+]
+
 const load = async () => {
   loading.value = true
   error.value = ''
@@ -107,7 +96,7 @@ const load = async () => {
     const response = await legalPageService.getAll()
     items.value = response.data
   } catch (err) {
-    error.value = 'Erreur lors du chargement'
+    showSnack('Erreur lors du chargement', 'error')
   } finally {
     loading.value = false
   }
@@ -120,15 +109,15 @@ const save = async () => {
   try {
     if (editingItem.value) {
       await legalPageService.update(editingItem.value.id, form.value)
-      success.value = 'Page légale modifiée avec succès'
+      showSnack('Page légale modifiée avec succès')
     } else {
       await legalPageService.create(form.value)
-      success.value = 'Page légale créée avec succès'
+      showSnack('Page légale créée avec succès')
     }
     await load()
     cancelForm()
   } catch (err) {
-    error.value = err.response?.data?.message || "Erreur lors de l'enregistrement"
+    showSnack(err.response?.data?.message || "Erreur lors de l'enregistrement", 'error')
   } finally {
     loading.value = false
   }
@@ -146,10 +135,10 @@ const deleteItem = async (id) => {
   error.value = ''
   try {
     await legalPageService.delete(id)
-    success.value = 'Page légale supprimée avec succès'
+    showSnack('Page légale supprimée avec succès')
     await load()
   } catch (err) {
-    error.value = err.response?.data?.message || 'Erreur lors de la suppression'
+    showSnack(err.response?.data?.message || 'Erreur lors de la suppression', 'error')
   } finally {
     loading.value = false
   }

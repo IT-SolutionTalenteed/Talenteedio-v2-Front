@@ -1,51 +1,70 @@
 <template>
-  <div>
-    <h2>Mes feedbacks</h2>
+  <v-card rounded="xl" border elevation="0" class="pa-4">
+    <v-card-title class="text-h5 mb-4">Mes feedbacks</v-card-title>
 
-    <div v-if="items.length > 0">
-      <table>
-        <thead>
-          <tr>
-            <th>Entreprise</th>
-            <th>Événement</th>
-            <th>Date entretien</th>
-            <th>Note</th>
-            <th>Commentaire</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="fb in items" :key="fb.id">
-            <td>{{ fb.entretien?.entreprise?.nom }}</td>
-            <td>{{ fb.entretien?.evenement?.titre }}</td>
-            <td>{{ fb.entretien?.date }}</td>
-            <td>
-              <span v-if="editingId !== fb.id">{{ fb.note }} / 5</span>
-              <input v-else type="number" v-model.number="editForm.note" min="1" max="5" style="width:50px;" />
-            </td>
-            <td>
-              <span v-if="editingId !== fb.id">{{ fb.commentaire || '—' }}</span>
-              <textarea v-else v-model="editForm.commentaire" rows="2" style="width:200px;"></textarea>
-            </td>
-            <td>
-              <template v-if="editingId !== fb.id">
-                <button @click="startEdit(fb)">Modifier</button>
-                <button @click="supprimer(fb)" style="margin-left:4px;">Supprimer</button>
-              </template>
-              <template v-else>
-                <button @click="sauvegarder(fb)" :disabled="saving">{{ saving ? '...' : 'Sauvegarder' }}</button>
-                <button @click="editingId = null" style="margin-left:4px;">Annuler</button>
-              </template>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div v-else-if="!loading"><p>Aucun feedback soumis.</p></div>
+    <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">{{ snackMsg }}</v-snackbar>
 
-    <div v-if="error" style="color:red;">{{ error }}</div>
-    <div v-if="success" style="color:green;">{{ success }}</div>
-  </div>
+    <v-data-table
+      :headers="headers"
+      :items="items"
+      :loading="loading"
+      hover
+      density="comfortable"
+    >
+      <template #item.note="{ item }">
+        <v-rating
+          v-if="editingId !== item.id"
+          :model-value="item.note"
+          readonly
+          density="compact"
+          size="small"
+          color="warning"
+        />
+        <v-rating
+          v-else
+          v-model="editForm.note"
+          :length="5"
+          color="warning"
+          hover
+          density="compact"
+        />
+      </template>
+
+      <template #item.commentaire="{ item }">
+        <span v-if="editingId !== item.id">{{ item.commentaire || '—' }}</span>
+        <v-textarea
+          v-else
+          v-model="editForm.commentaire"
+          rows="2"
+          variant="outlined"
+          density="compact"
+          hide-details
+          style="min-width:200px;"
+        />
+      </template>
+
+      <template #item.entretien.date="{ item }">
+        {{ item.entretien?.date }}
+      </template>
+
+      <template #item.actions="{ item }">
+        <template v-if="editingId !== item.id">
+          <v-btn size="small" variant="text" icon="mdi-pencil-outline" color="primary" class="mr-1" @click="startEdit(item)" />
+          <v-btn size="small" variant="text" icon="mdi-delete-outline" color="error" @click="supprimer(item)" />
+        </template>
+        <template v-else>
+          <v-btn size="small" color="success" variant="tonal" :disabled="saving" :loading="saving" class="mr-1" @click="sauvegarder(item)">
+            Sauvegarder
+          </v-btn>
+          <v-btn size="small" variant="text" @click="editingId = null">Annuler</v-btn>
+        </template>
+      </template>
+
+      <template #no-data>
+        <div class="text-center py-6 text-medium-emphasis">Aucun feedback soumis.</div>
+      </template>
+    </v-data-table>
+  </v-card>
 </template>
 
 <script setup>
@@ -60,6 +79,22 @@ const editingId = ref(null)
 const editForm = ref({ note: 1, commentaire: '' })
 const saving = ref(false)
 
+const snackbar = ref(false)
+const snackColor = ref('success')
+const snackMsg = ref('')
+const showSnack = (msg, color = 'success') => {
+  snackMsg.value = msg; snackColor.value = color; snackbar.value = true
+}
+
+const headers = [
+  { title: 'Entreprise', key: 'entretien.entreprise.nom' },
+  { title: 'Événement', key: 'entretien.evenement.titre' },
+  { title: 'Date entretien', key: 'entretien.date' },
+  { title: 'Note', key: 'note', sortable: false },
+  { title: 'Commentaire', key: 'commentaire', sortable: false },
+  { title: 'Actions', key: 'actions', sortable: false, align: 'end' },
+]
+
 const load = async () => {
   loading.value = true
   try {
@@ -67,6 +102,7 @@ const load = async () => {
     items.value = res.data
   } catch {
     error.value = 'Erreur lors du chargement des feedbacks'
+    showSnack('Erreur lors du chargement des feedbacks', 'error')
   } finally {
     loading.value = false
   }
@@ -88,8 +124,10 @@ const sauvegarder = async (fb) => {
     if (idx !== -1) items.value[idx] = res.data
     editingId.value = null
     success.value = 'Feedback modifié.'
+    showSnack('Feedback modifié.')
   } catch (err) {
     error.value = err.response?.data?.message || 'Erreur lors de la modification'
+    showSnack(error.value, 'error')
   } finally {
     saving.value = false
   }
@@ -102,8 +140,10 @@ const supprimer = async (fb) => {
     await feedbackService.destroy(fb.id)
     items.value = items.value.filter(f => f.id !== fb.id)
     success.value = 'Feedback supprimé.'
+    showSnack('Feedback supprimé.')
   } catch {
     error.value = 'Erreur lors de la suppression'
+    showSnack('Erreur lors de la suppression', 'error')
   }
 }
 

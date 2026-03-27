@@ -1,52 +1,69 @@
 <template>
-  <div>
-    <h2>Événements</h2>
+  <v-card rounded="xl" border elevation="0" class="pa-4">
+    <v-card-title class="text-h5 mb-4">Événements</v-card-title>
 
-    <div v-if="showDemande">
-      <h3>Demande de participation — {{ selectedEvenement?.titre }}</h3>
-      <form @submit.prevent="soumettreDemande">
-        <div>
-          <label>Message (optionnel)</label>
-          <textarea v-model="demandeMessage" rows="4" placeholder="Présentez votre entreprise..."></textarea>
-        </div>
-        <button type="submit" :disabled="loading">{{ loading ? 'Envoi...' : 'Envoyer la demande' }}</button>
-        <button type="button" @click="showDemande = false">Annuler</button>
-      </form>
-    </div>
+    <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">{{ snackMsg }}</v-snackbar>
 
-    <div v-if="items.length > 0">
-      <table>
-        <thead>
-          <tr><th>Nom</th><th>Date début</th><th>Date fin</th><th>Mon statut</th><th>Actions</th></tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in items" :key="item.id">
-            <td>{{ item.titre }}</td>
-            <td>{{ item.date_debut }}</td>
-            <td>{{ item.date_fin }}</td>
-            <td>
-              <span v-if="item.demande_statut === 'en_attente'">En attente</span>
-              <span v-else-if="item.demande_statut === 'acceptee'">Acceptée ✓</span>
-              <span v-else-if="item.demande_statut === 'refusee'">Refusée</span>
-              <span v-else>-</span>
-            </td>
-            <td>
-              <button
-                v-if="!item.demande_statut || item.demande_statut === 'refusee'"
-                @click="openDemande(item)"
-              >
-                Demander participation
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div v-else-if="!loading"><p>Aucun événement disponible.</p></div>
+    <!-- Dialog demande de participation -->
+    <v-dialog v-model="showDemande" max-width="480" persistent>
+      <v-card rounded="xl">
+        <v-card-title class="text-h6 pa-4">
+          Demande de participation — {{ selectedEvenement?.titre }}
+        </v-card-title>
+        <v-card-text>
+          <v-textarea
+            v-model="demandeMessage"
+            label="Message (optionnel)"
+            rows="4"
+            placeholder="Présentez votre entreprise..."
+            variant="outlined"
+            density="comfortable"
+          />
+        </v-card-text>
+        <v-card-actions class="pa-4 pt-0">
+          <v-spacer />
+          <v-btn variant="text" @click="showDemande = false">Annuler</v-btn>
+          <v-btn color="primary" variant="tonal" :disabled="loading" :loading="loading" @click="soumettreDemande">
+            Envoyer la demande
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
-    <div v-if="error" style="color:red;">{{ error }}</div>
-    <div v-if="success" style="color:green;">{{ success }}</div>
-  </div>
+    <!-- Table -->
+    <v-data-table
+      :headers="headers"
+      :items="items"
+      :loading="loading"
+      hover
+      density="comfortable"
+    >
+      <template #item.demande_statut="{ item }">
+        <v-chip
+          v-if="item.demande_statut"
+          size="small"
+          :color="item.demande_statut === 'acceptee' ? 'success' : item.demande_statut === 'refusee' ? 'error' : 'warning'"
+        >
+          {{ item.demande_statut === 'acceptee' ? 'Acceptée' : item.demande_statut === 'refusee' ? 'Refusée' : 'En attente' }}
+        </v-chip>
+        <span v-else class="text-medium-emphasis">-</span>
+      </template>
+
+      <template #item.actions="{ item }">
+        <v-btn
+          v-if="!item.demande_statut || item.demande_statut === 'refusee'"
+          size="small"
+          color="primary"
+          variant="tonal"
+          @click="openDemande(item)"
+        >Demander participation</v-btn>
+      </template>
+
+      <template #no-data>
+        <div class="text-center py-6 text-medium-emphasis">Aucun événement disponible.</div>
+      </template>
+    </v-data-table>
+  </v-card>
 </template>
 
 <script setup>
@@ -61,12 +78,27 @@ const showDemande = ref(false)
 const selectedEvenement = ref(null)
 const demandeMessage = ref('')
 
+const snackbar = ref(false)
+const snackColor = ref('success')
+const snackMsg = ref('')
+const showSnack = (msg, color = 'success') => {
+  snackMsg.value = msg; snackColor.value = color; snackbar.value = true
+}
+
+const headers = [
+  { title: 'Nom', key: 'titre' },
+  { title: 'Date début', key: 'date_debut' },
+  { title: 'Date fin', key: 'date_fin' },
+  { title: 'Mon statut', key: 'demande_statut' },
+  { title: 'Actions', key: 'actions', sortable: false, align: 'end' },
+]
+
 const load = async () => {
   loading.value = true
   try {
     const res = await evenementService.getAll()
     items.value = res.data
-  } catch { error.value = 'Erreur chargement' }
+  } catch { error.value = 'Erreur chargement'; showSnack('Erreur chargement', 'error') }
   finally { loading.value = false }
 }
 
@@ -81,10 +113,12 @@ const soumettreDemande = async () => {
   try {
     await evenementService.demandeParticipation(selectedEvenement.value.id, { message: demandeMessage.value })
     success.value = 'Demande envoyée — un email a été envoyé à l\'administrateur'
+    showSnack('Demande envoyée — un email a été envoyé à l\'administrateur')
     showDemande.value = false
     await load()
   } catch (err) {
     error.value = err.response?.data?.message || 'Erreur lors de l\'envoi'
+    showSnack(error.value, 'error')
   } finally { loading.value = false }
 }
 

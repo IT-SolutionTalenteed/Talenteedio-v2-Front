@@ -1,215 +1,173 @@
 <template>
-  <div class="container-xl">
-    <div class="card flex-grow-1">
-      <div class="card-header">
-        <h3 class="card-title">
-          <i class="bi bi-calendar-event me-2"></i>
-          Gestion des Événements
-        </h3>
-        <div class="card-actions">
-          <button class="btn btn-primary" @click="openCreate">
-            <i class="bi bi-plus"></i>
-            Ajouter un événement
-          </button>
+  <v-card rounded="xl" border elevation="0">
+    <!-- Snackbar -->
+    <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">{{ snackMsg }}</v-snackbar>
+
+    <!-- Header -->
+    <v-toolbar color="transparent" border="b" density="compact" class="px-2">
+      <v-icon class="mr-2">mdi-calendar-star</v-icon>
+      <v-toolbar-title>Gestion des Événements</v-toolbar-title>
+      <template #append>
+        <v-btn color="primary" prepend-icon="mdi-plus" @click="openCreate">Ajouter un événement</v-btn>
+      </template>
+    </v-toolbar>
+
+    <!-- Avertissement catégories manquantes -->
+    <v-alert
+      v-if="referentiels.categories?.length === 0"
+      type="warning"
+      variant="tonal"
+      class="ma-4"
+      prepend-icon="mdi-alert-triangle"
+    >
+      Aucune catégorie d'événement disponible. Créez-en une d'abord dans "Catégories d'événement".
+    </v-alert>
+
+    <!-- Formulaire -->
+    <v-expand-transition>
+      <div v-if="showForm || editingItem">
+        <v-card variant="outlined" class="ma-4 mb-0">
+          <v-card-title class="text-subtitle-1 pa-4 pb-2">
+            {{ editingItem ? 'Modifier' : 'Créer' }} un événement
+          </v-card-title>
+          <v-card-text>
+            <form @submit.prevent="save">
+              <v-row>
+                <v-col cols="12" md="8">
+                  <v-text-field v-model="form.titre" label="Titre *" variant="outlined" density="compact" required />
+                </v-col>
+                <v-col cols="12" md="4">
+                  <v-select
+                    v-model="form.categorie_evenement_id"
+                    label="Catégorie"
+                    variant="outlined"
+                    density="compact"
+                    :items="[{titre:'-- Aucune --',id:''},...referentiels.categories]"
+                    item-title="titre"
+                    item-value="id"
+                  />
+                </v-col>
+
+                <v-col cols="12">
+                  <div class="text-caption text-medium-emphasis mb-1">Image mise en avant</div>
+                  <input type="file" accept="image/*" @change="e => imageFile = e.target.files[0]" style="display:block;width:100%;" />
+                  <v-avatar v-if="imagePreview" size="80" rounded="lg" class="mt-2">
+                    <img :src="imagePreview" style="object-fit:cover;width:100%;height:100%" />
+                  </v-avatar>
+                  <v-avatar v-else-if="editingItem?.image_mise_en_avant_url" size="80" rounded="lg" class="mt-2">
+                    <img :src="editingItem.image_mise_en_avant_url" style="object-fit:cover;width:100%;height:100%" />
+                  </v-avatar>
+                </v-col>
+
+                <v-col cols="12" md="3">
+                  <v-text-field v-model="form.date_debut" label="Date début *" type="date" variant="outlined" density="compact" required />
+                </v-col>
+                <v-col cols="12" md="3">
+                  <v-text-field v-model="form.date_fin" label="Date fin *" type="date" variant="outlined" density="compact" required />
+                </v-col>
+                <v-col cols="12" md="3">
+                  <v-text-field v-model="form.heure_debut_journee" label="Heure début *" type="time" variant="outlined" density="compact" required />
+                </v-col>
+                <v-col cols="12" md="3">
+                  <v-text-field v-model="form.heure_fin_journee" label="Heure fin *" type="time" variant="outlined" density="compact" required />
+                </v-col>
+
+                <v-col cols="12" md="4">
+                  <v-text-field v-model="form.pays" label="Pays" variant="outlined" density="compact" />
+                </v-col>
+                <v-col cols="12" md="4">
+                  <v-text-field v-model="form.ville" label="Ville" variant="outlined" density="compact" />
+                </v-col>
+                <v-col cols="12" md="4">
+                  <v-text-field v-model="form.adresse" label="Adresse" variant="outlined" density="compact" />
+                </v-col>
+
+                <v-col cols="12">
+                  <div class="text-caption text-medium-emphasis mb-1">Description</div>
+                  <WysiwygEditor v-model="form.description" />
+                </v-col>
+                <v-col cols="12">
+                  <div class="text-caption text-medium-emphasis mb-1">Détails supplémentaires</div>
+                  <WysiwygEditor v-model="form.details_supplementaires" />
+                </v-col>
+
+                <v-col cols="12" md="6">
+                  <div class="text-caption text-medium-emphasis mb-1">Entreprises participantes</div>
+                  <select v-model="form.entreprise_ids" multiple size="5" style="width:100%;padding:8px;border:1px solid rgba(0,0,0,0.23);border-radius:4px;">
+                    <option v-for="e in referentiels.entreprises" :key="e.id" :value="e.id">{{ e.nom }}</option>
+                  </select>
+                  <div class="text-caption text-medium-emphasis mt-1">Maintenez Ctrl/Cmd pour sélectionner plusieurs</div>
+                </v-col>
+
+                <v-col cols="12" md="6" class="d-flex align-center">
+                  <v-checkbox v-model="form.is_featured" label="Mise en avant" density="compact" hide-details />
+                </v-col>
+              </v-row>
+
+              <div class="d-flex gap-2 mt-2">
+                <v-btn type="submit" color="primary" :loading="loading">Enregistrer</v-btn>
+                <v-btn variant="tonal" @click="cancelForm">Annuler</v-btn>
+              </div>
+            </form>
+          </v-card-text>
+        </v-card>
+      </div>
+    </v-expand-transition>
+
+    <!-- Tableau -->
+    <v-data-table
+      :headers="headers"
+      :items="evenements"
+      :loading="loading"
+      hover
+      density="comfortable"
+    >
+      <template #item.image="{ item }">
+        <v-avatar size="36" rounded="lg">
+          <img :src="item.image_mise_en_avant_url || '/placeholder.png'" style="object-fit:cover;width:100%;height:100%" />
+        </v-avatar>
+      </template>
+
+      <template #item.titre="{ item }">
+        <div class="font-weight-bold">{{ item.titre }}</div>
+        <div v-if="item.ville" class="text-caption text-medium-emphasis">{{ item.ville }}</div>
+      </template>
+
+      <template #item.dates="{ item }">
+        <span class="text-medium-emphasis">{{ formatDate(item.date_debut) }} → {{ formatDate(item.date_fin) }}</span>
+      </template>
+
+      <template #item.is_featured="{ item }">
+        <v-btn
+          :icon="item.is_featured ? 'mdi-star' : 'mdi-star-outline'"
+          :color="item.is_featured ? 'warning' : 'default'"
+          variant="text"
+          size="small"
+          @click="toggleFeatured(item)"
+        />
+      </template>
+
+      <template #item.entreprises="{ item }">
+        <v-chip size="small">{{ item.entreprises?.length || 0 }}</v-chip>
+      </template>
+
+      <template #item.actions="{ item }">
+        <div class="d-flex gap-1">
+          <v-btn icon="mdi-pencil" size="small" color="primary" variant="tonal" @click="editItem(item)" />
+          <v-btn icon="mdi-delete" size="small" color="error" variant="tonal" @click="deleteItem(item.id)" />
         </div>
-      </div>
+      </template>
+    </v-data-table>
 
-      <div v-if="referentiels.categories?.length === 0" class="card-body">
-        <div class="alert alert-warning">
-          <i class="bi bi-exclamation-triangle me-2"></i>
-          Aucune catégorie d'événement disponible. Créez-en une d'abord dans "Catégories d'événement".
-        </div>
-      </div>
-
-      <!-- Formulaire -->
-      <div v-if="showForm || editingItem" class="card-body border-bottom">
-        <h4 class="mb-3">{{ editingItem ? 'Modifier' : 'Créer' }} un événement</h4>
-
-        <form @submit.prevent="save">
-          <div class="row">
-            <div class="col-md-8 mb-3">
-              <label class="form-label required">Titre</label>
-              <input type="text" class="form-control" v-model="form.titre" required />
-            </div>
-
-            <div class="col-md-4 mb-3">
-              <label class="form-label">Catégorie</label>
-              <select class="form-select" v-model="form.categorie_evenement_id">
-                <option value="">-- Aucune --</option>
-                <option v-for="cat in referentiels.categories" :key="cat.id" :value="cat.id">{{ cat.titre }}</option>
-              </select>
-            </div>
-
-            <div class="col-md-12 mb-3">
-              <label class="form-label">Image mise en avant</label>
-              <input type="file" class="form-control" accept="image/*" @change="e => imageFile = e.target.files[0]" />
-              <img v-if="imagePreview" :src="imagePreview" class="mt-2 avatar avatar-xl" />
-              <img v-else-if="editingItem?.image_mise_en_avant_url" :src="editingItem.image_mise_en_avant_url" class="mt-2 avatar avatar-xl" />
-            </div>
-
-            <div class="col-md-3 mb-3">
-              <label class="form-label required">Date début</label>
-              <input type="date" class="form-control" v-model="form.date_debut" required />
-            </div>
-
-            <div class="col-md-3 mb-3">
-              <label class="form-label required">Date fin</label>
-              <input type="date" class="form-control" v-model="form.date_fin" required />
-            </div>
-
-            <div class="col-md-3 mb-3">
-              <label class="form-label required">Heure début</label>
-              <input type="time" class="form-control" v-model="form.heure_debut_journee" required />
-            </div>
-
-            <div class="col-md-3 mb-3">
-              <label class="form-label required">Heure fin</label>
-              <input type="time" class="form-control" v-model="form.heure_fin_journee" required />
-            </div>
-
-            <div class="col-md-4 mb-3">
-              <label class="form-label">Pays</label>
-              <input type="text" class="form-control" v-model="form.pays" />
-            </div>
-
-            <div class="col-md-4 mb-3">
-              <label class="form-label">Ville</label>
-              <input type="text" class="form-control" v-model="form.ville" />
-            </div>
-
-            <div class="col-md-4 mb-3">
-              <label class="form-label">Adresse</label>
-              <input type="text" class="form-control" v-model="form.adresse" />
-            </div>
-
-            <div class="col-12 mb-3">
-              <label class="form-label">Description</label>
-              <WysiwygEditor v-model="form.description" />
-            </div>
-
-            <div class="col-12 mb-3">
-              <label class="form-label">Détails supplémentaires</label>
-              <WysiwygEditor v-model="form.details_supplementaires" />
-            </div>
-
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Entreprises participantes</label>
-              <select class="form-select" v-model="form.entreprise_ids" multiple size="5">
-                <option v-for="e in referentiels.entreprises" :key="e.id" :value="e.id">{{ e.nom }}</option>
-              </select>
-              <small class="form-hint">Maintenez Ctrl/Cmd pour sélectionner plusieurs</small>
-            </div>
-
-            <div class="col-md-6 mb-3">
-              <label class="form-check">
-                <input type="checkbox" class="form-check-input" v-model="form.is_featured" />
-                <span class="form-check-label">Mise en avant</span>
-              </label>
-            </div>
-          </div>
-
-          <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary" :disabled="loading">
-              <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
-              {{ loading ? 'Enregistrement...' : 'Enregistrer' }}
-            </button>
-            <button type="button" class="btn" @click="cancelForm">Annuler</button>
-          </div>
-        </form>
-      </div>
-
-      <!-- Liste -->
-      <div class="table-responsive">
-        <table class="table table-vcenter card-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Image</th>
-              <th>Titre</th>
-              <th>Dates</th>
-              <th>Ville</th>
-              <th>Mis en avant</th>
-              <th>Entreprises</th>
-              <th class="w-1"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="loading">
-              <td colspan="8" class="text-center">
-                <div class="spinner-border text-primary" role="status">
-                  <span class="visually-hidden">Chargement...</span>
-                </div>
-              </td>
-            </tr>
-            <tr v-else-if="evenements.length === 0">
-              <td colspan="8" class="text-center text-muted">Aucun événement trouvé.</td>
-            </tr>
-            <tr v-else v-for="ev in evenements" :key="ev.id">
-              <td class="text-muted">{{ ev.id }}</td>
-              <td>
-                <img v-if="ev.image_mise_en_avant_url" :src="ev.image_mise_en_avant_url" class="avatar" />
-                <span v-else class="avatar">?</span>
-              </td>
-              <td>
-                <div class="fw-bold">{{ ev.titre }}</div>
-                <div v-if="ev.ville" class="text-muted small">{{ ev.ville }}</div>
-              </td>
-              <td class="text-muted">
-                {{ formatDate(ev.date_debut) }} → {{ formatDate(ev.date_fin) }}
-              </td>
-              <td>{{ ev.ville || '-' }}</td>
-              <td>
-                <button class="btn btn-sm" @click="toggleFeatured(ev)">
-                  <i v-if="ev.is_featured" class="bi bi-star-fill text-warning"></i>
-                  <i v-else class="bi bi-star"></i>
-                </button>
-              </td>
-              <td>
-                <span class="badge">{{ ev.entreprises?.length || 0 }}</span>
-              </td>
-              <td>
-                <div class="btn-list">
-                  <button class="btn btn-sm btn-primary" @click="editItem(ev)">
-                    <i class="bi bi-pencil"></i>
-                  </button>
-                  <button class="btn btn-sm btn-danger" @click="deleteItem(ev.id)">
-                    <i class="bi bi-trash"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Pagination -->
-      <div v-if="pagination.last_page > 1" class="card-footer d-flex align-items-center">
-        <p class="m-0 text-muted">
-          Page {{ pagination.current_page }} sur {{ pagination.last_page }}
-        </p>
-        <ul class="pagination m-0 ms-auto">
-          <li class="page-item" :class="{ disabled: pagination.current_page <= 1 }">
-            <a class="page-link" href="#" @click.prevent="loadPage(pagination.current_page - 1)">
-              <i class="bi bi-chevron-left"></i>
-              Précédent
-            </a>
-          </li>
-          <li class="page-item" :class="{ disabled: pagination.current_page >= pagination.last_page }">
-            <a class="page-link" href="#" @click.prevent="loadPage(pagination.current_page + 1)">
-              Suivant
-              <i class="bi bi-chevron-right"></i>
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Messages -->
-      <div v-if="error || success" class="card-footer">
-        <div v-if="error" class="alert alert-danger mb-0">{{ error }}</div>
-        <div v-if="success" class="alert alert-success mb-0">{{ success }}</div>
-      </div>
-    </div>
-  </div>
+    <!-- Pagination -->
+    <v-pagination
+      v-if="pagination.last_page > 1"
+      v-model="pagination.current_page"
+      :length="pagination.last_page"
+      @update:model-value="loadPage"
+      class="mt-2"
+    />
+  </v-card>
 </template>
 
 <script setup>
@@ -227,6 +185,25 @@ const editingItem = ref(null)
 const imageFile = ref(null)
 const imagePreview = ref(null)
 const pagination = ref({ current_page: 1, last_page: 1 })
+
+const snackbar  = ref(false)
+const snackMsg  = ref('')
+const snackColor = ref('success')
+const showSnack = (msg, color = 'success') => {
+  snackMsg.value   = msg
+  snackColor.value = color
+  snackbar.value   = true
+}
+
+const headers = [
+  { title: 'ID', key: 'id', sortable: true, width: '60px' },
+  { title: 'Image', key: 'image', sortable: false, width: '60px' },
+  { title: 'Titre / Ville', key: 'titre', sortable: true },
+  { title: 'Dates', key: 'dates', sortable: false },
+  { title: 'Mis en avant', key: 'is_featured', sortable: false },
+  { title: 'Entreprises', key: 'entreprises', sortable: false },
+  { title: '', key: 'actions', sortable: false, align: 'end' },
+]
 
 const emptyForm = () => ({
   titre: '', description: '', details_supplementaires: '',
@@ -246,6 +223,7 @@ const loadPage = async (page = 1) => {
     pagination.value = { current_page: res.data.current_page, last_page: res.data.last_page }
   } catch (err) {
     error.value = 'Erreur lors du chargement'
+    showSnack('Erreur lors du chargement', 'error')
   } finally {
     loading.value = false
   }
@@ -293,11 +271,13 @@ const save = async () => {
       await evenementService.create(fd)
       success.value = 'Événement créé avec succès'
     }
+    showSnack(success.value)
     await loadPage(pagination.value.current_page)
     cancelForm()
   } catch (err) {
     const errs = err.response?.data?.errors
     error.value = errs ? Object.values(errs).flat().join(' | ') : "Erreur lors de l'enregistrement"
+    showSnack(error.value, 'error')
   } finally {
     loading.value = false
   }
@@ -331,6 +311,7 @@ const toggleFeatured = async (ev) => {
     await loadPage(pagination.value.current_page)
   } catch {
     error.value = 'Erreur lors de la mise à jour'
+    showSnack('Erreur lors de la mise à jour', 'error')
   }
 }
 
@@ -341,9 +322,11 @@ const deleteItem = async (id) => {
   try {
     await evenementService.delete(id)
     success.value = 'Événement supprimé avec succès'
+    showSnack(success.value)
     await loadPage(pagination.value.current_page)
   } catch (err) {
     error.value = err.response?.data?.message || 'Erreur lors de la suppression'
+    showSnack(error.value, 'error')
   } finally {
     loading.value = false
   }
@@ -357,7 +340,7 @@ const cancelForm = () => {
   imagePreview.value = null
 }
 
-const formatDate = (d) => d ? new Date(d).toLocaleDateString('fr-FR') : '-'
+const formatDate = (d) => d ? new Date(d).toLocaleDateString('fr-FR') : '—'
 
 onMounted(() => {
   loadPage()
