@@ -14,6 +14,7 @@
       :headers="headers"
       :items="offres"
       :loading="loading"
+      :items-per-page="-1"
       hover
       density="comfortable"
     >
@@ -41,14 +42,6 @@
       </template>
     </v-data-table>
 
-    <v-pagination
-      v-if="pagination.last_page > 1"
-      v-model="pagination.current_page"
-      :length="pagination.last_page"
-      @update:model-value="loadPage"
-      class="mt-2"
-    />
-
     <ConfirmDialog ref="confirmRef" />
   </v-card>
 </template>
@@ -62,7 +55,6 @@ import ConfirmDialog from '../shared/ConfirmDialog.vue'
 const router = useRouter()
 const offres = ref([])
 const loading = ref(false)
-const pagination = ref({ current_page: 1, last_page: 1 })
 const confirmRef = ref(null)
 
 const snackbar = ref(false)
@@ -82,12 +74,11 @@ const headers = [
   { title: '', key: 'actions', sortable: false, align: 'end' },
 ]
 
-const loadPage = async (page = 1) => {
+const loadPage = async () => {
   loading.value = true
   try {
-    const response = await offreService.getAll(page)
-    offres.value = response.data.data
-    pagination.value = { current_page: response.data.current_page, last_page: response.data.last_page }
+    const response = await offreService.getAll(1, 1000)
+    offres.value = response.data.data ?? response.data
   } catch {
     showSnack('Erreur lors du chargement', 'error')
   } finally {
@@ -102,7 +93,7 @@ const deleteItem = async (id) => {
   try {
     await offreService.delete(id)
     showSnack('Offre supprimée avec succès')
-    await loadPage(pagination.value.current_page)
+    await loadPage()
   } catch (err) {
     showSnack(err.response?.data?.message || 'Erreur lors de la suppression', 'error')
   } finally {

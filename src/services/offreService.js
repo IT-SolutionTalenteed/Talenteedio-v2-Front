@@ -1,7 +1,7 @@
 import api from './api.js'
 
 export const offreService = {
-  getAll: (page = 1) => api.get(`/admin/offres?page=${page}`),
+  getAll: (page = 1, perPage = 1000) => api.get(`/admin/offres?page=${page}&per_page=${perPage}`),
   getById: (id) => api.get(`/admin/offres/${id}`),
   getReferentiels: () => api.get('/admin/offres-referentiels'),
   create: (data) => api.post('/admin/offres', data),
