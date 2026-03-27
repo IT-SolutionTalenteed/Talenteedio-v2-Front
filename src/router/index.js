@@ -5,6 +5,7 @@ import Register from '../components/Register.vue'
 import AdminDashboard from '../components/AdminDashboard.vue'
 import TalentDashboard from '../components/TalentDashboard.vue'
 import EntrepriseDashboard from '../components/EntrepriseDashboard.vue'
+import VerticalLayout from '../components/layout/VerticalLayout.vue'
 import TestAuth from '../components/TestAuth.vue'
 import GoogleCallback from '../components/GoogleCallback.vue'
 import Annonces from '../components/Annonces.vue'
@@ -111,9 +112,31 @@ const routes = [
   },
   {
     path: '/admin',
-    name: 'AdminDashboard',
-    component: AdminDashboard,
-    meta: { requiresAuth: true, role: 'admin' }
+    component: VerticalLayout,
+    meta: { requiresAuth: true, role: 'admin' },
+    redirect: '/admin/overview',
+    children: [
+      { path: 'overview', name: 'AdminOverview', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
+      { path: 'entreprises', name: 'AdminEntreprises', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
+      { path: 'talents', name: 'AdminTalents', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
+      { path: 'entretiens', name: 'AdminEntretiens', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
+      { path: 'feedbacks', name: 'AdminFeedbacks', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
+      { path: 'import-candidats', name: 'AdminImportCandidats', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
+      { path: 'sync-crm', name: 'AdminSyncCrm', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
+      { path: 'offres', name: 'AdminOffres', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
+      { path: 'categorie-evenements', name: 'AdminCategorieEvenements', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
+      { path: 'evenements', name: 'AdminEvenements', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
+      { path: 'media-categories', name: 'AdminMediaCategories', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
+      { path: 'articles', name: 'AdminArticles', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
+      { path: 'job-contracts', name: 'AdminJobContracts', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
+      { path: 'job-modes', name: 'AdminJobModes', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
+      { path: 'skills', name: 'AdminSkills', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
+      { path: 'study-levels', name: 'AdminStudyLevels', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
+      { path: 'experiences', name: 'AdminExperiences', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
+      { path: 'languages', name: 'AdminLanguages', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
+      { path: 'activity-sectors', name: 'AdminActivitySectors', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
+      { path: 'legal-pages', name: 'AdminLegalPages', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } }
+    ]
   },
   {
     path: '/talent',
