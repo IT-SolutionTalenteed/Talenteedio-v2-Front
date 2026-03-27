@@ -1,44 +1,82 @@
 <template>
-  <div>
-    <h2>Gestion des Expériences professionnelles</h2>
-
-    <button @click="showForm = true">Ajouter</button>
-
-    <div v-if="showForm || editingItem">
-      <h3>{{ editingItem ? 'Modifier' : 'Créer' }} un(e) expérience</h3>
-      <form @submit.prevent="save">
-        <div>
-          <label for="name">Nom:</label>
-          <input type="text" id="name" v-model="form.name" required />
-        </div>
-        <button type="submit" :disabled="loading">
-          {{ loading ? 'Enregistrement...' : 'Enregistrer' }}
+  <div class="container-xl">
+    <div class="card flex-grow-1">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="bi bi-briefcase me-2"></i>
+          Gestion des Expériences
+        </h3>
+      <div class="card-actions">
+        <button class="btn btn-primary" @click="showForm = true">
+          <i class="bi bi-plus"></i>
+          Ajouter
         </button>
-        <button type="button" @click="cancelForm">Annuler</button>
+      </div>
+    </div>
+
+    <!-- Formulaire -->
+    <div v-if="showForm || editingItem" class="card-body border-bottom">
+      <h4 class="mb-3">{{ editingItem ? 'Modifier' : 'Créer' }} une expérience</h4>
+      <form @submit.prevent="save">
+        <div class="mb-3">
+          <label class="form-label required">Nom</label>
+          <input type="text" class="form-control" v-model="form.name" required />
+        </div>
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary" :disabled="loading">
+            <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
+            {{ loading ? 'Enregistrement...' : 'Enregistrer' }}
+          </button>
+          <button type="button" class="btn btn-secondary" @click="cancelForm">Annuler</button>
+        </div>
       </form>
     </div>
 
-    <div v-if="items.length > 0">
-      <table>
+    <!-- Liste -->
+    <div class="table-responsive">
+      <table class="table table-vcenter card-table">
         <thead>
-          <tr><th>ID</th><th>Nom</th><th>Actions</th></tr>
+          <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th class="w-1"></th>
+          </tr>
         </thead>
         <tbody>
-          <tr v-for="item in items" :key="item.id">
-            <td>{{ item.id }}</td>
+          <tr v-if="loading">
+            <td colspan="3" class="text-center">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Chargement...</span>
+              </div>
+            </td>
+          </tr>
+          <tr v-else-if="items.length === 0">
+            <td colspan="3" class="text-center text-muted">Aucune expérience de travail trouvé.</td>
+          </tr>
+          <tr v-else v-for="item in items" :key="item.id">
+            <td class="text-muted">{{ item.id }}</td>
             <td>{{ item.name }}</td>
             <td>
-              <button @click="editItem(item)">Modifier</button>
-              <button @click="deleteItem(item.id)">Supprimer</button>
+              <div class="btn-list">
+                <button class="btn btn-sm btn-primary" @click="editItem(item)">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" @click="deleteItem(item.id)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <div v-else-if="!loading"><p>Aucun(e) expérience trouvé(e).</p></div>
 
-    <div v-if="error" style="color: red;">{{ error }}</div>
-    <div v-if="success" style="color: green;">{{ success }}</div>
+    <!-- Messages -->
+    <div v-if="error || success" class="card-footer">
+      <div v-if="error" class="alert alert-danger mb-0">{{ error }}</div>
+      <div v-if="success" class="alert alert-success mb-0">{{ success }}</div>
+    </div>
+    </div>
   </div>
 </template>
 
@@ -74,15 +112,15 @@ const save = async () => {
   try {
     if (editingItem.value) {
       await experienceService.update(editingItem.value.id, form.value)
-      success.value = 'Modifié avec succès'
+      success.value = 'Expérience modifié avec succès'
     } else {
       await experienceService.create(form.value)
-      success.value = 'Créé avec succès'
+      success.value = 'Expérience créé avec succès'
     }
     await load()
     cancelForm()
   } catch (err) {
-    error.value = err.response?.data?.message || "Erreur lors de l'enregistrement"
+    error.value = err.response?.data?.message || 'Erreur lors de l\'enregistrement'
   } finally {
     loading.value = false
   }
@@ -95,12 +133,12 @@ const editItem = (item) => {
 }
 
 const deleteItem = async (id) => {
-  if (!confirm('Supprimer cet élément ?')) return
+  if (!confirm('Supprimer ce expérience ?')) return
   loading.value = true
   error.value = ''
   try {
     await experienceService.delete(id)
-    success.value = 'Supprimé avec succès'
+    success.value = 'Expérience supprimé avec succès'
     await load()
   } catch (err) {
     error.value = err.response?.data?.message || 'Erreur lors de la suppression'
