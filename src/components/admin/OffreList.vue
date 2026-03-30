@@ -6,17 +6,38 @@
       <v-icon class="mr-2">mdi-briefcase</v-icon>
       <v-toolbar-title>Gestion des Offres d'emploi</v-toolbar-title>
       <template #append>
+        <span class="text-caption text-medium-emphasis mr-4">{{ total }} résultat{{ total > 1 ? 's' : '' }}</span>
         <v-btn color="primary" prepend-icon="mdi-plus" @click="router.push({ name: 'AdminOffreCreate' })">Ajouter une offre</v-btn>
       </template>
     </v-toolbar>
 
-    <v-data-table
+    <!-- Barre de recherche -->
+    <div class="pa-3 pb-0">
+      <v-text-field
+        v-model="searchInput"
+        prepend-inner-icon="mdi-magnify"
+        placeholder="Rechercher par titre, client, localisation…"
+        density="compact"
+        variant="outlined"
+        clearable
+        hide-details
+        style="max-width: 420px"
+        @update:model-value="onSearchChange"
+        @click:clear="onClear"
+      />
+    </div>
+
+    <v-data-table-server
       :headers="headers"
       :items="offres"
+      :items-length="total"
       :loading="loading"
-      :items-per-page="-1"
+      v-model:page="page"
+      v-model:items-per-page="perPage"
+      :items-per-page-options="[10, 25, 50, 100]"
       hover
       density="comfortable"
+      @update:options="onOptions"
     >
       <template #item.titre="{ item }">
         <div class="font-weight-bold">{{ item.titre }}</div>
@@ -40,22 +61,28 @@
           <v-btn icon="mdi-delete" size="small" color="error" variant="tonal" @click="deleteItem(item.id)" />
         </div>
       </template>
-    </v-data-table>
+    </v-data-table-server>
 
     <ConfirmDialog ref="confirmRef" />
   </v-card>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import offreService from '../../services/offreService.js'
 import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
 const router = useRouter()
-const offres = ref([])
-const loading = ref(false)
-const confirmRef = ref(null)
+const offres      = ref([])
+const total       = ref(0)
+const loading     = ref(false)
+const page        = ref(1)
+const perPage     = ref(25)
+const searchInput = ref('')
+const confirmRef  = ref(null)
+
+let searchTimer = null
 
 const snackbar = ref(false)
 const snackMsg = ref('')
@@ -65,11 +92,11 @@ const showSnack = (msg, color = 'success') => {
 }
 
 const headers = [
-  { title: 'ID', key: 'id', sortable: true, width: '60px' },
-  { title: 'Titre / Salaire', key: 'titre', sortable: true },
-  { title: 'Client', key: 'client', sortable: true },
+  { title: 'ID', key: 'id', sortable: false, width: '60px' },
+  { title: 'Titre / Salaire', key: 'titre', sortable: false },
+  { title: 'Client', key: 'client', sortable: false },
   { title: 'Localisation', key: 'localisation', sortable: false },
-  { title: 'Date limite', key: 'date_limite', sortable: true },
+  { title: 'Date limite', key: 'date_limite', sortable: false },
   { title: 'Contrats', key: 'job_contracts', sortable: false },
   { title: '', key: 'actions', sortable: false, align: 'end' },
 ]
@@ -77,13 +104,34 @@ const headers = [
 const loadPage = async () => {
   loading.value = true
   try {
-    const response = await offreService.getAll(1, 1000)
-    offres.value = response.data.data ?? response.data
+    const res = await offreService.getAll(page.value, perPage.value, searchInput.value)
+    offres.value = res.data.data
+    total.value  = res.data.total
   } catch {
     showSnack('Erreur lors du chargement', 'error')
   } finally {
     loading.value = false
   }
+}
+
+const onOptions = ({ page: p, itemsPerPage: ipp }) => {
+  page.value    = p
+  perPage.value = ipp
+  loadPage()
+}
+
+const onSearchChange = () => {
+  clearTimeout(searchTimer)
+  searchTimer = setTimeout(() => {
+    page.value = 1
+    loadPage()
+  }, 400)
+}
+
+const onClear = () => {
+  searchInput.value = ''
+  page.value = 1
+  loadPage()
 }
 
 const deleteItem = async (id) => {
@@ -102,6 +150,4 @@ const deleteItem = async (id) => {
 }
 
 const formatDate = (d) => new Date(d).toLocaleDateString('fr-FR')
-
-onMounted(loadPage)
 </script>

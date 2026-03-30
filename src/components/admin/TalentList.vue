@@ -5,15 +5,38 @@
     <v-toolbar color="transparent" border="b" density="compact" class="px-2">
       <v-icon class="mr-2">mdi-account-group</v-icon>
       <v-toolbar-title>Gestion des Talents &amp; Consultants</v-toolbar-title>
+      <template #append>
+        <span class="text-caption text-medium-emphasis mr-4">{{ total }} résultat{{ total > 1 ? 's' : '' }}</span>
+      </template>
     </v-toolbar>
 
-    <v-data-table
+    <!-- Barre de recherche -->
+    <div class="pa-3 pb-0">
+      <v-text-field
+        v-model="searchInput"
+        prepend-inner-icon="mdi-magnify"
+        placeholder="Rechercher par nom, email, poste, ville…"
+        density="compact"
+        variant="outlined"
+        clearable
+        hide-details
+        style="max-width: 420px"
+        @update:model-value="onSearchChange"
+        @click:clear="onClear"
+      />
+    </div>
+
+    <v-data-table-server
       :headers="headers"
       :items="talents"
+      :items-length="total"
       :loading="loading"
-      :items-per-page="-1"
+      v-model:page="page"
+      v-model:items-per-page="perPage"
+      :items-per-page-options="[10, 25, 50, 100]"
       hover
       density="comfortable"
+      @update:options="onOptions"
     >
       <template #item.name="{ item }">
         <div class="font-weight-bold">{{ item.name }}</div>
@@ -76,22 +99,28 @@
           <v-btn icon="mdi-delete" size="small" color="error" variant="tonal" @click="deleteItem(item.id)" title="Supprimer" />
         </div>
       </template>
-    </v-data-table>
+    </v-data-table-server>
 
     <ConfirmDialog ref="confirmRef" />
   </v-card>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import talentService from '../../services/talentService.js'
 import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
 const router = useRouter()
-const talents = ref([])
-const loading = ref(false)
+const talents    = ref([])
+const total      = ref(0)
+const loading    = ref(false)
+const page       = ref(1)
+const perPage    = ref(25)
+const searchInput = ref('')
 const confirmRef = ref(null)
+
+let searchTimer = null
 
 const snackbar = ref(false)
 const snackMsg = ref('')
@@ -101,8 +130,8 @@ const showSnack = (msg, color = 'success') => {
 }
 
 const headers = [
-  { title: 'Nom / Titre', key: 'name', sortable: true },
-  { title: 'Email', key: 'email', sortable: true },
+  { title: 'Nom / Titre', key: 'name', sortable: false },
+  { title: 'Email', key: 'email', sortable: false },
   { title: 'Rôle', key: 'role', sortable: false },
   { title: 'Localisation', key: 'localisation', sortable: false },
   { title: 'Provenance', key: 'source_provenance', sortable: false },
@@ -125,13 +154,36 @@ const statutOptions = [
 const loadPage = async () => {
   loading.value = true
   try {
-    const res = await talentService.getAll(1, 1000)
-    talents.value = res.data.data ?? res.data
+    const res = await talentService.getAll(page.value, perPage.value, searchInput.value)
+    talents.value = res.data.data
+    total.value   = res.data.total
   } catch {
     showSnack('Erreur lors du chargement', 'error')
   } finally {
     loading.value = false
   }
+}
+
+// Déclenché par v-data-table-server quand page/perPage change
+const onOptions = ({ page: p, itemsPerPage: ipp }) => {
+  page.value    = p
+  perPage.value = ipp
+  loadPage()
+}
+
+// Debounce recherche 400ms
+const onSearchChange = () => {
+  clearTimeout(searchTimer)
+  searchTimer = setTimeout(() => {
+    page.value = 1
+    loadPage()
+  }, 400)
+}
+
+const onClear = () => {
+  searchInput.value = ''
+  page.value = 1
+  loadPage()
 }
 
 const toggleSuspend = async (talent) => {
@@ -158,7 +210,7 @@ const updateStatutCrm = async (talent, statut) => {
   try {
     const res = await talentService.updateStatutCrm(talent.id, statut || null)
     talent.statut_crm = res.data.statut_crm
-    talent.is_banned = res.data.is_banned
+    talent.is_banned  = res.data.is_banned
     showSnack('Statut CRM mis à jour')
   } catch {
     showSnack('Erreur lors de la mise à jour du statut', 'error')
@@ -179,6 +231,4 @@ const deleteItem = async (id) => {
     loading.value = false
   }
 }
-
-onMounted(loadPage)
 </script>
