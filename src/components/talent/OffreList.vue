@@ -62,13 +62,6 @@
 
       <template #item.actions="{ item }">
         <v-btn
-          color="primary"
-          size="small"
-          variant="tonal"
-          class="mr-1"
-          @click="openCandidature(item)"
-        >Postuler</v-btn>
-        <v-btn
           :icon="favorisIds.has(item.id) ? 'mdi-star' : 'mdi-star-outline'"
           :color="favorisIds.has(item.id) ? 'warning' : 'default'"
           size="small"

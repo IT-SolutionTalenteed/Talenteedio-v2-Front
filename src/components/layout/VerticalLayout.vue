@@ -345,25 +345,25 @@ const sideNav = computed(() => {
 
   if (role === 'entreprise') {
     return [
-      { label: 'Tableau de bord', tab: 'overview', icon: 'mdi-view-dashboard-outline' },
-      { label: 'Mes offres', tab: 'offres', icon: 'mdi-briefcase-outline' },
-      { label: 'Candidatures', tab: 'candidatures', icon: 'mdi-account-multiple-outline' },
-      { label: 'Événements', tab: 'evenements', icon: 'mdi-calendar-star' },
-      { label: 'Articles', tab: 'articles', icon: 'mdi-newspaper-variant-outline' },
-      { label: 'Entretiens', tab: 'entretiens', icon: 'mdi-calendar-account-outline' },
-      { label: 'Mon profil', tab: 'profile', icon: 'mdi-account-circle-outline' },
+      { label: 'Tableau de bord', route: { name: 'EntrepriseDashboard' }, icon: 'mdi-view-dashboard-outline' },
+      { label: 'Mes offres',      route: { name: 'EntrepriseDashboard' }, icon: 'mdi-briefcase-outline' },
+      { label: 'Candidatures',    route: { name: 'EntrepriseCandidatures' }, icon: 'mdi-account-multiple-outline' },
+      { label: 'Événements',      route: { name: 'EntrepriseEvenements' }, icon: 'mdi-calendar-star' },
+      { label: 'Articles',        route: { name: 'EntrepriseArticles' }, icon: 'mdi-newspaper-variant-outline' },
+      { label: 'Entretiens',      route: { name: 'EntrepriseEntretiens' }, icon: 'mdi-calendar-account-outline' },
+      { label: 'Mon profil',      route: { name: 'EntrepriseProfile' }, icon: 'mdi-account-circle-outline' },
     ]
   }
 
   if (role === 'talent') {
     return [
-      { label: "Offres d'emploi", tab: 'offres', icon: 'mdi-briefcase-search-outline' },
-      { label: 'Mes candidatures', tab: 'candidatures', icon: 'mdi-briefcase-check-outline' },
-      { label: 'Mes favoris', tab: 'favoris', icon: 'mdi-heart-outline' },
-      { label: 'Événements & Matching', tab: 'evenements', icon: 'mdi-calendar-star' },
-      { label: 'Mes entretiens', tab: 'entretiens', icon: 'mdi-calendar-account-outline' },
-      { label: 'Mes feedbacks', tab: 'feedbacks', icon: 'mdi-message-text-outline' },
-      { label: 'Mon profil', tab: 'profile', icon: 'mdi-account-circle-outline' },
+      { label: "Offres d'emploi",    route: { name: 'TalentDashboard' }, icon: 'mdi-briefcase-search-outline' },
+      { label: 'Mes candidatures',   route: { name: 'TalentCandidatures' }, icon: 'mdi-briefcase-check-outline' },
+      { label: 'Mes favoris',        route: { name: 'TalentFavoris' }, icon: 'mdi-heart-outline' },
+      { label: 'Événements & Matching', route: { name: 'TalentEvenements' }, icon: 'mdi-calendar-star' },
+      { label: 'Mes entretiens',     route: { name: 'TalentEntretiens' }, icon: 'mdi-calendar-account-outline' },
+      { label: 'Mes feedbacks',      route: { name: 'TalentFeedbacks' }, icon: 'mdi-message-text-outline' },
+      { label: 'Mon profil',         route: { name: 'TalentProfile' }, icon: 'mdi-account-circle-outline' },
     ]
   }
 

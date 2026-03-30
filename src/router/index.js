@@ -6,7 +6,6 @@ import AdminDashboard from '../components/AdminDashboard.vue'
 import TalentDashboard from '../components/TalentDashboard.vue'
 import EntrepriseDashboard from '../components/EntrepriseDashboard.vue'
 import VerticalLayout from '../components/layout/VerticalLayout.vue'
-import TestAuth from '../components/TestAuth.vue'
 import GoogleCallback from '../components/GoogleCallback.vue'
 import Annonces from '../components/Annonces.vue'
 import AnnonceDetail from '../components/AnnonceDetail.vue'
@@ -136,11 +135,6 @@ const routes = [
     component: Register
   },
   {
-    path: '/test-auth',
-    name: 'TestAuth',
-    component: TestAuth
-  },
-  {
     path: '/auth/google/callback',
     name: 'GoogleCallback',
     component: GoogleCallback
@@ -205,59 +199,41 @@ const routes = [
       { path: 'profile', name: 'AdminProfile', component: EditProfile, meta: adminMeta },
     ]
   },
+  // TALENT
   {
     path: '/talent',
-    name: 'TalentDashboard',
-    component: TalentDashboard,
-    meta: talentMeta
+    component: VerticalLayout,
+    meta: talentMeta,
+    redirect: '/talent/offres',
+    children: [
+      { path: 'offres',        name: 'TalentDashboard',    component: TalentDashboard, meta: talentMeta },
+      { path: 'candidatures',  name: 'TalentCandidatures', component: TalentDashboard, meta: talentMeta },
+      { path: 'favoris',       name: 'TalentFavoris',      component: TalentDashboard, meta: talentMeta },
+      { path: 'evenements',    name: 'TalentEvenements',   component: TalentDashboard, meta: talentMeta },
+      { path: 'entretiens',    name: 'TalentEntretiens',   component: TalentDashboard, meta: talentMeta },
+      { path: 'feedbacks',     name: 'TalentFeedbacks',    component: TalentDashboard, meta: talentMeta },
+      { path: 'profile',       name: 'TalentProfile',      component: TalentDashboard, meta: talentMeta },
+      { path: 'feedbacks/:id/edit', name: 'TalentFeedbackEdit', component: FeedbackForm, meta: talentMeta },
+    ]
   },
-  {
-    path: '/talent/feedbacks/:id/edit',
-    name: 'TalentFeedbackEdit',
-    component: FeedbackForm,
-    meta: talentMeta
-  },
-  {
-    path: '/talent/profile',
-    name: 'TalentProfile',
-    component: EditProfile,
-    meta: talentMeta
-  },
+  // ENTREPRISE
   {
     path: '/entreprise',
-    name: 'EntrepriseDashboard',
-    component: EntrepriseDashboard,
-    meta: entrepriseMeta
-  },
-  {
-    path: '/entreprise/offres/create',
-    name: 'EntrepriseOffreCreate',
-    component: EntrepriseOffreForm,
-    meta: entrepriseMeta
-  },
-  {
-    path: '/entreprise/offres/:id/edit',
-    name: 'EntrepriseOffreEdit',
-    component: EntrepriseOffreForm,
-    meta: entrepriseMeta
-  },
-  {
-    path: '/entreprise/articles/create',
-    name: 'EntrepriseArticleCreate',
-    component: EntrepriseArticleForm,
-    meta: entrepriseMeta
-  },
-  {
-    path: '/entreprise/articles/:id/edit',
-    name: 'EntrepriseArticleEdit',
-    component: EntrepriseArticleForm,
-    meta: entrepriseMeta
-  },
-  {
-    path: '/entreprise/profile',
-    name: 'EntrepriseProfile',
-    component: EditProfile,
-    meta: entrepriseMeta
+    component: VerticalLayout,
+    meta: entrepriseMeta,
+    redirect: '/entreprise/offres',
+    children: [
+      { path: 'offres',        name: 'EntrepriseDashboard',   component: EntrepriseDashboard, meta: entrepriseMeta },
+      { path: 'candidatures',  name: 'EntrepriseCandidatures',component: EntrepriseDashboard, meta: entrepriseMeta },
+      { path: 'evenements',    name: 'EntrepriseEvenements',  component: EntrepriseDashboard, meta: entrepriseMeta },
+      { path: 'articles',      name: 'EntrepriseArticles',    component: EntrepriseDashboard, meta: entrepriseMeta },
+      { path: 'entretiens',    name: 'EntrepriseEntretiens',  component: EntrepriseDashboard, meta: entrepriseMeta },
+      { path: 'profile',       name: 'EntrepriseProfile',     component: EntrepriseDashboard, meta: entrepriseMeta },
+      { path: 'offres/create',      name: 'EntrepriseOffreCreate',  component: EntrepriseOffreForm,  meta: entrepriseMeta },
+      { path: 'offres/:id/edit',    name: 'EntrepriseOffreEdit',    component: EntrepriseOffreForm,  meta: entrepriseMeta },
+      { path: 'articles/create',    name: 'EntrepriseArticleCreate',component: EntrepriseArticleForm,meta: entrepriseMeta },
+      { path: 'articles/:id/edit',  name: 'EntrepriseArticleEdit',  component: EntrepriseArticleForm,meta: entrepriseMeta },
+    ]
   },
 ]
 
