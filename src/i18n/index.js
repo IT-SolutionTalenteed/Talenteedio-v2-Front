@@ -8,6 +8,7 @@ import frAuth from './locales/fr/auth.json'
 import frFooter from './locales/fr/footer.json'
 import frEntreprises from './locales/fr/entreprises.json'
 import frBlog from './locales/fr/blog.json'
+import frEvenements from './locales/fr/evenements.json'
 
 // Import English translations
 import enCommon from './locales/en/common.json'
@@ -17,6 +18,7 @@ import enAuth from './locales/en/auth.json'
 import enFooter from './locales/en/footer.json'
 import enEntreprises from './locales/en/entreprises.json'
 import enBlog from './locales/en/blog.json'
+import enEvenements from './locales/en/evenements.json'
 
 // Merge translations with proper nesting
 const fr = {
@@ -26,7 +28,8 @@ const fr = {
   auth: frAuth,
   footer: frFooter,
   entreprises: frEntreprises,
-  blog: frBlog
+  blog: frBlog,
+  evenements: frEvenements
 }
 
 const en = {
@@ -36,7 +39,8 @@ const en = {
   auth: enAuth,
   footer: enFooter,
   entreprises: enEntreprises,
-  blog: enBlog
+  blog: enBlog,
+  evenements: enEvenements
 }
 
 const i18n = createI18n({

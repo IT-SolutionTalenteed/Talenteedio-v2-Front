@@ -5,14 +5,14 @@
     <!-- Loading -->
     <div v-if="loading" class="evd-loading">
       <i class="fa-solid fa-spinner fa-spin"></i>
-      <p>Chargement de l'événement...</p>
+      <p>{{ t('evenements.detail.loading') }}</p>
     </div>
 
     <!-- Erreur -->
     <div v-else-if="!evenement" class="evd-loading">
       <i class="fa-solid fa-triangle-exclamation"></i>
-      <p>Événement introuvable.</p>
-      <router-link to="/" class="btn btn--blue" style="margin-top:16px;">Retour à l'accueil</router-link>
+      <p>{{ t('evenements.detail.notFound') }}</p>
+      <router-link to="/" class="btn btn--blue" style="margin-top:16px;">{{ t('evenements.backHome') }}</router-link>
     </div>
 
     <template v-else>
@@ -42,15 +42,15 @@
             <div class="evd-hero-cta">
               <template v-if="isTalent">
                 <button class="btn btn--orange btn--lg" @click="scrollToMatching">
-                  <i class="fa-solid fa-wand-magic-sparkles" style="margin-right:6px;"></i>Lancer le matching IA
+                  <i class="fa-solid fa-wand-magic-sparkles" style="margin-right:6px;"></i>{{ t('evenements.detail.launchMatching') }}
                 </button>
               </template>
               <template v-else>
                 <router-link to="/register" class="btn btn--orange btn--lg">
-                  <i class="fa-solid fa-user-plus" style="margin-right:6px;"></i>Souscrire pour participer
+                  <i class="fa-solid fa-user-plus" style="margin-right:6px;"></i>{{ t('evenements.detail.subscribeToParticipate') }}
                 </router-link>
                 <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--outline-white btn--lg">
-                  Se connecter
+                  {{ t('evenements.detail.login') }}
                 </router-link>
               </template>
             </div>
@@ -68,63 +68,54 @@
 
               <!-- Description -->
               <div v-if="evenement.description" class="evd-block">
-                <h2 class="evd-block-title"><i class="fa-solid fa-circle-info"></i> À propos de cet événement</h2>
+                <h2 class="evd-block-title"><i class="fa-solid fa-circle-info"></i> {{ t('evenements.detail.about') }}</h2>
                 <div class="evd-description" v-html="evenement.description"></div>
               </div>
 
               <!-- ══ PARTICIPATION ENTREPRISE ══ -->
               <div v-if="isEntreprise" class="evd-block evd-participation-block">
                 <h2 class="evd-block-title">
-                  <i class="fa-solid fa-handshake"></i> Participation à l'événement
+                  <i class="fa-solid fa-handshake"></i> {{ t('evenements.detail.participation') }}
                 </h2>
 
-                <!-- Déjà participante -->
                 <div v-if="estParticipant" class="evd-part-status evd-part-status--ok">
                   <i class="fa-solid fa-circle-check"></i>
                   <div>
-                    <strong>Vous participez à cet événement</strong>
-                    <p>Votre entreprise est inscrite comme recruteur partenaire.</p>
+                    <strong>{{ t('evenements.detail.alreadyParticipating') }}</strong>
+                    <p>{{ t('evenements.detail.alreadyParticipatingDesc') }}</p>
                   </div>
                 </div>
 
-                <!-- Demande en attente -->
                 <div v-else-if="maDemandeStatut === 'en_attente'" class="evd-part-status evd-part-status--pending">
                   <i class="fa-solid fa-clock"></i>
                   <div>
-                    <strong>Demande en cours de traitement</strong>
-                    <p>Votre demande de participation a été transmise à l'équipe Talenteed.</p>
+                    <strong>{{ t('evenements.detail.pendingRequest') }}</strong>
+                    <p>{{ t('evenements.detail.pendingRequestDesc') }}</p>
                   </div>
                 </div>
 
-                <!-- Demande acceptée (mais pas encore dans le pivot) -->
                 <div v-else-if="maDemandeStatut === 'accepte'" class="evd-part-status evd-part-status--ok">
                   <i class="fa-solid fa-circle-check"></i>
                   <div>
-                    <strong>Demande acceptée</strong>
-                    <p>Votre participation a été validée par l'équipe Talenteed.</p>
+                    <strong>{{ t('evenements.detail.acceptedRequest') }}</strong>
+                    <p>{{ t('evenements.detail.acceptedRequestDesc') }}</p>
                   </div>
                 </div>
 
-                <!-- Demande refusée -->
                 <div v-else-if="maDemandeStatut === 'refuse'" class="evd-part-status evd-part-status--refused">
                   <i class="fa-solid fa-circle-xmark"></i>
                   <div>
-                    <strong>Demande refusée</strong>
-                    <p>Votre demande de participation n'a pas été retenue pour cet événement.</p>
+                    <strong>{{ t('evenements.detail.refusedRequest') }}</strong>
+                    <p>{{ t('evenements.detail.refusedRequestDesc') }}</p>
                   </div>
                 </div>
 
-                <!-- Aucune demande -->
                 <div v-else class="evd-part-cta">
-                  <p>Votre entreprise ne participe pas encore à cet événement. Soumettez une demande pour rejoindre les recruteurs partenaires.</p>
-                  <button
-                    class="btn btn--blue"
-                    :disabled="demandeLoading"
-                    @click="demanderParticipation"
-                  >
+                  <p>{{ t('evenements.detail.noParticipation') }}</p>
+                  <button class="btn btn--blue" :disabled="demandeLoading" @click="demanderParticipation">
                     <i class="fa-solid fa-paper-plane" v-if="!demandeLoading"></i>
                     <i class="fa-solid fa-spinner fa-spin" v-else></i>
-                    {{ demandeLoading ? 'Envoi en cours…' : 'Demander à participer' }}
+                    {{ demandeLoading ? t('evenements.detail.sendingRequest') : t('evenements.detail.requestToParticipate') }}
                   </button>
                 </div>
               </div>
@@ -132,16 +123,11 @@
               <!-- ══ ENTREPRISES PARTICIPANTES ══ -->
               <div class="evd-block" id="entreprises-section">
                 <h2 class="evd-block-title">
-                  <i class="fa-solid fa-building"></i> Entreprises participantes
+                  <i class="fa-solid fa-building"></i> {{ t('evenements.detail.participatingCompanies') }}
                   <span class="evd-count">{{ evenement.entreprises?.length || 0 }}</span>
                 </h2>
-
                 <div v-if="evenement.entreprises?.length" class="evd-companies-grid">
-                  <div
-                    v-for="ent in evenement.entreprises"
-                    :key="ent.id"
-                    class="evd-company-card"
-                  >
+                  <div v-for="ent in evenement.entreprises" :key="ent.id" class="evd-company-card">
                     <div class="evd-company-logo">
                       <img v-if="ent.logo_url" :src="ent.logo_url" :alt="ent.nom" />
                       <span v-else class="evd-company-initial">{{ ent.nom.charAt(0) }}</span>
@@ -156,95 +142,75 @@
                     </p>
                     <div v-if="ent.offres?.length" class="evd-company-offres">
                       <i class="fa-solid fa-briefcase"></i>
-                      {{ ent.offres.length }} offre{{ ent.offres.length > 1 ? 's' : '' }}
+                      {{ ent.offres.length }} {{ ent.offres.length > 1 ? t('evenements.detail.offers') : t('evenements.detail.offer') }}
                     </div>
                     <div class="evd-company-action">
                       <router-link :to="`/entreprises/${ent.id}`" class="btn btn--outline-nav btn--sm">
-                        Voir le profil
+                        {{ t('evenements.detail.viewProfile') }}
                       </router-link>
                     </div>
                   </div>
                 </div>
                 <div v-else class="evd-empty">
                   <i class="fa-solid fa-building-circle-xmark"></i>
-                  <p>Aucune entreprise enregistrée pour cet événement.</p>
+                  <p>{{ t('evenements.detail.noCompanies') }}</p>
                 </div>
-
               </div>
 
-              <!-- ══ MATCHING IA (talent seulement) ══ -->
               <div v-if="isTalent" class="evd-block evd-matching-block" id="matching-section">
                 <h2 class="evd-block-title">
-                  <i class="fa-solid fa-wand-magic-sparkles"></i> Matching IA
+                  <i class="fa-solid fa-wand-magic-sparkles"></i> {{ t('evenements.detail.matchingTitle') }}
                 </h2>
-                <p class="evd-matching-intro">
-                  Notre IA analyse votre profil et le compare aux entreprises participantes pour vous proposer les meilleures opportunités.
-                </p>
+                <p class="evd-matching-intro">{{ t('evenements.detail.matchingIntro') }}</p>
 
-                <!-- Formulaire matching -->
                 <div v-if="!matchingResultats" class="evd-matching-form">
                   <div class="evd-form-row">
-                    <label class="evd-form-label">Poste recherché <span class="req">*</span></label>
-                    <input
-                      v-model="matchingForm.poste_recherche"
-                      type="text"
-                      class="evd-form-input"
-                      placeholder="Ex: Développeur Full Stack, Data Analyst, Manager RH..."
-                    />
+                    <label class="evd-form-label">{{ t('evenements.detail.jobSought') }} <span class="req">*</span></label>
+                    <input v-model="matchingForm.poste_recherche" type="text" class="evd-form-input" :placeholder="t('evenements.detail.jobSoughtPlaceholder')" />
                   </div>
-
                   <div class="evd-form-row">
-                    <label class="evd-form-label">Compétences clés</label>
+                    <label class="evd-form-label">{{ t('evenements.detail.keySkills') }}</label>
                     <select v-model="matchingForm.competences_ids" multiple class="evd-form-select" size="6">
                       <option v-for="sk in skills" :key="sk.id" :value="sk.name">{{ sk.name }}</option>
                     </select>
-                    <small class="evd-form-hint">Maintenir Ctrl/Cmd pour sélectionner plusieurs</small>
+                    <small class="evd-form-hint">{{ t('evenements.detail.multiSelectHint') }}</small>
                   </div>
-
                   <div class="evd-form-row">
-                    <label class="evd-form-label">CV (PDF, DOC, DOCX — optionnel)</label>
+                    <label class="evd-form-label">{{ t('evenements.detail.cvLabel') }}</label>
                     <div class="evd-file-input" @click="$refs.cvInput.click()">
                       <i class="fa-solid fa-upload"></i>
-                      <span>{{ cvFile ? cvFile.name : 'Déposer votre CV ici ou cliquer pour parcourir' }}</span>
+                      <span>{{ cvFile ? cvFile.name : t('evenements.detail.cvDropzone') }}</span>
                     </div>
                     <input ref="cvInput" type="file" accept=".pdf,.doc,.docx" @change="e => cvFile = e.target.files[0]" style="display:none;" />
                   </div>
-
                   <div v-if="matchingError" class="evd-error">
                     <i class="fa-solid fa-triangle-exclamation"></i> {{ matchingError }}
                   </div>
-
-                  <button
-                    class="btn btn--blue btn--lg evd-matching-btn"
-                    :disabled="!matchingForm.poste_recherche || matchingLoading"
-                    @click="lancerMatching"
-                  >
+                  <button class="btn btn--blue btn--lg evd-matching-btn" :disabled="!matchingForm.poste_recherche || matchingLoading" @click="lancerMatching">
                     <i class="fa-solid fa-wand-magic-sparkles" v-if="!matchingLoading"></i>
                     <i class="fa-solid fa-spinner fa-spin" v-else></i>
-                    {{ matchingLoading ? 'Analyse IA en cours...' : 'Lancer le matching IA' }}
+                    {{ matchingLoading ? t('evenements.detail.analyzing') : t('evenements.detail.launchMatching') }}
                   </button>
                 </div>
 
-                <!-- Résultats matching -->
                 <div v-else class="evd-matching-results">
                   <div class="evd-matching-results-header">
-                    <h3><i class="fa-solid fa-chart-bar"></i> Résultats — {{ matchingResultats.resultats?.length }} entreprise{{ matchingResultats.resultats?.length !== 1 ? 's' : '' }} analysée{{ matchingResultats.resultats?.length !== 1 ? 's' : '' }}</h3>
+                    <h3>
+                      <i class="fa-solid fa-chart-bar"></i>
+                      {{ t('evenements.detail.matchingResults') }} —
+                      {{ matchingResultats.resultats?.length }}
+                      {{ matchingResultats.resultats?.length !== 1 ? t('evenements.detail.companies') : t('evenements.detail.company') }}
+                      {{ matchingResultats.resultats?.length !== 1 ? t('evenements.detail.analyzedPlural') : t('evenements.detail.analyzed') }}
+                    </h3>
                     <button class="btn btn--outline-nav btn--sm" @click="resetMatching">
-                      <i class="fa-solid fa-rotate-left"></i> Nouveau matching
+                      <i class="fa-solid fa-rotate-left"></i> {{ t('evenements.detail.newMatching') }}
                     </button>
                   </div>
-
                   <div v-if="matchingResultats.resultats?.length" class="evd-results-list">
-                    <div
-                      v-for="(r, i) in matchingResultats.resultats"
-                      :key="r.entreprise_id"
-                      class="evd-result-card"
-                    >
-                      <!-- Rang -->
+                    <div v-for="(r, i) in matchingResultats.resultats" :key="r.entreprise_id" class="evd-result-card">
                       <div class="evd-result-rank" :class="`rank-${i+1}`">
                         {{ i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i+1}` }}
                       </div>
-                      <!-- Infos -->
                       <div class="evd-result-info">
                         <h4 class="evd-result-name">{{ r.nom }}</h4>
                         <p class="evd-result-raison">{{ r.raison }}</p>
@@ -252,7 +218,6 @@
                           <i class="fa-solid fa-location-dot"></i> {{ r.ville }}
                         </div>
                       </div>
-                      <!-- Score -->
                       <div class="evd-result-score">
                         <div class="evd-score-circle" :class="scoreClass(r.score)">
                           <span class="evd-score-num">{{ r.score }}</span>
@@ -262,49 +227,41 @@
                           <div class="evd-score-fill" :style="{ width: r.score + '%' }" :class="scoreClass(r.score)"></div>
                         </div>
                       </div>
-                      <!-- CTA -->
                       <div class="evd-result-cta">
                         <button class="btn btn--blue btn--sm" @click="ouvrirReservationById(r.entreprise_id, r.nom)">
-                          <i class="fa-solid fa-calendar-plus"></i> Prendre RDV
+                          <i class="fa-solid fa-calendar-plus"></i> {{ t('evenements.detail.bookAppointment') }}
                         </button>
                       </div>
                     </div>
                   </div>
                   <div v-else class="evd-empty">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <p>Aucun résultat — essayez avec d'autres critères.</p>
+                    <p>{{ t('evenements.detail.noResults') }}</p>
                   </div>
                 </div>
               </div>
 
-              <!-- ══ CTA CONNEXION (non-talent) ══ -->
               <div v-else class="evd-block evd-cta-login-block">
                 <div class="evd-cta-login-inner">
                   <div class="evd-cta-login-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
                   <div>
-                    <h3>Matching IA & Prise de rendez-vous</h3>
-                    <p>Connectez-vous en tant que talent pour accéder au matching IA et réserver un entretien avec les entreprises de votre choix.</p>
+                    <h3>{{ t('evenements.detail.loginMatchingTitle') }}</h3>
+                    <p>{{ t('evenements.detail.loginMatchingDesc') }}</p>
                     <div class="evd-cta-login-btns">
-                      <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--blue">Se connecter</router-link>
-                      <router-link to="/register" class="btn btn--orange">Créer un compte talent</router-link>
+                      <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--blue">{{ t('evenements.detail.loginBtn') }}</router-link>
+                      <router-link to="/register" class="btn btn--orange">{{ t('evenements.detail.createTalentAccount') }}</router-link>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <!-- ══ MES ENTRETIENS (talent seulement) ══ -->
               <div v-if="isTalent && mesEntretiens.length" class="evd-block">
                 <h2 class="evd-block-title">
-                  <i class="fa-solid fa-calendar-check"></i> Mes entretiens
+                  <i class="fa-solid fa-calendar-check"></i> {{ t('evenements.detail.myInterviews') }}
                   <span class="evd-count">{{ mesEntretiens.length }}</span>
                 </h2>
                 <div class="evd-entretiens-list">
-                  <div
-                    v-for="ent in mesEntretiens"
-                    :key="ent.id"
-                    class="evd-entretien-card"
-                  >
-                    <!-- Ligne principale -->
+                  <div v-for="ent in mesEntretiens" :key="ent.id" class="evd-entretien-card">
                     <div class="evd-entretien-row">
                       <div class="evd-entretien-logo">
                         <img v-if="ent.entreprise?.logo_url" :src="ent.entreprise.logo_url" :alt="ent.entreprise?.nom" />
@@ -319,72 +276,47 @@
                         </div>
                       </div>
                       <span :class="['evd-entretien-badge', `status--${ent.statut}`]">
-                        {{ ent.statut === 'confirme' ? 'Confirmé' : ent.statut === 'refuse' ? 'Refusé' : 'En attente' }}
+                        {{ ent.statut === 'confirme' ? t('evenements.detail.statusConfirmed') : ent.statut === 'refuse' ? t('evenements.detail.statusRefused') : t('evenements.detail.statusPending') }}
                       </span>
                     </div>
 
-                    <!-- Feedback existant -->
                     <div v-if="getFeedback(ent.id)" class="evd-feedback-display">
                       <div class="evd-feedback-stars">
-                        <i
-                          v-for="s in 5" :key="s"
-                          :class="['fa-star', s <= getFeedback(ent.id).note ? 'fa-solid' : 'fa-regular']"
-                        ></i>
+                        <i v-for="s in 5" :key="s" :class="['fa-star', s <= getFeedback(ent.id).note ? 'fa-solid' : 'fa-regular']"></i>
                         <span class="evd-feedback-note">{{ getFeedback(ent.id).note }}/5</span>
                       </div>
                       <p v-if="getFeedback(ent.id).commentaire" class="evd-feedback-comment">
                         "{{ getFeedback(ent.id).commentaire }}"
                       </p>
-                      <button 
-                        class="evd-feedback-edit-btn" 
-                        @click="ouvrirFeedback(ent)"
-                        :disabled="!isEntretienTermine(ent)"
-                        :title="!isEntretienTermine(ent) ? 'Vous pourrez modifier après l\'entretien' : ''"
-                      >
-                        <i class="fa-solid fa-pen"></i> Modifier
+                      <button class="evd-feedback-edit-btn" @click="ouvrirFeedback(ent)" :disabled="!isEntretienTermine(ent)" :title="!isEntretienTermine(ent) ? t('evenements.detail.modifyAfterInterview') : ''">
+                        <i class="fa-solid fa-pen"></i> {{ t('evenements.detail.editFeedback') }}
                       </button>
                     </div>
 
-                    <!-- Bouton donner feedback (entretien confirmé sans feedback) -->
                     <div v-else-if="ent.statut === 'confirme' && feedbackOpen !== ent.id" class="evd-feedback-cta">
-                      <button 
-                        class="btn btn--outline-nav btn--sm" 
-                        @click="ouvrirFeedback(ent)"
-                        :disabled="!isEntretienTermine(ent)"
-                        :title="!isEntretienTermine(ent) ? 'Disponible après l\'entretien' : ''"
-                      >
-                        <i class="fa-solid fa-star"></i> 
-                        {{ isEntretienTermine(ent) ? 'Donner un feedback' : 'Feedback disponible après l\'entretien' }}
+                      <button class="btn btn--outline-nav btn--sm" @click="ouvrirFeedback(ent)" :disabled="!isEntretienTermine(ent)" :title="!isEntretienTermine(ent) ? t('evenements.detail.availableAfterInterview') : ''">
+                        <i class="fa-solid fa-star"></i>
+                        {{ isEntretienTermine(ent) ? t('evenements.detail.giveFeedback') : t('evenements.detail.feedbackAfterInterview') }}
                       </button>
                     </div>
 
-                    <!-- Formulaire feedback inline -->
                     <div v-if="feedbackOpen === ent.id" class="evd-feedback-form">
                       <div class="evd-stars-input">
-                        <button
-                          v-for="s in 5" :key="s"
-                          :class="['evd-star-btn', { active: s <= feedbackForm.note }]"
-                          @click="feedbackForm.note = s"
-                          type="button"
-                        ><i class="fa-solid fa-star"></i></button>
-                        <span class="evd-star-label">{{ feedbackForm.note ? feedbackForm.note + '/5' : 'Choisir une note' }}</span>
+                        <button v-for="s in 5" :key="s" :class="['evd-star-btn', { active: s <= feedbackForm.note }]" @click="feedbackForm.note = s" type="button">
+                          <i class="fa-solid fa-star"></i>
+                        </button>
+                        <span class="evd-star-label">{{ feedbackForm.note ? feedbackForm.note + '/5' : t('evenements.detail.chooseRating') }}</span>
                       </div>
-                      <textarea
-                        v-model="feedbackForm.commentaire"
-                        class="evd-feedback-textarea"
-                        placeholder="Votre commentaire (optionnel)..."
-                        rows="3"
-                      ></textarea>
+                      <textarea v-model="feedbackForm.commentaire" class="evd-feedback-textarea" :placeholder="t('evenements.detail.feedbackPlaceholder')" rows="3"></textarea>
                       <div v-if="feedbackError" class="evd-error" style="margin-bottom:8px;">{{ feedbackError }}</div>
                       <div class="evd-feedback-form-btns">
-                        <button class="btn btn--ghost" @click="feedbackOpen = null">Annuler</button>
+                        <button class="btn btn--ghost" @click="feedbackOpen = null">{{ t('evenements.detail.cancelFeedback') }}</button>
                         <button class="btn btn--blue btn--sm" :disabled="feedbackSaving" @click="soumettreF(ent)">
                           <i class="fa-solid fa-paper-plane"></i>
-                          {{ feedbackSaving ? 'Envoi…' : (getFeedback(ent.id) ? 'Mettre à jour' : 'Envoyer') }}
+                          {{ feedbackSaving ? t('evenements.detail.sendingFeedback') : (getFeedback(ent.id) ? t('evenements.detail.updateFeedback') : t('evenements.detail.sendFeedback')) }}
                         </button>
                       </div>
                     </div>
-
                   </div>
                 </div>
               </div>
@@ -396,42 +328,41 @@
 
               <!-- Infos événement -->
               <div class="evd-side-card">
-                <h3 class="evd-side-title">Informations</h3>
+                <h3 class="evd-side-title">{{ t('evenements.detail.information') }}</h3>
                 <ul class="evd-info-list">
                   <li v-if="evenement.date_debut">
                     <i class="fa-solid fa-calendar-days"></i>
                     <div>
-                      <span class="evd-info-label">Date</span>
+                      <span class="evd-info-label">{{ t('evenements.detail.date') }}</span>
                       <span>{{ formatDateRange(evenement.date_debut, evenement.date_fin) }}</span>
                     </div>
                   </li>
                   <li v-if="evenement.heure_debut_journee">
                     <i class="fa-solid fa-clock"></i>
                     <div>
-                      <span class="evd-info-label">Horaires</span>
+                      <span class="evd-info-label">{{ t('evenements.detail.schedule') }}</span>
                       <span>{{ evenement.heure_debut_journee?.substring(0,5) }} – {{ evenement.heure_fin_journee?.substring(0,5) }}</span>
                     </div>
                   </li>
                   <li v-if="evenement.ville">
                     <i class="fa-solid fa-location-dot"></i>
                     <div>
-                      <span class="evd-info-label">Lieu</span>
+                      <span class="evd-info-label">{{ t('evenements.detail.location') }}</span>
                       <span>{{ evenement.ville }}{{ evenement.pays ? ', ' + evenement.pays : '' }}</span>
                     </div>
                   </li>
                   <li v-if="evenement.entreprises?.length">
                     <i class="fa-solid fa-building"></i>
                     <div>
-                      <span class="evd-info-label">Recruteurs</span>
-                      <span>{{ evenement.entreprises.length }} entreprise{{ evenement.entreprises.length > 1 ? 's' : '' }}</span>
+                      <span class="evd-info-label">{{ t('evenements.detail.recruiters') }}</span>
+                      <span>{{ evenement.entreprises.length }} {{ evenement.entreprises.length > 1 ? t('evenements.detail.enterprises') : t('evenements.detail.enterprise') }}</span>
                     </div>
                   </li>
                 </ul>
               </div>
 
-              <!-- Logos entreprises (mini grid) -->
               <div v-if="evenement.entreprises?.length" class="evd-side-card">
-                <h3 class="evd-side-title">Recruteurs</h3>
+                <h3 class="evd-side-title">{{ t('evenements.detail.recruitersLabel') }}</h3>
                 <div class="evd-logos-mini">
                   <template v-for="ent in evenement.entreprises.slice(0, 12)" :key="ent.id">
                     <div class="evd-logo-mini" :title="ent.nom">
@@ -445,18 +376,17 @@
                 </div>
               </div>
 
-              <!-- CTA -->
               <div class="evd-side-card evd-side-cta">
                 <template v-if="isTalent">
-                  <p>Prêt à trouver les meilleures opportunités ?</p>
+                  <p>{{ t('evenements.detail.readyForMatching') }}</p>
                   <button class="btn btn--blue" style="width:100%;" @click="scrollToMatching">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i> Lancer le matching
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> {{ t('evenements.detail.launchMatchingBtn') }}
                   </button>
                 </template>
                 <template v-else>
-                  <p>Rejoignez la communauté des talents</p>
+                  <p>{{ t('evenements.detail.joinCommunity') }}</p>
                   <router-link to="/register" class="btn btn--orange" style="display:block;text-align:center;">
-                    Souscrire gratuitement
+                    {{ t('evenements.detail.subscribeFree') }}
                   </router-link>
                 </template>
               </div>
@@ -488,21 +418,18 @@
             </button>
           </div>
 
-          <!-- Chargement -->
           <div v-if="rdvLoading" class="evd-rdv-loading">
             <i class="fa-solid fa-spinner fa-spin"></i>
-            <span>Chargement des créneaux…</span>
+            <span>{{ t('evenements.detail.loadingSlots') }}</span>
           </div>
 
-          <!-- Confirmation réussie -->
           <div v-else-if="rdvConfirme" class="evd-rdv-confirme">
             <i class="fa-solid fa-circle-check"></i>
-            <p>Entretien réservé le <strong>{{ rdvConfirme.date }}</strong> à <strong>{{ rdvConfirme.heure_debut }}</strong></p>
-            <p class="evd-rdv-status">En attente de confirmation de l'entreprise</p>
-            <button class="btn btn--blue" @click="rdvEntreprise = null">Fermer</button>
+            <p>{{ t('evenements.detail.reservationConfirmed') }} <strong>{{ rdvConfirme.date }}</strong> {{ t('evenements.detail.reservationAt') }} <strong>{{ rdvConfirme.heure_debut }}</strong></p>
+            <p class="evd-rdv-status">{{ t('evenements.detail.pendingConfirmation') }}</p>
+            <button class="btn btn--blue" @click="rdvEntreprise = null">{{ t('evenements.detail.close') }}</button>
           </div>
 
-          <!-- Créneaux -->
           <div v-else class="evd-modal-body">
             <div v-if="rdvCreneaux.length" class="evd-creneaux">
               <div v-for="jour in rdvCreneaux" :key="jour.date" class="evd-creneau-jour">
@@ -527,11 +454,10 @@
             </div>
             <div v-else class="evd-rdv-loading">
               <i class="fa-solid fa-calendar-xmark"></i>
-              <span>Aucun créneau disponible.</span>
+              <span>{{ t('evenements.detail.noSlots') }}</span>
             </div>
           </div>
 
-          <!-- Footer confirmation -->
           <div v-if="selectedSlot && !rdvConfirme" class="evd-modal-footer">
             <div class="evd-slot-selected-info">
               <i class="fa-solid fa-clock"></i>
@@ -539,9 +465,9 @@
             </div>
             <div v-if="rdvError" class="evd-error">{{ rdvError }}</div>
             <div class="evd-modal-footer-btns">
-              <button class="btn btn--ghost" @click="selectedSlot = null">Annuler</button>
+              <button class="btn btn--ghost" @click="selectedSlot = null">{{ t('evenements.detail.cancel') }}</button>
               <button class="btn btn--blue" @click="confirmerReservation" :disabled="rdvLoading">
-                <i class="fa-solid fa-check"></i> Confirmer
+                <i class="fa-solid fa-check"></i> {{ t('evenements.detail.confirm') }}
               </button>
             </div>
           </div>
@@ -556,10 +482,12 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
 import api from '../services/api.js'
 
+const { t, locale } = useI18n()
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const route   = useRoute()
 
@@ -663,7 +591,7 @@ const ouvrirFeedback = (entretien) => {
 }
 
 const soumettreF = async (entretien) => {
-  if (!feedbackForm.value.note) { feedbackError.value = 'Veuillez choisir une note.'; return }
+  if (!feedbackForm.value.note) { feedbackError.value = t('evenements.detail.feedbackRequired'); return }
   feedbackSaving.value = true
   feedbackError.value  = ''
   try {
@@ -800,14 +728,18 @@ const scrollToMatching = () => {
 }
 
 const formatDateRange = (debut, fin) => {
-  const fmt = (s) => new Date(s).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+  const fmt = (s) => {
+    const lang = locale.value === 'en' ? 'en-US' : 'fr-FR'
+    return new Date(s).toLocaleDateString(lang, { day: 'numeric', month: 'long', year: 'numeric' })
+  }
   if (!debut) return ''
   if (!fin || debut === fin) return fmt(debut)
   return `${fmt(debut)} – ${fmt(fin)}`
 }
 
 const formatJour = (dateStr) => {
-  return new Date(dateStr).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
+  const lang = locale.value === 'en' ? 'en-US' : 'fr-FR'
+  return new Date(dateStr).toLocaleDateString(lang, { weekday: 'long', day: 'numeric', month: 'long' })
 }
 
 const truncate = (str, len) => !str ? '' : str.length > len ? str.slice(0, len) + '…' : str

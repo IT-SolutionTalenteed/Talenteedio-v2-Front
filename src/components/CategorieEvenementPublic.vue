@@ -8,7 +8,7 @@
       <div class="cat-hero-overlay"></div>
       <div class="container">
         <div class="cat-hero-content fade-in">
-          <span class="label-white">Événements</span>
+          <span class="label-white">{{ t('evenements.label') }}</span>
           <h1>{{ categorie.titre }}</h1>
           <p v-if="categorie.description">{{ categorie.description }}</p>
         </div>
@@ -26,8 +26,8 @@
     <section v-if="categorie.liste_details && categorie.liste_details.length" class="cat-details">
       <div class="container">
         <div class="cat-section-header fade-in">
-          <span class="label-blue">Détails</span>
-          <h2>À propos de cet événement</h2>
+          <span class="label-blue">{{ t('evenements.details.label') }}</span>
+          <h2>{{ t('evenements.details.about') }}</h2>
         </div>
         <div class="cat-details-grid fade-in">
           <div v-for="(detail, i) in categorie.liste_details" :key="i" class="cat-detail-item">
@@ -42,9 +42,9 @@
     <section v-if="categorie.evenements && categorie.evenements.length" class="cat-events">
       <div class="container">
         <div class="cat-section-header fade-in">
-          <span class="label-blue">Agenda</span>
-          <h2>Événements</h2>
-          <p>Les prochains événements de cette catégorie</p>
+          <span class="label-blue">{{ t('evenements.agenda.label') }}</span>
+          <h2>{{ t('evenements.agenda.title') }}</h2>
+          <p>{{ t('evenements.agenda.description') }}</p>
         </div>
         <div class="cat-events-grid fade-in">
           <div v-for="ev in categorie.evenements" :key="ev.id" class="cat-event-card">
@@ -53,7 +53,7 @@
               <div v-else class="cat-event-img-placeholder">
                 <i class="fa-solid fa-calendar-days"></i>
               </div>
-              <span v-if="ev.is_featured" class="ev-badge-featured">⭐ Mis en avant</span>
+              <span v-if="ev.is_featured" class="ev-badge-featured">⭐ {{ t('evenements.card.featured') }}</span>
             </div>
             <div class="cat-event-body">
               <h3>{{ ev.titre }}</h3>
@@ -71,7 +71,7 @@
               <p v-if="ev.description" class="cat-event-desc">{{ truncate(ev.description, 120) }}</p>
               <!-- Entreprises participantes -->
               <div v-if="ev.entreprises && ev.entreprises.length" class="cat-event-entreprises">
-                <span class="cat-event-entreprises-label">Recruteurs :</span>
+                <span class="cat-event-entreprises-label">{{ t('evenements.card.recruiters') }}</span>
                 <div class="cat-event-logos">
                   <template v-for="ent in ev.entreprises.slice(0,5)" :key="ent.id">
                     <img v-if="ent.logo_url" :src="ent.logo_url" :alt="ent.nom" class="cat-ent-logo" :title="ent.nom" />
@@ -83,7 +83,7 @@
             </div>
             <div class="cat-event-footer">
               <router-link :to="`/evenements/${ev.id}`" class="btn btn--blue">
-                Voir l'événement <i class="fa-solid fa-chevron-right" style="font-size:10px;"></i>
+                {{ t('evenements.card.viewEvent') }} <i class="fa-solid fa-chevron-right" style="font-size:10px;"></i>
               </router-link>
             </div>
           </div>
@@ -95,8 +95,8 @@
     <section v-if="categorie.liste_faqs && categorie.liste_faqs.length" class="cat-faqs">
       <div class="container">
         <div class="cat-section-header fade-in">
-          <span class="label-blue">FAQ</span>
-          <h2>Questions fréquentes</h2>
+          <span class="label-blue">{{ t('evenements.faq.label') }}</span>
+          <h2>{{ t('evenements.faq.title') }}</h2>
         </div>
         <div class="cat-faqs-list fade-in">
           <div
@@ -122,8 +122,8 @@
     <section v-if="categorie.temoignages && categorie.temoignages.length" class="cat-temoignages">
       <div class="container">
         <div class="cat-section-header fade-in">
-          <span class="label-blue">Témoignages</span>
-          <h2>Ce qu'ils en disent</h2>
+          <span class="label-blue">{{ t('evenements.testimonials.label') }}</span>
+          <h2>{{ t('evenements.testimonials.title') }}</h2>
         </div>
         <div class="cat-temoignages-grid fade-in">
           <div v-for="t in categorie.temoignages" :key="t.id" class="temoignage-card">
@@ -145,10 +145,10 @@
     <!-- ══ CTA ══ -->
     <section class="cat-cta">
       <div class="container">
-        <h2>Prêt à participer ?</h2>
-        <p>Souscrivez dès maintenant et rejoignez la communauté des talents.</p>
+        <h2>{{ t('evenements.cta.title') }}</h2>
+        <p>{{ t('evenements.cta.description') }}</p>
         <router-link to="/register" class="btn btn--blue btn--lg">
-          Souscrire <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
+          {{ t('evenements.cta.action') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
         </router-link>
       </div>
     </section>
@@ -158,14 +158,14 @@
   <!-- Loading -->
   <div v-else-if="loading" class="cat-loading">
     <i class="fa-solid fa-spinner fa-spin"></i>
-    <p>Chargement...</p>
+    <p>{{ t('evenements.loading') }}</p>
   </div>
 
   <!-- Erreur -->
   <div v-else class="cat-loading">
     <i class="fa-solid fa-triangle-exclamation"></i>
-    <p>Catégorie introuvable.</p>
-    <router-link to="/" class="btn btn--blue" style="margin-top:16px;">Retour à l'accueil</router-link>
+    <p>{{ t('evenements.notFound') }}</p>
+    <router-link to="/" class="btn btn--blue" style="margin-top:16px;">{{ t('evenements.backHome') }}</router-link>
   </div>
   </div>
 </template>
@@ -173,9 +173,11 @@
 <script setup>
 import { ref, computed, watch, onMounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
 
+const { t, locale } = useI18n()
 const apiBase   = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const route     = useRoute()
 const categorie = ref(null)
@@ -225,7 +227,10 @@ watch(() => route.params.id, (newId) => {
 })
 
 const formatDateRange = (debut, fin) => {
-  const fmt = (s) => new Date(s).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+  const fmt = (s) => {
+    const lang = locale.value === 'en' ? 'en-US' : 'fr-FR'
+    return new Date(s).toLocaleDateString(lang, { day: 'numeric', month: 'long', year: 'numeric' })
+  }
   if (!debut) return ''
   if (!fin || debut === fin) return fmt(debut)
   return `${fmt(debut)} – ${fmt(fin)}`
