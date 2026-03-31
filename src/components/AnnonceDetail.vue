@@ -5,14 +5,14 @@
     <!-- Loading -->
     <div v-if="loading" class="od-loading">
       <i class="fa-solid fa-spinner fa-spin"></i>
-      <p>Chargement de l'offre...</p>
+      <p>{{ t('annonces.detail.loading') }}</p>
     </div>
 
     <!-- Erreur -->
     <div v-else-if="!offre" class="od-loading">
       <i class="fa-solid fa-triangle-exclamation"></i>
-      <p>Offre introuvable.</p>
-      <router-link to="/annonces" class="btn btn--blue" style="margin-top:16px;">Retour aux annonces</router-link>
+      <p>{{ t('annonces.detail.notFound') }}</p>
+      <router-link to="/annonces" class="btn btn--blue" style="margin-top:16px;">{{ t('annonces.detail.backToOffers') }}</router-link>
     </div>
 
     <template v-else>
@@ -41,7 +41,7 @@
                   <i class="fa-solid fa-location-dot"></i> {{ offre.localisation }}
                 </span>
                 <span v-if="offre.date_limite">
-                  <i class="fa-solid fa-calendar"></i> Limite : {{ formatDate(offre.date_limite) }}
+                  <i class="fa-solid fa-calendar"></i> {{ t('annonces.detail.deadline') }} : {{ formatDate(offre.date_limite) }}
                 </span>
                 <span v-if="offre.salaire">
                   <i class="fa-solid fa-coins"></i> {{ offre.salaire }} €
@@ -53,12 +53,12 @@
               <template v-if="isLoggedIn && userRole === 'talent'">
                 <div class="od-cta-row">
                   <button class="btn btn--blue btn--lg" @click="showModal = true">
-                    <i class="fa-solid fa-paper-plane" style="margin-right:6px;"></i>Postuler
+                    <i class="fa-solid fa-paper-plane" style="margin-right:6px;"></i>{{ t('annonces.detail.apply') }}
                   </button>
                   <button
                     class="btn-favori-hero"
                     :class="{ 'btn-favori-hero--active': isFavori }"
-                    :title="isFavori ? 'Retirer des favoris' : 'Ajouter aux favoris'"
+                    :title="isFavori ? t('annonces.detail.removeFromFavorites') : t('annonces.detail.addToFavorites')"
                     @click="toggleFavori"
                   >
                     <i :class="isFavori ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
@@ -66,14 +66,14 @@
                 </div>
               </template>
               <template v-else-if="isLoggedIn">
-                <p class="od-cta-note">Seuls les talents peuvent postuler.</p>
+                <p class="od-cta-note">{{ t('annonces.detail.talentOnly') }}</p>
               </template>
               <template v-else>
                 <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--blue btn--lg">
-                  <i class="fa-solid fa-lock" style="margin-right:6px;"></i>Se connecter pour postuler
+                  <i class="fa-solid fa-lock" style="margin-right:6px;"></i>{{ t('annonces.detail.loginToApply') }}
                 </router-link>
                 <router-link to="/register" class="btn btn--orange btn--lg" style="margin-top:8px;">
-                  Créer un compte
+                  {{ t('annonces.detail.createAccount') }}
                 </router-link>
               </template>
               <!-- Feedback postuler -->
@@ -95,25 +95,25 @@
 
               <!-- Mission -->
               <div v-if="offre.mission" class="od-block">
-                <h2 class="od-block-title"><i class="fa-solid fa-bullseye"></i> Mission</h2>
+                <h2 class="od-block-title"><i class="fa-solid fa-bullseye"></i> {{ t('annonces.detail.mission') }}</h2>
                 <div class="od-rich" v-html="offre.mission"></div>
               </div>
 
               <!-- Description -->
               <div v-if="offre.description" class="od-block">
-                <h2 class="od-block-title"><i class="fa-solid fa-align-left"></i> Description du poste</h2>
+                <h2 class="od-block-title"><i class="fa-solid fa-align-left"></i> {{ t('annonces.detail.jobDescription') }}</h2>
                 <div class="od-rich" v-html="offre.description"></div>
               </div>
 
               <!-- Profil recherché -->
               <div v-if="offre.profil_recherche" class="od-block">
-                <h2 class="od-block-title"><i class="fa-solid fa-user-check"></i> Profil recherché</h2>
+                <h2 class="od-block-title"><i class="fa-solid fa-user-check"></i> {{ t('annonces.detail.profileSought') }}</h2>
                 <div class="od-rich" v-html="offre.profil_recherche"></div>
               </div>
 
               <!-- À propos -->
               <div v-if="offre.a_propos" class="od-block">
-                <h2 class="od-block-title"><i class="fa-solid fa-circle-info"></i> À propos de l'entreprise</h2>
+                <h2 class="od-block-title"><i class="fa-solid fa-circle-info"></i> {{ t('annonces.detail.aboutCompany') }}</h2>
                 <div class="od-rich" v-html="offre.a_propos"></div>
               </div>
 
@@ -124,47 +124,47 @@
 
               <!-- Détails -->
               <div class="od-side-card">
-                <h3 class="od-side-title">Détails de l'offre</h3>
+                <h3 class="od-side-title">{{ t('annonces.detail.offerDetails') }}</h3>
                 <ul class="od-detail-list">
                   <li v-if="offre.job_contracts?.length">
                     <i class="fa-solid fa-file-contract"></i>
                     <div>
-                      <span class="od-detail-label">Contrat</span>
+                      <span class="od-detail-label">{{ t('annonces.detail.contract') }}</span>
                       <span>{{ offre.job_contracts.map(c => c.name).join(', ') }}</span>
                     </div>
                   </li>
                   <li v-if="offre.localisation">
                     <i class="fa-solid fa-location-dot"></i>
                     <div>
-                      <span class="od-detail-label">Localisation</span>
+                      <span class="od-detail-label">{{ t('annonces.detail.location') }}</span>
                       <span>{{ offre.localisation }}</span>
                     </div>
                   </li>
                   <li v-if="offre.study_levels?.length">
                     <i class="fa-solid fa-graduation-cap"></i>
                     <div>
-                      <span class="od-detail-label">Niveau d'études</span>
+                      <span class="od-detail-label">{{ t('annonces.detail.studyLevel') }}</span>
                       <span>{{ offre.study_levels.map(s => s.name).join(', ') }}</span>
                     </div>
                   </li>
                   <li v-if="offre.experiences?.length">
                     <i class="fa-solid fa-briefcase"></i>
                     <div>
-                      <span class="od-detail-label">Expérience</span>
+                      <span class="od-detail-label">{{ t('annonces.detail.experience') }}</span>
                       <span>{{ offre.experiences.map(e => e.name).join(', ') }}</span>
                     </div>
                   </li>
                   <li v-if="offre.date_limite">
                     <i class="fa-solid fa-calendar-xmark"></i>
                     <div>
-                      <span class="od-detail-label">Date limite</span>
+                      <span class="od-detail-label">{{ t('annonces.detail.deadline2') }}</span>
                       <span>{{ formatDate(offre.date_limite) }}</span>
                     </div>
                   </li>
                   <li v-if="offre.salaire">
                     <i class="fa-solid fa-coins"></i>
                     <div>
-                      <span class="od-detail-label">Salaire</span>
+                      <span class="od-detail-label">{{ t('annonces.detail.salary') }}</span>
                       <span>{{ offre.salaire }} €</span>
                     </div>
                   </li>
@@ -173,7 +173,7 @@
 
               <!-- Entreprise -->
               <div v-if="offre.entreprise" class="od-side-card">
-                <h3 class="od-side-title">L'entreprise</h3>
+                <h3 class="od-side-title">{{ t('annonces.detail.theCompany') }}</h3>
                 <div class="od-company">
                   <div class="od-company-logo">
                     <img v-if="offre.entreprise.logo_url" :src="offre.entreprise.logo_url" :alt="offre.entreprise.nom" />
@@ -187,24 +187,24 @@
                       {{ [offre.entreprise.ville, offre.entreprise.pays].filter(Boolean).join(', ') }}
                     </p>
                     <a v-if="offre.entreprise.site_web" :href="offre.entreprise.site_web" target="_blank" rel="noopener" class="od-company-link">
-                      <i class="fa-solid fa-globe"></i> Site web
+                      <i class="fa-solid fa-globe"></i> {{ t('annonces.detail.website') }}
                     </a>
                   </div>
                 </div>
                 <router-link :to="`/entreprises/${offre.entreprise.id}`" class="btn btn--outline btn--sm" style="margin-top:14px;display:block;text-align:center;">
-                  Voir le profil de l'entreprise
+                  {{ t('annonces.detail.viewCompanyProfile') }}
                 </router-link>
               </div>
 
               <!-- CTA -->
               <div class="od-side-card od-side-cta">
-                <p>Intéressé par ce poste ?</p>
+                <p>{{ t('annonces.detail.interestedInJob') }}</p>
                 <template v-if="isLoggedIn && userRole === 'talent'">
-                  <button class="btn btn--blue" style="width:100%;" @click="showModal = true">Postuler maintenant</button>
+                  <button class="btn btn--blue" style="width:100%;" @click="showModal = true">{{ t('annonces.detail.applyNow') }}</button>
                 </template>
                 <template v-else>
                   <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--blue" style="display:block;text-align:center;">
-                    Se connecter pour postuler
+                    {{ t('annonces.detail.loginToApply') }}
                   </router-link>
                 </template>
               </div>
@@ -220,14 +220,14 @@
     <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
       <div class="modal-content">
         <div class="modal-header">
-          <h2>Postuler à cette offre</h2>
+          <h2>{{ t('annonces.detail.modalTitle') }}</h2>
           <button class="modal-close" @click="closeModal">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
         <form @submit.prevent="postuler" class="modal-body">
           <div class="form-group">
-            <label for="cv">CV (PDF, DOC, DOCX) <span class="required">*</span></label>
+            <label for="cv">{{ t('annonces.detail.cvLabel') }} <span class="required">*</span></label>
             <input
               type="file"
               id="cv"
@@ -241,11 +241,11 @@
             </p>
           </div>
           <div class="modal-actions">
-            <button type="button" class="btn btn--outline" @click="closeModal">Annuler</button>
+            <button type="button" class="btn btn--outline" @click="closeModal">{{ t('annonces.detail.cancel') }}</button>
             <button type="submit" class="btn btn--blue" :disabled="submitting">
               <i v-if="submitting" class="fa-solid fa-spinner fa-spin"></i>
               <i v-else class="fa-solid fa-paper-plane"></i>
-              {{ submitting ? 'Envoi...' : 'Envoyer ma candidature' }}
+              {{ submitting ? t('annonces.detail.sending') : t('annonces.detail.sendApplication') }}
             </button>
           </div>
         </form>
@@ -257,10 +257,12 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
 import { useFavoris } from '../composables/useFavoris.js'
 
+const { t, locale } = useI18n()
 const apiBase    = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const route      = useRoute()
 const offre      = ref(null)
@@ -299,7 +301,7 @@ const handleFileChange = (e) => {
   if (file) {
     const maxSize = 5 * 1024 * 1024 // 5MB
     if (file.size > maxSize) {
-      alert('Le fichier est trop volumineux. Taille maximale : 5 Mo')
+      alert(t('annonces.detail.fileTooLarge'))
       e.target.value = ''
       cvFile.value = null
       return
@@ -316,7 +318,7 @@ const closeModal = () => {
 
 const postuler = async () => {
   if (!cvFile.value) {
-    alert('Veuillez sélectionner un CV')
+    alert(t('annonces.detail.selectCv'))
     return
   }
 
@@ -338,7 +340,7 @@ const postuler = async () => {
       }
     )
 
-    postuleMsg.value = 'Votre candidature a bien été envoyée !'
+    postuleMsg.value = t('annonces.detail.applicationSent')
     postuleOk.value = true
     closeModal()
   } catch (e) {
@@ -353,7 +355,11 @@ const toggleFavori = () => {
   if (offre.value) _toggleFavori(offre.value)
 }
 
-const formatDate = (str) => !str ? '' : new Date(str).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+const formatDate = (str) => {
+  if (!str) return ''
+  const lang = locale.value === 'en' ? 'en-US' : 'fr-FR'
+  return new Date(str).toLocaleDateString(lang, { day: 'numeric', month: 'long', year: 'numeric' })
+}
 
 onMounted(() => {
   load()
