@@ -99,52 +99,28 @@
             />
           </v-col>
 
-          <v-col cols="12">
-            <div class="text-caption text-medium-emphasis mb-1">Secteurs d'activité</div>
-            <div class="d-flex flex-wrap gap-1">
-              <v-checkbox
-                v-for="sec in referentiels.activitySectors"
-                :key="sec.id"
-                :label="sec.name"
-                :value="sec.id"
-                v-model="form.activity_sector_ids"
-                density="compact"
-                hide-details
-                class="mr-2"
-              />
-            </div>
+          <v-col cols="12" md="4">
+            <ComboboxMultiple
+              v-model="form.activity_sector_ids"
+              label="Secteurs d'activité"
+              :items="referentiels.activitySectors"
+            />
           </v-col>
 
-          <v-col cols="12">
-            <div class="text-caption text-medium-emphasis mb-1">Langues</div>
-            <div class="d-flex flex-wrap gap-1">
-              <v-checkbox
-                v-for="lang in referentiels.languages"
-                :key="lang.id"
-                :label="lang.name"
-                :value="lang.id"
-                v-model="form.language_ids"
-                density="compact"
-                hide-details
-                class="mr-2"
-              />
-            </div>
+          <v-col cols="12" md="4">
+            <ComboboxMultiple
+              v-model="form.language_ids"
+              label="Langues"
+              :items="referentiels.languages"
+            />
           </v-col>
 
-          <v-col cols="12">
-            <div class="text-caption text-medium-emphasis mb-1">Compétences</div>
-            <div class="d-flex flex-wrap gap-1">
-              <v-checkbox
-                v-for="skill in referentiels.skills"
-                :key="skill.id"
-                :label="skill.name"
-                :value="skill.id"
-                v-model="form.skill_ids"
-                density="compact"
-                hide-details
-                class="mr-2"
-              />
-            </div>
+          <v-col cols="12" md="4">
+            <ComboboxMultiple
+              v-model="form.skill_ids"
+              label="Compétences"
+              :items="referentiels.skills"
+            />
           </v-col>
         </v-row>
       </v-card-text>
@@ -157,6 +133,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import talentService from '../../services/talentService.js'
 import api from '../../services/api.js'
+import ComboboxMultiple from '../shared/ComboboxMultiple.vue'
 
 const route = useRoute()
 const router = useRouter()
