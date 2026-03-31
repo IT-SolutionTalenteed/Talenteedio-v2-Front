@@ -5,9 +5,9 @@
     <!-- ══ HERO ══ -->
     <section class="ent-hero">
       <div class="container">
-        <span class="label-white">Partenaires</span>
-        <h1>Entreprises</h1>
-        <p>Découvrez les entreprises qui recrutent sur la plateforme</p>
+        <span class="label-white">{{ t('entreprises.hero.label') }}</span>
+        <h1>{{ t('entreprises.hero.title') }}</h1>
+        <p>{{ t('entreprises.hero.description') }}</p>
       </div>
     </section>
 
@@ -17,10 +17,10 @@
         <div class="ent-search-inner">
           <div class="ent-search-input">
             <i class="fa-solid fa-magnifying-glass"></i>
-            <input v-model="search" type="text" placeholder="Rechercher une entreprise..." @input="debouncedSearch" />
+            <input v-model="search" type="text" :placeholder="t('entreprises.search.placeholder')" @input="debouncedSearch" />
           </div>
           <span class="ent-count" v-if="!loading">
-            <strong>{{ filtered.length }}</strong> entreprise{{ filtered.length !== 1 ? 's' : '' }}
+            <strong>{{ filtered.length }}</strong> {{ filtered.length !== 1 ? t('entreprises.results.companies') : t('entreprises.results.company') }}
           </span>
         </div>
       </div>
@@ -48,7 +48,7 @@
 
             <!-- Badge participant -->
             <span v-if="e.participe_evenement" class="badge-participant">
-              <i class="fa-solid fa-star"></i> Participant
+              <i class="fa-solid fa-star"></i> {{ t('entreprises.card.participant') }}
             </span>
 
             <!-- Logo -->
@@ -74,10 +74,10 @@
             <div class="ent-footer">
               <span class="ent-jobs-count">
                 <i class="fa-solid fa-briefcase"></i>
-                {{ e.offres_count }} offre{{ e.offres_count !== 1 ? 's' : '' }}
+                {{ e.offres_count }} {{ e.offres_count !== 1 ? t('entreprises.card.offers') : t('entreprises.card.offer') }}
               </span>
               <router-link :to="`/annonces?entreprise_id=${e.id}`" class="btn btn--blue btn--sm">
-                Voir les offres
+                {{ t('entreprises.card.viewOffers') }}
               </router-link>
             </div>
 
@@ -87,7 +87,7 @@
         <!-- Vide -->
         <div v-else class="ent-empty">
           <i class="fa-solid fa-building-circle-xmark"></i>
-          <p>Aucune entreprise trouvée.</p>
+          <p>{{ t('entreprises.empty') }}</p>
         </div>
 
       </div>
@@ -98,9 +98,11 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
 
+const { t } = useI18n()
 const apiBase     = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const entreprises = ref([])
 const loading     = ref(false)

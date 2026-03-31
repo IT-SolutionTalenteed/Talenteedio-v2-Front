@@ -1,0 +1,41 @@
+{
+  "hero": {
+    "label": "Partners",
+    "title": "Companies",
+    "description": "Discover the companies recruiting on the platform"
+  },
+  "search": {
+    "placeholder": "Search for a company..."
+  },
+  "results": {
+    "company": "company",
+    "companies": "companies"
+  },
+  "card": {
+    "participant": "Participant",
+    "offer": "offer",
+    "offers": "offers",
+    "viewOffers": "View offers"
+  },
+  "empty": "No companies found.",
+  "detail": {
+    "loading": "Loading...",
+    "notFound": "Company not found.",
+    "backToList": "Back to companies",
+    "participant": "Participant",
+    "website": "Website",
+    "offer": "offer",
+    "offers": "offers",
+    "article": "article",
+    "articles": "articles",
+    "about": "About",
+    "jobOffers": "Job offers",
+    "publishedArticles": "Published articles",
+    "deadline": "Deadline",
+    "noOffers": "No offers at the moment.",
+    "information": "Information",
+    "interestedInCompany": "Interested in this company?",
+    "createAccount": "Create an account",
+    "login": "Login"
+  }
+}

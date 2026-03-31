@@ -1,0 +1,41 @@
+{
+  "hero": {
+    "label": "Partenaires",
+    "title": "Entreprises",
+    "description": "Découvrez les entreprises qui recrutent sur la plateforme"
+  },
+  "search": {
+    "placeholder": "Rechercher une entreprise..."
+  },
+  "results": {
+    "company": "entreprise",
+    "companies": "entreprises"
+  },
+  "card": {
+    "participant": "Participant",
+    "offer": "offre",
+    "offers": "offres",
+    "viewOffers": "Voir les offres"
+  },
+  "empty": "Aucune entreprise trouvée.",
+  "detail": {
+    "loading": "Chargement...",
+    "notFound": "Entreprise introuvable.",
+    "backToList": "Retour aux entreprises",
+    "participant": "Participant",
+    "website": "Site web",
+    "offer": "offre",
+    "offers": "offres",
+    "article": "article",
+    "articles": "articles",
+    "about": "À propos",
+    "jobOffers": "Offres d'emploi",
+    "publishedArticles": "Articles publiés",
+    "deadline": "Limite",
+    "noOffers": "Aucune offre en ce moment.",
+    "information": "Informations",
+    "interestedInCompany": "Vous êtes intéressé par cette entreprise ?",
+    "createAccount": "Créer un compte",
+    "login": "Se connecter"
+  }
+}

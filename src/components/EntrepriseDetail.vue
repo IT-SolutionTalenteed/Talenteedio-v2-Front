@@ -5,14 +5,14 @@
     <!-- Loading -->
     <div v-if="loading" class="ed-loading">
       <i class="fa-solid fa-spinner fa-spin"></i>
-      <p>Chargement...</p>
+      <p>{{ t('entreprises.detail.loading') }}</p>
     </div>
 
     <!-- Erreur -->
     <div v-else-if="!data" class="ed-loading">
       <i class="fa-solid fa-triangle-exclamation"></i>
-      <p>Entreprise introuvable.</p>
-      <router-link to="/entreprises" class="btn btn--blue" style="margin-top:16px;">Retour aux entreprises</router-link>
+      <p>{{ t('entreprises.detail.notFound') }}</p>
+      <router-link to="/entreprises" class="btn btn--blue" style="margin-top:16px;">{{ t('entreprises.detail.backToList') }}</router-link>
     </div>
 
     <template v-else>
@@ -27,7 +27,7 @@
             <div class="ed-hero-info">
               <div class="ed-badges">
                 <span v-if="data.participe_evenement" class="badge-participant">
-                  <i class="fa-solid fa-star"></i> Participant
+                  <i class="fa-solid fa-star"></i> {{ t('entreprises.detail.participant') }}
                 </span>
               </div>
               <h1 class="ed-hero-title">{{ entreprise.nom }}</h1>
@@ -40,18 +40,18 @@
                   {{ [entreprise.ville, entreprise.pays].filter(Boolean).join(', ') }}
                 </span>
                 <a v-if="entreprise.site_web" :href="entreprise.site_web" target="_blank" rel="noopener" class="ed-hero-link">
-                  <i class="fa-solid fa-globe"></i> Site web
+                  <i class="fa-solid fa-globe"></i> {{ t('entreprises.detail.website') }}
                 </a>
               </div>
             </div>
             <div class="ed-hero-stats">
               <div class="ed-stat">
                 <span class="ed-stat-num">{{ offres.length }}</span>
-                <span class="ed-stat-label">offre{{ offres.length !== 1 ? 's' : '' }}</span>
+                <span class="ed-stat-label">{{ offres.length !== 1 ? t('entreprises.detail.offers') : t('entreprises.detail.offer') }}</span>
               </div>
               <div class="ed-stat">
                 <span class="ed-stat-num">{{ articles.length }}</span>
-                <span class="ed-stat-label">article{{ articles.length !== 1 ? 's' : '' }}</span>
+                <span class="ed-stat-label">{{ articles.length !== 1 ? t('entreprises.detail.articles') : t('entreprises.detail.article') }}</span>
               </div>
             </div>
           </div>
@@ -68,14 +68,14 @@
 
               <!-- Description -->
               <div v-if="entreprise.description" class="ed-block">
-                <h2 class="ed-block-title"><i class="fa-solid fa-circle-info"></i> À propos</h2>
+                <h2 class="ed-block-title"><i class="fa-solid fa-circle-info"></i> {{ t('entreprises.detail.about') }}</h2>
                 <p class="ed-description">{{ entreprise.description }}</p>
               </div>
 
               <!-- Offres -->
               <div class="ed-block">
                 <h2 class="ed-block-title">
-                  <i class="fa-solid fa-briefcase"></i> Offres d'emploi
+                  <i class="fa-solid fa-briefcase"></i> {{ t('entreprises.detail.jobOffers') }}
                   <span class="ed-count">{{ offres.length }}</span>
                 </h2>
                 <div v-if="offres.length" class="ed-offres-list">
@@ -92,19 +92,19 @@
                       <h3 class="ed-offre-title">{{ o.titre }}</h3>
                       <div class="ed-offre-meta">
                         <span v-if="o.localisation"><i class="fa-solid fa-location-dot"></i> {{ o.localisation }}</span>
-                        <span v-if="o.date_limite"><i class="fa-solid fa-calendar"></i> Limite : {{ formatDate(o.date_limite) }}</span>
+                        <span v-if="o.date_limite"><i class="fa-solid fa-calendar"></i> {{ t('entreprises.detail.deadline') }} : {{ formatDate(o.date_limite) }}</span>
                       </div>
                     </div>
                     <div class="ed-offre-arrow"><i class="fa-solid fa-chevron-right"></i></div>
                   </router-link>
                 </div>
-                <p v-else class="ed-empty">Aucune offre en ce moment.</p>
+                <p v-else class="ed-empty">{{ t('entreprises.detail.noOffers') }}</p>
               </div>
 
               <!-- Articles -->
               <div v-if="articles.length" class="ed-block">
                 <h2 class="ed-block-title">
-                  <i class="fa-solid fa-newspaper"></i> Articles publiés
+                  <i class="fa-solid fa-newspaper"></i> {{ t('entreprises.detail.publishedArticles') }}
                   <span class="ed-count">{{ articles.length }}</span>
                 </h2>
                 <div class="ed-articles-grid">
@@ -132,7 +132,7 @@
             <!-- ── Sidebar ── -->
             <aside class="ed-sidebar">
               <div class="ed-side-card">
-                <h3 class="ed-side-title">Informations</h3>
+                <h3 class="ed-side-title">{{ t('entreprises.detail.information') }}</h3>
                 <ul class="ed-info-list">
                   <li v-if="entreprise.telephone">
                     <i class="fa-solid fa-phone"></i>
@@ -158,12 +158,12 @@
               </div>
 
               <div class="ed-side-card ed-side-cta">
-                <p>Vous êtes intéressé par cette entreprise ?</p>
+                <p>{{ t('entreprises.detail.interestedInCompany') }}</p>
                 <router-link to="/register" class="btn btn--blue" style="display:block;text-align:center;">
-                  Créer un compte
+                  {{ t('entreprises.detail.createAccount') }}
                 </router-link>
                 <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--outline" style="display:block;text-align:center;margin-top:8px;">
-                  Se connecter
+                  {{ t('entreprises.detail.login') }}
                 </router-link>
               </div>
             </aside>
@@ -178,9 +178,11 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
 
+const { t, locale } = useI18n()
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const route   = useRoute()
 const data    = ref(null)
@@ -202,7 +204,11 @@ const load = async () => {
   }
 }
 
-const formatDate = (str) => !str ? '' : new Date(str).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+const formatDate = (str) => {
+  if (!str) return ''
+  const lang = locale.value === 'en' ? 'en-US' : 'fr-FR'
+  return new Date(str).toLocaleDateString(lang, { day: 'numeric', month: 'long', year: 'numeric' })
+}
 
 onMounted(load)
 </script>
