@@ -17,7 +17,16 @@
     "learnMore": "En savoir plus"
   },
   "favorites": {
-    "title": "Mes favoris",
+    "title": "Mes offres favorites",
+    "mySpace": "Mon espace",
+    "subtitle": "Retrouvez toutes les offres que vous avez sauvegardées",
+    "emptyTitle": "Aucun favori pour l'instant",
+    "emptyDesc": "Parcourez les offres et cliquez sur le cœur pour les sauvegarder ici.",
+    "browseOffers": "Voir les offres",
+    "saved": "offre sauvegardée",
+    "savedPlural": "offres sauvegardées",
+    "viewOffer": "Voir l'offre",
+    "remove": "Retirer des favoris",
     "empty": "Aucun favori pour l'instant",
     "viewAll": "Voir tous mes favoris"
   },

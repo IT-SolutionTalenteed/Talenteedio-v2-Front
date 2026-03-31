@@ -17,7 +17,16 @@
     "learnMore": "Learn more"
   },
   "favorites": {
-    "title": "My favorites",
+    "title": "My favorite offers",
+    "mySpace": "My space",
+    "subtitle": "Find all the offers you have saved",
+    "emptyTitle": "No favorites yet",
+    "emptyDesc": "Browse offers and click the heart to save them here.",
+    "browseOffers": "View offers",
+    "saved": "saved offer",
+    "savedPlural": "saved offers",
+    "viewOffer": "View offer",
+    "remove": "Remove from favorites",
     "empty": "No favorites yet",
     "viewAll": "View all my favorites"
   },
