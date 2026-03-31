@@ -387,6 +387,6 @@ const sideNav = computed(() => {
 }
 /* Enfants : pas d'icône → réduire le padding gauche */
 :deep(.v-list-group__items .child-nav-item) {
-  padding-inline-start: 20px !important;
+  padding-inline-start: 40px !important;
 }
 </style>
