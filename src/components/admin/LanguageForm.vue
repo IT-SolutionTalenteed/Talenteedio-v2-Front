@@ -1,17 +1,19 @@
 <template>
-    <div class="d-flex align-center justify-space-between mb-5">
+    <div class="d-flex align-center mb-5">
       <div class="d-flex align-center ga-2">
         <v-btn icon="mdi-arrow-left" variant="text" density="comfortable" @click="goBack" />
         <span class="text-h6 font-weight-bold">{{ isEdit ? 'Modifier la langue' : 'Nouvelle langue' }}</span>
       </div>
-      <v-btn color="primary" :loading="saving" @click="save" prepend-icon="mdi-content-save-outline">
-        Enregistrer
-      </v-btn>
     </div>
     <v-card rounded="xl" border elevation="0">
       <v-card-text class="pa-6" style="max-width:600px">
         <v-text-field v-model="form.name" label="Nom *" variant="outlined" density="compact" autofocus />
       </v-card-text>
+      <v-card-actions class="pa-4 pt-2 justify-end">
+        <v-btn color="primary" :loading="saving" @click="save" prepend-icon="mdi-content-save-outline" size="large">
+          Enregistrer
+        </v-btn>
+      </v-card-actions>
     </v-card>
     <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">{{ snackMsg }}</v-snackbar>
 </template>
