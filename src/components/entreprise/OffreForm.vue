@@ -63,39 +63,24 @@
 
         <v-row>
           <v-col cols="12" md="4">
-            <div class="text-body-2 font-weight-medium mb-2">Contrats de travail</div>
-            <v-checkbox
-              v-for="c in referentiels.job_contracts"
-              :key="c.id"
-              :label="c.name"
-              :value="c.id"
+            <ComboboxMultiple
               v-model="form.job_contract_ids"
-              density="compact"
-              hide-details
+              label="Contrats de travail"
+              :items="referentiels.job_contracts"
             />
           </v-col>
           <v-col cols="12" md="4">
-            <div class="text-body-2 font-weight-medium mb-2">Modes de travail</div>
-            <v-checkbox
-              v-for="m in referentiels.job_modes"
-              :key="m.id"
-              :label="m.name"
-              :value="m.id"
+            <ComboboxMultiple
               v-model="form.job_mode_ids"
-              density="compact"
-              hide-details
+              label="Modes de travail"
+              :items="referentiels.job_modes"
             />
           </v-col>
           <v-col cols="12" md="4">
-            <div class="text-body-2 font-weight-medium mb-2">Compétences</div>
-            <v-checkbox
-              v-for="s in referentiels.skills"
-              :key="s.id"
-              :label="s.name"
-              :value="s.id"
+            <ComboboxMultiple
               v-model="form.skill_ids"
-              density="compact"
-              hide-details
+              label="Compétences"
+              :items="referentiels.skills"
             />
           </v-col>
         </v-row>
@@ -110,6 +95,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import VerticalLayout from '../layout/VerticalLayout.vue'
 import WysiwygEditor from '../WysiwygEditor.vue'
+import ComboboxMultiple from '../shared/ComboboxMultiple.vue'
 import offreService from '../../services/entreprise/offreService.js'
 import { useDashboardStore } from '@/stores/dashboard.store'
 
