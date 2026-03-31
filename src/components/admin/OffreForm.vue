@@ -48,39 +48,43 @@
           </v-col>
 
           <v-col cols="12" md="6">
-            <div class="text-caption text-medium-emphasis mb-1">Contrats de travail</div>
-            <select v-model="form.job_contract_ids" multiple size="4" style="width:100%;padding:8px;border:1px solid rgba(0,0,0,0.23);border-radius:4px;">
-              <option v-for="item in referentiels.job_contracts" :key="item.id" :value="item.id">{{ item.name }}</option>
-            </select>
-            <div class="text-caption text-medium-emphasis mt-1">Maintenez Ctrl/Cmd pour sélectionner plusieurs</div>
+            <ComboboxMultiple
+              v-model="form.job_contract_ids"
+              label="Contrats de travail"
+              :items="referentiels.job_contracts"
+            />
           </v-col>
 
           <v-col cols="12" md="6">
-            <div class="text-caption text-medium-emphasis mb-1">Modes de travail</div>
-            <select v-model="form.job_mode_ids" multiple size="4" style="width:100%;padding:8px;border:1px solid rgba(0,0,0,0.23);border-radius:4px;">
-              <option v-for="item in referentiels.job_modes" :key="item.id" :value="item.id">{{ item.name }}</option>
-            </select>
+            <ComboboxMultiple
+              v-model="form.job_mode_ids"
+              label="Modes de travail"
+              :items="referentiels.job_modes"
+            />
           </v-col>
 
           <v-col cols="12" md="4">
-            <div class="text-caption text-medium-emphasis mb-1">Compétences requises</div>
-            <select v-model="form.skill_ids" multiple size="4" style="width:100%;padding:8px;border:1px solid rgba(0,0,0,0.23);border-radius:4px;">
-              <option v-for="item in referentiels.skills" :key="item.id" :value="item.id">{{ item.name }}</option>
-            </select>
+            <ComboboxMultiple
+              v-model="form.skill_ids"
+              label="Compétences requises"
+              :items="referentiels.skills"
+            />
           </v-col>
 
           <v-col cols="12" md="4">
-            <div class="text-caption text-medium-emphasis mb-1">Formations requises</div>
-            <select v-model="form.study_level_ids" multiple size="4" style="width:100%;padding:8px;border:1px solid rgba(0,0,0,0.23);border-radius:4px;">
-              <option v-for="item in referentiels.study_levels" :key="item.id" :value="item.id">{{ item.name }}</option>
-            </select>
+            <ComboboxMultiple
+              v-model="form.study_level_ids"
+              label="Formations requises"
+              :items="referentiels.study_levels"
+            />
           </v-col>
 
           <v-col cols="12" md="4">
-            <div class="text-caption text-medium-emphasis mb-1">Expériences requises</div>
-            <select v-model="form.experience_ids" multiple size="4" style="width:100%;padding:8px;border:1px solid rgba(0,0,0,0.23);border-radius:4px;">
-              <option v-for="item in referentiels.experiences" :key="item.id" :value="item.id">{{ item.name }}</option>
-            </select>
+            <ComboboxMultiple
+              v-model="form.experience_ids"
+              label="Expériences requises"
+              :items="referentiels.experiences"
+            />
           </v-col>
         </v-row>
       </v-card-text>
@@ -92,6 +96,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import WysiwygEditor from '../WysiwygEditor.vue'
+import ComboboxMultiple from '../shared/ComboboxMultiple.vue'
 import offreService from '../../services/offreService.js'
 import api from '../../services/api.js'
 
