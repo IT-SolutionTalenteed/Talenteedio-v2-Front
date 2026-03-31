@@ -5,14 +5,14 @@
     <!-- Loading -->
     <div v-if="loading" class="artd-loading">
       <i class="fa-solid fa-spinner fa-spin"></i>
-      <p>Chargement de l'article...</p>
+      <p>{{ t('blog.detail.loading') }}</p>
     </div>
 
     <!-- Erreur -->
     <div v-else-if="!article" class="artd-loading">
       <i class="fa-solid fa-triangle-exclamation"></i>
-      <p>Article introuvable.</p>
-      <router-link to="/blog" class="btn btn--blue" style="margin-top:16px;">Retour au blog</router-link>
+      <p>{{ t('blog.detail.notFound') }}</p>
+      <router-link to="/blog" class="btn btn--blue" style="margin-top:16px;">{{ t('blog.detail.backToBlog') }}</router-link>
     </div>
 
     <template v-else>
@@ -49,7 +49,7 @@
               <!-- Retour -->
               <div class="artd-footer">
                 <router-link to="/blog" class="artd-back">
-                  <i class="fa-solid fa-arrow-left"></i> Retour au blog
+                  <i class="fa-solid fa-arrow-left"></i> {{ t('blog.detail.backToBlog') }}
                 </router-link>
               </div>
             </article>
@@ -59,7 +59,7 @@
 
               <!-- Auteur -->
               <div v-if="article.entreprise" class="artd-side-card">
-                <h3 class="artd-side-title">Publié par</h3>
+                <h3 class="artd-side-title">{{ t('blog.detail.publishedBy') }}</h3>
                 <div class="artd-author">
                   <div class="artd-author-logo">
                     <img v-if="article.entreprise.logo_url" :src="article.entreprise.logo_url" :alt="article.entreprise.nom" />
@@ -68,7 +68,7 @@
                   <div>
                     <p class="artd-author-name">{{ article.entreprise.nom }}</p>
                     <router-link :to="`/entreprises/${article.entreprise.id}`" class="artd-author-link">
-                      Voir le profil <i class="fa-solid fa-arrow-right" style="font-size:10px;"></i>
+                      {{ t('blog.detail.viewProfile') }} <i class="fa-solid fa-arrow-right" style="font-size:10px;"></i>
                     </router-link>
                   </div>
                 </div>
@@ -76,7 +76,7 @@
 
               <!-- Catégories -->
               <div v-if="article.media_categories?.length" class="artd-side-card">
-                <h3 class="artd-side-title">Catégories</h3>
+                <h3 class="artd-side-title">{{ t('blog.detail.categories') }}</h3>
                 <div class="artd-side-cats">
                   <router-link
                     v-for="cat in article.media_categories"
@@ -89,9 +89,9 @@
 
               <!-- CTA -->
               <div class="artd-side-card artd-side-cta">
-                <p>Rejoignez notre communauté de talents</p>
+                <p>{{ t('blog.detail.ctaText') }}</p>
                 <router-link to="/register" class="btn btn--blue" style="display:block;text-align:center;">
-                  Souscrire gratuitement
+                  {{ t('blog.detail.ctaAction') }}
                 </router-link>
               </div>
 
@@ -107,9 +107,11 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
 
+const { t, locale } = useI18n()
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const route   = useRoute()
 const article = ref(null)
@@ -129,7 +131,8 @@ const load = async () => {
 
 const formatDate = (iso) => {
   if (!iso) return ''
-  return new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+  const lang = locale.value === 'en' ? 'en-US' : 'fr-FR'
+  return new Date(iso).toLocaleDateString(lang, { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
 onMounted(load)

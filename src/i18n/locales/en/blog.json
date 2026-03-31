@@ -1,0 +1,24 @@
+{
+  "hero": {
+    "label": "News",
+    "title": "Blog & Resources",
+    "description": "HR news, career advice and market trends"
+  },
+  "tabs": {
+    "all": "All"
+  },
+  "card": {
+    "readMore": "Read more"
+  },
+  "empty": "No articles available.",
+  "detail": {
+    "loading": "Loading article...",
+    "notFound": "Article not found.",
+    "backToBlog": "Back to blog",
+    "publishedBy": "Published by",
+    "viewProfile": "View profile",
+    "categories": "Categories",
+    "ctaText": "Join our talent community",
+    "ctaAction": "Subscribe for free"
+  }
+}

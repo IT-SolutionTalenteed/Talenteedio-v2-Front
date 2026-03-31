@@ -5,9 +5,9 @@
     <!-- ══ HERO ══ -->
     <section class="blog-hero">
       <div class="container">
-        <span class="label-white">Actualités</span>
-        <h1>Blog & Ressources</h1>
-        <p>Actualités RH, conseils carrière et tendances du marché</p>
+        <span class="label-white">{{ t('blog.hero.label') }}</span>
+        <h1>{{ t('blog.hero.title') }}</h1>
+        <p>{{ t('blog.hero.description') }}</p>
       </div>
     </section>
 
@@ -19,7 +19,7 @@
             class="blog-tab"
             :class="{ active: activeCategory === null }"
             @click="selectCategory(null)"
-          >Tous</button>
+          >{{ t('blog.tabs.all') }}</button>
           <button
             v-for="cat in categories"
             :key="cat.id"
@@ -72,7 +72,7 @@
               <h3 class="blog-card-title">{{ a.title }}</h3>
               <p class="blog-card-excerpt">{{ truncate(stripHtml(a.content), 150) }}</p>
               <router-link :to="`/blog/${a.id}`" class="blog-read-more">
-                Lire la suite <i class="fa-solid fa-arrow-right"></i>
+                {{ t('blog.card.readMore') }} <i class="fa-solid fa-arrow-right"></i>
               </router-link>
             </div>
 
@@ -82,7 +82,7 @@
         <!-- Vide -->
         <div v-else class="blog-empty">
           <i class="fa-solid fa-newspaper"></i>
-          <p>Aucun article disponible.</p>
+          <p>{{ t('blog.empty') }}</p>
         </div>
 
         <!-- Pagination -->
@@ -118,9 +118,11 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
 
+const { t, locale } = useI18n()
 const apiBase      = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const articles     = ref([])
 const categories   = ref([])
@@ -184,7 +186,8 @@ const paginationPages = computed(() => {
 
 const formatDate = (iso) => {
   if (!iso) return ''
-  return new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+  const lang = locale.value === 'en' ? 'en-US' : 'fr-FR'
+  return new Date(iso).toLocaleDateString(lang, { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
 const stripHtml = (html) => {

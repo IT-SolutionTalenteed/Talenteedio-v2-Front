@@ -1,0 +1,24 @@
+{
+  "hero": {
+    "label": "Actualités",
+    "title": "Blog & Ressources",
+    "description": "Actualités RH, conseils carrière et tendances du marché"
+  },
+  "tabs": {
+    "all": "Tous"
+  },
+  "card": {
+    "readMore": "Lire la suite"
+  },
+  "empty": "Aucun article disponible.",
+  "detail": {
+    "loading": "Chargement de l'article...",
+    "notFound": "Article introuvable.",
+    "backToBlog": "Retour au blog",
+    "publishedBy": "Publié par",
+    "viewProfile": "Voir le profil",
+    "categories": "Catégories",
+    "ctaText": "Rejoignez notre communauté de talents",
+    "ctaAction": "Souscrire gratuitement"
+  }
+}
