@@ -44,7 +44,7 @@
     </div>
     <div class="footer-bottom">
       <div class="container">
-        <p>© 2026 Solution Talenteed . Tous droits réservés.</p>
+        <p>© 2026 {{ t('footer.copyright') }}</p>
       </div>
     </div>
   </footer>
