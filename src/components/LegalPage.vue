@@ -37,9 +37,9 @@ const page = ref(null)
 const loading = ref(true)
 const error = ref('')
 
-const legacySlugMap = {
-  '/terms-and-conditions': 'conditions-generales',
-  '/privacy-policy': 'confidentialite',
+const legacyTypeMap = {
+  '/terms-and-conditions': 'terms',
+  '/privacy-policy': 'privacy',
 }
 
 const load = async () => {
@@ -48,15 +48,19 @@ const load = async () => {
   page.value = null
 
   try {
-    const slug = route.params.slug || legacySlugMap[route.path]
+    const pageType = legacyTypeMap[route.path]
 
-    if (!slug) {
+    if (pageType) {
+      // Routes fixes : on cherche par type (indépendant du titre/slug)
+      const response = await api.get(`/legal-pages/by-type/${pageType}`)
+      page.value = response.data
+    } else if (route.params.slug) {
+      // Route dynamique /legal/:slug
+      const response = await api.get(`/legal-pages/${route.params.slug}`)
+      page.value = response.data
+    } else {
       error.value = 'Page non trouvée.'
-      return
     }
-
-    const response = await api.get(`/legal-pages/${slug}`)
-    page.value = response.data
   } catch (err) {
     if (err.response?.status === 404) {
       error.value = 'Page non trouvée. Elle n\'a peut-être pas encore été créée.'

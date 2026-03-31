@@ -18,6 +18,23 @@
           required
           class="mb-4"
         />
+        <v-select
+          v-model="form.type"
+          label="Type de page"
+          :items="[
+            { title: 'Conditions générales (terms-and-conditions)', value: 'terms' },
+            { title: 'Politique de confidentialité (privacy-policy)', value: 'privacy' },
+            { title: 'Autre page légale', value: null }
+          ]"
+          item-title="title"
+          item-value="value"
+          variant="outlined"
+          density="compact"
+          clearable
+          class="mb-4"
+          hint="Assigner 'terms' ou 'privacy' pour que la page apparaisse sur les URLs fixes."
+          persistent-hint
+        />
         <div class="mb-4">
           <div class="text-body-2 mb-1">Contenu</div>
           <WysiwygEditor v-model="form.description" />
@@ -38,7 +55,7 @@ const router = useRouter()
 
 const isEdit = computed(() => !!route.params.id)
 
-const form = ref({ title: '', description: '' })
+const form = ref({ title: '', description: '', type: null })
 const saving = ref(false)
 
 const snackbar = ref(false)
@@ -61,7 +78,7 @@ const loadPage = async () => {
     const all = res.data.data || res.data
     const item = Array.isArray(all) ? all.find(x => x.id == route.params.id) : all
     if (item) {
-      form.value = { title: item.title || '', description: item.description || '' }
+      form.value = { title: item.title || '', description: item.description || '', type: item.type || null }
     }
   } catch (err) {
     showSnack('Erreur lors du chargement', 'error')
