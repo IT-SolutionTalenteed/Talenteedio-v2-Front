@@ -326,8 +326,8 @@ onUnmounted(() => {
 
 /* Logo */
 .site-logo { display: flex; flex-direction: column; align-items: center; gap: 0; text-decoration: none; flex-shrink: 0; }
-.site-logo img { height: 64px; width: auto; }
-.site-tagline { font-size: 10px; font-weight: 700; color: #f07c00; letter-spacing: .3px; text-align: center; }
+.site-logo img { height: 72px; width: auto; }
+.site-tagline { font-size: 12px; font-weight: 700; color: #f07c00; letter-spacing: .4px; text-align: center; }
 
 /* Nav */
 .site-nav { flex: 1; display: flex; justify-content: center; }
@@ -564,6 +564,6 @@ onUnmounted(() => {
 }
 
 @media (max-width: 480px) {
-  .site-logo img { height: 48px; }
+  .site-logo img { height: 52px; }
 }
 </style>
