@@ -260,6 +260,11 @@ const sideNav = computed(() => {
   }
 }
 
+/* Enfants du menu : pas d'espace réservé pour icône, padding réduit */
+.dropdown-menu .dropdown-item {
+  padding-left: 1.25rem !important;
+}
+
 @media (min-width: 992px) {
   .navbar-header {
     flex-grow: 0;
