@@ -21,11 +21,11 @@
           </v-col>
 
           <v-col cols="12" md="6">
-            <div class="text-caption text-medium-emphasis mb-1">Catégories Média</div>
-            <select v-model="form.media_category_ids" multiple size="5" style="width:100%;padding:8px;border:1px solid rgba(0,0,0,0.23);border-radius:4px;">
-              <option v-for="category in mediaCategories" :key="category.id" :value="category.id">{{ category.name }}</option>
-            </select>
-            <div class="text-caption text-medium-emphasis mt-1">Maintenez Ctrl/Cmd pour sélectionner plusieurs</div>
+            <ComboboxMultiple
+              v-model="form.media_category_ids"
+              label="Catégories Média"
+              :items="mediaCategories"
+            />
           </v-col>
 
           <v-col cols="12" md="6">
@@ -52,6 +52,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import WysiwygEditor from '../WysiwygEditor.vue'
+import ComboboxMultiple from '../shared/ComboboxMultiple.vue'
 import articleService from '../../services/articleService.js'
 import mediaCategoryService from '../../services/mediaCategoryService.js'
 
