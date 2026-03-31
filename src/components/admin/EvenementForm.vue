@@ -79,11 +79,12 @@
           </v-col>
 
           <v-col cols="12" md="6">
-            <div class="text-caption text-medium-emphasis mb-1">Entreprises participantes</div>
-            <select v-model="form.entreprise_ids" multiple size="5" style="width:100%;padding:8px;border:1px solid rgba(0,0,0,0.23);border-radius:4px;">
-              <option v-for="e in referentiels.entreprises" :key="e.id" :value="e.id">{{ e.nom }}</option>
-            </select>
-            <div class="text-caption text-medium-emphasis mt-1">Maintenez Ctrl/Cmd pour sélectionner plusieurs</div>
+            <ComboboxMultiple
+              v-model="form.entreprise_ids"
+              label="Entreprises participantes"
+              :items="referentiels.entreprises"
+              item-title="nom"
+            />
           </v-col>
 
           <v-col cols="12" md="6" class="d-flex align-center">
@@ -99,6 +100,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import WysiwygEditor from '../WysiwygEditor.vue'
+import ComboboxMultiple from '../shared/ComboboxMultiple.vue'
 import evenementService from '../../services/evenementService.js'
 
 const route = useRoute()
