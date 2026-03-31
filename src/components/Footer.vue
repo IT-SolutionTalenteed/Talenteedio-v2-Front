@@ -9,7 +9,7 @@
             <div class="footer-logo">
               <img src="/logo.png" alt="Talenteed" width="180">
             </div>
-            <p>L'Africa Talent Summit Luxembourg est la première plateforme stratégique européenne dédiée à la mobilisation de l'intelligence collective et des compétences rares de la diaspora, afin d'accélérer la performance des entreprises en Afrique.</p>
+            <p>{{ t('footer.description') }}</p>
             <div class="footer-socials">
               <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
               <a href="https://x.com/" target="_blank" rel="noopener" aria-label="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
@@ -18,25 +18,25 @@
             </div>
           </div>
           <div class="footer-col">
-            <h4>Contactez-nous</h4>
+            <h4>{{ t('footer.contactUs') }}</h4>
             <div class="contact-item"><i class="fa-solid fa-phone"></i><a href="tel:+3522060162">+3522060162</a></div>
             <div class="contact-item"><i class="fa-solid fa-location-dot"></i><span>57 avenue de la Gare, L-1611 Luxembourg</span></div>
             <div class="contact-item"><i class="fa-solid fa-envelope"></i><a href="mailto:contact@africatalentsummit.com">contact@africatalentsummit.com</a></div>
           </div>
           <div class="footer-col">
-            <h4>Rejoignez-nous</h4>
+            <h4>{{ t('footer.joinUs') }}</h4>
             <ul>
-              <li><router-link to="/register"><i class="fa-solid fa-chevron-right"></i> Devenir Talent</router-link></li>
-              <li><router-link to="/login"><i class="fa-solid fa-chevron-right"></i> Se connecter</router-link></li>
-              <li><a href="mailto:contact@africatalentsummit.com"><i class="fa-solid fa-chevron-right"></i> Presse et Média</a></li>
-              <li><a href="mailto:contact@africatalentsummit.com"><i class="fa-solid fa-chevron-right"></i> Partenariats</a></li>
+              <li><router-link to="/register"><i class="fa-solid fa-chevron-right"></i> {{ t('footer.becomeTalent') }}</router-link></li>
+              <li><router-link to="/login"><i class="fa-solid fa-chevron-right"></i> {{ t('nav.login') }}</router-link></li>
+              <li><a href="mailto:contact@africatalentsummit.com"><i class="fa-solid fa-chevron-right"></i> {{ t('footer.pressMedia') }}</a></li>
+              <li><a href="mailto:contact@africatalentsummit.com"><i class="fa-solid fa-chevron-right"></i> {{ t('footer.partnerships') }}</a></li>
             </ul>
           </div>
           <div class="footer-col">
-            <h4>Informations légales</h4>
+            <h4>{{ t('footer.legalInfo') }}</h4>
             <ul>
-              <li><router-link to="/terms-and-conditions"><i class="fa-solid fa-chevron-right"></i> Conditions générales</router-link></li>
-              <li><router-link to="/privacy-policy"><i class="fa-solid fa-chevron-right"></i> Confidentialité</router-link></li>
+              <li><router-link to="/terms-and-conditions"><i class="fa-solid fa-chevron-right"></i> {{ t('footer.terms') }}</router-link></li>
+              <li><router-link to="/privacy-policy"><i class="fa-solid fa-chevron-right"></i> {{ t('footer.privacy') }}</router-link></li>
             </ul>
           </div>
         </div>
@@ -51,6 +51,8 @@
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 </script>
 
 

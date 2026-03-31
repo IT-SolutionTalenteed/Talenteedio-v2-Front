@@ -257,55 +257,7 @@
     </section>
 
     <!-- ══ FOOTER ══ -->
-    <footer class="site-footer">
-      <div class="footer-bg"></div>
-      <div class="footer-overlay"></div>
-      <div class="footer-inner">
-        <div class="container">
-          <div class="footer-grid">
-            <div class="footer-brand">
-              <div class="footer-logo">
-                <img src="/logo.png" alt="Talenteed" width="180">
-              </div>
-              <p>{{ t('footer.description') }}</p>
-              <div class="footer-socials">
-                <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="https://x.com/" target="_blank" rel="noopener" aria-label="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
-                <a href="https://www.linkedin.com/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-                <a href="https://wa.me/" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-              </div>
-            </div>
-            <div class="footer-col">
-              <h4>{{ t('footer.contactUs') }}</h4>
-              <div class="contact-item"><i class="fa-solid fa-phone"></i><a href="tel:+3522060162">+3522060162</a></div>
-              <div class="contact-item"><i class="fa-solid fa-location-dot"></i><span>57 avenue de la Gare, L-1611 Luxembourg</span></div>
-              <div class="contact-item"><i class="fa-solid fa-envelope"></i><a href="mailto:contact@africatalentsummit.com">contact@africatalentsummit.com</a></div>
-            </div>
-            <div class="footer-col">
-              <h4>{{ t('footer.joinUs') }}</h4>
-              <ul>
-                <li><router-link to="/register"><i class="fa-solid fa-chevron-right"></i> {{ t('footer.becomeTalent') }}</router-link></li>
-                <li><router-link to="/login"><i class="fa-solid fa-chevron-right"></i> {{ t('nav.login') }}</router-link></li>
-                <li><a href="mailto:contact@africatalentsummit.com"><i class="fa-solid fa-chevron-right"></i> {{ t('footer.pressMedia') }}</a></li>
-                <li><a href="mailto:contact@africatalentsummit.com"><i class="fa-solid fa-chevron-right"></i> {{ t('footer.partnerships') }}</a></li>
-              </ul>
-            </div>
-            <div class="footer-col">
-              <h4>{{ t('footer.legalInfo') }}</h4>
-              <ul>
-                <li><router-link to="/terms-and-conditions"><i class="fa-solid fa-chevron-right"></i> {{ t('footer.terms') }}</router-link></li>
-                <li><router-link to="/privacy-policy"><i class="fa-solid fa-chevron-right"></i> {{ t('footer.privacy') }}</router-link></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <div class="container">
-          <p>© {{ new Date().getFullYear() }} {{ t('footer.copyright') }}</p>
-        </div>
-      </div>
-    </footer>
+    <Footer />
 
   </div>
 </template>
@@ -315,6 +267,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
+import Footer from './Footer.vue'
 
 const { t, locale } = useI18n()
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'

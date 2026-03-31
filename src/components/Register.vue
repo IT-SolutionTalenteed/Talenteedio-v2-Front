@@ -8,24 +8,13 @@
       </router-link>
 
       <div class="auth-left-body">
-        <div class="auth-left-icon">
-          <i class="fa-solid fa-rocket"></i>
-        </div>
-        <h2 class="auth-left-title">Rejoignez<br><span>la communauté</span></h2>
-        <p class="auth-left-sub">Créez votre profil et accédez aux meilleures opportunités professionnelles en Afrique.</p>
+        <div class="auth-left-icon"><i class="fa-solid fa-rocket"></i></div>
+        <h2 class="auth-left-title">{{ t('auth.register.leftTitle') }}<br><span>{{ t('auth.register.leftTitleSpan') }}</span></h2>
+        <p class="auth-left-sub">{{ t('auth.register.leftSub') }}</p>
         <div class="auth-steps">
-          <div class="step">
-            <div class="step-num">1</div>
-            <div class="step-text">Créez votre compte gratuitement</div>
-          </div>
-          <div class="step">
-            <div class="step-num">2</div>
-            <div class="step-text">Complétez votre profil talent</div>
-          </div>
-          <div class="step">
-            <div class="step-num">3</div>
-            <div class="step-text">Accédez aux offres et événements</div>
-          </div>
+          <div class="step"><div class="step-num">1</div><div class="step-text">{{ t('auth.register.step1') }}</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-text">{{ t('auth.register.step2') }}</div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-text">{{ t('auth.register.step3') }}</div></div>
         </div>
       </div>
 
@@ -36,11 +25,10 @@
     <div class="auth-right">
       <div class="auth-card">
         <div class="auth-card-header">
-          <h1>Inscription</h1>
-          <p>Créez votre compte en quelques secondes</p>
+          <h1>{{ t('auth.register.title') }}</h1>
+          <p>{{ t('auth.register.subtitle') }}</p>
         </div>
 
-        <!-- Google -->
         <button type="button" class="btn-google" @click="loginWithGoogle">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
             <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
@@ -48,103 +36,70 @@
             <path d="M3.964 10.706A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.706V4.962H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.038l3.007-2.332z" fill="#FBBC05"/>
             <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.962L3.964 6.294C4.672 4.169 6.656 3.58 9 3.58z" fill="#EA4335"/>
           </svg>
-          S'inscrire avec Google
+          {{ t('auth.register.googleBtn') }}
         </button>
 
-        <div class="auth-divider"><span>ou</span></div>
+        <div class="auth-divider"><span>{{ t('auth.register.or') }}</span></div>
 
         <form @submit.prevent="handleRegister" novalidate>
-
           <div class="field">
-            <label for="name">Nom complet</label>
+            <label for="name">{{ t('auth.register.fullName') }}</label>
             <div class="field-input-wrap">
               <i class="fa-regular fa-user field-icon"></i>
-              <input
-                type="text"
-                id="name"
-                v-model="form.name"
-                placeholder="Prénom Nom"
-                required
-                autocomplete="name"
-              />
+              <input type="text" id="name" v-model="form.name" :placeholder="t('auth.register.namePlaceholder')" required autocomplete="name" />
             </div>
           </div>
 
           <div class="field">
-            <label for="email">Adresse email</label>
+            <label for="email">{{ t('auth.register.email') }}</label>
             <div class="field-input-wrap">
               <i class="fa-regular fa-envelope field-icon"></i>
-              <input
-                type="email"
-                id="email"
-                v-model="form.email"
-                placeholder="votre@email.com"
-                required
-                autocomplete="email"
-              />
+              <input type="email" id="email" v-model="form.email" :placeholder="t('auth.register.emailPlaceholder')" required autocomplete="email" />
             </div>
           </div>
 
           <div class="fields-row">
             <div class="field">
-              <label for="password">Mot de passe</label>
+              <label for="password">{{ t('auth.register.password') }}</label>
               <div class="field-input-wrap">
                 <i class="fa-solid fa-lock field-icon"></i>
-                <input
-                  :type="showPassword ? 'text' : 'password'"
-                  id="password"
-                  v-model="form.password"
-                  placeholder="••••••••"
-                  required
-                  autocomplete="new-password"
-                />
+                <input :type="showPassword ? 'text' : 'password'" id="password" v-model="form.password" placeholder="••••••••" required autocomplete="new-password" />
                 <button type="button" class="field-eye" @click="showPassword = !showPassword" tabindex="-1">
                   <i :class="showPassword ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye'"></i>
                 </button>
               </div>
             </div>
-
             <div class="field">
-              <label for="password_confirmation">Confirmation</label>
+              <label for="password_confirmation">{{ t('auth.register.confirmPassword') }}</label>
               <div class="field-input-wrap">
                 <i class="fa-solid fa-lock field-icon"></i>
-                <input
-                  :type="showPassword ? 'text' : 'password'"
-                  id="password_confirmation"
-                  v-model="form.password_confirmation"
-                  placeholder="••••••••"
-                  required
-                  autocomplete="new-password"
-                />
+                <input :type="showPassword ? 'text' : 'password'" id="password_confirmation" v-model="form.password_confirmation" placeholder="••••••••" required autocomplete="new-password" />
               </div>
             </div>
           </div>
 
           <div class="field">
-            <label for="role">Je suis</label>
+            <label for="role">{{ t('auth.register.iAm') }}</label>
             <div class="field-input-wrap">
               <i class="fa-solid fa-id-badge field-icon"></i>
               <select id="role" v-model="form.role" required class="field-select">
-                <option value="">Sélectionner un profil</option>
-                <option value="talent">Un talent (chercheur d'emploi)</option>
-                <option value="entreprise">Une entreprise</option>
+                <option value="">{{ t('auth.register.selectProfile') }}</option>
+                <option value="talent">{{ t('auth.register.talentOption') }}</option>
+                <option value="entreprise">{{ t('auth.register.companyOption') }}</option>
               </select>
               <i class="fa-solid fa-chevron-down select-arrow"></i>
             </div>
           </div>
 
-          <!-- Consentement -->
           <div v-if="form.role === 'talent'" class="consent-block">
             <label class="consent-label">
               <input type="checkbox" v-model="form.consent" class="consent-check" />
-              <span class="consent-box">
-                <i class="fa-solid fa-check"></i>
-              </span>
+              <span class="consent-box"><i class="fa-solid fa-check"></i></span>
               <span class="consent-text">
-                J'accepte les
-                <router-link to="/terms-and-conditions" target="_blank">conditions générales</router-link>
-                et la
-                <router-link to="/privacy-policy" target="_blank">politique de confidentialité</router-link>
+                {{ t('auth.register.consentText') }}
+                <router-link to="/terms-and-conditions" target="_blank">{{ t('auth.register.terms') }}</router-link>
+                {{ t('auth.register.and') }}
+                <router-link to="/privacy-policy" target="_blank">{{ t('auth.register.privacy') }}</router-link>
               </span>
             </label>
           </div>
@@ -152,22 +107,21 @@
           <div v-if="error" class="auth-error">
             <i class="fa-solid fa-circle-exclamation"></i> {{ error }}
           </div>
-
           <div v-if="success" class="auth-success">
             <i class="fa-solid fa-circle-check"></i> {{ success }}
           </div>
 
           <button type="submit" class="btn-submit" :disabled="isSubmitDisabled">
             <span v-if="loading" class="btn-loader">
-              <i class="fa-solid fa-circle-notch fa-spin"></i> Inscription…
+              <i class="fa-solid fa-circle-notch fa-spin"></i> {{ t('auth.register.loading') }}
             </span>
-            <span v-else>Créer mon compte <i class="fa-solid fa-arrow-right"></i></span>
+            <span v-else>{{ t('auth.register.submit') }} <i class="fa-solid fa-arrow-right"></i></span>
           </button>
         </form>
 
         <p class="auth-switch">
-          Déjà un compte ?
-          <router-link to="/login">Se connecter</router-link>
+          {{ t('auth.register.hasAccount') }}
+          <router-link to="/login">{{ t('auth.register.login') }}</router-link>
         </p>
       </div>
     </div>
@@ -178,8 +132,10 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { authService } from '../services/api.js'
 
+const { t } = useI18n()
 const router  = useRouter()
 const apiBase = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8000'
 const loginWithGoogle = () => { window.location.href = `${apiBase}/api/auth/google/redirect` }
@@ -209,13 +165,13 @@ const handleRegister = async () => {
   success.value = ''
   try {
     await authService.register(form.value)
-    success.value = 'Compte créé avec succès ! Redirection vers la connexion…'
+    success.value = t('auth.register.success')
     setTimeout(() => router.push('/login'), 2000)
   } catch (err) {
     if (err.response?.data?.errors) {
       error.value = Object.values(err.response.data.errors).flat().join(', ')
     } else {
-      error.value = err.response?.data?.message || "Erreur lors de l'inscription"
+      error.value = err.response?.data?.message || t('auth.register.error', 'Erreur lors de l\'inscription')
     }
   } finally {
     loading.value = false

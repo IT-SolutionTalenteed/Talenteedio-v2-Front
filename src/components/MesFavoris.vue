@@ -5,9 +5,9 @@
     <!-- ══ HERO ══ -->
     <section class="favoris-hero">
       <div class="container">
-        <span class="label-white">Mon espace</span>
-        <h1><i class="fa-solid fa-heart"></i> Mes offres favorites</h1>
-        <p>Retrouvez toutes les offres que vous avez sauvegardées</p>
+        <span class="label-white">{{ t('favorites.mySpace') }}</span>
+        <h1><i class="fa-solid fa-heart"></i> {{ t('favorites.title') }}</h1>
+        <p>{{ t('favorites.subtitle') }}</p>
       </div>
     </section>
 
@@ -30,10 +30,10 @@
         <!-- Vide -->
         <div v-else-if="!favoris.length" class="favoris-empty">
           <i class="fa-regular fa-heart"></i>
-          <h2>Aucun favori pour l'instant</h2>
-          <p>Parcourez les offres et cliquez sur le cœur pour les sauvegarder ici.</p>
+          <h2>{{ t('favorites.emptyTitle') }}</h2>
+          <p>{{ t('favorites.emptyDesc') }}</p>
           <router-link to="/annonces" class="btn btn--blue">
-            <i class="fa-solid fa-briefcase" style="margin-right:6px;"></i>Voir les offres
+            <i class="fa-solid fa-briefcase" style="margin-right:6px;"></i>{{ t('favorites.browseOffers') }}
           </router-link>
         </div>
 
@@ -41,48 +41,35 @@
         <template v-else>
           <div class="favoris-bar">
             <span class="favoris-count">
-              <strong>{{ favoris.length }}</strong> offre{{ favoris.length > 1 ? 's' : '' }} sauvegardée{{ favoris.length > 1 ? 's' : '' }}
+              <strong>{{ favoris.length }}</strong>
+              {{ favoris.length > 1 ? t('favorites.savedPlural') : t('favorites.saved') }}
             </span>
           </div>
 
           <div class="favoris-grid">
             <div v-for="offre in favoris" :key="offre.id" class="favori-card">
-              <!-- Logo -->
               <div class="favori-logo">
                 <img v-if="offre.entreprise?.logo_url" :src="offre.entreprise.logo_url" :alt="offre.entreprise.nom" />
                 <span v-else class="favori-initial">{{ offre.entreprise?.nom?.charAt(0) || '?' }}</span>
               </div>
-
-              <!-- Contenu -->
               <div class="favori-body">
                 <div class="favori-tags">
                   <span v-for="c in offre.job_contracts" :key="c.id" class="tag tag--blue">{{ c.name }}</span>
                   <span v-for="m in offre.job_modes"     :key="m.id" class="tag tag--gray">{{ m.name }}</span>
                 </div>
                 <h3 class="favori-titre">{{ offre.titre }}</h3>
-                <p class="favori-entreprise">{{ offre.entreprise?.nom || 'Entreprise non précisée' }}</p>
+                <p class="favori-entreprise">{{ offre.entreprise?.nom || t('annonces.card.companyNotSpecified') }}</p>
                 <p class="favori-desc">{{ truncate(stripHtml(offre.mission), 110) }}</p>
                 <div class="favori-meta">
-                  <span v-if="offre.localisation">
-                    <i class="fa-solid fa-location-dot"></i> {{ offre.localisation }}
-                  </span>
-                  <span v-if="offre.date_limite">
-                    <i class="fa-solid fa-calendar"></i> {{ formatDate(offre.date_limite) }}
-                  </span>
+                  <span v-if="offre.localisation"><i class="fa-solid fa-location-dot"></i> {{ offre.localisation }}</span>
+                  <span v-if="offre.date_limite"><i class="fa-solid fa-calendar"></i> {{ formatDate(offre.date_limite) }}</span>
                 </div>
               </div>
-
-              <!-- Actions -->
               <div class="favori-actions">
                 <router-link :to="`/annonces/${offre.id}`" class="btn btn--blue btn--sm">
-                  Voir l'offre
+                  {{ t('favorites.viewOffer') }}
                 </router-link>
-                <button
-                  class="btn-remove"
-                  title="Retirer des favoris"
-                  :disabled="removing === offre.id"
-                  @click="handleRemove(offre.id)"
-                >
+                <button class="btn-remove" :title="t('favorites.remove')" :disabled="removing === offre.id" @click="handleRemove(offre.id)">
                   <i class="fa-solid fa-heart-crack"></i>
                 </button>
               </div>
@@ -97,9 +84,11 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import PublicNav from './PublicNav.vue'
 import { useFavoris } from '../composables/useFavoris.js'
 
+const { t, locale } = useI18n()
 const { favoris, loadFavoris, removeFavori } = useFavoris()
 const loading = ref(false)
 const removing = ref(null)
@@ -112,7 +101,11 @@ const handleRemove = async (offreId) => {
 
 const truncate = (str, len) => !str ? '' : str.length > len ? str.slice(0, len) + '…' : str
 const stripHtml = (html) => !html ? '' : html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
-const formatDate = (str) => !str ? '' : new Date(str).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })
+const formatDate = (str) => {
+  if (!str) return ''
+  const lang = locale.value === 'en' ? 'en-US' : 'fr-FR'
+  return new Date(str).toLocaleDateString(lang, { day: 'numeric', month: 'short', year: 'numeric' })
+}
 
 onMounted(async () => {
   if (!favoris.value.length) {

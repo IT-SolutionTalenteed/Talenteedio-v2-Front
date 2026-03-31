@@ -4,13 +4,13 @@
 
     <div v-if="loading" class="loading">
       <i class="fa-solid fa-spinner fa-spin"></i>
-      <p>Chargement...</p>
+      <p>{{ t('auth.legal.loading') }}</p>
     </div>
 
     <div v-else-if="error" class="error-container">
       <i class="fa-solid fa-triangle-exclamation"></i>
       <p>{{ error }}</p>
-      <router-link to="/" class="btn btn--blue">Retour à l'accueil</router-link>
+      <router-link to="/" class="btn btn--blue">{{ t('auth.legal.backHome') }}</router-link>
     </div>
 
     <div v-else-if="page" class="legal-content">
@@ -27,10 +27,12 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import api from '../services/api.js'
 import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
 
+const { t } = useI18n()
 const route = useRoute()
 
 const page = ref(null)
@@ -51,21 +53,19 @@ const load = async () => {
     const pageType = legacyTypeMap[route.path]
 
     if (pageType) {
-      // Routes fixes : on cherche par type (indépendant du titre/slug)
       const response = await api.get(`/legal-pages/by-type/${pageType}`)
       page.value = response.data
     } else if (route.params.slug) {
-      // Route dynamique /legal/:slug
       const response = await api.get(`/legal-pages/${route.params.slug}`)
       page.value = response.data
     } else {
-      error.value = 'Page non trouvée.'
+      error.value = t('auth.legal.notFound')
     }
   } catch (err) {
     if (err.response?.status === 404) {
-      error.value = 'Page non trouvée. Elle n\'a peut-être pas encore été créée.'
+      error.value = t('auth.legal.notFoundDetail')
     } else {
-      error.value = 'Erreur lors du chargement de la page.'
+      error.value = t('auth.legal.loadError')
     }
   } finally {
     loading.value = false

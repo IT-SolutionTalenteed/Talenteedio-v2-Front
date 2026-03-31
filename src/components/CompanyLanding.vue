@@ -7,11 +7,9 @@
       <div class="hero-overlay"></div>
       <div class="container">
         <div class="hero-content">
-          <span class="hero-badge">Recruteurs</span>
-          <h1 class="hero-title">Trouvez les talents qui feront grandir votre entreprise</h1>
-          <p class="hero-subtitle">
-            Accédez à un vivier de candidats qualifiés et motivés. Participez à nos événements de recrutement et développez votre marque employeur en Afrique.
-          </p>
+          <span class="hero-badge">{{ t('company.hero.badge') }}</span>
+          <h1 class="hero-title">{{ t('company.hero.title') }}</h1>
+          <p class="hero-subtitle">{{ t('company.hero.subtitle') }}</p>
         </div>
       </div>
     </section>
@@ -27,144 +25,87 @@
               <div class="form-header">
                 <h2 class="form-title">
                   <i class="fa-solid fa-building"></i>
-                  Créer mon compte entreprise
+                  {{ t('company.form.title') }}
                 </h2>
-                <p class="form-subtitle">Rejoignez notre réseau de recruteurs et accédez aux meilleurs talents</p>
+                <p class="form-subtitle">{{ t('company.form.subtitle') }}</p>
               </div>
 
               <form @submit.prevent="handleRegister" class="register-form">
-                <!-- Informations entreprise -->
                 <div class="form-section-title">
                   <i class="fa-solid fa-building-circle-check"></i>
-                  Informations entreprise
+                  {{ t('company.form.companyInfo') }}
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Nom de l'entreprise <span class="required">*</span></label>
-                  <input 
-                    v-model="form.nom" 
-                    type="text" 
-                    class="form-input" 
-                    placeholder="Ex: TechCorp France"
-                    required 
-                  />
+                  <label class="form-label">{{ t('company.form.companyName') }} <span class="required">*</span></label>
+                  <input v-model="form.nom" type="text" class="form-input" :placeholder="t('company.form.companyNamePlaceholder')" required />
                 </div>
 
                 <div class="form-row">
                   <div class="form-group">
-                    <label class="form-label">Secteur d'activité <span class="required">*</span></label>
+                    <label class="form-label">{{ t('company.form.sector') }} <span class="required">*</span></label>
                     <select v-model="form.activity_sector_id" class="form-input" required>
-                      <option value="">Sélectionner...</option>
-                      <option v-for="sector in sectors" :key="sector.id" :value="sector.id">
-                        {{ sector.name }}
-                      </option>
+                      <option value="">{{ t('company.form.sectorSelect') }}</option>
+                      <option v-for="sector in sectors" :key="sector.id" :value="sector.id">{{ sector.name }}</option>
                     </select>
                   </div>
-
                   <div class="form-group">
-                    <label class="form-label">Taille de l'entreprise</label>
+                    <label class="form-label">{{ t('company.form.size') }}</label>
                     <select v-model="form.taille" class="form-input">
-                      <option value="">Sélectionner...</option>
-                      <option value="1-10">1-10 employés</option>
-                      <option value="11-50">11-50 employés</option>
-                      <option value="51-200">51-200 employés</option>
-                      <option value="201-500">201-500 employés</option>
-                      <option value="500+">500+ employés</option>
+                      <option value="">{{ t('company.form.sizeSelect') }}</option>
+                      <option value="1-10">{{ t('company.form.size1') }}</option>
+                      <option value="11-50">{{ t('company.form.size2') }}</option>
+                      <option value="51-200">{{ t('company.form.size3') }}</option>
+                      <option value="201-500">{{ t('company.form.size4') }}</option>
+                      <option value="500+">{{ t('company.form.size5') }}</option>
                     </select>
                   </div>
                 </div>
 
                 <div class="form-row">
                   <div class="form-group">
-                    <label class="form-label">Ville</label>
-                    <input 
-                      v-model="form.ville" 
-                      type="text" 
-                      class="form-input" 
-                      placeholder="Ex: Paris"
-                    />
+                    <label class="form-label">{{ t('company.form.city') }}</label>
+                    <input v-model="form.ville" type="text" class="form-input" :placeholder="t('company.form.cityPlaceholder')" />
                   </div>
-
                   <div class="form-group">
-                    <label class="form-label">Pays</label>
-                    <input 
-                      v-model="form.pays" 
-                      type="text" 
-                      class="form-input" 
-                      placeholder="Ex: France"
-                    />
+                    <label class="form-label">{{ t('company.form.country') }}</label>
+                    <input v-model="form.pays" type="text" class="form-input" :placeholder="t('company.form.countryPlaceholder')" />
                   </div>
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Site web</label>
-                  <input 
-                    v-model="form.site_web" 
-                    type="url" 
-                    class="form-input" 
-                    placeholder="https://www.exemple.com"
-                  />
+                  <label class="form-label">{{ t('company.form.website') }}</label>
+                  <input v-model="form.site_web" type="url" class="form-input" :placeholder="t('company.form.websitePlaceholder')" />
                 </div>
 
-                <!-- Contact -->
                 <div class="form-section-title">
                   <i class="fa-solid fa-user-tie"></i>
-                  Contact principal
+                  {{ t('company.form.contact') }}
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Nom complet <span class="required">*</span></label>
-                  <input 
-                    v-model="form.name" 
-                    type="text" 
-                    class="form-input" 
-                    placeholder="Ex: Jean Dupont"
-                    required 
-                  />
+                  <label class="form-label">{{ t('company.form.fullName') }} <span class="required">*</span></label>
+                  <input v-model="form.name" type="text" class="form-input" :placeholder="t('company.form.fullNamePlaceholder')" required />
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Email professionnel <span class="required">*</span></label>
-                  <input 
-                    v-model="form.email" 
-                    type="email" 
-                    class="form-input" 
-                    placeholder="contact@entreprise.com"
-                    required 
-                  />
+                  <label class="form-label">{{ t('company.form.email') }} <span class="required">*</span></label>
+                  <input v-model="form.email" type="email" class="form-input" :placeholder="t('company.form.emailPlaceholder')" required />
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Téléphone</label>
-                  <input 
-                    v-model="form.telephone" 
-                    type="tel" 
-                    class="form-input" 
-                    placeholder="+33 6 12 34 56 78"
-                  />
+                  <label class="form-label">{{ t('company.form.phone') }}</label>
+                  <input v-model="form.telephone" type="tel" class="form-input" :placeholder="t('company.form.phonePlaceholder')" />
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Mot de passe <span class="required">*</span></label>
-                  <input 
-                    v-model="form.password" 
-                    type="password" 
-                    class="form-input" 
-                    placeholder="Minimum 8 caractères"
-                    required 
-                    minlength="8"
-                  />
+                  <label class="form-label">{{ t('company.form.password') }} <span class="required">*</span></label>
+                  <input v-model="form.password" type="password" class="form-input" :placeholder="t('company.form.passwordPlaceholder')" required minlength="8" />
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Confirmer le mot de passe <span class="required">*</span></label>
-                  <input 
-                    v-model="form.password_confirmation" 
-                    type="password" 
-                    class="form-input" 
-                    placeholder="Retapez votre mot de passe"
-                    required 
-                  />
+                  <label class="form-label">{{ t('company.form.confirmPassword') }} <span class="required">*</span></label>
+                  <input v-model="form.password_confirmation" type="password" class="form-input" :placeholder="t('company.form.confirmPasswordPlaceholder')" required />
                 </div>
 
                 <!-- Erreur -->
@@ -180,20 +121,16 @@
                 </div>
 
                 <!-- Submit -->
-                <button 
-                  type="submit" 
-                  class="btn btn--blue btn--lg btn--block"
-                  :disabled="loading"
-                >
+                <button type="submit" class="btn btn--blue btn--lg btn--block" :disabled="loading">
                   <span v-if="loading" class="spinner"></span>
                   <i v-else class="fa-solid fa-rocket"></i>
-                  {{ loading ? 'Création en cours...' : 'Créer mon compte gratuitement' }}
+                  {{ loading ? t('company.form.loading') : t('company.form.submit') }}
                 </button>
 
                 <p class="form-note">
-                  En créant un compte, vous acceptez nos 
-                  <router-link to="/legal/terms-and-conditions">conditions d'utilisation</router-link> et notre 
-                  <router-link to="/legal/privacy-policy">politique de confidentialité</router-link>.
+                  {{ t('company.form.note') }}
+                  <router-link to="/terms-and-conditions">{{ t('company.form.terms') }}</router-link> {{ t('company.form.and') }}
+                  <router-link to="/privacy-policy">{{ t('company.form.privacy') }}</router-link>.
                 </p>
               </form>
             </div>
@@ -205,91 +142,41 @@
               <div class="cta-icon">
                 <i class="fa-solid fa-phone-volume"></i>
               </div>
-              <h3 class="cta-title">Besoin d'aide pour démarrer ?</h3>
-              <p class="cta-text">
-                Notre équipe est là pour vous accompagner dans votre recrutement. Laissez-nous vos coordonnées et nous vous rappelons sous 24h.
-              </p>
+              <h3 class="cta-title">{{ t('company.callback.title') }}</h3>
+              <p class="cta-text">{{ t('company.callback.text') }}</p>
 
               <form @submit.prevent="handleCallback" class="callback-form">
                 <div class="form-group">
-                  <input 
-                    v-model="callbackForm.name" 
-                    type="text" 
-                    class="form-input" 
-                    placeholder="Votre nom"
-                    required 
-                  />
+                  <input v-model="callbackForm.name" type="text" class="form-input" :placeholder="t('company.callback.namePlaceholder')" required />
                 </div>
-
                 <div class="form-group">
-                  <input 
-                    v-model="callbackForm.email" 
-                    type="email" 
-                    class="form-input" 
-                    placeholder="Votre email"
-                    required 
-                  />
+                  <input v-model="callbackForm.email" type="email" class="form-input" :placeholder="t('company.callback.emailPlaceholder')" required />
                 </div>
-
                 <div class="form-group">
-                  <input 
-                    v-model="callbackForm.phone" 
-                    type="tel" 
-                    class="form-input" 
-                    placeholder="Votre téléphone"
-                    required 
-                  />
+                  <input v-model="callbackForm.phone" type="tel" class="form-input" :placeholder="t('company.callback.phonePlaceholder')" required />
                 </div>
-
                 <div class="form-group">
-                  <textarea 
-                    v-model="callbackForm.message" 
-                    class="form-textarea" 
-                    placeholder="Votre message (optionnel)"
-                    rows="3"
-                  ></textarea>
+                  <textarea v-model="callbackForm.message" class="form-textarea" :placeholder="t('company.callback.messagePlaceholder')" rows="3"></textarea>
                 </div>
-
                 <div v-if="callbackError" class="form-error">
-                  <i class="fa-solid fa-triangle-exclamation"></i>
-                  {{ callbackError }}
+                  <i class="fa-solid fa-triangle-exclamation"></i> {{ callbackError }}
                 </div>
-
                 <div v-if="callbackSuccess" class="form-success">
-                  <i class="fa-solid fa-check-circle"></i>
-                  {{ callbackSuccess }}
+                  <i class="fa-solid fa-check-circle"></i> {{ callbackSuccess }}
                 </div>
-
-                <button 
-                  type="submit" 
-                  class="btn btn--orange btn--lg btn--block"
-                  :disabled="callbackLoading"
-                >
+                <button type="submit" class="btn btn--orange btn--lg btn--block" :disabled="callbackLoading">
                   <span v-if="callbackLoading" class="spinner"></span>
                   <i v-else class="fa-solid fa-phone"></i>
-                  {{ callbackLoading ? 'Envoi en cours...' : 'Demander à être rappelé' }}
+                  {{ callbackLoading ? t('company.callback.loading') : t('company.callback.submit') }}
                 </button>
               </form>
             </div>
 
-            <!-- Avantages rapides -->
             <div class="benefits-list">
-              <div class="benefit-item">
-                <i class="fa-solid fa-check-circle"></i>
-                <span>Inscription 100% gratuite</span>
-              </div>
-              <div class="benefit-item">
-                <i class="fa-solid fa-check-circle"></i>
-                <span>Accès immédiat aux talents</span>
-              </div>
-              <div class="benefit-item">
-                <i class="fa-solid fa-check-circle"></i>
-                <span>Support dédié</span>
-              </div>
-              <div class="benefit-item">
-                <i class="fa-solid fa-check-circle"></i>
-                <span>Aucune carte bancaire requise</span>
-              </div>
+              <div class="benefit-item"><i class="fa-solid fa-check-circle"></i><span>{{ t('company.benefits.free') }}</span></div>
+              <div class="benefit-item"><i class="fa-solid fa-check-circle"></i><span>{{ t('company.benefits.access') }}</span></div>
+              <div class="benefit-item"><i class="fa-solid fa-check-circle"></i><span>{{ t('company.benefits.support') }}</span></div>
+              <div class="benefit-item"><i class="fa-solid fa-check-circle"></i><span>{{ t('company.benefits.noCard') }}</span></div>
             </div>
           </div>
 
@@ -304,10 +191,12 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
 
+const { t } = useI18n()
 const router = useRouter()
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
@@ -359,7 +248,7 @@ const handleRegister = async () => {
   success.value = ''
 
   if (form.value.password !== form.value.password_confirmation) {
-    error.value = 'Les mots de passe ne correspondent pas'
+    error.value = t('company.form.passwordMismatch')
     return
   }
 
@@ -385,13 +274,13 @@ const handleRegister = async () => {
 
     await axios.post(`${apiBase}/register`, payload)
     
-    success.value = 'Compte créé avec succès ! Redirection...'
+    success.value = t('company.form.success')
     
     setTimeout(() => {
       router.push('/login')
     }, 2000)
   } catch (e) {
-    error.value = e.response?.data?.message || 'Erreur lors de la création du compte'
+    error.value = e.response?.data?.message || t('company.form.error')
   } finally {
     loading.value = false
   }
@@ -407,7 +296,7 @@ const handleCallback = async () => {
     // Simuler l'envoi (à remplacer par votre endpoint)
     await new Promise(resolve => setTimeout(resolve, 1500))
     
-    callbackSuccess.value = 'Demande envoyée ! Nous vous recontacterons sous 24h.'
+    callbackSuccess.value = t('company.callback.success')
     
     // Reset form
     callbackForm.value = {
@@ -417,7 +306,7 @@ const handleCallback = async () => {
       message: ''
     }
   } catch (e) {
-    callbackError.value = 'Erreur lors de l\'envoi de la demande'
+    callbackError.value = t('company.callback.error')
   } finally {
     callbackLoading.value = false
   }

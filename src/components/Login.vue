@@ -11,12 +11,12 @@
         <div class="auth-left-icon">
           <i class="fa-solid fa-handshake"></i>
         </div>
-        <h2 class="auth-left-title">Bienvenue sur<br><span>Talenteed</span></h2>
-        <p class="auth-left-sub">La plateforme qui connecte les talents africains aux meilleures opportunités.</p>
+        <h2 class="auth-left-title">{{ t('auth.login.leftTitle') }}<br><span>Talenteed</span></h2>
+        <p class="auth-left-sub">{{ t('auth.login.leftSub') }}</p>
         <div class="auth-badges">
-          <span><i class="fa-solid fa-briefcase"></i> Offres d'emploi</span>
-          <span><i class="fa-solid fa-calendar-days"></i> Événements RH</span>
-          <span><i class="fa-solid fa-wand-magic-sparkles"></i> Matching IA</span>
+          <span><i class="fa-solid fa-briefcase"></i> {{ t('auth.login.badge1') }}</span>
+          <span><i class="fa-solid fa-calendar-days"></i> {{ t('auth.login.badge2') }}</span>
+          <span><i class="fa-solid fa-wand-magic-sparkles"></i> {{ t('auth.login.badge3') }}</span>
         </div>
       </div>
 
@@ -27,11 +27,10 @@
     <div class="auth-right">
       <div class="auth-card">
         <div class="auth-card-header">
-          <h1>Connexion</h1>
-          <p>Accédez à votre espace personnel</p>
+          <h1>{{ t('auth.login.title') }}</h1>
+          <p>{{ t('auth.login.subtitle') }}</p>
         </div>
 
-        <!-- Google -->
         <button type="button" class="btn-google" @click="loginWithGoogle">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
             <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
@@ -39,48 +38,33 @@
             <path d="M3.964 10.706A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.706V4.962H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.038l3.007-2.332z" fill="#FBBC05"/>
             <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.962L3.964 6.294C4.672 4.169 6.656 3.58 9 3.58z" fill="#EA4335"/>
           </svg>
-          Continuer avec Google
+          {{ t('auth.login.googleBtn') }}
         </button>
 
-        <div class="auth-divider"><span>ou</span></div>
+        <div class="auth-divider"><span>{{ t('auth.login.or') }}</span></div>
 
         <form @submit.prevent="handleLogin" novalidate>
           <div class="field">
-            <label for="email">Adresse email</label>
+            <label for="email">{{ t('auth.login.email') }}</label>
             <div class="field-input-wrap">
               <i class="fa-regular fa-envelope field-icon"></i>
-              <input
-                type="email"
-                id="email"
-                v-model="form.email"
-                placeholder="votre@email.com"
-                required
-                autocomplete="email"
-              />
+              <input type="email" id="email" v-model="form.email" :placeholder="t('auth.login.emailPlaceholder')" required autocomplete="email" />
             </div>
           </div>
 
           <div class="field">
             <div class="field-label-row">
-              <label for="password">Mot de passe</label>
+              <label for="password">{{ t('auth.login.password') }}</label>
             </div>
             <div class="field-input-wrap">
               <i class="fa-solid fa-lock field-icon"></i>
-              <input
-                :type="showPassword ? 'text' : 'password'"
-                id="password"
-                v-model="form.password"
-                placeholder="••••••••"
-                required
-                autocomplete="current-password"
-              />
+              <input :type="showPassword ? 'text' : 'password'" id="password" v-model="form.password" placeholder="••••••••" required autocomplete="current-password" />
               <button type="button" class="field-eye" @click="showPassword = !showPassword" tabindex="-1">
                 <i :class="showPassword ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye'"></i>
               </button>
             </div>
           </div>
 
-          <!-- reCAPTCHA -->
           <div class="recaptcha-wrap">
             <div ref="recaptchaContainer"></div>
           </div>
@@ -91,15 +75,15 @@
 
           <button type="submit" class="btn-submit" :disabled="loading || !recaptchaToken">
             <span v-if="loading" class="btn-loader">
-              <i class="fa-solid fa-circle-notch fa-spin"></i> Connexion…
+              <i class="fa-solid fa-circle-notch fa-spin"></i> {{ t('auth.login.loading') }}
             </span>
-            <span v-else>Se connecter <i class="fa-solid fa-arrow-right"></i></span>
+            <span v-else>{{ t('auth.login.submit') }} <i class="fa-solid fa-arrow-right"></i></span>
           </button>
         </form>
 
         <p class="auth-switch">
-          Pas encore de compte ?
-          <router-link to="/register">Créer un compte</router-link>
+          {{ t('auth.login.noAccount') }}
+          <router-link to="/register">{{ t('auth.login.createAccount') }}</router-link>
         </p>
       </div>
     </div>
@@ -110,8 +94,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { authService } from '../services/api.js'
 
+const { t } = useI18n()
 const router = useRouter()
 const route  = useRoute()
 
@@ -134,7 +120,7 @@ const renderRecaptcha = () => {
     sitekey:            siteKey,
     callback:           (token) => { recaptchaToken.value = token },
     'expired-callback': () => { recaptchaToken.value = '' },
-    'error-callback':   () => { recaptchaToken.value = ''; error.value = 'Erreur reCAPTCHA' },
+    'error-callback':   () => { recaptchaToken.value = ''; error.value = t('auth.login.recaptchaError') },
   })
 }
 
@@ -162,7 +148,7 @@ onMounted(() => {
 
 const handleLogin = async () => {
   if (!recaptchaToken.value) {
-    error.value = 'Veuillez valider le reCAPTCHA'
+    error.value = t('auth.login.recaptchaRequired')
     return
   }
   loading.value = true
@@ -186,13 +172,13 @@ const handleLogin = async () => {
         case 'admin':      router.push('/admin');      break
         case 'talent':     router.push('/talent');     break
         case 'entreprise': router.push('/entreprise'); break
-        default: error.value = 'Rôle utilisateur non reconnu'
+        default: error.value = t('auth.login.unknownRole')
       }
     }
   } catch (err) {
     error.value = err.response?.data?.message
       || Object.values(err.response?.data?.errors || {}).flat().join(' | ')
-      || 'Erreur de connexion'
+      || t('auth.login.error')
     if (widgetId.value !== null && window.grecaptcha) {
       window.grecaptcha.reset(widgetId.value)
     }
