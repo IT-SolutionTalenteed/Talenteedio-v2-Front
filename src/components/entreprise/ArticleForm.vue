@@ -29,18 +29,11 @@
         <v-checkbox v-model="form.is_published" label="Publier" density="compact" hide-details class="mb-4" />
 
         <div class="mb-4">
-          <div class="text-body-2 font-weight-medium mb-2">Catégories</div>
-          <v-row>
-            <v-col v-for="c in referentiels.media_categories" :key="c.id" cols="12" sm="6" md="4">
-              <v-checkbox
-                :label="c.name"
-                :value="c.id"
-                v-model="form.category_ids"
-                density="compact"
-                hide-details
-              />
-            </v-col>
-          </v-row>
+          <ComboboxMultiple
+            v-model="form.category_ids"
+            label="Catégories"
+            :items="referentiels.media_categories"
+          />
         </div>
       </v-card-text>
     </v-card>
@@ -53,6 +46,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import VerticalLayout from '../layout/VerticalLayout.vue'
 import WysiwygEditor from '../WysiwygEditor.vue'
+import ComboboxMultiple from '../shared/ComboboxMultiple.vue'
 import articleService from '../../services/entreprise/articleService.js'
 import { useDashboardStore } from '@/stores/dashboard.store'
 
