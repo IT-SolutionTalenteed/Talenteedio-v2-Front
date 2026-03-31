@@ -31,7 +31,7 @@
 
           <!-- Logo -->
           <router-link to="/" class="site-logo" @click="menuOpen = false">
-            <img src="/logo.png" alt="Talenteed" width="148" height="52">
+            <img src="/logo.png" alt="Talenteed" width="185" height="64">
             <span class="site-tagline">{{ t('home.tagline') }}</span>
           </router-link>
 
@@ -48,14 +48,22 @@
                   {{ t('nav.announcements') }} <i class="fa-solid fa-chevron-down nav-chevron"></i>
                 </a>
                 <div class="mega-menu">
-                  <router-link to="/annonces" class="mega-item" @click="menuOpen = false">
-                    <i class="fa-solid fa-briefcase mega-icon"></i>
-                    <div><strong>{{ t('nav.jobs') }}</strong><small>{{ t('nav.jobsDesc') }}</small></div>
-                  </router-link>
-                  <router-link to="/entreprises" class="mega-item" @click="menuOpen = false">
-                    <i class="fa-solid fa-building mega-icon"></i>
-                    <div><strong>{{ t('nav.companies') }}</strong><small>{{ t('nav.companiesDesc') }}</small></div>
-                  </router-link>
+                  <div class="mega-hero">
+                    <div class="mega-hero-icon"><i class="fa-solid fa-briefcase"></i></div>
+                    <div class="mega-hero-title">{{ t('nav.megaJobs.heroTitle') }}</div>
+                    <div class="mega-hero-desc">{{ t('nav.megaJobs.heroDesc') }}</div>
+                  </div>
+                  <div class="mega-divider"></div>
+                  <div class="mega-items">
+                    <router-link to="/annonces" class="mega-item" @click="menuOpen = false">
+                      <i class="fa-solid fa-briefcase mega-icon"></i>
+                      <div><strong>{{ t('nav.jobs') }}</strong><small>{{ t('nav.jobsDesc') }}</small></div>
+                    </router-link>
+                    <router-link to="/entreprises" class="mega-item" @click="menuOpen = false">
+                      <i class="fa-solid fa-building mega-icon"></i>
+                      <div><strong>{{ t('nav.companies') }}</strong><small>{{ t('nav.companiesDesc') }}</small></div>
+                    </router-link>
+                  </div>
                 </div>
               </li>
 
@@ -65,20 +73,28 @@
                   {{ t('nav.events') }} <i class="fa-solid fa-chevron-down nav-chevron"></i>
                 </a>
                 <div class="mega-menu">
-                  <template v-if="categories.length">
-                    <router-link
-                      v-for="cat in categories" :key="cat.id"
-                      :to="`/evenements/categorie/${cat.id}`"
-                      class="mega-item"
-                      @click="menuOpen = false"
-                    >
-                      <i class="fa-solid fa-calendar-days mega-icon"></i>
-                      <div><strong>{{ cat.titre }}</strong></div>
-                    </router-link>
-                  </template>
-                  <div v-else class="mega-item mega-item--empty">
-                    <i class="fa-solid fa-calendar-xmark mega-icon"></i>
-                    <div><strong>{{ t('nav.noEvents') }}</strong></div>
+                  <div class="mega-hero">
+                    <div class="mega-hero-icon mega-hero-icon--orange"><i class="fa-solid fa-calendar-days"></i></div>
+                    <div class="mega-hero-title">{{ t('nav.megaEvents.heroTitle') }}</div>
+                    <div class="mega-hero-desc">{{ t('nav.megaEvents.heroDesc') }}</div>
+                  </div>
+                  <div class="mega-divider"></div>
+                  <div class="mega-items">
+                    <template v-if="categories.length">
+                      <router-link
+                        v-for="cat in categories" :key="cat.id"
+                        :to="`/evenements/categorie/${cat.id}`"
+                        class="mega-item"
+                        @click="menuOpen = false"
+                      >
+                        <i class="fa-solid fa-calendar-days mega-icon"></i>
+                        <div><strong>{{ cat.titre }}</strong></div>
+                      </router-link>
+                    </template>
+                    <div v-else class="mega-item mega-item--empty">
+                      <i class="fa-solid fa-calendar-xmark mega-icon"></i>
+                      <div><strong>{{ t('nav.noEvents') }}</strong></div>
+                    </div>
                   </div>
                 </div>
               </li>
@@ -325,9 +341,9 @@ onUnmounted(() => {
 .header-inner { display: flex; align-items: center; height: 80px; gap: 20px; }
 
 /* Logo */
-.site-logo { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-decoration: none; flex-shrink: 0; }
-.site-logo img { height: 52px; width: auto; }
-.site-tagline { font-size: 10px; font-weight: 700; color: #f07c00; letter-spacing: .3px; position: relative; top: -5px; }
+.site-logo { display: flex; flex-direction: column; align-items: center; gap: 0; text-decoration: none; flex-shrink: 0; }
+.site-logo img { height: 72px; width: auto; }
+.site-tagline { font-size: 12px; font-weight: 700; color: #f07c00; letter-spacing: .4px; text-align: center; }
 
 /* Nav */
 .site-nav { flex: 1; display: flex; justify-content: center; }
@@ -345,47 +361,73 @@ onUnmounted(() => {
 .mega-trigger { cursor: pointer; }
 .mega-menu {
   display: none;
-  position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%);
-  background: #fff; border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0,0,0,.14);
-  padding: 10px; min-width: 240px; z-index: 200;
-  border-top: 3px solid #192bc2;
-  flex-direction: column; gap: 4px;
+  position: absolute; top: calc(100% + 10px); left: 50%; transform: translateX(-50%);
+  background: #fff; border-radius: 16px;
+  box-shadow: 0 16px 48px rgba(4,10,93,.18);
+  padding: 0; min-width: 520px; z-index: 200;
+  border: 1px solid #e8edf5;
+  overflow: hidden;
+  flex-direction: row; gap: 0;
   opacity: 0;
   pointer-events: none;
   transition: opacity .2s ease, transform .2s ease;
-  transform: translateX(-50%) translateY(-5px);
+  transform: translateX(-50%) translateY(-6px);
 }
 .has-mega:hover .mega-menu,
 .has-mega:focus-within .mega-menu,
 .mega-menu:hover { 
   display: flex;
+  flex-direction: row;
+  align-items: stretch;
   opacity: 1;
   pointer-events: auto;
   transform: translateX(-50%) translateY(0);
 }
-/* Zone de hover étendue pour éviter la fermeture accidentelle */
 .has-mega::before {
   content: '';
   position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  height: 12px;
-  background: transparent;
+  top: 100%; left: 0; right: 0;
+  height: 14px; background: transparent;
 }
 .mega-item {
-  display: flex; align-items: flex-start; gap: 12px;
-  padding: 10px 14px; border-radius: 8px;
-  color: #040a5d; text-decoration: none; transition: background .15s;
+  display: flex; align-items: center; gap: 14px;
+  padding: 11px 16px; border-radius: 10px;
+  color: #040a5d; text-decoration: none;
+  transition: background .15s, transform .15s;
 }
-.mega-item:hover { background: #f5f7fa; }
-.mega-item strong { display: block; font-size: 14px; font-weight: 700; color: #040a5d; }
-.mega-item small  { display: block; font-size: 12px; color: #6b7280; margin-top: 2px; }
+.mega-item:hover { background: #f0f4ff; transform: translateX(3px); }
+.mega-item strong { display: block; font-size: 13.5px; font-weight: 700; color: #040a5d; }
+.mega-item small  { display: block; font-size: 12px; color: #6b7280; margin-top: 2px; line-height: 1.4; }
 .mega-item--empty { opacity: .6; cursor: default; pointer-events: none; }
-.mega-icon { font-size: 18px; color: #192bc2; margin-top: 2px; flex-shrink: 0; }
+.mega-icon {
+  width: 36px; height: 36px; border-radius: 9px; flex-shrink: 0;
+  background: #eef1fd; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: #192bc2;
+}
 .nav-chevron { font-size: 9px; margin-left: 3px; vertical-align: middle; transition: transform .2s; }
 .has-mega:hover .nav-chevron { transform: rotate(180deg); }
+
+/* Mega hero */
+.mega-hero {
+  display: flex; flex-direction: column; justify-content: space-between; gap: 16px;
+  padding: 24px 20px;
+  background: linear-gradient(160deg, #040a5d 0%, #192bc2 100%);
+  min-width: 200px; max-width: 210px; flex-shrink: 0;
+}
+.mega-hero-icon {
+  width: 48px; height: 48px; border-radius: 14px; flex-shrink: 0;
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: #fff;
+}
+.mega-hero-icon--orange { background: rgba(240,124,0,.3); border-color: rgba(240,124,0,.4); }
+.mega-hero-title { font-size: 14px; font-weight: 700; color: #fff; line-height: 1.35; }
+.mega-hero-desc  { font-size: 12px; color: rgba(255,255,255,.65); line-height: 1.55; }
+.mega-divider { width: 1px; background: #e8edf5; flex-shrink: 0; }
+
+/* Items column */
+.mega-items { display: flex; flex-direction: column; gap: 4px; flex: 1; padding: 10px 8px; justify-content: center; }
 
 /* Header buttons area */
 .header-btns { display: flex; gap: 10px; align-items: center; margin-left: auto; flex-shrink: 0; }
@@ -550,7 +592,10 @@ onUnmounted(() => {
   .site-nav ul { flex-direction: column; gap: 4px; width: 100%; max-width: 300px; }
   .site-nav a { color: rgba(255,255,255,.85); font-size: 16px; padding: 11px 16px; display: block; border-radius: 10px; }
   .site-nav a:hover, .site-nav a.active { background: rgba(255,255,255,.1); color: #fff; }
-  .mega-menu { position: static; transform: none; box-shadow: none; border: none; background: rgba(255,255,255,.07); border-top: none; margin-top: 4px; }
+  .mega-menu { position: static; transform: none; box-shadow: none; border: none; background: rgba(255,255,255,.07); border-top: none; margin-top: 4px; flex-direction: column; min-width: unset; }
+  .mega-hero { display: none; }
+  .mega-divider { display: none; }
+  .mega-items { padding: 0; }
   .has-mega:hover .mega-menu, .has-mega:focus-within .mega-menu { display: flex; }
   .mega-item strong { color: rgba(255,255,255,.85); }
   .mega-item small  { color: rgba(255,255,255,.5); }
@@ -564,6 +609,6 @@ onUnmounted(() => {
 }
 
 @media (max-width: 480px) {
-  .site-logo img { height: 40px; }
+  .site-logo img { height: 52px; }
 }
 </style>

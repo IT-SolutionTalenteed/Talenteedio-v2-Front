@@ -9,6 +9,14 @@
     "companies": "Companies",
     "companiesDesc": "Partner companies",
     "noEvents": "No events available",
+    "megaJobs": {
+      "heroTitle": "Find your next job",
+      "heroDesc": "Hundreds of offers from partner recruiters across Africa and Europe"
+    },
+    "megaEvents": {
+      "heroTitle": "HR Events & Networking",
+      "heroDesc": "Attend summits, forums and professional meetings of the diaspora"
+    },
     "subscription": "SUBSCRIBE",
     "login": "LOGIN",
     "dashboard": "Dashboard",
