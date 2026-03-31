@@ -58,11 +58,11 @@
           <v-list-item
             v-for="child in item.children"
             :key="child.label"
-            :prepend-icon="child.icon || 'mdi-circle-small'"
             :title="(!rail || mobile) ? child.label : ''"
             :active="isActive(child)"
             active-color="primary"
             rounded="lg"
+            class="child-nav-item"
             style="color:rgba(255,255,255,0.65)"
             @click="handleNav(child)"
           />
@@ -384,5 +384,9 @@ const sideNav = computed(() => {
 }
 :deep(.v-navigation-drawer .v-list-group__header) {
   color: rgba(255,255,255,0.75) !important;
+}
+/* Enfants : pas d'icône → réduire le padding gauche */
+:deep(.v-list-group__items .child-nav-item) {
+  padding-inline-start: 20px !important;
 }
 </style>
