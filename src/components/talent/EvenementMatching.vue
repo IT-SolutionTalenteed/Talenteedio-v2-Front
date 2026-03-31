@@ -16,10 +16,13 @@
 
         <div>
           <label>Compétences clés (sélection multiple)</label>
-          <select v-model="form.competences_ids" multiple size="6" style="width:100%;">
-            <option v-for="skill in skills" :key="skill.id" :value="skill.name">{{ skill.name }}</option>
-          </select>
-          <small>Maintenir Ctrl/Cmd pour sélectionner plusieurs compétences</small>
+          <ComboboxMultiple
+            v-model="form.competences_ids"
+            label="Compétences clés"
+            :items="skills"
+            item-title="name"
+            item-value="name"
+          />
         </div>
 
         <div>
@@ -77,6 +80,7 @@
 import { ref, onMounted } from 'vue'
 import evenementService from '../../services/talent/evenementService.js'
 import api from '../../services/api.js'
+import ComboboxMultiple from '../shared/ComboboxMultiple.vue'
 
 defineEmits(['demanderRdv'])
 
