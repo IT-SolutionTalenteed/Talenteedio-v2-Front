@@ -44,7 +44,7 @@
     </div>
     <div class="footer-bottom">
       <div class="container">
-        <p>© {{ new Date().getFullYear() }} Solution Talenteed SARL R.C.S. Luxembourg B 255 801. Tous droits réservés. Africa Talent Summit Luxembourg est une marque déposée.</p>
+        <p>© 2026 Solution Talenteed . Tous droits réservés.</p>
       </div>
     </div>
   </footer>
