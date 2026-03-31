@@ -31,7 +31,7 @@
 
           <!-- Logo -->
           <router-link to="/" class="site-logo" @click="menuOpen = false">
-            <img src="/logo.png" alt="Talenteed" width="148" height="52">
+            <img src="/logo.png" alt="Talenteed" width="185" height="64">
             <span class="site-tagline">{{ t('home.tagline') }}</span>
           </router-link>
 
@@ -325,9 +325,9 @@ onUnmounted(() => {
 .header-inner { display: flex; align-items: center; height: 80px; gap: 20px; }
 
 /* Logo */
-.site-logo { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-decoration: none; flex-shrink: 0; }
-.site-logo img { height: 52px; width: auto; }
-.site-tagline { font-size: 10px; font-weight: 700; color: #f07c00; letter-spacing: .3px; position: relative; top: -5px; }
+.site-logo { display: flex; flex-direction: column; align-items: center; gap: 0; text-decoration: none; flex-shrink: 0; }
+.site-logo img { height: 64px; width: auto; }
+.site-tagline { font-size: 10px; font-weight: 700; color: #f07c00; letter-spacing: .3px; text-align: center; }
 
 /* Nav */
 .site-nav { flex: 1; display: flex; justify-content: center; }
@@ -564,6 +564,6 @@ onUnmounted(() => {
 }
 
 @media (max-width: 480px) {
-  .site-logo img { height: 40px; }
+  .site-logo img { height: 48px; }
 }
 </style>
