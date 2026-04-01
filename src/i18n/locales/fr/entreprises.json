@@ -18,7 +18,8 @@
     "participant": "Participant",
     "offer": "offre",
     "offers": "offres",
-    "viewOffers": "Voir les offres"
+    "viewOffers": "Voir les offres",
+    "viewCompany": "Voir l'entreprise"
   },
   "empty": "Aucune entreprise trouvée.",
   "detail": {

@@ -89,8 +89,8 @@
                 <i class="fa-solid fa-briefcase"></i>
                 {{ e.offres_count }} {{ e.offres_count !== 1 ? t('entreprises.card.offers') : t('entreprises.card.offer') }}
               </span>
-              <router-link :to="`/annonces?entreprise_id=${e.id}`" class="btn btn--blue btn--sm">
-                {{ t('entreprises.card.viewOffers') }}
+              <router-link :to="`/entreprises/${e.id}`" class="btn btn--blue btn--sm">
+                {{ t('entreprises.card.viewCompany') }}
               </router-link>
             </div>
 
