@@ -27,6 +27,30 @@
             <v-text-field v-model="form.date_limite" label="Date limite" type="date" variant="outlined" density="compact" />
           </v-col>
 
+          <!-- Image de fond -->
+          <v-col cols="12">
+            <div class="text-caption text-medium-emphasis mb-2">Image de fond de la carte</div>
+            <div class="d-flex align-center ga-4 flex-wrap">
+              <v-img
+                v-if="imagePreview"
+                :src="imagePreview"
+                width="160"
+                height="90"
+                cover
+                rounded="lg"
+                class="border"
+              />
+              <div>
+                <v-btn variant="tonal" prepend-icon="mdi-upload" @click="$refs.imageInput.click()">
+                  {{ imagePreview ? 'Changer l\'image' : 'Ajouter une image' }}
+                </v-btn>
+                <v-btn v-if="imagePreview" variant="text" color="error" icon="mdi-delete" class="ml-2" @click="removeImage" />
+                <input ref="imageInput" type="file" accept="image/*" style="display:none" @change="handleImageChange" />
+                <div class="text-caption text-medium-emphasis mt-1">JPG, PNG, WebP — max 2 Mo</div>
+              </div>
+            </div>
+          </v-col>
+
           <v-col cols="12">
             <div class="text-caption text-medium-emphasis mb-1">Mission</div>
             <WysiwygEditor v-model="form.mission" />
@@ -122,10 +146,26 @@ const emptyForm = () => ({
   titre: '', client: '', localisation: '', salaire: '', fourchette_salariale: '',
   date_mise_en_ligne: '', date_limite: '', mission: '', profil_recherche: '',
   a_propos: '', liste_offre: '', description: '',
-  job_contract_ids: [], job_mode_ids: [], skill_ids: [], study_level_ids: [], experience_ids: []
+  job_contract_ids: [], job_mode_ids: [], skill_ids: [], study_level_ids: [], experience_ids: [],
+  image: null, remove_image: false
 })
 
 const form = ref(emptyForm())
+const imagePreview = ref(null)
+
+const handleImageChange = (e) => {
+  const file = e.target.files[0]
+  if (!file) return
+  form.value.image = file
+  form.value.remove_image = false
+  imagePreview.value = URL.createObjectURL(file)
+}
+
+const removeImage = () => {
+  form.value.image = null
+  form.value.remove_image = true
+  imagePreview.value = null
+}
 
 const goBack = () => router.push({ name: 'AdminOffres' })
 
@@ -162,7 +202,10 @@ const loadOffre = async () => {
         skill_ids: offre.skills?.map(c => c.id) || [],
         study_level_ids: offre.study_levels?.map(c => c.id) || [],
         experience_ids: offre.experiences?.map(c => c.id) || [],
+        image: null,
+        remove_image: false,
       }
+      if (offre.image_url) imagePreview.value = offre.image_url
     }
   } catch (err) {
     showSnack('Erreur lors du chargement', 'error')

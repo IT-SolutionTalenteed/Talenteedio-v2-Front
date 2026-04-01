@@ -93,7 +93,7 @@
             <!-- Skeleton loader -->
             <div v-if="loading" class="offres-grid">
               <div v-for="n in 8" :key="n" class="offre-card offre-card--skeleton">
-                <div class="sk-logo"></div>
+                <div class="sk-visual"></div>
                 <div class="sk-lines">
                   <div class="sk-line sk-line--lg"></div>
                   <div class="sk-line sk-line--sm"></div>
@@ -105,12 +105,19 @@
             <!-- Résultats -->
             <div v-else-if="offres.length" class="offres-grid">
               <router-link v-for="offre in offres" :key="offre.id" :to="`/annonces/${offre.id}`" class="offre-card offre-card--link">
-                <!-- Logo entreprise -->
-                <div class="offre-logo">
-                  <img v-if="offre.entreprise?.logo_url" :src="offre.entreprise.logo_url" :alt="offre.entreprise.nom" />
-                  <span v-else class="offre-logo-initial">
-                    {{ offre.entreprise ? offre.entreprise.nom.charAt(0) : '?' }}
-                  </span>
+                <!-- Visuel gauche : image de fond + logo -->
+                <div class="offre-visual">
+                  <div
+                    class="offre-bg"
+                    :style="offre.image_url ? `background-image: url('${offre.image_url}')` : ''"
+                    :class="{ 'offre-bg--default': !offre.image_url }"
+                  ></div>
+                  <div class="offre-logo">
+                    <img v-if="offre.entreprise?.logo_url" :src="offre.entreprise.logo_url" :alt="offre.entreprise.nom" />
+                    <span v-else class="offre-logo-initial">
+                      {{ offre.entreprise ? offre.entreprise.nom.charAt(0) : '?' }}
+                    </span>
+                  </div>
                 </div>
                 <!-- Contenu -->
                 <div class="offre-body">
@@ -412,23 +419,47 @@ onMounted(() => {
 .offre-card {
   background: #fff; border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0,0,0,.06);
-  padding: 20px 24px;
-  display: grid; grid-template-columns: 64px 1fr auto;
-  gap: 16px; align-items: center;
+  padding: 0;
+  display: grid; grid-template-columns: 160px 1fr auto;
+  gap: 0; align-items: center;
   border: 1.5px solid transparent;
+  overflow: hidden;
   transition: border-color .2s, box-shadow .2s, transform .15s;
 }
 .offre-card:hover { border-color: var(--blue); box-shadow: 0 6px 20px rgba(0,0,0,.10); transform: translateY(-2px); }
 .offre-card--link { text-decoration: none; }
 
+/* Visuel gauche */
+.offre-visual {
+  position: relative;
+  width: 160px;
+  height: 100%;
+  min-height: 110px;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+.offre-bg {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  border-radius: 0;
+}
+.offre-bg--default {
+  background: linear-gradient(135deg, #040a5d 0%, #192bc2 100%);
+}
 .offre-logo {
-  width: 56px; height: 56px; border-radius: 10px;
-  background: var(--light-bg, #f5f7fa); overflow: hidden;
+  position: absolute;
+  bottom: 10px; left: 10px;
+  width: 52px; height: 52px; border-radius: 10px;
+  background: #fff; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);
   flex-shrink: 0;
 }
 .offre-logo img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
-.offre-logo-initial { font-size: 22px; font-weight: 800; color: var(--blue); }
+.offre-logo-initial { font-size: 20px; font-weight: 800; color: var(--blue); }
+
+.offre-body { padding: 16px 20px; }
+.offre-action { padding: 16px 16px 16px 0; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
 
 .offre-tags   { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
 .tag { font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 50px; }
@@ -453,8 +484,8 @@ onMounted(() => {
 
 /* ── Skeleton ── */
 .offre-card--skeleton { pointer-events: none; }
-.sk-logo { width: 56px; height: 56px; border-radius: 10px; background: #e9ecef; animation: shimmer 1.2s infinite; }
-.sk-lines { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.sk-visual { width: 160px; align-self: stretch; min-height: 110px; background: #e9ecef; animation: shimmer 1.2s infinite; }
+.sk-lines { flex: 1; display: flex; flex-direction: column; gap: 8px; padding: 16px 20px; }
 .sk-line { height: 12px; border-radius: 6px; background: #e9ecef; animation: shimmer 1.2s infinite; }
 .sk-line--lg { width: 60%; }
 .sk-line--md { width: 40%; }
@@ -478,7 +509,8 @@ onMounted(() => {
 .page-btn--dots                    { border: none; background: transparent; cursor: default; }
 
 @media (max-width: 640px) {
-  .offre-card { grid-template-columns: 48px 1fr; }
-  .offre-action { grid-column: 1 / -1; }
+  .offre-card { grid-template-columns: 100px 1fr; }
+  .offre-visual { min-height: 90px; }
+  .offre-action { grid-column: 1 / -1; padding: 0 16px 16px; flex-direction: row; justify-content: flex-end; }
 }
 </style>
