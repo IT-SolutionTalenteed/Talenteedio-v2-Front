@@ -95,6 +95,9 @@
                 </router-link>
               </div>
 
+              <!-- Partage -->
+              <ShareCard :text="article.title" />
+
             </aside>
           </div>
         </div>
@@ -110,6 +113,7 @@ import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
+import ShareCard from './ShareCard.vue'
 
 const { t, locale } = useI18n()
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'

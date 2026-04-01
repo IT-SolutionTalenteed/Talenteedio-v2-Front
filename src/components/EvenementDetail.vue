@@ -391,6 +391,8 @@
                 </template>
               </div>
 
+              <!-- Partage -->
+              <ShareCard :text="evenement.titre" />
 
             </aside>
           </div>
@@ -485,6 +487,7 @@ import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
+import ShareCard from './ShareCard.vue'
 import api from '../services/api.js'
 
 const { t, locale } = useI18n()

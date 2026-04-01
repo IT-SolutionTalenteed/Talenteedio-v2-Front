@@ -61,5 +61,14 @@
     "confirm": "Confirm",
     "yes": "Yes",
     "no": "No"
+  },
+  "share": {
+    "title": "Share",
+    "facebook": "Share on Facebook",
+    "twitter": "Share on Twitter",
+    "linkedin": "Share on LinkedIn",
+    "copyLink": "Copy link",
+    "copy": "Copy",
+    "copied": "Copied!"
   }
 }
