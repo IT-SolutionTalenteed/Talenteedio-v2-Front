@@ -7,6 +7,9 @@
   "search": {
     "placeholder": "Rechercher une entreprise..."
   },
+  "filters": {
+    "all": "Tous les secteurs"
+  },
   "results": {
     "company": "entreprise",
     "companies": "entreprises"
