@@ -20,7 +20,7 @@
         </div>
       </div>
 
-      <p class="auth-left-footer">Africa Talent Summit Luxembourg</p>
+      <p class="auth-left-footer">Talenteed</p>
     </div>
 
     <!-- ── Panneau droit ── -->
