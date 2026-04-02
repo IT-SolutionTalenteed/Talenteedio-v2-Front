@@ -110,16 +110,6 @@ const routes = [
     meta: { requiresAuth: true, role: 'talent' }
   },
   {
-    path: '/terms-and-conditions',
-    name: 'TermsAndConditions',
-    component: LegalPage
-  },
-  {
-    path: '/privacy-policy',
-    name: 'PrivacyPolicy',
-    component: LegalPage
-  },
-  {
     path: '/legal/:slug',
     name: 'LegalPage',
     component: LegalPage

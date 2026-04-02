@@ -39,23 +39,13 @@ const page = ref(null)
 const loading = ref(true)
 const error = ref('')
 
-const legacyTypeMap = {
-  '/terms-and-conditions': 'terms',
-  '/privacy-policy': 'privacy',
-}
-
 const load = async () => {
   loading.value = true
   error.value = ''
   page.value = null
 
   try {
-    const pageType = legacyTypeMap[route.path]
-
-    if (pageType) {
-      const response = await api.get(`/legal-pages/by-type/${pageType}`)
-      page.value = response.data
-    } else if (route.params.slug) {
+    if (route.params.slug) {
       const response = await api.get(`/legal-pages/${route.params.slug}`)
       page.value = response.data
     } else {

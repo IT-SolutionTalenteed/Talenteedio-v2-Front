@@ -35,8 +35,9 @@
           <div class="footer-col">
             <h4>{{ t('footer.legalInfo') }}</h4>
             <ul>
-              <li><router-link to="/terms-and-conditions"><i class="fa-solid fa-chevron-right"></i> {{ t('footer.terms') }}</router-link></li>
-              <li><router-link to="/privacy-policy"><i class="fa-solid fa-chevron-right"></i> {{ t('footer.privacy') }}</router-link></li>
+              <li v-for="page in legalPages" :key="page.id">
+                <router-link :to="`/legal/${page.slug}`"><i class="fa-solid fa-chevron-right"></i> {{ page.title }}</router-link>
+              </li>
             </ul>
           </div>
         </div>
@@ -51,8 +52,21 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import api from '../services/api.js'
+
 const { t } = useI18n()
+const legalPages = ref([])
+
+onMounted(async () => {
+  try {
+    const res = await api.get('/legal-pages')
+    legalPages.value = res.data
+  } catch {
+    // silencieux
+  }
+})
 </script>
 
 
