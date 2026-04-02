@@ -427,7 +427,7 @@ onUnmounted(() => {
 .mega-divider { width: 1px; background: #e8edf5; flex-shrink: 0; }
 
 /* Items column */
-.mega-items { display: flex; flex-direction: column; gap: 4px; flex: 1; padding: 10px 8px; justify-content: center; }
+.mega-items { display: flex; flex-direction: column; gap: 4px; flex: 1; padding: 0 8px; justify-content: center; }
 
 /* Header buttons area */
 .header-btns { display: flex; gap: 10px; align-items: center; margin-left: auto; flex-shrink: 0; }
