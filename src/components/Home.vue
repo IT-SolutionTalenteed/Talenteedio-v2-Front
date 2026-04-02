@@ -458,7 +458,6 @@ function initFadeIn() {
   background: #fff;
   border-radius: var(--radius-lg, 12px);
   box-shadow: 0 8px 32px rgba(0,0,0,.14);
-  padding: 10px;
   min-width: 240px;
   z-index: 200;
   border-top: 3px solid var(--blue);
