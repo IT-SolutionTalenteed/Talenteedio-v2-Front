@@ -204,33 +204,33 @@
                 <ul class="ed-info-list">
                   <li v-if="entreprise.activity_sector">
                     <i class="fa-solid fa-industry"></i>
-                    <span>{{ entreprise.activity_sector.name }}</span>
+                    <div><span class="ed-info-label">{{ t('entreprises.detail.sector') }}</span><span>{{ entreprise.activity_sector.name }}</span></div>
                   </li>
                   <li v-if="entreprise.ville || entreprise.pays">
                     <i class="fa-solid fa-location-dot"></i>
-                    <span>{{ [entreprise.ville, entreprise.pays].filter(Boolean).join(', ') }}</span>
+                    <div><span class="ed-info-label">{{ t('entreprises.detail.location') }}</span><span>{{ [entreprise.ville, entreprise.pays].filter(Boolean).join(', ') }}</span></div>
                   </li>
-                  <li v-if="entreprise.adresse">
-                    <i class="fa-solid fa-map-marker-alt"></i>
-                    <span>{{ entreprise.adresse }}</span>
+                  <li v-if="entreprise.site_web">
+                    <i class="fa-solid fa-globe"></i>
+                    <div><span class="ed-info-label">{{ t('entreprises.detail.website') }}</span><a :href="entreprise.site_web" target="_blank" rel="noopener">{{ entreprise.site_web }}</a></div>
                   </li>
                 </ul>
-                <p v-if="!entreprise.activity_sector && !entreprise.ville && !entreprise.pays && !entreprise.adresse" class="ed-empty">—</p>
+                <p v-if="!entreprise.activity_sector && !entreprise.ville && !entreprise.pays && !entreprise.site_web" class="ed-empty">—</p>
               </div>
 
               <div class="ed-side-card">
                 <h3 class="ed-side-title">{{ t('entreprises.detail.contact') }}</h3>
                 <ul class="ed-info-list">
+                  <li v-if="entreprise.adresse">
+                    <i class="fa-solid fa-map-marker-alt"></i>
+                    <div><span class="ed-info-label">{{ t('entreprises.detail.address') }}</span><span>{{ entreprise.adresse }}</span></div>
+                  </li>
                   <li v-if="entreprise.telephone">
                     <i class="fa-solid fa-phone"></i>
-                    <span>{{ entreprise.telephone }}</span>
-                  </li>
-                  <li v-if="entreprise.site_web">
-                    <i class="fa-solid fa-globe"></i>
-                    <a :href="entreprise.site_web" target="_blank" rel="noopener">{{ entreprise.site_web }}</a>
+                    <div><span class="ed-info-label">{{ t('entreprises.detail.phone') }}</span><span>{{ entreprise.telephone }}</span></div>
                   </li>
                 </ul>
-                <p v-if="!entreprise.telephone && !entreprise.site_web" class="ed-empty">—</p>
+                <p v-if="!entreprise.adresse && !entreprise.telephone" class="ed-empty">—</p>
               </div>
 
               <div class="ed-side-card ed-side-cta">
@@ -494,6 +494,8 @@ onMounted(load)
 .ed-info-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
 .ed-info-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--navy); }
 .ed-info-list i  { color: var(--blue); font-size: 13px; margin-top: 2px; flex-shrink: 0; width: 14px; }
+.ed-info-list div { display: flex; flex-direction: column; gap: 2px; }
+.ed-info-label { font-size: 11px; font-weight: 700; color: var(--body-text); text-transform: uppercase; letter-spacing: .4px; }
 .ed-info-list a  { color: var(--blue); text-decoration: none; word-break: break-all; }
 .ed-info-list a:hover { text-decoration: underline; }
 
