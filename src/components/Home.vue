@@ -178,7 +178,12 @@
         </div>
 
         <div v-if="offres.length" class="home-offres-list fade-in">
-          <router-link v-for="offre in offres" :key="offre.id" :to="`/annonces/${offre.id}`" class="offre-card offre-card--link">
+          <router-link
+            v-for="offre in offres"
+            :key="offre.id"
+            :to="isLoggedIn ? `/annonces/${offre.id}` : `/login?redirect=${encodeURIComponent('/annonces/' + offre.id)}`"
+            class="offre-card offre-card--link"
+          >
             <!-- Visuel gauche -->
             <div class="offre-visual">
               <div class="offre-bg" :style="offre.image_url ? `background-image:url('${offre.image_url}')` : ''" :class="{ 'offre-bg--default': !offre.image_url }"></div>
@@ -208,7 +213,10 @@
           {{ t('home.jobOffers.noOffers') }}
         </div>
         <div style="text-align:center;margin-top:40px;">
-          <router-link to="/annonces" class="btn btn--blue btn--lg">
+          <router-link
+            :to="isLoggedIn ? '/annonces' : `/login?redirect=${encodeURIComponent('/annonces')}`"
+            class="btn btn--blue btn--lg"
+          >
             {{ t('home.jobOffers.viewAll') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
           </router-link>
         </div>
