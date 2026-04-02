@@ -66,25 +66,39 @@
             <!-- ── Colonne principale ── -->
             <div class="ed-main">
 
-              <!-- Description -->
+              <!-- À propos -->
               <div v-if="entreprise.description" class="ed-block">
-                <h2 class="ed-block-title"><i class="fa-solid fa-circle-info"></i> {{ t('entreprises.detail.about') }}</h2>
+                <h2 class="ed-block-title"><i class="fa-solid fa-circle-info"></i> {{ t('entreprises.detail.about') }} {{ entreprise.nom }}</h2>
                 <p class="ed-description">{{ entreprise.description }}</p>
               </div>
 
-              <!-- Offres -->
+              <!-- Informations de recrutement -->
+              <div v-if="offres.length || entreprise.description" class="ed-block">
+                <h2 class="ed-block-title"><i class="fa-solid fa-user-tie"></i> {{ t('entreprises.detail.recruitmentInfo') }}</h2>
+                <div class="ed-recruit-stats">
+                  <div class="ed-recruit-stat">
+                    <span class="ed-recruit-num">{{ offres.length }}</span>
+                    <span class="ed-recruit-label">{{ offres.length !== 1 ? t('entreprises.detail.offers') : t('entreprises.detail.offer') }} {{ t('entreprises.detail.active') }}</span>
+                  </div>
+                  <div class="ed-recruit-stat">
+                    <span class="ed-recruit-num">{{ articles.length }}</span>
+                    <span class="ed-recruit-label">{{ articles.length !== 1 ? t('entreprises.detail.articles') : t('entreprises.detail.article') }}</span>
+                  </div>
+                  <div class="ed-recruit-stat">
+                    <span class="ed-recruit-num">{{ evenements.length }}</span>
+                    <span class="ed-recruit-label">{{ t('entreprises.detail.upcomingEvents') }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Offres d'emploi -->
               <div class="ed-block">
                 <h2 class="ed-block-title">
                   <i class="fa-solid fa-briefcase"></i> {{ t('entreprises.detail.jobOffers') }}
                   <span class="ed-count">{{ offres.length }}</span>
                 </h2>
                 <div v-if="offres.length" class="ed-offres-list">
-                  <router-link
-                    v-for="o in offres"
-                    :key="o.id"
-                    :to="`/annonces/${o.id}`"
-                    class="ed-offre-card"
-                  >
+                  <router-link v-for="o in offres" :key="o.id" :to="`/annonces/${o.id}`" class="ed-offre-card">
                     <div class="ed-offre-body">
                       <div class="ed-offre-tags">
                         <span v-for="c in o.job_contracts" :key="c.id" class="tag tag--blue">{{ c.name }}</span>
@@ -101,19 +115,33 @@
                 <p v-else class="ed-empty">{{ t('entreprises.detail.noOffers') }}</p>
               </div>
 
-              <!-- Articles -->
+              <!-- Événements à venir -->
+              <div v-if="evenements.length" class="ed-block">
+                <h2 class="ed-block-title">
+                  <i class="fa-solid fa-calendar-days"></i> {{ t('entreprises.detail.upcomingEventsTitle') }}
+                  <span class="ed-count">{{ evenements.length }}</span>
+                </h2>
+                <div class="ed-events-list">
+                  <div v-for="ev in evenements" :key="ev.id" class="ed-event-card">
+                    <div class="ed-event-date">
+                      <span class="ed-event-day">{{ new Date(ev.date_debut).getDate() }}</span>
+                      <span class="ed-event-month">{{ new Date(ev.date_debut).toLocaleDateString(locale === 'en' ? 'en-US' : 'fr-FR', { month: 'short' }) }}</span>
+                    </div>
+                    <div class="ed-event-body">
+                      <h3 class="ed-event-title">{{ ev.titre }}</h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Articles & Actualités -->
               <div v-if="articles.length" class="ed-block">
                 <h2 class="ed-block-title">
                   <i class="fa-solid fa-newspaper"></i> {{ t('entreprises.detail.publishedArticles') }}
                   <span class="ed-count">{{ articles.length }}</span>
                 </h2>
                 <div class="ed-articles-grid">
-                  <router-link
-                    v-for="a in articles"
-                    :key="a.id"
-                    :to="`/blog/${a.id}`"
-                    class="ed-article-card"
-                  >
+                  <router-link v-for="a in articles" :key="a.id" :to="`/blog/${a.id}`" class="ed-article-card">
                     <div class="ed-article-img">
                       <img v-if="a.image_url" :src="a.image_url" :alt="a.title" />
                       <div v-else class="ed-article-placeholder"><i class="fa-solid fa-newspaper"></i></div>
@@ -134,25 +162,31 @@
               <div class="ed-side-card">
                 <h3 class="ed-side-title">{{ t('entreprises.detail.information') }}</h3>
                 <ul class="ed-info-list">
-                  <li v-if="entreprise.telephone">
-                    <i class="fa-solid fa-phone"></i>
-                    <span>{{ entreprise.telephone }}</span>
-                  </li>
-                  <li v-if="entreprise.adresse">
-                    <i class="fa-solid fa-map-marker-alt"></i>
-                    <span>{{ entreprise.adresse }}</span>
+                  <li v-if="entreprise.activity_sector">
+                    <i class="fa-solid fa-industry"></i>
+                    <span>{{ entreprise.activity_sector.name }}</span>
                   </li>
                   <li v-if="entreprise.ville || entreprise.pays">
                     <i class="fa-solid fa-location-dot"></i>
                     <span>{{ [entreprise.ville, entreprise.pays].filter(Boolean).join(', ') }}</span>
                   </li>
+                  <li v-if="entreprise.adresse">
+                    <i class="fa-solid fa-map-marker-alt"></i>
+                    <span>{{ entreprise.adresse }}</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="ed-side-card">
+                <h3 class="ed-side-title">{{ t('entreprises.detail.contact') }}</h3>
+                <ul class="ed-info-list">
+                  <li v-if="entreprise.telephone">
+                    <i class="fa-solid fa-phone"></i>
+                    <span>{{ entreprise.telephone }}</span>
+                  </li>
                   <li v-if="entreprise.site_web">
                     <i class="fa-solid fa-globe"></i>
                     <a :href="entreprise.site_web" target="_blank" rel="noopener">{{ entreprise.site_web }}</a>
-                  </li>
-                  <li v-if="entreprise.activity_sector">
-                    <i class="fa-solid fa-industry"></i>
-                    <span>{{ entreprise.activity_sector.name }}</span>
                   </li>
                 </ul>
               </div>
@@ -191,6 +225,7 @@ const loading = ref(true)
 const entreprise = computed(() => data.value?.entreprise)
 const offres     = computed(() => data.value?.offres || [])
 const articles   = computed(() => data.value?.articles || [])
+const evenements = computed(() => data.value?.evenements || [])
 
 const load = async () => {
   loading.value = true
@@ -296,6 +331,34 @@ onMounted(load)
 }
 .ed-description { font-size: 14px; color: var(--navy); line-height: 1.7; margin: 0; }
 .ed-empty { font-size: 14px; color: var(--body-text); font-style: italic; }
+
+/* Recrutement stats */
+.ed-recruit-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.ed-recruit-stat {
+  background: var(--light-bg, #f5f7fa); border-radius: 10px;
+  padding: 16px; text-align: center;
+}
+.ed-recruit-num   { display: block; font-size: 28px; font-weight: 800; color: var(--blue); line-height: 1; }
+.ed-recruit-label { display: block; font-size: 12px; color: var(--body-text); margin-top: 6px; }
+
+/* Événements */
+.ed-events-list { display: flex; flex-direction: column; gap: 12px; }
+.ed-event-card {
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px 18px; border-radius: 10px;
+  border: 1.5px solid var(--border, #e2e8f0); background: #fff;
+}
+.ed-event-date {
+  width: 52px; height: 52px; border-radius: 10px; flex-shrink: 0;
+  background: linear-gradient(135deg, #040a5d, #192bc2);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.ed-event-day   { font-size: 18px; font-weight: 800; color: #fff; line-height: 1; }
+.ed-event-month { font-size: 10px; font-weight: 600; color: rgba(255,255,255,.75); text-transform: uppercase; }
+.ed-event-body  { flex: 1; }
+.ed-event-title { font-size: 14px; font-weight: 700; color: var(--navy); margin: 0 0 4px; }
+.ed-event-lieu  { font-size: 12px; color: var(--body-text); margin: 0; display: flex; align-items: center; gap: 5px; }
+.ed-event-lieu i { color: var(--orange); }
 
 /* Offres */
 .ed-offres-list { display: flex; flex-direction: column; gap: 12px; }
