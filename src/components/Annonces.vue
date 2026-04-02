@@ -271,7 +271,7 @@ const resetFilters = () => {
 }
 
 // ── Pagination pages ───────────────────────────────────────
-const paginationPages = () => {
+const paginationPages = computed(() => {
   const total   = pagination.value.last_page
   const current = pagination.value.current_page
   if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1)
@@ -281,7 +281,7 @@ const paginationPages = () => {
   if (current < total - 2) pages.push('...')
   pages.push(total)
   return pages
-}
+})
 
 // ── Utilitaires ────────────────────────────────────────────
 const truncate = (str, len) => !str ? '' : str.length > len ? str.slice(0, len) + '…' : str
