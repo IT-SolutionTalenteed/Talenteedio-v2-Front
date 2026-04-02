@@ -45,7 +45,7 @@
     </div>
     <div class="footer-bottom">
       <div class="container">
-        <p>© 2026 {{ t('footer.copyright') }}</p>
+        <p>© {{ currentYear }} {{ t('footer.copyright') }}</p>
       </div>
     </div>
   </footer>
@@ -58,6 +58,7 @@ import api from '../services/api.js'
 
 const { t } = useI18n()
 const legalPages = ref([])
+const currentYear = new Date().getFullYear()
 
 onMounted(async () => {
   try {
