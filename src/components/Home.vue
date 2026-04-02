@@ -176,48 +176,44 @@
           <h2>{{ t('home.jobOffers.title') }}</h2>
           <p>{{ t('home.jobOffers.description') }}</p>
         </div>
-        <div v-if="offres.length" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:28px;">
-          <div v-for="offre in offres" :key="offre.id" class="fade-in"
-               style="background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;">
-            <div style="padding:28px 28px 0;">
-              <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-                <div v-if="offre.entreprise && offre.entreprise.logo_url">
-                  <img :src="offre.entreprise.logo_url" :alt="offre.entreprise.nom"
-                       style="width:44px;height:44px;object-fit:contain;border-radius:6px;border:1px solid var(--border);">
-                </div>
-                <div v-else style="width:44px;height:44px;border-radius:6px;background:var(--light-blue);display:flex;align-items:center;justify-content:center;">
-                  <i class="fa-solid fa-building" style="color:var(--navy);font-size:18px;"></i>
-                </div>
-                <div>
-                  <div style="font-weight:700;color:var(--navy);font-size:15px;">{{ offre.titre }}</div>
-                  <div style="font-size:13px;color:var(--body-text);">{{ offre.entreprise ? offre.entreprise.nom : '—' }}</div>
-                </div>
+
+        <div v-if="offres.length" class="home-offres-list fade-in">
+          <router-link v-for="offre in offres" :key="offre.id" :to="`/annonces/${offre.id}`" class="offre-card offre-card--link">
+            <!-- Visuel gauche -->
+            <div class="offre-visual">
+              <div class="offre-bg" :style="offre.image_url ? `background-image:url('${offre.image_url}')` : ''" :class="{ 'offre-bg--default': !offre.image_url }"></div>
+              <div class="offre-logo">
+                <img v-if="offre.entreprise?.logo_url" :src="offre.entreprise.logo_url" :alt="offre.entreprise.nom" />
+                <span v-else class="offre-logo-initial">{{ offre.entreprise ? offre.entreprise.nom.charAt(0) : '?' }}</span>
               </div>
-              <p style="color:var(--body-text);font-size:14px;line-height:1.6;margin-bottom:16px;">
-                {{ truncate(offre.mission, 120) }}
-              </p>
             </div>
-            <div style="margin-top:auto;padding:16px 28px 24px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);">
-              <span style="font-size:13px;color:var(--body-text);">
-                <i class="fa-solid fa-location-dot" style="color:var(--orange);margin-right:4px;"></i>{{ offre.localisation || '—' }}
-              </span>
-              <router-link to="/login" class="btn btn--blue btn--sm">{{ t('home.jobOffers.apply') }}</router-link>
+            <!-- Contenu -->
+            <div class="offre-body">
+              <h3 class="offre-title">{{ offre.titre }}</h3>
+              <p class="offre-entreprise">{{ offre.entreprise?.nom || '—' }}</p>
+              <p class="offre-desc">{{ truncate(stripHtml(offre.mission), 110) }}</p>
+              <div class="offre-meta">
+                <span v-if="offre.localisation"><i class="fa-solid fa-location-dot"></i> {{ offre.localisation }}</span>
+                <span v-if="offre.date_limite"><i class="fa-solid fa-calendar"></i> {{ formatDate(offre.date_limite) }}</span>
+              </div>
             </div>
-          </div>
+            <!-- Action -->
+            <div class="offre-action">
+              <span class="btn btn--blue btn--sm">{{ t('home.jobOffers.apply') }}</span>
+            </div>
+          </router-link>
         </div>
+
         <div v-else style="text-align:center;color:var(--body-text);padding:40px 0;">
           {{ t('home.jobOffers.noOffers') }}
         </div>
         <div style="text-align:center;margin-top:40px;">
-          <router-link to="/login" class="btn btn--blue btn--lg">
+          <router-link to="/annonces" class="btn btn--blue btn--lg">
             {{ t('home.jobOffers.viewAll') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
           </router-link>
         </div>
       </div>
     </section>
-
-
-    <!-- ══ SECTION EVENT (countdown 2) ══ -->
     <section class="section-event" v-if="event">
       <div class="event-img">
         <img src="https://africatalentsummit.com/wp-content/uploads/2026/02/back-thinking-window-with-business-black-man-standing-his-office-looking-city-view-id-scaled.jpg"
@@ -289,7 +285,7 @@ onMounted(async () => {
     const [evRes, artRes, offRes] = await Promise.all([
       axios.get(`${apiBase}/public/featured-event`),
       axios.get(`${apiBase}/public/articles`),
-      axios.get(`${apiBase}/public/offres`),
+      axios.get(`${apiBase}/public/offres-home`),
     ])
     event.value    = evRes.data
     articles.value = artRes.data
@@ -678,5 +674,39 @@ function initFadeIn() {
 .lang-switch:hover {
   background: var(--blue);
   color: #fff;
+}
+/* ── Offres home ── */
+.home-offres-list { display: flex; flex-direction: column; gap: 16px; }
+.offre-card {
+  background: #fff; border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+  display: grid; grid-template-columns: 160px 1fr auto;
+  border: 1.5px solid transparent; overflow: hidden;
+  transition: border-color .2s, box-shadow .2s, transform .15s;
+}
+.offre-card:hover { border-color: #192bc2; box-shadow: 0 6px 20px rgba(0,0,0,.10); transform: translateY(-2px); }
+.offre-card--link { text-decoration: none; }
+.offre-visual { position: relative; width: 160px; min-height: 110px; align-self: stretch; flex-shrink: 0; }
+.offre-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
+.offre-bg--default { background: linear-gradient(135deg, #040a5d 0%, #192bc2 100%); }
+.offre-logo {
+  position: absolute; bottom: 10px; left: 10px;
+  width: 52px; height: 52px; border-radius: 10px;
+  background: #fff; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);
+}
+.offre-logo img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+.offre-logo-initial { font-size: 20px; font-weight: 800; color: #192bc2; }
+.offre-body { padding: 16px 20px; }
+.offre-title { font-size: 16px; font-weight: 700; color: #040a5d; margin: 0 0 3px; }
+.offre-entreprise { font-size: 13px; color: #6b7280; margin: 0 0 8px; }
+.offre-desc { font-size: 13px; color: #6b7280; line-height: 1.5; margin: 0 0 10px; }
+.offre-meta { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: #6b7280; }
+.offre-meta i { color: #f07c00; margin-right: 4px; }
+.offre-action { padding: 16px 16px 16px 0; display: flex; align-items: center; flex-shrink: 0; }
+@media (max-width: 640px) {
+  .offre-card { grid-template-columns: 100px 1fr; }
+  .offre-action { grid-column: 1 / -1; padding: 0 16px 16px; }
 }
 </style>
