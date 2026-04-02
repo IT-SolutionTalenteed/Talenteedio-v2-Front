@@ -67,27 +67,65 @@
             <div class="ed-main">
 
               <!-- À propos -->
-              <div v-if="entreprise.description" class="ed-block">
+              <div class="ed-block">
                 <h2 class="ed-block-title"><i class="fa-solid fa-circle-info"></i> {{ t('entreprises.detail.about') }} {{ entreprise.nom }}</h2>
-                <p class="ed-description">{{ entreprise.description }}</p>
+                <p v-if="entreprise.description" class="ed-description">{{ entreprise.description }}</p>
+                <p v-else class="ed-empty">—</p>
               </div>
 
               <!-- Informations de recrutement -->
-              <div v-if="offres.length || entreprise.description" class="ed-block">
+              <div class="ed-block">
                 <h2 class="ed-block-title"><i class="fa-solid fa-user-tie"></i> {{ t('entreprises.detail.recruitmentInfo') }}</h2>
-                <div class="ed-recruit-stats">
-                  <div class="ed-recruit-stat">
-                    <span class="ed-recruit-num">{{ offres.length }}</span>
-                    <span class="ed-recruit-label">{{ offres.length !== 1 ? t('entreprises.detail.offers') : t('entreprises.detail.offer') }} {{ t('entreprises.detail.active') }}</span>
+
+                <!-- Postes à pourvoir -->
+                <div class="ed-recruit-row">
+                  <div class="ed-recruit-label-col"><i class="fa-solid fa-briefcase"></i> {{ t('entreprises.detail.openPositions') }}</div>
+                  <div class="ed-recruit-value-col">
+                    <template v-if="offres.length">
+                      <span v-for="o in offres" :key="o.id" class="tag tag--blue">{{ o.titre }}</span>
+                    </template>
+                    <span v-else class="ed-recruit-empty">—</span>
                   </div>
-                  <div class="ed-recruit-stat">
-                    <span class="ed-recruit-num">{{ articles.length }}</span>
-                    <span class="ed-recruit-label">{{ articles.length !== 1 ? t('entreprises.detail.articles') : t('entreprises.detail.article') }}</span>
+                </div>
+
+                <!-- Compétences requises -->
+                <div class="ed-recruit-row">
+                  <div class="ed-recruit-label-col"><i class="fa-solid fa-code"></i> {{ t('entreprises.detail.requiredSkills') }}</div>
+                  <div class="ed-recruit-value-col">
+                    <template v-if="allSkills.length">
+                      <span v-for="s in allSkills" :key="s" class="tag tag--gray">{{ s }}</span>
+                    </template>
+                    <span v-else class="ed-recruit-empty">—</span>
                   </div>
-                  <div class="ed-recruit-stat">
-                    <span class="ed-recruit-num">{{ evenements.length }}</span>
-                    <span class="ed-recruit-label">{{ t('entreprises.detail.upcomingEvents') }}</span>
+                </div>
+
+                <!-- Expérience requise -->
+                <div class="ed-recruit-row">
+                  <div class="ed-recruit-label-col"><i class="fa-solid fa-chart-line"></i> {{ t('entreprises.detail.requiredExperience') }}</div>
+                  <div class="ed-recruit-value-col">
+                    <template v-if="allExperiences.length">
+                      <span v-for="e in allExperiences" :key="e" class="tag tag--orange">{{ e }}</span>
+                    </template>
+                    <span v-else class="ed-recruit-empty">—</span>
                   </div>
+                </div>
+
+                <!-- Heures de travail -->
+                <div class="ed-recruit-row">
+                  <div class="ed-recruit-label-col"><i class="fa-solid fa-clock"></i> {{ t('entreprises.detail.workModes') }}</div>
+                  <div class="ed-recruit-value-col">
+                    <template v-if="allJobModes.length">
+                      <span v-for="m in allJobModes" :key="m" class="tag tag--blue">{{ m }}</span>
+                    </template>
+                    <span v-else class="ed-recruit-empty">—</span>
+                  </div>
+                </div>
+
+                <!-- Profil recherché -->
+                <div class="ed-recruit-row ed-recruit-row--full">
+                  <div class="ed-recruit-label-col"><i class="fa-solid fa-user-check"></i> {{ t('entreprises.detail.profileSought') }}</div>
+                  <div v-if="firstProfilRecherche" class="ed-recruit-value-col ed-rich" v-html="firstProfilRecherche"></div>
+                  <span v-else class="ed-recruit-empty">—</span>
                 </div>
               </div>
 
@@ -116,12 +154,12 @@
               </div>
 
               <!-- Événements à venir -->
-              <div v-if="evenements.length" class="ed-block">
+              <div class="ed-block">
                 <h2 class="ed-block-title">
                   <i class="fa-solid fa-calendar-days"></i> {{ t('entreprises.detail.upcomingEventsTitle') }}
                   <span class="ed-count">{{ evenements.length }}</span>
                 </h2>
-                <div class="ed-events-list">
+                <div v-if="evenements.length" class="ed-events-list">
                   <div v-for="ev in evenements" :key="ev.id" class="ed-event-card">
                     <div class="ed-event-date">
                       <span class="ed-event-day">{{ new Date(ev.date_debut).getDate() }}</span>
@@ -132,15 +170,16 @@
                     </div>
                   </div>
                 </div>
+                <p v-else class="ed-empty">—</p>
               </div>
 
               <!-- Articles & Actualités -->
-              <div v-if="articles.length" class="ed-block">
+              <div class="ed-block">
                 <h2 class="ed-block-title">
                   <i class="fa-solid fa-newspaper"></i> {{ t('entreprises.detail.publishedArticles') }}
                   <span class="ed-count">{{ articles.length }}</span>
                 </h2>
-                <div class="ed-articles-grid">
+                <div v-if="articles.length" class="ed-articles-grid">
                   <router-link v-for="a in articles" :key="a.id" :to="`/blog/${a.id}`" class="ed-article-card">
                     <div class="ed-article-img">
                       <img v-if="a.image_url" :src="a.image_url" :alt="a.title" />
@@ -153,6 +192,7 @@
                     </div>
                   </router-link>
                 </div>
+                <p v-else class="ed-empty">—</p>
               </div>
 
             </div>
@@ -175,6 +215,7 @@
                     <span>{{ entreprise.adresse }}</span>
                   </li>
                 </ul>
+                <p v-if="!entreprise.activity_sector && !entreprise.ville && !entreprise.pays && !entreprise.adresse" class="ed-empty">—</p>
               </div>
 
               <div class="ed-side-card">
@@ -189,6 +230,7 @@
                     <a :href="entreprise.site_web" target="_blank" rel="noopener">{{ entreprise.site_web }}</a>
                   </li>
                 </ul>
+                <p v-if="!entreprise.telephone && !entreprise.site_web" class="ed-empty">—</p>
               </div>
 
               <div class="ed-side-card ed-side-cta">
@@ -226,6 +268,25 @@ const entreprise = computed(() => data.value?.entreprise)
 const offres     = computed(() => data.value?.offres || [])
 const articles   = computed(() => data.value?.articles || [])
 const evenements = computed(() => data.value?.evenements || [])
+
+const allSkills = computed(() => {
+  const set = new Set()
+  offres.value.forEach(o => o.skills?.forEach(s => set.add(s.name)))
+  return [...set]
+})
+const allExperiences = computed(() => {
+  const set = new Set()
+  offres.value.forEach(o => o.experiences?.forEach(e => set.add(e.name)))
+  return [...set]
+})
+const allJobModes = computed(() => {
+  const set = new Set()
+  offres.value.forEach(o => o.job_modes?.forEach(m => set.add(m.name)))
+  return [...set]
+})
+const firstProfilRecherche = computed(() =>
+  offres.value.find(o => o.profil_recherche)?.profil_recherche || null
+)
 
 const load = async () => {
   loading.value = true
@@ -332,14 +393,26 @@ onMounted(load)
 .ed-description { font-size: 14px; color: var(--navy); line-height: 1.7; margin: 0; }
 .ed-empty { font-size: 14px; color: var(--body-text); font-style: italic; }
 
-/* Recrutement stats */
-.ed-recruit-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.ed-recruit-stat {
-  background: var(--light-bg, #f5f7fa); border-radius: 10px;
-  padding: 16px; text-align: center;
+/* Recrutement */
+.ed-recruit-row {
+  display: flex; gap: 16px; padding: 12px 0;
+  border-bottom: 1px solid var(--border, #e2e8f0);
+  align-items: flex-start;
 }
-.ed-recruit-num   { display: block; font-size: 28px; font-weight: 800; color: var(--blue); line-height: 1; }
-.ed-recruit-label { display: block; font-size: 12px; color: var(--body-text); margin-top: 6px; }
+.ed-recruit-row:last-child { border-bottom: none; }
+.ed-recruit-row--full { flex-direction: column; gap: 8px; }
+.ed-recruit-label-col {
+  min-width: 180px; font-size: 13px; font-weight: 700; color: var(--navy);
+  display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+}
+.ed-recruit-label-col i { color: var(--blue); width: 14px; }
+.ed-recruit-value-col { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; }
+.ed-recruit-empty { font-size: 13px; color: var(--body-text); }
+.tag--gray   { background: #f1f5f9; color: var(--navy); }
+.tag--orange { background: #fff3e0; color: #e65100; }
+.ed-rich { font-size: 13px; color: var(--navy); line-height: 1.7; }
+.ed-rich :deep(p) { margin: 0 0 8px; }
+.ed-rich :deep(ul) { padding-left: 18px; margin: 4px 0; }
 
 /* Événements */
 .ed-events-list { display: flex; flex-direction: column; gap: 12px; }
