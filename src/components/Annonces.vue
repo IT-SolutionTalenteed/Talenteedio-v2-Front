@@ -448,12 +448,12 @@ onMounted(() => {
 }
 .offre-logo {
   position: absolute;
-  bottom: 10px; left: 10px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
   width: 52px; height: 52px; border-radius: 10px;
   background: #fff; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 2px 8px rgba(0,0,0,.18);
-  flex-shrink: 0;
 }
 .offre-logo img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
 .offre-logo-initial { font-size: 20px; font-weight: 800; color: var(--blue); }

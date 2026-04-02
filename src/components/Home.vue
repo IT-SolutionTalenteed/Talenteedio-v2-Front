@@ -698,7 +698,9 @@ function initFadeIn() {
 .offre-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
 .offre-bg--default { background: linear-gradient(135deg, #040a5d 0%, #192bc2 100%); }
 .offre-logo {
-  position: absolute; bottom: 10px; left: 10px;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
   width: 52px; height: 52px; border-radius: 10px;
   background: #fff; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
