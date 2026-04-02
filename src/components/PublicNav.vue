@@ -49,11 +49,9 @@
                 </a>
                 <div class="mega-menu">
                   <div class="mega-hero">
-                    <div class="mega-hero-icon"><i class="fa-solid fa-briefcase"></i></div>
-                    <div class="mega-hero-title">{{ t('nav.megaJobs.heroTitle') }}</div>
+                    <h3 class="mega-hero-title">{{ t('nav.megaJobs.heroTitle') }}</h3>
                     <div class="mega-hero-desc">{{ t('nav.megaJobs.heroDesc') }}</div>
                   </div>
-                  <div class="mega-divider"></div>
                   <div class="mega-items">
                     <router-link to="/annonces" class="mega-item" @click="menuOpen = false">
                       <i class="fa-solid fa-briefcase mega-icon"></i>
@@ -74,11 +72,9 @@
                 </a>
                 <div class="mega-menu">
                   <div class="mega-hero">
-                    <div class="mega-hero-icon mega-hero-icon--orange"><i class="fa-solid fa-calendar-days"></i></div>
-                    <div class="mega-hero-title">{{ t('nav.megaEvents.heroTitle') }}</div>
+                    <h3 class="mega-hero-title">{{ t('nav.megaEvents.heroTitle') }}</h3>
                     <div class="mega-hero-desc">{{ t('nav.megaEvents.heroDesc') }}</div>
                   </div>
-                  <div class="mega-divider"></div>
                   <div class="mega-items">
                     <template v-if="categories.length">
                       <router-link
@@ -379,6 +375,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: row;
   align-items: stretch;
+  gap: 0;
   opacity: 1;
   pointer-events: auto;
   transform: translateX(-50%) translateY(0);
@@ -390,10 +387,11 @@ onUnmounted(() => {
   height: 14px; background: transparent;
 }
 .mega-item {
-  display: flex; align-items: center; gap: 14px;
-  padding: 11px 16px; border-radius: 10px;
-  color: #040a5d; text-decoration: none;
-  transition: background .15s, transform .15s;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.25rem 1.5rem; border-radius: 12px;
+  text-decoration: none; transition: all .2s;
+  border: 1px solid transparent; cursor: pointer; min-height: 90px;
+  color: #040a5d;
 }
 .mega-item:hover { background: #f0f4ff; transform: translateX(3px); }
 .mega-item strong { display: block; font-size: 13.5px; font-weight: 700; color: #040a5d; }
@@ -409,8 +407,9 @@ onUnmounted(() => {
 
 /* Mega hero */
 .mega-hero {
-  display: flex; flex-direction: column; justify-content: space-between; gap: 16px;
-  padding: 24px 20px;
+  padding: 2.5rem 2rem;
+  display: flex; flex-direction: column; justify-content: center;
+  color: #fff;
   background: linear-gradient(160deg, #040a5d 0%, #192bc2 100%);
   min-width: 200px; max-width: 210px; flex-shrink: 0;
 }
@@ -422,12 +421,12 @@ onUnmounted(() => {
   font-size: 22px; color: #fff;
 }
 .mega-hero-icon--orange { background: rgba(240,124,0,.3); border-color: rgba(240,124,0,.4); }
-.mega-hero-title { font-size: 14px; font-weight: 700; color: #fff; line-height: 1.35; }
+.mega-hero-title { font-size: 1.5rem; font-weight: 700; line-height: 1.3; margin: 0 0 1rem; color: #fff; }
 .mega-hero-desc  { font-size: 12px; color: rgba(255,255,255,.65); line-height: 1.55; }
 .mega-divider { width: 1px; background: #e8edf5; flex-shrink: 0; }
 
 /* Items column */
-.mega-items { display: flex; flex-direction: column; gap: 4px; flex: 1; padding: 10px 8px; justify-content: center; }
+.mega-items { padding: 1.5rem 24px; display: flex; flex-direction: column; gap: .5rem; flex: 1; justify-content: center; }
 
 /* Header buttons area */
 .header-btns { display: flex; gap: 10px; align-items: center; margin-left: auto; flex-shrink: 0; }
