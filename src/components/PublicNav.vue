@@ -37,6 +37,12 @@
 
           <!-- Nav desktop -->
           <nav class="site-nav" :class="{ open: menuOpen }">
+
+            <!-- Bouton fermer (mobile/tablette uniquement) -->
+            <button class="nav-close" @click="menuOpen = false" aria-label="Fermer le menu">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+
             <ul>
               <li>
                 <router-link to="/" exact-active-class="active" @click="menuOpen = false">{{ t('nav.home') }}</router-link>
@@ -580,25 +586,68 @@ onUnmounted(() => {
 .menu-toggle.open span:nth-child(2) { opacity: 0; }
 .menu-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
+/* ── Bouton fermer — masqué sur desktop ── */
+.nav-close { display: none; }
+
 /* ── Tablette (nav cachée, boutons auth toujours visibles) ── */
 @media (max-width: 900px) {
   .menu-toggle { display: flex; }
+
+  /* Nav overlay plein écran */
   .site-nav {
-    display: none; position: fixed; inset: 0; z-index: 500;
-    background: #040a5d; flex-direction: column; align-items: center; justify-content: center; padding: 48px 24px;
+    display: none; position: fixed; inset: 0; z-index: 1100;
+    background: #040a5d; flex-direction: column; align-items: center; justify-content: flex-start;
+    padding: 72px 24px 40px; overflow-y: auto;
   }
   .site-nav.open { display: flex; }
-  .site-nav ul { flex-direction: column; gap: 4px; width: 100%; max-width: 300px; }
+
+  /* Bouton × en haut à droite de l'overlay */
+  .nav-close {
+    display: flex; align-items: center; justify-content: center;
+    position: absolute; top: 18px; right: 18px;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(255,255,255,.12); border: 1.5px solid rgba(255,255,255,.2);
+    color: #fff; font-size: 20px; cursor: pointer;
+    transition: background .15s;
+  }
+  .nav-close:hover { background: rgba(255,255,255,.22); }
+
+  /* Liste principale */
+  .site-nav ul { flex-direction: column; gap: 2px; width: 100%; max-width: 340px; }
+  .site-nav > ul { width: 100%; max-width: 340px; }
   .site-nav a { color: rgba(255,255,255,.85); font-size: 16px; padding: 11px 16px; display: block; border-radius: 10px; }
   .site-nav a:hover, .site-nav a.active { background: rgba(255,255,255,.1); color: #fff; }
-  .mega-menu { position: static; transform: none; box-shadow: none; border: none; background: rgba(255,255,255,.07); border-top: none; margin-top: 4px; flex-direction: column; min-width: unset; }
+
+  /* Trigger ANNONCES / ÉVÉNEMENTS → simple label non-cliquable */
+  .mega-trigger { color: rgba(255,255,255,.45) !important; font-size: 11px !important; letter-spacing: 1.5px; padding: 14px 16px 6px !important; cursor: default; text-transform: uppercase; }
+  .mega-trigger .nav-chevron { display: none; }
+
+  /* Sous-menus : toujours visibles, pas de hover nécessaire */
+  .mega-menu {
+    display: flex !important; flex-direction: column; gap: 2px;
+    position: static; transform: none; box-shadow: none; border: none;
+    background: transparent; border-top: none; min-width: unset;
+    opacity: 1; pointer-events: auto;
+    padding: 0 0 10px;
+  }
   .mega-hero { display: none; }
-  .mega-items { padding: 0; }
-  .has-mega:hover .mega-menu, .has-mega:focus-within .mega-menu { display: flex; }
-  .mega-item strong { color: rgba(255,255,255,.85); }
-  .mega-item small  { color: rgba(255,255,255,.5); }
-  .mega-item:hover  { background: rgba(255,255,255,.08); }
-  .mega-icon { color: #f07c00; }
+  .mega-items { padding: 0; display: flex; flex-direction: column; gap: 2px; }
+  .mega-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 16px; border-radius: 10px; min-height: unset;
+    color: rgba(255,255,255,.85); text-decoration: none;
+    transition: background .15s; border: none;
+  }
+  .mega-item:hover { background: rgba(255,255,255,.1); transform: none; }
+  .mega-item strong { color: rgba(255,255,255,.9); font-size: 14px; }
+  .mega-item small  { color: rgba(255,255,255,.5); font-size: 12px; }
+  .mega-icon {
+    width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+    background: rgba(255,255,255,.1); display: flex; align-items: center;
+    justify-content: center; font-size: 14px; color: #f07c00;
+  }
+  .mega-item--empty { opacity: .5; pointer-events: none; }
+
   /* Tablette : masquer langue et favoris, garder auth buttons */
   .header-btns .has-lang,
   .header-btns .favori-wrap { display: none; }
