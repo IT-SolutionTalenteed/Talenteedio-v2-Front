@@ -580,7 +580,7 @@ onUnmounted(() => {
 .menu-toggle.open span:nth-child(2) { opacity: 0; }
 .menu-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-/* ── Mobile ──────────────────────────────────────────── */
+/* ── Tablette (nav cachée, boutons auth toujours visibles) ── */
 @media (max-width: 900px) {
   .menu-toggle { display: flex; }
   .site-nav {
@@ -593,21 +593,25 @@ onUnmounted(() => {
   .site-nav a:hover, .site-nav a.active { background: rgba(255,255,255,.1); color: #fff; }
   .mega-menu { position: static; transform: none; box-shadow: none; border: none; background: rgba(255,255,255,.07); border-top: none; margin-top: 4px; flex-direction: column; min-width: unset; }
   .mega-hero { display: none; }
-
   .mega-items { padding: 0; }
   .has-mega:hover .mega-menu, .has-mega:focus-within .mega-menu { display: flex; }
   .mega-item strong { color: rgba(255,255,255,.85); }
   .mega-item small  { color: rgba(255,255,255,.5); }
   .mega-item:hover  { background: rgba(255,255,255,.08); }
   .mega-icon { color: #f07c00; }
+  /* Tablette : masquer langue et favoris, garder auth buttons */
   .header-btns .has-lang,
-  .header-btns .user-wrap,
-  .header-btns .btn { display: none; }
-  .topbar-label { max-width: 140px; }
+  .header-btns .favori-wrap { display: none; }
+  .header-btns { flex-shrink: 0; }
+  .topbar-label { max-width: 200px; }
   .topbar-link { display: none; }
 }
 
-@media (max-width: 480px) {
+/* ── Mobile : masquer tous les header-btns, burger seul à droite ── */
+@media (max-width: 600px) {
+  .header-btns { display: none; }
+  .menu-toggle { margin-left: auto; }
   .site-logo img { height: 52px; }
+  .topbar-label { max-width: 130px; }
 }
 </style>

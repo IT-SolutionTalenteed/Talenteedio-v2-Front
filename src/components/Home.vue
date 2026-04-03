@@ -87,29 +87,42 @@
           <h2>{{ t('home.partners.title') }}</h2>
           <p>{{ t('home.partners.description') }}</p>
         </div>
-        <div class="partners-grid fade-in">
+      </div>
+      <!-- Carrousel infini pleine largeur -->
+      <div class="partners-carousel-outer">
+        <div class="partners-carousel-track">
           <router-link
             v-for="entreprise in event.entreprises"
             :key="entreprise.id"
             to="/entreprises"
-            class="partner-card"
+            class="partner-slide"
           >
-            <div class="partner-logo">
-              <img v-if="entreprise.logo_url"
-                   :src="entreprise.logo_url"
-                   :alt="entreprise.nom">
-              <span v-else class="partner-initials">
-                {{ entreprise.nom.charAt(0).toUpperCase() }}
-              </span>
+            <div class="partner-logo-big">
+              <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom">
+              <span v-else class="partner-logo-initial">{{ entreprise.nom.charAt(0).toUpperCase() }}</span>
             </div>
-            <span class="partner-name">{{ entreprise.nom }}</span>
+            <span class="partner-slide-name">{{ entreprise.nom }}</span>
+          </router-link>
+          <!-- Duplication pour effet infini continu -->
+          <router-link
+            v-for="entreprise in event.entreprises"
+            :key="'dup-' + entreprise.id"
+            to="/entreprises"
+            class="partner-slide"
+            aria-hidden="true"
+          >
+            <div class="partner-logo-big">
+              <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom">
+              <span v-else class="partner-logo-initial">{{ entreprise.nom.charAt(0).toUpperCase() }}</span>
+            </div>
+            <span class="partner-slide-name">{{ entreprise.nom }}</span>
           </router-link>
         </div>
-        <div class="partners-cta fade-in">
-          <router-link to="/entreprises" class="btn btn--blue">
-            {{ t('home.partners.viewAll') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
-          </router-link>
-        </div>
+      </div>
+      <div class="partners-cta fade-in">
+        <router-link to="/entreprises" class="btn btn--blue">
+          {{ t('home.partners.viewAll') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
+        </router-link>
       </div>
     </section>
 
@@ -134,7 +147,7 @@
                 <div style="font-size:12px;color:var(--blue);margin-bottom:6px;">{{ formatDate(article.created_at) }}</div>
                 <h3>{{ article.title }}</h3>
                 <p>{{ truncate(stripHtml(article.content), 120) }}</p>
-                <router-link to="/login" style="color:var(--blue);font-weight:600;font-size:14px;margin-top:8px;display:inline-block;">
+                <router-link :to="`/blog/${article.id}`" style="color:var(--blue);font-weight:600;font-size:14px;margin-top:8px;display:inline-block;">
                   {{ t('home.triple.readMore') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
                 </router-link>
               </div>
@@ -177,9 +190,9 @@
           <p>{{ t('home.jobOffers.description') }}</p>
         </div>
 
-        <div v-if="offres.length" class="home-offres-list fade-in">
+        <div v-if="offres.length" class="home-offres-grid fade-in">
           <router-link
-            v-for="offre in offres"
+            v-for="offre in offres.slice(0, 6)"
             :key="offre.id"
             :to="isLoggedIn ? `/annonces/${offre.id}` : `/login?redirect=${encodeURIComponent('/annonces/' + offre.id)}`"
             class="offre-card offre-card--link"
@@ -244,18 +257,6 @@
         </div>
         <router-link :to="`/evenements/${event.id}`" class="btn btn--blue btn--lg" style="position:relative;z-index:2;">
           {{ t('home.eventSection.participate') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
-        </router-link>
-      </div>
-    </section>
-
-    <!-- ══ CTA ══ -->
-    <section class="section-cta">
-      <div class="cta-watermark">{{ t('home.cta.watermark') }}</div>
-      <div class="container">
-        <span class="cta-label">{{ t('home.cta.label') }}</span>
-        <h2>{{ t('home.cta.title') }}</h2>
-        <router-link to="/register" class="btn btn--blue btn--lg">
-          {{ t('home.cta.action') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
         </router-link>
       </div>
     </section>
@@ -537,13 +538,14 @@ function initFadeIn() {
 .ql-card {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 32px 28px;
+  gap: 20px;
+  padding: 44px 36px;
   border-radius: var(--radius-lg, 14px);
   box-shadow: 0 4px 20px rgba(0,0,0,.15);
   text-decoration: none;
   border: none;
   transition: box-shadow .2s, transform .2s;
+  min-height: 260px;
 }
 .ql-card:hover {
   box-shadow: 0 10px 32px rgba(0,0,0,.22);
@@ -554,116 +556,134 @@ function initFadeIn() {
 .ql-card:nth-child(3) { background: linear-gradient(135deg,#2687e9 0%,#5ba3f0 100%); }
 .ql-card:nth-child(4) { background: linear-gradient(135deg,#f49f0a 0%,#ffb52e 100%); }
 .ql-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: 12px;
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
   background: rgba(255,255,255,.18);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: 26px;
   color: #fff;
   flex-shrink: 0;
 }
 .ql-body h3 {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
   color: #fff;
-  margin: 0 0 8px;
+  margin: 0 0 10px;
   line-height: 1.3;
 }
 .ql-body p {
-  font-size: 14px;
-  color: rgba(255,255,255,.82);
-  line-height: 1.6;
-  margin: 0 0 16px;
+  font-size: 15px;
+  color: rgba(255,255,255,.85);
+  line-height: 1.65;
+  margin: 0 0 20px;
   flex: 1;
 }
 .ql-link {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   color: #fff;
   display: flex;
   align-items: center;
   gap: 6px;
   margin-top: auto;
+  padding: 10px 18px;
+  background: rgba(255,255,255,.18);
+  border-radius: 50px;
+  align-self: flex-start;
+  transition: background .2s;
 }
+.ql-card:hover .ql-link { background: rgba(255,255,255,.28); }
 .ql-link i { font-size: 11px; transition: transform .2s; }
 .ql-card:hover .ql-link i { transform: translateX(4px); }
 
 /* ── Section partenaires ──────────────────────────────── */
 .section-partners {
-  padding: 80px 0;
+  padding: 80px 0 60px;
   background: #fff;
+  overflow: hidden;
 }
 .partners-header {
   text-align: center;
   margin-bottom: 48px;
 }
-.partners-header h2 {
-  margin: 8px 0 12px;
+.partners-header h2 { margin: 8px 0 12px; }
+.partners-header p  { color: var(--body-text); font-size: 16px; }
+
+/* Carrousel infini */
+.partners-carousel-outer {
+  width: 100%;
+  overflow: hidden;
+  padding: 16px 0 24px;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
 }
-.partners-header p {
-  color: var(--body-text);
-  font-size: 16px;
+.partners-carousel-track {
+  display: flex;
+  gap: 40px;
+  width: max-content;
+  animation: partners-scroll 35s linear infinite;
 }
-.partners-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 20px;
-  margin-bottom: 48px;
+.partners-carousel-track:hover { animation-play-state: paused; }
+@keyframes partners-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
-.partner-card {
+.partner-slide {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 14px;
-  padding: 28px 16px 22px;
-  background: var(--light-bg, #f5f7fa);
-  border: 1.5px solid transparent;
-  border-radius: var(--radius-lg, 14px);
+  flex-shrink: 0;
+  width: 150px;
   text-decoration: none;
-  transition: border-color .2s, box-shadow .2s, transform .2s;
   cursor: pointer;
 }
-.partner-card:hover {
-  border-color: var(--blue);
-  box-shadow: 0 6px 24px rgba(0,0,0,.10);
-  transform: translateY(-4px);
-}
-.partner-logo {
-  width: 72px;
-  height: 72px;
-  border-radius: 12px;
+.partner-logo-big {
+  width: 110px;
+  height: 110px;
+  border-radius: 18px;
   overflow: hidden;
   background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,.08);
-  flex-shrink: 0;
+  box-shadow: 0 4px 18px rgba(0,0,0,.10);
+  border: 1.5px solid #e8edf5;
+  transition: box-shadow .2s, transform .2s;
 }
-.partner-logo img {
+.partner-slide:hover .partner-logo-big {
+  box-shadow: 0 8px 28px rgba(0,0,0,.16);
+  transform: translateY(-4px);
+}
+.partner-logo-big img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  padding: 6px;
+  padding: 10px;
 }
-.partner-initials {
-  font-size: 28px;
+.partner-logo-initial {
+  font-size: 38px;
   font-weight: 800;
-  color: var(--blue);
+  color: var(--blue, #192bc2);
   line-height: 1;
 }
-.partner-name {
+.partner-slide-name {
   font-size: 13px;
   font-weight: 600;
-  color: var(--navy);
+  color: var(--navy, #040a5d);
   text-align: center;
   line-height: 1.3;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .partners-cta {
   text-align: center;
+  margin-top: 36px;
 }
 
 /* ── Switcher langue ──────────────────────────────────── */
@@ -684,39 +704,44 @@ function initFadeIn() {
   color: #fff;
 }
 /* ── Offres home ── */
-.home-offres-list { display: flex; flex-direction: column; gap: 16px; }
+.home-offres-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+@media (max-width: 900px) { .home-offres-grid { grid-template-columns: 1fr; } }
 .offre-card {
   background: #fff; border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0,0,0,.06);
-  display: grid; grid-template-columns: 160px 1fr auto;
+  display: grid; grid-template-columns: 120px 1fr auto;
   border: 1.5px solid transparent; overflow: hidden;
   transition: border-color .2s, box-shadow .2s, transform .15s;
 }
 .offre-card:hover { border-color: #192bc2; box-shadow: 0 6px 20px rgba(0,0,0,.10); transform: translateY(-2px); }
 .offre-card--link { text-decoration: none; }
-.offre-visual { position: relative; width: 160px; min-height: 110px; align-self: stretch; flex-shrink: 0; }
+.offre-visual { position: relative; width: 120px; min-height: 110px; align-self: stretch; flex-shrink: 0; }
 .offre-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
 .offre-bg--default { background: linear-gradient(135deg, #040a5d 0%, #192bc2 100%); }
 .offre-logo {
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  width: 52px; height: 52px; border-radius: 10px;
+  width: 48px; height: 48px; border-radius: 10px;
   background: #fff; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 2px 8px rgba(0,0,0,.18);
 }
 .offre-logo img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
-.offre-logo-initial { font-size: 20px; font-weight: 800; color: #192bc2; }
-.offre-body { padding: 16px 20px; }
-.offre-title { font-size: 16px; font-weight: 700; color: #040a5d; margin: 0 0 3px; }
-.offre-entreprise { font-size: 13px; color: #6b7280; margin: 0 0 8px; }
-.offre-desc { font-size: 13px; color: #6b7280; line-height: 1.5; margin: 0 0 10px; }
-.offre-meta { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: #6b7280; }
-.offre-meta i { color: #f07c00; margin-right: 4px; }
-.offre-action { padding: 16px 16px 16px 0; display: flex; align-items: center; flex-shrink: 0; }
-@media (max-width: 640px) {
-  .offre-card { grid-template-columns: 100px 1fr; }
-  .offre-action { grid-column: 1 / -1; padding: 0 16px 16px; }
+.offre-logo-initial { font-size: 18px; font-weight: 800; color: #192bc2; }
+.offre-body { padding: 14px 16px; min-width: 0; }
+.offre-title { font-size: 15px; font-weight: 700; color: #040a5d; margin: 0 0 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.offre-entreprise { font-size: 12px; color: #6b7280; margin: 0 0 6px; }
+.offre-desc { font-size: 12px; color: #6b7280; line-height: 1.5; margin: 0 0 8px; }
+.offre-meta { display: flex; gap: 12px; flex-wrap: wrap; font-size: 11px; color: #6b7280; }
+.offre-meta i { color: #f07c00; margin-right: 3px; }
+.offre-action { padding: 14px 14px 14px 0; display: flex; align-items: center; flex-shrink: 0; }
+@media (max-width: 480px) {
+  .offre-card { grid-template-columns: 90px 1fr; }
+  .offre-action { grid-column: 1 / -1; padding: 0 14px 14px; }
 }
 </style>
