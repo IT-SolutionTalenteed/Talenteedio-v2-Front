@@ -22,9 +22,9 @@
       "action": "Découvrir"
     },
     "articles": {
-      "title": "Articles",
-      "description": "Actualités RH, conseils carrière et tendances du marché du travail africain",
-      "action": "Lire"
+      "title": "Articles de blog",
+      "description": "Conseils carrière, actualités RH et tendances du marché du travail africain",
+      "action": "Lire les articles"
     },
     "matching": {
       "title": "Matching Profile",

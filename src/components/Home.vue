@@ -90,10 +90,10 @@
       </div>
       <!-- Carrousel infini pleine largeur -->
       <div class="partners-carousel-outer">
-        <div class="partners-carousel-track">
+        <div class="partners-carousel-track" :style="`animation-duration:${carouselDuration}s`">
           <router-link
-            v-for="entreprise in event.entreprises"
-            :key="entreprise.id"
+            v-for="(entreprise, i) in carouselSlides"
+            :key="`a${i}`"
             to="/entreprises"
             class="partner-slide"
           >
@@ -103,10 +103,10 @@
             </div>
             <span class="partner-slide-name">{{ entreprise.nom }}</span>
           </router-link>
-          <!-- Duplication pour effet infini continu -->
+          <!-- Duplication pour boucle infinie (translateX -50%) -->
           <router-link
-            v-for="entreprise in event.entreprises"
-            :key="'dup-' + entreprise.id"
+            v-for="(entreprise, i) in carouselSlides"
+            :key="`b${i}`"
             to="/entreprises"
             class="partner-slide"
             aria-hidden="true"
@@ -287,6 +287,23 @@ let   timer    = null
 // Auth state
 const isLoggedIn = computed(() => !!localStorage.getItem('token'))
 const userRole = computed(() => localStorage.getItem('userRole') || '')
+
+// ── Carrousel infini ───────────────────────────────────────
+// Répète les logos jusqu'à avoir ≥10 items pour couvrir toute la largeur
+const carouselSlides = computed(() => {
+  if (!event.value?.entreprises?.length) return []
+  const logos = event.value.entreprises
+  const repeatCount = Math.max(1, Math.ceil(10 / logos.length))
+  const result = []
+  for (let i = 0; i < repeatCount; i++) result.push(...logos)
+  return result
+})
+// Durée basée sur 60px/s pour une vitesse constante quelle que soit la quantité
+const carouselDuration = computed(() => {
+  const slideWidth = window.innerWidth * 0.20 // 25vw en px
+  const totalWidth = carouselSlides.value.length * slideWidth
+  return Math.round(totalWidth / 60)
+})
 
 // ── Chargement des données ─────────────────────────────────
 onMounted(async () => {
@@ -622,11 +639,11 @@ function initFadeIn() {
 }
 .partners-carousel-track {
   display: flex;
-  gap: 40px;
+  gap: 0;
   width: max-content;
-  animation: partners-scroll 35s linear infinite;
+  animation: partners-scroll 20s linear infinite;
 }
-.partners-carousel-track:hover { animation-play-state: paused; }
+
 @keyframes partners-scroll {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
@@ -637,7 +654,7 @@ function initFadeIn() {
   align-items: center;
   gap: 14px;
   flex-shrink: 0;
-  width: 150px;
+  width: 20vw;
   text-decoration: none;
   cursor: pointer;
 }
