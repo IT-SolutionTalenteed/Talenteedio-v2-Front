@@ -39,21 +39,21 @@
     "viewAll": "Voir toutes les entreprises"
   },
   "triple": {
-    "watermark": "Impact Systémique",
-    "title": "Triple Ancrage Stratégique",
-    "description": "Pour garantir un impact systémique et durable, le sommet repose sur trois piliers indissociables, pensés pour transformer l'intention en action :",
+    "watermark": "Notre Blog",
+    "title": "Articles de Blog",
+    "description": "Conseils carrière, actualités RH et analyses du marché du travail africain, rédigés par nos experts pour vous aider à avancer :",
     "readMore": "Lire la suite",
     "thinkTank": {
-      "title": "Think Tank",
-      "description": "Un Comité Scientifique international composé de chercheurs, experts RH et décideurs produit chaque année un Livre Blanc de référence."
+      "title": "Conseils Carrière",
+      "description": "Optimisez votre CV, préparez vos entretiens et découvrez les meilleures pratiques pour décrocher le poste de vos rêves."
     },
     "recruitmentHub": {
-      "title": "Hub de Recrutement Premium",
-      "description": "Une plateforme de matching direct entre les entreprises en quête de compétences critiques et les talents de la diaspora."
+      "title": "Actualités RH",
+      "description": "Restez informé des dernières tendances en ressources humaines, des évolutions du marché et des opportunités qui émergent en Afrique."
     },
     "diplomacy": {
-      "title": "Levier de Diplomatie Économique",
-      "description": "Un cadre privilégié pour la signature d'accords bilatéraux et le renforcement des partenariats institutionnels Europe-Afrique."
+      "title": "Tendances du Marché",
+      "description": "Analyses approfondies sur les secteurs qui recrutent, les compétences les plus recherchées et les dynamiques économiques Europe-Afrique."
     }
   },
   "jobOffers": {
