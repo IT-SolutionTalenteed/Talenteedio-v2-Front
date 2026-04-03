@@ -478,8 +478,8 @@
       </div>
 
     </template>
+    <Footer />
   </div>
-  <Footer />
 </template>
 
 <script setup>

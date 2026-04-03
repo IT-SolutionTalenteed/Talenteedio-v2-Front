@@ -167,8 +167,8 @@
     <p>{{ t('evenements.notFound') }}</p>
     <router-link to="/" class="btn btn--blue" style="margin-top:16px;">{{ t('evenements.backHome') }}</router-link>
   </div>
+    <Footer />
   </div>
-  <Footer />
 </template>
 
 <script setup>

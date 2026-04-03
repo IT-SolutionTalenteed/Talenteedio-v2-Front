@@ -104,8 +104,8 @@
       </section>
 
     </template>
+    <Footer />
   </div>
-  <Footer />
 </template>
 
 <script setup>
