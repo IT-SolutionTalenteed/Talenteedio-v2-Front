@@ -255,6 +255,7 @@
       </div>
     </div>
   </div>
+  <Footer />
 </template>
 
 <script setup>
@@ -263,6 +264,7 @@ import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
+import Footer from './Footer.vue'
 import ShareCard from './ShareCard.vue'
 import { useFavoris } from '../composables/useFavoris.js'
 

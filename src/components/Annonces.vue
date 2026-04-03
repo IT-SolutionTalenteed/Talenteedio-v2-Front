@@ -175,6 +175,7 @@
     </section>
 
   </div>
+  <Footer />
 </template>
 
 <script setup>
@@ -182,6 +183,7 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
+import Footer from './Footer.vue'
 import { useFavoris } from '../composables/useFavoris.js'
 
 const { t, locale } = useI18n()

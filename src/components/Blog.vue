@@ -114,6 +114,7 @@
     </section>
 
   </div>
+  <Footer />
 </template>
 
 <script setup>
@@ -121,6 +122,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
+import Footer from './Footer.vue'
 
 const { t, locale } = useI18n()
 const apiBase      = import.meta.env.VITE_API_URL || 'http://localhost:8000'

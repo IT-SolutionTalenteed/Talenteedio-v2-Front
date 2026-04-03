@@ -242,7 +242,7 @@
           <div class="ecd-item"><span class="ecd-num">{{ pad(cd.minutes, 2) }}</span><span class="ecd-label">{{ t('home.hero.minutes') }}</span></div>
           <div class="ecd-item"><span class="ecd-num">{{ pad(cd.seconds, 2) }}</span><span class="ecd-label">{{ t('home.hero.seconds') }}</span></div>
         </div>
-        <router-link to="/register" class="btn btn--blue btn--lg" style="position:relative;z-index:2;">
+        <router-link :to="`/evenements/${event.id}`" class="btn btn--blue btn--lg" style="position:relative;z-index:2;">
           {{ t('home.eventSection.participate') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
         </router-link>
       </div>

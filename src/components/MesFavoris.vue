@@ -80,12 +80,14 @@
       </div>
     </section>
   </div>
+  <Footer />
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import PublicNav from './PublicNav.vue'
+import Footer from './Footer.vue'
 import { useFavoris } from '../composables/useFavoris.js'
 
 const { t, locale } = useI18n()
