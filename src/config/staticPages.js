@@ -8,7 +8,7 @@
 export const staticPages = [
   {
     name: 'corporate',
-    path: '/static/corporate',
+    path: '/static/corporate.html',
     title: 'Solutions Corporate',
     description: 'Solutions sur-mesure pour grandes entreprises',
     icon: 'fa-building-columns',
@@ -17,7 +17,7 @@ export const staticPages = [
   },
   {
     name: 'company',
-    path: '/static/company',
+    path: '/static/company.html',
     title: 'Espace Recruteurs',
     description: 'Créer un compte entreprise',
     icon: 'fa-building',
@@ -26,7 +26,7 @@ export const staticPages = [
   },
   {
     name: 'entreprises',
-    path: '/static/entreprises',
+    path: '/static/entreprises.html',
     title: 'Entreprises Partenaires',
     description: 'Découvrez nos entreprises partenaires',
     icon: 'fa-handshake',
@@ -35,7 +35,7 @@ export const staticPages = [
   },
   {
     name: 'talent',
-    path: '/static/talent',
+    path: '/static/talent.html',
     title: 'Espace Talents',
     description: 'Rejoignez notre communauté de talents',
     icon: 'fa-user-tie',
@@ -44,7 +44,7 @@ export const staticPages = [
   },
   {
     name: 'talent-landing',
-    path: '/static/talent-landing',
+    path: '/static/talent-landing.html',
     title: 'Devenir Talent',
     description: 'Page d\'atterrissage pour les talents',
     icon: 'fa-star',
@@ -53,7 +53,7 @@ export const staticPages = [
   },
   {
     name: 'talent-confirm',
-    path: '/static/talent-confirm',
+    path: '/static/talent-confirm.html',
     title: 'Confirmation',
     description: 'Confirmation d\'inscription',
     icon: 'fa-check-circle',
@@ -62,7 +62,7 @@ export const staticPages = [
   },
   {
     name: 'matching',
-    path: '/static/matching',
+    path: '/static/matching.html',
     title: 'Matching IA',
     description: 'Notre système de matching intelligent',
     icon: 'fa-brain',
@@ -71,7 +71,7 @@ export const staticPages = [
   },
   {
     name: 'comment-ca-marche',
-    path: '/static/comment-ca-marche',
+    path: '/static/comment-ca-marche.html',
     title: 'Comment ça marche',
     description: 'Guide d\'utilisation de la plateforme',
     icon: 'fa-question-circle',
@@ -80,7 +80,7 @@ export const staticPages = [
   },
   {
     name: 'jobs',
-    path: '/static/jobs',
+    path: '/static/jobs.html',
     title: 'Offres d\'emploi',
     description: 'Parcourez nos offres d\'emploi',
     icon: 'fa-briefcase',
@@ -89,7 +89,7 @@ export const staticPages = [
   },
   {
     name: 'talents',
-    path: '/static/talents',
+    path: '/static/talents.html',
     title: 'Annuaire Talents',
     description: 'Découvrez nos talents',
     icon: 'fa-users',
@@ -98,7 +98,7 @@ export const staticPages = [
   },
   {
     name: 'corporate-landing',
-    path: '/static/corporate-landing',
+    path: '/static/corporate-landing.html',
     title: 'Corporate Landing',
     description: 'Page d\'atterrissage corporate',
     icon: 'fa-rocket',
