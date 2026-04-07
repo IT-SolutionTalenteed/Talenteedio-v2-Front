@@ -6,7 +6,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: './',
+  base: '/',
   plugins: [
     vue(),
     vueDevTools(),
@@ -16,4 +16,11 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      }
+    }
+  }
 })
