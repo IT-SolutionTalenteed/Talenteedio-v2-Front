@@ -54,6 +54,12 @@ const i18n = createI18n({
   messages: {
     fr,
     en
+  },
+  missingWarn: false,
+  fallbackWarn: false,
+  warnHtmlMessage: false,
+  modifiers: {
+    raw: (str) => str
   }
 })
 

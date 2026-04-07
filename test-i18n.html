@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Test i18n</title>
+</head>
+<body>
+  <div id="app">
+    <h1>Test Legal Pages</h1>
+    <ul>
+      <li v-for="page in pages" :key="page.id">
+        {{ page.title }}
+      </li>
+    </ul>
+  </div>
+
+  <script type="module">
+    import { createApp, ref, onMounted } from 'vue'
+    
+    createApp({
+      setup() {
+        const pages = ref([])
+        
+        onMounted(async () => {
+          try {
+            const res = await fetch('http://localhost:8000/api/legal-pages')
+            const data = await res.json()
+            console.log('Data received:', data)
+            pages.value = data
+          } catch (err) {
+            console.error('Error:', err)
+          }
+        })
+        
+        return { pages }
+      }
+    }).mount('#app')
+  </script>
+</body>
+</html>

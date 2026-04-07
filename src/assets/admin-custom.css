@@ -35,49 +35,49 @@
 
 /* Remettre les couleurs sur les avatars des stats - admin uniquement */
 .page-wrapper .avatar.bg-primary-stat {
-  background-color: var(--tblr-primary) !important;
+  background-color: #2563eb !important;
   color: white !important;
 }
 
 .page-wrapper .avatar.bg-success-stat {
-  background-color: var(--tblr-success) !important;
+  background-color: #22c55e !important;
   color: white !important;
 }
 
 .page-wrapper .avatar.bg-info-stat {
-  background-color: var(--tblr-info) !important;
+  background-color: #3b82f6 !important;
   color: white !important;
 }
 
 .page-wrapper .avatar.bg-warning-stat {
-  background-color: var(--tblr-warning) !important;
+  background-color: #f59e0b !important;
   color: white !important;
 }
 
 .page-wrapper .avatar.bg-danger-stat {
-  background-color: var(--tblr-danger) !important;
+  background-color: #ef4444 !important;
   color: white !important;
 }
 
 /* Couleurs pour les avatars des actions rapides - admin uniquement */
 .page-wrapper .avatar.bg-primary-lt {
-  background-color: rgba(32, 107, 196, 0.1) !important;
-  color: var(--tblr-primary) !important;
+  background-color: rgba(37, 99, 235, 0.1) !important;
+  color: #2563eb !important;
 }
 
 .page-wrapper .avatar.bg-success-lt {
-  background-color: rgba(47, 179, 68, 0.1) !important;
-  color: var(--tblr-success) !important;
+  background-color: rgba(34, 197, 94, 0.1) !important;
+  color: #22c55e !important;
 }
 
 .page-wrapper .avatar.bg-info-lt {
-  background-color: rgba(66, 153, 225, 0.1) !important;
-  color: var(--tblr-info) !important;
+  background-color: rgba(59, 130, 246, 0.1) !important;
+  color: #3b82f6 !important;
 }
 
 .page-wrapper .avatar.bg-warning-lt {
-  background-color: rgba(247, 103, 7, 0.1) !important;
-  color: var(--tblr-warning) !important;
+  background-color: rgba(245, 158, 11, 0.1) !important;
+  color: #f59e0b !important;
 }
 
 .page-wrapper .avatar.bg-purple-lt {

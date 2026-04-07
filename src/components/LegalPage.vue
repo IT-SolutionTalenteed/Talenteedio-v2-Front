@@ -15,7 +15,7 @@
 
     <div v-else-if="page" class="legal-content">
       <div class="container">
-        <h1>{{ page.title }}</h1>
+        <h1 v-text="page.title"></h1>
         <div class="content" v-html="page.description"></div>
       </div>
     </div>
