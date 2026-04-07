@@ -25,5 +25,5 @@ jobs:
           password: ${{ secrets.SSH_TALENTEED_PASSWORD }}
           port: ${{ secrets.SSH_TALENTEED_PORT }}
           script: |
-            cd /home/talenteedio/sites/Talenteed-Front/
+            cd /home/talenteedio/website/frontend/
             ./scripts/deploy_prod.sh
