@@ -91,15 +91,15 @@
             </div>
           </div>
 
-          <div v-if="form.role === 'talent'" class="consent-block">
+          <div class="consent-block">
             <label class="consent-label">
-              <input type="checkbox" v-model="form.consent" class="consent-check" />
+              <input type="checkbox" v-model="form.consent" class="consent-check" required />
               <span class="consent-box"><i class="fa-solid fa-check"></i></span>
               <span class="consent-text">
                 {{ t('auth.register.consentText') }}
-                <router-link to="/terms-and-conditions" target="_blank">{{ t('auth.register.terms') }}</router-link>
+                <router-link to="/legal/conditions-generales" target="_blank">{{ t('auth.register.terms') }}</router-link>
                 {{ t('auth.register.and') }}
-                <router-link to="/privacy-policy" target="_blank">{{ t('auth.register.privacy') }}</router-link>
+                <router-link to="/legal/confidentialite" target="_blank">{{ t('auth.register.privacy') }}</router-link>
               </span>
             </label>
           </div>
@@ -156,7 +156,7 @@ const error   = ref('')
 const success = ref('')
 
 const isSubmitDisabled = computed(() => {
-  return loading.value || (form.value.role === 'talent' && !form.value.consent)
+  return loading.value || !form.value.consent
 })
 
 const handleRegister = async () => {

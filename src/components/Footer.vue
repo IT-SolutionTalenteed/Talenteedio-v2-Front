@@ -35,8 +35,8 @@
           <div class="footer-col">
             <h4>{{ t('footer.legalInfo') }}</h4>
             <ul>
-              <li><router-link to="/legal/conditions-generales"><i class="fa-solid fa-chevron-right"></i> Conditions générales</router-link></li>
-              <li><router-link to="/legal/confidentialite"><i class="fa-solid fa-chevron-right"></i> Confidentialité</router-link></li>
+              <li><router-link to="/legal/conditions-generales"><i class="fa-solid fa-chevron-right"></i> {{ t('footer.terms') }}</router-link></li>
+              <li><router-link to="/legal/confidentialite"><i class="fa-solid fa-chevron-right"></i> {{ t('footer.privacy') }}</router-link></li>
             </ul>
           </div>
         </div>
