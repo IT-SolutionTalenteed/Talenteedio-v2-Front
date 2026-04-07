@@ -278,3 +278,35 @@ Copyright © 2026 Solution Talenteed. Tous droits réservés.
 **Pour plus d'informations, consultez [INDEX_DOCUMENTATION.md](./INDEX_DOCUMENTATION.md)** 📚
 
 *Dernière mise à jour: 2026-03-27*
+
+---
+
+## 📄 Pages Statiques
+
+Le projet intègre 11 pages HTML statiques accessibles via `/static/*.html`.
+
+### Accès rapide
+
+- **Corporate** : `/static/corporate.html` - Solutions pour grandes entreprises
+- **Company** : `/static/company.html` - Inscription entreprise
+- **Talent** : `/static/talent.html` - Inscription talents
+- **Matching** : `/static/matching.html` - Système de matching IA
+
+### Documentation
+
+- 📖 [Quick Start](QUICK_START_STATIC.md) - Démarrage rapide
+- 📚 [Guide complet](README_STATIC_PAGES.md) - Documentation détaillée
+- 🔧 [Solution technique](SOLUTION_PAGES_STATIQUES.md) - Architecture
+- ✅ [Tests](TEST_STATIC_PAGES.md) - Checklist de tests
+- 🐛 [Corrections](FIXES_STATIC_PAGES.md) - Problèmes résolus
+
+### Synchronisation
+
+Pour mettre à jour les pages statiques depuis le dossier `static/` :
+
+```bash
+./scripts/sync-static-pages.sh
+```
+
+Ce script copie les fichiers HTML et assets, met à jour les chemins et applique les corrections CSS.
+
