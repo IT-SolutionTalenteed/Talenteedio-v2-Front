@@ -1,0 +1,263 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   TALENTEED.IO - FIXES CSS
+   Corrections et améliorations pour les pages statiques
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ══ LOGO FIXES ══ */
+.site-logo img {
+  height: 52px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.footer-logo img {
+  height: auto;
+  width: 180px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+/* ══ RESPONSIVE LOGO ══ */
+@media (max-width: 768px) {
+  .site-logo img {
+    height: 44px;
+  }
+  
+  .footer-logo img {
+    width: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .site-logo img {
+    height: 40px;
+  }
+  
+  .site-tagline {
+    font-size: 9px;
+  }
+  
+  .footer-logo img {
+    width: 140px;
+  }
+}
+
+/* ══ IMAGE RESPONSIVE FIXES ══ */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ══ HERO SECTION FIXES ══ */
+.hero-section {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ══ CONTAINER FIXES ══ */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 16px;
+  }
+}
+
+/* ══ BUTTON FIXES ══ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+/* ══ FORM FIXES ══ */
+.form-input,
+.form-textarea {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* ══ TOPBAR RESPONSIVE ══ */
+@media (max-width: 768px) {
+  .topbar-label {
+    font-size: 13px;
+    max-width: 200px;
+  }
+  
+  .cd-num {
+    font-size: 16px;
+  }
+  
+  .cd-unit {
+    font-size: 11px;
+  }
+  
+  .cd-block {
+    padding: 4px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar {
+    height: auto;
+    min-height: 48px;
+    padding: 8px 0;
+  }
+  
+  .topbar .container {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  
+  .topbar-label {
+    font-size: 12px;
+    max-width: 150px;
+  }
+  
+  .countdown-blocks {
+    gap: 4px;
+  }
+  
+  .cd-num {
+    font-size: 14px;
+  }
+  
+  .cd-unit {
+    font-size: 10px;
+  }
+  
+  .cd-block {
+    padding: 3px 6px;
+  }
+  
+  .topbar-link {
+    font-size: 11px;
+    padding: 3px 10px;
+  }
+}
+
+/* ══ HEADER RESPONSIVE ══ */
+@media (max-width: 768px) {
+  .header-inner {
+    height: 70px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-inner {
+    height: 64px;
+  }
+}
+
+/* ══ GRID FIXES ══ */
+.solutions-grid,
+.benefits-grid,
+.testimonials-grid {
+  display: grid;
+  gap: 24px;
+}
+
+@media (min-width: 768px) {
+  .solutions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .benefits-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .testimonials-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .solutions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .benefits-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .testimonials-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ══ CARD FIXES ══ */
+.solution-card,
+.benefit-card,
+.testimonial-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ══ FOOTER FIXES ══ */
+.footer-grid {
+  display: grid;
+  gap: 32px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer-grid {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+  }
+}
+
+/* ══ OVERFLOW FIXES ══ */
+body {
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ══ SMOOTH SCROLL ══ */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ══ ACCESSIBILITY ══ */
+.btn:focus,
+.form-input:focus,
+.form-textarea:focus {
+  outline: 2px solid #FF6B35;
+  outline-offset: 2px;
+}
+
+/* ══ PRINT STYLES ══ */
+@media print {
+  .topbar,
+  .menu-toggle,
+  .header-btns,
+  .footer-socials {
+    display: none;
+  }
+  
+  .site-header {
+    position: static;
+    box-shadow: none;
+  }
+}

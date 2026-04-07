@@ -1,11 +1,6 @@
 <template>
-  <div class="static-page-wrapper">
-    <iframe 
-      :src="iframeSrc" 
-      frameborder="0"
-      class="static-iframe"
-      @load="onIframeLoad"
-    ></iframe>
+  <div class="static-page-container">
+    <!-- On redirige directement vers la page HTML statique -->
   </div>
 </template>
 
@@ -18,39 +13,20 @@ export default {
       required: true
     }
   },
-  computed: {
-    iframeSrc() {
-      return `/static/${this.page}.html`
-    }
-  },
-  methods: {
-    onIframeLoad() {
-      // Ajuster la hauteur de l'iframe si nécessaire
-      const iframe = this.$el.querySelector('iframe')
-      if (iframe && iframe.contentWindow) {
-        try {
-          const height = iframe.contentWindow.document.body.scrollHeight
-          iframe.style.height = height + 'px'
-        } catch (e) {
-          // Ignore cross-origin errors
-        }
-      }
-    }
+  mounted() {
+    // Rediriger directement vers la page HTML statique
+    // Cela évite les problèmes d'iframe et de vh
+    window.location.href = `/static/${this.page}.html`
   }
 }
 </script>
 
 <style scoped>
-.static-page-wrapper {
+.static-page-container {
   width: 100%;
   min-height: 100vh;
-  position: relative;
-}
-
-.static-iframe {
-  width: 100%;
-  min-height: 100vh;
-  border: none;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

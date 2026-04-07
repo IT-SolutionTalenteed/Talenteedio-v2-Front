@@ -31,6 +31,16 @@ for file in "$STATIC_DEST"/*.html; do
         # Remplacer les chemins relatifs par des chemins absolus
         sed -i 's|href="assets/|href="/static/assets/|g' "$file"
         sed -i 's|src="assets/|src="/static/assets/|g' "$file"
+        
+        # Supprimer les attributs width/height des logos pour permettre le CSS de gérer la taille
+        sed -i 's/<img src="\/static\/assets\/logo\.png" alt="Talenteed" width="[0-9]*" height="[0-9]*">/<img src="\/static\/assets\/logo.png" alt="Talenteed">/g' "$file"
+        sed -i 's/<img src="\/static\/assets\/logo\.png" alt="Talenteed" width="[0-9]*">/<img src="\/static\/assets\/logo.png" alt="Talenteed">/g' "$file"
+        
+        # Ajouter le fichier fixes.css si pas déjà présent
+        if ! grep -q "fixes.css" "$file"; then
+            sed -i 's|</head>|  <link rel="stylesheet" href="/static/assets/css/fixes.css">\n</head>|' "$file"
+        fi
+        
         echo "  ✓ $(basename "$file")"
     fi
 done
