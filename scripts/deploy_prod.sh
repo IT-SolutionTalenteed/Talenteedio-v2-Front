@@ -1,25 +1,28 @@
 #!/bin/bash
 
-set -e  # Exit on any error
-
+# Load NVM
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-nvm use v20
+# Use Node v20
+nvm use v20 || { echo "Failed to switch to Node v20"; exit 1; }
 
 echo "🚀 Starting deployment..."
 echo "Node version: $(node -v)"
 echo "NPM version: $(npm -v)"
 
-git fetch origin
-git reset --hard origin/main
-git pull origin main
+# Update code
+git fetch origin || { echo "Git fetch failed"; exit 1; }
+git reset --hard origin/main || { echo "Git reset failed"; exit 1; }
+git pull origin main || { echo "Git pull failed"; exit 1; }
 
+# Install dependencies
 echo "📦 Installing dependencies..."
-npm install
+npm install || { echo "npm install failed"; exit 1; }
 
+# Build
 echo "🏗️ Building application..."
-npm run build
+rm -rf dist/
+npm run build || { echo "Build failed"; exit 1; }
 
 echo "✅ Deployment completed successfully. 🎉🎉🎉"
