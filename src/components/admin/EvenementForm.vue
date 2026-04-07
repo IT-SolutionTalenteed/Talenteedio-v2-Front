@@ -182,7 +182,12 @@ const buildFormData = () => {
   if (form.value.categorie_evenement_id) fd.append('categorie_evenement_id', form.value.categorie_evenement_id)
   fd.append('is_featured', form.value.is_featured ? '1' : '0')
   form.value.entreprise_ids.forEach(id => fd.append('entreprise_ids[]', id))
-  if (imageFile.value) fd.append('image_mise_en_avant', imageFile.value)
+  
+  // N'ajouter l'image que si un nouveau fichier a été sélectionné
+  if (imageFile.value && imageFile.value instanceof File) {
+    fd.append('image_mise_en_avant', imageFile.value)
+  }
+  
   return fd
 }
 
