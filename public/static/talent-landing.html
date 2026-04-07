@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accéder aux Opportunités — Africa Talent Summit 2026</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    /* ══ TALENT HERO — 100VH ══ */
+    .ats-hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(160deg, #020830 0%, #040a5d 45%, #0d1a8a 75%, #040a5d 100%);
+      color: #fff;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .ats-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        45deg, transparent, transparent 35px,
+        rgba(255,255,255,.018) 35px, rgba(255,255,255,.018) 70px
+      );
+    }
+
+    .ats-hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 120px;
+      background: linear-gradient(to bottom, transparent, rgba(245,247,250,.15));
+    }
+
+    .ats-hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 820px;
+      padding: 40px 24px;
+    }
+
+    .ats-event-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(240,124,0,.15);
+      border: 1.5px solid rgba(240,124,0,.5);
+      color: #f07c00;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      padding: 9px 22px;
+      border-radius: 50px;
+      margin-bottom: 32px;
+    }
+
+    .ats-hero-title {
+      font-size: clamp(26px, 4.5vw, 52px);
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -0.5px;
+      margin: 0 0 22px;
+      text-transform: uppercase;
+    }
+
+    .ats-hero-title em {
+      font-style: normal;
+      color: #f07c00;
+    }
+
+    .ats-hero-desc {
+      font-size: clamp(15px, 2vw, 18px);
+      line-height: 1.75;
+      opacity: .88;
+      margin: 0 auto 40px;
+      max-width: 640px;
+    }
+
+    .ats-hero-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .ats-hero-actions .btn--orange {
+      font-size: 17px;
+      padding: 16px 40px;
+      border-radius: 50px;
+      box-shadow: 0 6px 24px rgba(240,124,0,.4);
+    }
+
+    .ats-selection-note {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: rgba(255,255,255,.6);
+      font-weight: 500;
+    }
+
+    .ats-selection-note::before,
+    .ats-selection-note::after {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: rgba(255,255,255,.3);
+    }
+
+    .ats-scroll-hint {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255,255,255,.3);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      animation: hint-bounce 2.5s ease-in-out infinite;
+    }
+
+    @keyframes hint-bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ══ EVENT SECTION ══ */
+    .ats-section {
+      padding: 80px 0 100px;
+      background: var(--light-bg);
+    }
+
+    .ats-intro {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto 64px;
+    }
+
+    .ats-intro h2 {
+      font-size: clamp(24px, 3vw, 38px);
+      font-weight: 900;
+      color: var(--navy);
+      margin: 0 0 28px;
+      line-height: 1.25;
+    }
+
+    .ats-bullets {
+      list-style: none;
+      margin: 0 0 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .ats-bullets li {
+      font-size: 17px;
+      color: #374151;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .ats-bullets li i {
+      color: #f07c00;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .ats-soustitre {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--navy);
+      font-style: italic;
+    }
+
+    /* ══ LOGOS STRIP ══ */
+    /* Sera affiché une fois les logos des entreprises participantes disponibles */
+    .logos-strip { display: none; }
+
+    /* ══ STEPPER ══ */
+    .stepper-nav {
+      display: flex;
+      align-items: center;
+      margin-bottom: 36px;
+    }
+
+    .stepper-step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .step-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: #fff;
+      color: var(--body-text);
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all .3s;
+    }
+
+    .step-info { display: flex; flex-direction: column; }
+
+    .step-info strong {
+      font-size: 14px;
+      color: var(--body-text);
+      font-weight: 700;
+      transition: color .3s;
+    }
+
+    .step-info small {
+      font-size: 11.5px;
+      color: var(--body-text);
+      opacity: .7;
+    }
+
+    .stepper-step.active .step-circle {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #fff;
+    }
+
+    .stepper-step.active .step-info strong { color: var(--navy); }
+
+    .stepper-step.done .step-circle {
+      background: #22c55e;
+      border-color: #22c55e;
+      color: #fff;
+    }
+
+    .stepper-line {
+      height: 2px;
+      flex: 0 0 48px;
+      background: var(--border);
+      margin-bottom: 8px;
+      transition: background .35s;
+    }
+
+    .stepper-line.done { background: #22c55e; }
+
+    /* ══ STICKY CTA ══ */
+    .sticky-col { /* wrapper column */ }
+
+    .sticky-cta-wrap {
+      position: sticky;
+      top: 100px;
+    }
+
+    .sticky-cta-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.08);
+      border-top: 4px solid #f07c00;
+      text-align: center;
+    }
+
+    .sticky-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f07c00, #ffb52e);
+      color: #fff;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 18px;
+    }
+
+    .sticky-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--navy);
+      margin: 0 0 10px;
+    }
+
+    .sticky-text {
+      font-size: 14px;
+      color: var(--body-text);
+      margin: 0 0 22px;
+      line-height: 1.6;
+    }
+
+    .sticky-note {
+      margin-top: 14px;
+      font-size: 12.5px;
+      color: var(--body-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .sticky-note i { color: #f07c00; }
+
+    .sticky-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 20px 0;
+    }
+
+    .sticky-feature {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      font-size: 13.5px;
+      color: #374151;
+      text-align: left;
+    }
+
+    .sticky-feature i { color: #22c55e; font-size: 14px; flex-shrink: 0; }
+
+    /* ══ MOBILE FIXED BAR ══ */
+    .mobile-cta-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border-top: 1px solid var(--border);
+      padding: 12px 16px;
+      z-index: 998;
+      box-shadow: 0 -4px 20px rgba(0,0,0,.12);
+      flex-direction: column;
+      align-items: stretch;
+      gap: 4px;
+    }
+
+    .mobile-cta-bar .btn { justify-content: center; }
+
+    .mobile-note {
+      text-align: center;
+      font-size: 11px;
+      color: var(--body-text);
+    }
+
+    /* ══ RESPONSIVE ══ */
+    @media (max-width: 900px) {
+      .content-layout { grid-template-columns: 1fr !important; }
+      .sticky-col { display: none; }
+      .mobile-cta-bar { display: flex; }
+      body { padding-bottom: 80px; }
+    }
+
+    @media (max-width: 600px) {
+      .site-nav { display: none; }
+      .site-nav.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 80px;
+        left: 0;
+        right: 0;
+        background: #fff;
+        padding: 12px 0;
+        box-shadow: 0 8px 32px rgba(0,0,0,.1);
+        z-index: 999;
+      }
+      .site-nav.open ul { flex-direction: column; gap: 0; }
+      .site-nav.open ul a { padding: 14px 24px; display: block; font-size: 15px; }
+      .menu-toggle { display: flex; }
+      .header-btns .btn--sm { display: none; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ MOBILE FIXED CTA (apparaît après le hero) ══ -->
+  <div class="mobile-cta-bar" id="mobile-cta-bar" style="display:none">
+    <a href="#register-section" class="btn btn--orange btn--lg">
+      <i class="fa-solid fa-arrow-right"></i>
+      Accéder aux opportunités
+    </a>
+    <p class="mobile-note">Sélection sur profil • Places limitées</p>
+  </div>
+
+  <!-- ══ HEADER ══ -->
+  <header class="site-header" id="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <a href="/" class="site-logo">
+          <img src="assets/logo.png" alt="Talenteed" width="148" height="52">
+          <span class="site-tagline">Africa Talent Summit</span>
+        </a>
+        <nav class="site-nav" id="site-nav">
+          <ul>
+            <li><a href="/">Accueil</a></li>
+            <li><a href="#register-section">Candidater</a></li>
+            <li><a href="corporate-landing.html">Entreprises</a></li>
+          </ul>
+        </nav>
+        <div class="header-btns">
+          <a href="#register-section" class="btn btn--orange btn--sm">
+            <i class="fa-solid fa-arrow-right"></i>
+            Accéder aux opportunités
+          </a>
+        </div>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ HERO — 100VH ══ -->
+  <section class="ats-hero" id="hero">
+    <div class="ats-hero-content">
+
+      <div class="ats-event-badge">
+        <i class="fa-solid fa-calendar-days"></i>
+        Africa Talent Summit — 5 &amp; 6 Novembre 2026
+      </div>
+
+      <h1 class="ats-hero-title">
+        Construisez la carrière qui<br>
+        façonnera <em>l'Afrique de demain</em>
+      </h1>
+
+      <p class="ats-hero-desc">
+        Rencontrez, les 5 et 6 novembre 2026, des entreprises panafricaines ambitieuses et accédez à des opportunités concrètes, sélectionnées pour leur impact et leur exigence.
+      </p>
+
+      <div class="ats-hero-actions">
+        <a href="#register-section" class="btn btn--orange">
+          <i class="fa-solid fa-arrow-right"></i>
+          Accéder aux opportunités
+        </a>
+        <span class="ats-selection-note">
+          Sélection sur profil &bull; Places limitées
+        </span>
+      </div>
+
+    </div>
+
+    <div class="ats-scroll-hint">
+      <i class="fa-solid fa-chevron-down"></i>
+      <span>Découvrir</span>
+    </div>
+  </section>
+
+  <!-- ══ SECTION PRINCIPALE ══ -->
+  <section class="ats-section">
+    <div class="container">
+
+      <!-- Intro -->
+      <div class="ats-intro">
+        <h2>L'Afrique n'a jamais eu autant besoin de talents comme le vôtre.</h2>
+        <ul class="ats-bullets">
+          <li><i class="fa-solid fa-circle-dot"></i> Accédez à des opportunités concrètes.</li>
+          <li><i class="fa-solid fa-circle-dot"></i> Rencontrez des entreprises ambitieuses.</li>
+          <li><i class="fa-solid fa-circle-dot"></i> Travaillez sur des projets qui comptent vraiment.</li>
+        </ul>
+        <p class="ats-soustitre">Ne regardez plus le futur se construire. Faites-en partie.</p>
+      </div>
+
+      <!-- Logos des entreprises participantes — sera rempli au fur et à mesure -->
+      <div class="logos-strip" aria-hidden="true">
+        <!-- Logo entreprise · Logo entreprise · Logo entreprise · Logo entreprise -->
+      </div>
+
+      <!-- Layout 2 colonnes : formulaire + sticky CTA -->
+      <div class="content-layout" id="register-section">
+
+        <!-- Formulaire avec stepper -->
+        <div>
+          <div class="form-card">
+            <div class="form-header">
+              <h2 class="form-title">
+                <i class="fa-solid fa-user-check"></i>
+                Rejoindre le Summit
+              </h2>
+              <p class="form-subtitle">Complétez votre profil pour accéder aux opportunités</p>
+            </div>
+
+            <!-- Stepper indicator -->
+            <div class="stepper-nav">
+              <div class="stepper-step active" id="dot-1">
+                <div class="step-circle" id="circle-1">1</div>
+                <div class="step-info">
+                  <strong>Contact</strong>
+                  <small>Informations de base</small>
+                </div>
+              </div>
+              <div class="stepper-line" id="step-line"></div>
+              <div class="stepper-step" id="dot-2">
+                <div class="step-circle" id="circle-2">
+                  <i class="fa-solid fa-brain" style="font-size:13px"></i>
+                </div>
+                <div class="step-info">
+                  <strong>Matching IA</strong>
+                  <small>Optionnel — compléter plus tard</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- ── STEP 1 : CONTACT ── -->
+            <div id="form-step-1">
+              <div class="form-section-title">
+                <i class="fa-solid fa-address-card"></i>
+                Vos informations
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Nom <span class="required">*</span></label>
+                  <input name="nom" type="text" class="form-input" placeholder="Ex : Diallo" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Prénom</label>
+                  <input name="prenom" type="text" class="form-input" placeholder="Ex : Aminata">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Email <span class="required">*</span></label>
+                <input name="email" type="email" class="form-input" placeholder="votre@email.com" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Secteur d'activité <span class="required">*</span></label>
+                <select name="secteur" class="form-input" required>
+                  <option value="">Sélectionner...</option>
+                  <option>Banque / Finance</option>
+                  <option>Assurance</option>
+                  <option>Technologie / IT</option>
+                  <option>Santé</option>
+                  <option>Industrie</option>
+                  <option>Commerce / Distribution</option>
+                  <option>BTP / Immobilier</option>
+                  <option>Énergie / Mines</option>
+                  <option>Agriculture / Agroalimentaire</option>
+                  <option>Télécommunications</option>
+                  <option>Consulting / Conseil</option>
+                  <option>Éducation / Formation</option>
+                  <option>Transport / Logistique</option>
+                  <option>Autre</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Années d'expérience <span class="required">*</span></label>
+                <select name="experience" class="form-input" required>
+                  <option value="">Sélectionner...</option>
+                  <option>Moins d'1 an</option>
+                  <option>1–3 ans</option>
+                  <option>3–5 ans</option>
+                  <option>5–10 ans</option>
+                  <option>10+ ans</option>
+                </select>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Ville</label>
+                  <input name="ville" type="text" class="form-input" placeholder="Ex : Dakar">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Pays <span class="required">*</span></label>
+                  <select name="pays" class="form-input" required>
+                    <option value="">Sélectionner...</option>
+                    <optgroup label="Europe">
+                      <option>France</option>
+                      <option>Luxembourg</option>
+                      <option>Belgique</option>
+                      <option>Suisse</option>
+                      <option>Allemagne</option>
+                      <option>Royaume-Uni</option>
+                      <option>Pays-Bas</option>
+                      <option>Espagne</option>
+                      <option>Italie</option>
+                      <option>Portugal</option>
+                    </optgroup>
+                    <optgroup label="Amérique du Nord">
+                      <option>Canada</option>
+                      <option>États-Unis</option>
+                    </optgroup>
+                    <optgroup label="Afrique de l'Ouest">
+                      <option>Sénégal</option>
+                      <option>Côte d'Ivoire</option>
+                      <option>Mali</option>
+                      <option>Burkina Faso</option>
+                      <option>Guinée</option>
+                      <option>Togo</option>
+                      <option>Bénin</option>
+                      <option>Niger</option>
+                      <option>Ghana</option>
+                      <option>Nigeria</option>
+                      <option>Mauritanie</option>
+                      <option>Cap-Vert</option>
+                    </optgroup>
+                    <optgroup label="Afrique Centrale">
+                      <option>Cameroun</option>
+                      <option>Congo (RDC)</option>
+                      <option>Congo (Brazzaville)</option>
+                      <option>Gabon</option>
+                      <option>Tchad</option>
+                    </optgroup>
+                    <optgroup label="Afrique du Nord">
+                      <option>Maroc</option>
+                      <option>Tunisie</option>
+                      <option>Algérie</option>
+                    </optgroup>
+                    <optgroup label="Afrique de l'Est & Australe">
+                      <option>Kenya</option>
+                      <option>Tanzanie</option>
+                      <option>Éthiopie</option>
+                      <option>Afrique du Sud</option>
+                      <option>Rwanda</option>
+                    </optgroup>
+                    <option>Autre</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-error" id="step1-error">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span id="step1-error-msg">Veuillez remplir tous les champs obligatoires.</span>
+              </div>
+
+              <button type="button" class="btn btn--blue btn--lg btn--block" onclick="goToStep2()">
+                Suivant — Matching IA
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+
+              <p class="form-note">
+                L'étape suivante est optionnelle. Vous pourrez la compléter depuis votre espace personnel.
+              </p>
+            </div>
+
+            <!-- ── STEP 2 : MATCHING IA ── -->
+            <div id="form-step-2" style="display:none">
+              <div class="form-section-title">
+                <i class="fa-solid fa-brain"></i>
+                Matching Intelligent
+              </div>
+              <p style="font-size:14px;color:var(--body-text);margin:0 0 24px;line-height:1.6">
+                Maximisez vos chances d'obtenir des entretiens grâce à notre matching intelligent.
+                <strong style="color:var(--navy)">Optionnel — vous pourrez le compléter plus tard.</strong>
+              </p>
+
+              <div class="form-group">
+                <label class="form-label">
+                  CV
+                  <small style="font-weight:400;color:var(--body-text)">&nbsp;— PDF, Word, max 5 Mo</small>
+                </label>
+                <input name="cv" type="file" class="form-input" accept=".pdf,.doc,.docx" style="padding:10px 12px">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Poste souhaité</label>
+                <input name="poste" type="text" class="form-input" placeholder="Ex : Directeur Financier, Ingénieur Data…">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Compétences clés</label>
+                <textarea name="competences" class="form-input form-textarea" rows="3"
+                  placeholder="Ex : Python, Finance d'entreprise, Management d'équipes, Marketing digital…"></textarea>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Pays souhaité de relocation</label>
+                  <select name="pays_relocation" class="form-input">
+                    <option value="">Indifférent</option>
+                    <option>Sénégal</option>
+                    <option>Côte d'Ivoire</option>
+                    <option>Maroc</option>
+                    <option>Tunisie</option>
+                    <option>Cameroun</option>
+                    <option>Mali</option>
+                    <option>Burkina Faso</option>
+                    <option>Ghana</option>
+                    <option>Nigeria</option>
+                    <option>Kenya</option>
+                    <option>Afrique du Sud</option>
+                    <option>Gabon</option>
+                    <option>Congo (RDC)</option>
+                    <option>Rwanda</option>
+                    <option>Autre</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Ville souhaitée de relocation</label>
+                  <input name="ville_relocation" type="text" class="form-input" placeholder="Ex : Abidjan, Dakar…">
+                </div>
+              </div>
+
+              <div class="form-error" id="step2-error">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span id="step2-error-msg">Une erreur est survenue. Veuillez réessayer.</span>
+              </div>
+              <div class="form-success" id="step2-success">
+                <i class="fa-solid fa-check-circle"></i>
+                Inscription enregistrée ! Redirection en cours…
+              </div>
+
+              <div style="display:flex;gap:12px;flex-wrap:wrap">
+                <button type="button" class="btn"
+                  style="border:2px solid var(--border);color:var(--navy);background:#fff"
+                  onclick="goToStep1()">
+                  <i class="fa-solid fa-arrow-left"></i> Retour
+                </button>
+                <button type="button" class="btn btn--orange btn--lg" style="flex:1;justify-content:center"
+                  id="submit-btn" onclick="handleSubmit()">
+                  <i class="fa-solid fa-check"></i>
+                  Soumettre mon inscription
+                </button>
+              </div>
+
+              <p class="form-note">
+                Vous pourrez compléter le matching IA depuis votre espace personnel après inscription.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ══ STICKY CTA (desktop) ══ -->
+        <div class="sticky-col">
+          <div class="sticky-cta-wrap">
+            <div class="sticky-cta-card">
+              <div class="sticky-icon">
+                <i class="fa-solid fa-rocket"></i>
+              </div>
+              <h3 class="sticky-title">Accéder aux opportunités</h3>
+              <p class="sticky-text">
+                Des entreprises panafricaines ambitieuses vous attendent les <strong>5 et 6 novembre 2026</strong> à Luxembourg.
+              </p>
+              <a href="#register-section" class="btn btn--orange btn--lg btn--block">
+                <i class="fa-solid fa-arrow-right"></i>
+                Candidater maintenant
+              </a>
+              <p class="sticky-note">
+                <i class="fa-solid fa-filter"></i>
+                Sélection sur profil &bull; Places limitées
+              </p>
+              <hr class="sticky-divider">
+              <div class="sticky-feature">
+                <i class="fa-solid fa-check-circle"></i>
+                <span>Accès aux offres panafricaines</span>
+              </div>
+              <div class="sticky-feature">
+                <i class="fa-solid fa-check-circle"></i>
+                <span>Matching IA avec les entreprises</span>
+              </div>
+              <div class="sticky-feature">
+                <i class="fa-solid fa-check-circle"></i>
+                <span>Entretiens en direct — Luxembourg</span>
+              </div>
+              <div class="sticky-feature">
+                <i class="fa-solid fa-check-circle"></i>
+                <span>Inscription 100 % gratuite</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FOOTER ══ -->
+  <footer class="site-footer">
+    <div class="footer-bg"></div>
+    <div class="footer-overlay"></div>
+    <div class="footer-inner">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-logo">
+              <img src="assets/logo.png" alt="Talenteed" width="180">
+            </div>
+            <p>L'Africa Talent Summit Luxembourg est la première plateforme stratégique européenne dédiée à la mobilisation de l'intelligence collective et des compétences rares de la diaspora, afin d'accélérer la performance des entreprises en Afrique.</p>
+            <div class="footer-socials">
+              <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+              <a href="https://x.com/" target="_blank" rel="noopener" aria-label="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+              <a href="https://www.linkedin.com/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+              <a href="https://wa.me/" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+            </div>
+          </div>
+          <div class="footer-col">
+            <h4>Contactez-nous</h4>
+            <div class="contact-item"><i class="fa-solid fa-phone"></i><a href="tel:+3522060162">+3522060162</a></div>
+            <div class="contact-item"><i class="fa-solid fa-location-dot"></i><span>57 avenue de la Gare, L-1611 Luxembourg</span></div>
+            <div class="contact-item"><i class="fa-solid fa-envelope"></i><a href="mailto:contact@africatalentsummit.com">contact@africatalentsummit.com</a></div>
+          </div>
+          <div class="footer-col">
+            <h4>Rejoignez-nous</h4>
+            <ul>
+              <li><a href="talent-landing.html"><i class="fa-solid fa-chevron-right"></i> Candidater</a></li>
+              <li><a href="corporate-landing.html"><i class="fa-solid fa-chevron-right"></i> Espace Entreprises</a></li>
+              <li><a href="mailto:contact@africatalentsummit.com"><i class="fa-solid fa-chevron-right"></i> Presse et Média</a></li>
+              <li><a href="mailto:contact@africatalentsummit.com"><i class="fa-solid fa-chevron-right"></i> Partenariats</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Informations légales</h4>
+            <ul>
+              <li><a href="/legal/terms-and-conditions"><i class="fa-solid fa-chevron-right"></i> Conditions générales</a></li>
+              <li><a href="/legal/privacy-policy"><i class="fa-solid fa-chevron-right"></i> Confidentialité</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>© <script>document.write(new Date().getFullYear())</script> Solution Talenteed SARL R.C.S. Luxembourg B 255 801. Tous droits réservés. Africa Talent Summit Luxembourg est une marque déposée.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* ══ BURGER ══ */
+    const menuToggle = document.getElementById('menu-toggle');
+    const siteNav    = document.getElementById('site-nav');
+    menuToggle.addEventListener('click', () => {
+      menuToggle.classList.toggle('open');
+      siteNav.classList.toggle('open');
+    });
+
+    /* ══ SCROLL HEADER ══ */
+    const header = document.getElementById('site-header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 50);
+    }, { passive: true });
+
+    /* ══ MOBILE CTA — apparaît après le hero ══ */
+    const mobileCta = document.getElementById('mobile-cta-bar');
+    const heroEl    = document.getElementById('hero');
+
+    function checkMobileCta() {
+      const heroBottom = heroEl.getBoundingClientRect().bottom;
+      mobileCta.style.display = heroBottom < 0 ? 'flex' : 'none';
+    }
+
+    window.addEventListener('scroll', checkMobileCta, { passive: true });
+
+    /* ══ STEPPER ══ */
+    function showEl(id)  { document.getElementById(id).classList.add('visible'); }
+    function hideEl(id)  { document.getElementById(id).classList.remove('visible'); }
+
+    function goToStep2() {
+      const nom        = document.querySelector('[name="nom"]').value.trim();
+      const email      = document.querySelector('[name="email"]').value.trim();
+      const secteur    = document.querySelector('[name="secteur"]').value;
+      const experience = document.querySelector('[name="experience"]').value;
+      const pays       = document.querySelector('[name="pays"]').value;
+      const errEl      = document.getElementById('step1-error');
+      const errMsg     = document.getElementById('step1-error-msg');
+
+      errEl.classList.remove('visible');
+
+      if (!nom || !email || !secteur || !experience || !pays) {
+        errMsg.textContent = 'Veuillez remplir tous les champs obligatoires.';
+        errEl.classList.add('visible');
+        return;
+      }
+
+      const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRe.test(email)) {
+        errMsg.textContent = 'Adresse e-mail invalide.';
+        errEl.classList.add('visible');
+        return;
+      }
+
+      document.getElementById('form-step-1').style.display = 'none';
+      document.getElementById('form-step-2').style.display = 'block';
+
+      /* Update stepper visuals */
+      const dot1 = document.getElementById('dot-1');
+      dot1.classList.remove('active');
+      dot1.classList.add('done');
+      document.getElementById('circle-1').innerHTML = '<i class="fa-solid fa-check" style="font-size:13px"></i>';
+
+      document.getElementById('dot-2').classList.add('active');
+      document.getElementById('step-line').classList.add('done');
+
+      document.getElementById('register-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function goToStep1() {
+      document.getElementById('form-step-1').style.display = 'block';
+      document.getElementById('form-step-2').style.display = 'none';
+
+      const dot1 = document.getElementById('dot-1');
+      dot1.classList.add('active');
+      dot1.classList.remove('done');
+      document.getElementById('circle-1').textContent = '1';
+
+      document.getElementById('dot-2').classList.remove('active');
+      document.getElementById('step-line').classList.remove('done');
+    }
+
+    function handleSubmit() {
+      hideEl('step2-error');
+      const btn = document.getElementById('submit-btn');
+      btn.innerHTML = '<span class="spinner"></span> Envoi en cours…';
+      btn.disabled = true;
+
+      /* TODO: brancher sur POST /api/public/ats/register */
+      setTimeout(() => {
+        showEl('step2-success');
+        setTimeout(() => { window.location.href = 'talent-confirm.html'; }, 800);
+      }, 1600);
+    }
+  </script>
+</body>
+</html>

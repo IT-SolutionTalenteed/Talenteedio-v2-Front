@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Talents — Africa Talent Summit 2026</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    /* ══ RESET & BASE ══ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:      #040a5d;
+      --blue:      #192bc2;
+      --orange:    #f07c00;
+      --light-bg:  #f5f7fa;
+      --border:    #e2e8f0;
+      --body-text: #6b7280;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body { 
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+      background: var(--light-bg); 
+      color: #1e293b;
+      overflow-x: hidden;
+    }
+
+    /* ══ STICKY CTA BAR ══ */
+    .sticky-cta-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(135deg, var(--navy), var(--blue));
+      padding: 12px 24px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 20px rgba(4,10,93,0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .sticky-cta-bar.hidden {
+      transform: translateY(-100%);
+    }
+
+    .sticky-cta-bar .event-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: #fff;
+    }
+
+    .sticky-cta-bar .event-info i {
+      color: var(--orange);
+    }
+
+    .sticky-cta-bar .cta-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .sticky-cta-bar .cta-badge span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .sticky-cta-bar .cta-badge i {
+      font-size: 8px;
+    }
+
+    .sticky-btn {
+      background: linear-gradient(135deg, var(--orange), #ff8c00);
+      color: #fff;
+      border: none;
+      padding: 10px 24px;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 30px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .sticky-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(240,124,0,0.4);
+    }
+
+    @media (max-width: 768px) {
+      .sticky-cta-bar .event-info {
+        display: none;
+      }
+      .sticky-cta-bar {
+        justify-content: center;
+      }
+      .sticky-cta-bar .cta-badge {
+        display: none;
+      }
+    }
+
+    /* ══ HERO SECTION (MOBILE-FIRST) ══ */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(160deg, #020830 0%, #040a5d 50%, #0d1a8a 100%);
+      color: #fff;
+      text-align: center;
+      padding: 60px 24px 60px;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(ellipse at 30% 20%, rgba(240,124,0,0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(25,43,194,0.2) 0%, transparent 50%);
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 150px;
+      background: var(--light-bg);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(240,124,0,0.2);
+      border: 1.5px solid rgba(240,124,0,0.5);
+      color: #ffb52e;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 8px 20px;
+      border-radius: 50px;
+      margin-bottom: 32px;
+    }
+
+    .hero-title {
+      font-size: clamp(28px, 6vw, 48px);
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -0.5px;
+      margin: 0 0 24px;
+      text-transform: uppercase;
+    }
+
+    .hero-title span {
+      display: block;
+    }
+
+    .hero-title .highlight {
+      color: var(--orange);
+    }
+
+    .hero-desc {
+      font-size: clamp(15px, 2.5vw, 18px);
+      line-height: 1.8;
+      opacity: 0.9;
+      margin: 0 auto 36px;
+      max-width: 600px;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .hero-cta .btn-main {
+      background: linear-gradient(135deg, var(--orange), #ff8c00);
+      color: #fff;
+      border: none;
+      padding: 16px 40px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 50px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 8px 30px rgba(240,124,0,0.4);
+    }
+
+    .hero-cta .btn-main:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(240,124,0,0.5);
+    }
+
+    .hero-badges {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .hero-badge-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      font-weight: 500;
+    }
+
+    .hero-badge-item::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--orange);
+      border-radius: 50%;
+    }
+
+    /* ══ MAIN CONTENT ══ */
+    .main-content {
+      position: relative;
+      z-index: 2;
+      padding: 80px 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Intro Section */
+    .intro-section {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 64px;
+    }
+
+    .intro-section h2 {
+      font-size: clamp(24px, 4vw, 38px);
+      font-weight: 900;
+      color: var(--navy);
+      margin: 0 0 32px;
+      line-height: 1.25;
+    }
+
+    .intro-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .intro-list li {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 18px;
+      color: #374151;
+    }
+
+    .intro-list li i {
+      color: var(--orange);
+      font-size: 12px;
+    }
+
+    .intro-subtitle {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--navy);
+      font-style: italic;
+    }
+
+    /* Partners Section */
+    .partners-section {
+      background: #fff;
+      padding: 60px 0;
+      margin-bottom: 64px;
+      overflow: hidden;
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+    }
+
+    .partners-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .partners-header h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--body-text);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .partners-carousel {
+      display: flex;
+      gap: 48px;
+      animation: scroll-logos 30s linear infinite;
+      width: max-content;
+    }
+
+    .partners-carousel:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes scroll-logos {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .partner-logo {
+      width: 140px;
+      height: 60px;
+      background: var(--light-bg);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 14px;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    /* Form Section */
+    .form-section {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .form-card {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+
+    .form-header {
+      background: linear-gradient(135deg, var(--navy), var(--blue));
+      color: #fff;
+      padding: 32px;
+      text-align: center;
+    }
+
+    .form-header h2 {
+      font-size: 22px;
+      font-weight: 800;
+      margin: 0 0 8px;
+    }
+
+    .form-header p {
+      font-size: 14px;
+      opacity: 0.85;
+      margin: 0;
+    }
+
+    .form-body {
+      padding: 32px;
+    }
+
+    /* Stepper */
+    .stepper {
+      display: flex;
+      align-items: center;
+      margin-bottom: 32px;
+      background: var(--light-bg);
+      padding: 16px 24px;
+      border-radius: 16px;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .step-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: #fff;
+      color: var(--body-text);
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .step-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .step-info strong {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .step-info small {
+      font-size: 11px;
+      color: var(--body-text);
+    }
+
+    .step.active .step-circle {
+      background: linear-gradient(135deg, var(--blue), var(--navy));
+      border-color: var(--navy);
+      color: #fff;
+    }
+
+    .step.done .step-circle {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-color: #22c55e;
+      color: #fff;
+    }
+
+    .step-line {
+      width: 40px;
+      height: 2px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+
+    .step-line.done {
+      background: #22c55e;
+    }
+
+    /* Form Steps */
+    .form-step {
+      display: none;
+    }
+
+    .form-step.active {
+      display: block;
+    }
+
+    .step-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 24px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group label .optional {
+      font-weight: 400;
+      color: var(--body-text);
+      text-transform: none;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 14px 18px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-size: 15px;
+      font-family: inherit;
+      transition: all 0.3s ease;
+      background: #fff;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(25,43,194,0.1);
+    }
+
+    .form-group input::placeholder {
+      color: #a0aec0;
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .file-upload {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .file-upload:hover {
+      border-color: var(--blue);
+      background: rgba(25,43,194,0.02);
+    }
+
+    .file-upload i {
+      font-size: 28px;
+      color: var(--body-text);
+      margin-bottom: 8px;
+    }
+
+    .file-upload p {
+      font-size: 14px;
+      color: var(--body-text);
+      margin: 0;
+    }
+
+    .file-upload small {
+      font-size: 12px;
+      color: #a0aec0;
+    }
+
+    .file-upload input {
+      display: none;
+    }
+
+    /* Buttons */
+    .form-actions {
+      display: flex;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, var(--orange), #ff8c00);
+      color: #fff;
+      border: none;
+      padding: 14px 32px;
+      font-size: 15px;
+      font-weight: 700;
+      border-radius: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(240,124,0,0.4);
+    }
+
+    .btn-secondary {
+      background: var(--light-bg);
+      color: var(--navy);
+      border: 2px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--border);
+      box-shadow: none;
+    }
+
+    .btn-full {
+      width: 100%;
+      justify-content: center;
+    }
+
+    /* Section Footer */
+    .form-footer {
+      text-align: center;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .form-footer p {
+      font-size: 14px;
+      color: var(--body-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .form-footer i {
+      color: var(--orange);
+    }
+
+    /* ══ CONFIRMATION PAGE ══ */
+    .confirm-page {
+      display: none;
+    }
+
+    .confirm-page.active {
+      display: block;
+    }
+
+    .confirm-hero {
+      position: relative;
+      min-height: auto;
+      padding: 120px 24px 60px;
+      background: linear-gradient(160deg, #020830 0%, #040a5d 50%, #0d1a8a 100%);
+      color: #fff;
+      text-align: center;
+    }
+
+    .confirm-hero .hero-title {
+      font-size: clamp(24px, 5vw, 36px);
+    }
+
+    .confirm-form-section {
+      padding: 60px 0;
+    }
+
+    .confirm-form-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 40px;
+      max-width: 500px;
+      margin: 0 auto;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.1);
+    }
+
+    .confirm-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 36px;
+      color: #fff;
+    }
+
+    .confirm-form-card h2 {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .confirm-form-card > p {
+      font-size: 15px;
+      color: var(--body-text);
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    /* ══ RESPONSIVE ══ */
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .stepper {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .step {
+        width: 100%;
+      }
+
+      .step-line {
+        display: none;
+      }
+
+      .form-actions {
+        flex-direction: column;
+      }
+
+      .confirm-form-card {
+        padding: 24px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero {
+        padding: 80px 16px 40px;
+      }
+
+      .form-body {
+        padding: 24px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ TOPBAR ══ -->
+  <div class="topbar">
+    <div class="container">
+      <div class="topbar-left">
+        <span class="topbar-dot"></span>
+        <span class="topbar-label">Africa Talent Summit 2026 — 5 &amp; 6 Novembre, Abidjan</span>
+      </div>
+      <div class="countdown-blocks" id="countdown">
+        <div class="cd-block"><span class="cd-num" id="cd-days">--</span><span class="cd-label">J</span></div>
+        <div class="cd-block"><span class="cd-num" id="cd-hours">--</span><span class="cd-label">H</span></div>
+        <div class="cd-block"><span class="cd-num" id="cd-mins">--</span><span class="cd-label">M</span></div>
+        <div class="cd-block"><span class="cd-num" id="cd-secs">--</span><span class="cd-label">S</span></div>
+      </div>
+      <div>
+        <a href="#register-section" class="topbar-link">
+          <i class="fa-solid fa-user-tie"></i> Postuler
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ HEADER ══ -->
+  <header class="site-header" id="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <a href="/" class="site-logo">
+          <img src="assets/logo.png" alt="Talenteed" width="148" height="52">
+          <span class="site-tagline">Africa Talent Summit</span>
+        </a>
+        <nav class="site-nav" id="site-nav">
+          <ul>
+            <li><a href="/">Accueil</a></li>
+            <li><a href="#register-section">Candidater</a></li>
+            <li><a href="corporate-landing.html">Entreprises</a></li>
+          </ul>
+        </nav>
+        <div class="header-btns">
+          <a href="#register-section" class="btn btn--orange btn--sm">
+            <i class="fa-solid fa-arrow-right"></i>
+            Accéder aux opportunités
+          </a>
+        </div>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- STICKY CTA BAR -->
+  <div class="sticky-cta-bar" id="sticky-cta" style="display:none">
+    <div class="event-info">
+      <i class="fa-solid fa-calendar-days"></i>
+      <span>Africa Talent Summit — 5 &amp; 6 Novembre 2026</span>
+    </div>
+    <div class="cta-badge">
+      <span><i class="fa-solid fa-circle"></i> Sélection sur profil</span>
+      <span><i class="fa-solid fa-circle"></i> Places limitées</span>
+    </div>
+    <a href="#register-section" class="sticky-btn">
+      <i class="fa-solid fa-arrow-right"></i>
+      Accéder aux opportunités
+    </a>
+  </div>
+
+  <!-- MAIN PAGE -->
+  <div class="main-page" id="main-page">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <i class="fa-solid fa-calendar-days"></i>
+          Africa Talent Summit — 5 & 6 Novembre 2026
+        </div>
+
+        <h1 class="hero-title">
+          <span>Construisez la carrière qui</span>
+          <span class="highlight">façonnera l'Afrique de demain</span>
+        </h1>
+
+        <p class="hero-desc">
+          Rencontrez, les 5 et 6 novembre 2026, des entreprises panafricaines ambitieuses et accédez à des opportunités concrètes, sélectionnées pour leur impact et leur exigence.
+        </p>
+
+        <div class="hero-cta">
+          <a href="#register-section" class="btn-main">
+            <i class="fa-solid fa-arrow-right"></i>
+            Accéder aux opportunités
+          </a>
+          <div class="hero-badges">
+            <span class="hero-badge-item">Sélection sur profil</span>
+            <span class="hero-badge-item">Places limitées</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <section class="main-content">
+      <div class="container">
+
+        <!-- Intro Section -->
+        <div class="intro-section">
+          <h2>L'Afrique n'a jamais eu autant besoin de talents comme le vôtre.</h2>
+          <ul class="intro-list">
+            <li><i class="fa-solid fa-circle-dot"></i> Accédez à des opportunités concrètes.</li>
+            <li><i class="fa-solid fa-circle-dot"></i> Rencontrez des entreprises ambitieuses.</li>
+            <li><i class="fa-solid fa-circle-dot"></i> Travaillez sur des projets qui comptent vraiment.</li>
+          </ul>
+          <p class="intro-subtitle">Ne regardez plus le futur se construire. Faites-en partie.</p>
+        </div>
+
+        <!-- Partners Section -->
+        <section class="partners-section">
+          <div class="partners-header">
+            <h3>Entreprises participantes</h3>
+          </div>
+          <div class="partners-carousel">
+            <div class="partner-logo">Logo Entreprise</div>
+            <div class="partner-logo">Logo Entreprise</div>
+            <div class="partner-logo">Logo Entreprise</div>
+            <div class="partner-logo">Logo Entreprise</div>
+            <div class="partner-logo">Logo Entreprise</div>
+            <div class="partner-logo">Logo Entreprise</div>
+            <div class="partner-logo">Logo Entreprise</div>
+            <div class="partner-logo">Logo Entreprise</div>
+            <!-- Duplicate for seamless scroll -->
+            <div class="partner-logo">Logo Entreprise</div>
+            <div class="partner-logo">Logo Entreprise</div>
+            <div class="partner-logo">Logo Entreprise</div>
+            <div class="partner-logo">Logo Entreprise</div>
+            <div class="partner-logo">Logo Entreprise</div>
+            <div class="partner-logo">Logo Entreprise</div>
+            <div class="partner-logo">Logo Entreprise</div>
+            <div class="partner-logo">Logo Entreprise</div>
+          </div>
+        </section>
+
+        <!-- Form Section -->
+        <section class="form-section" id="register-section">
+          <div class="form-card">
+            <div class="form-header">
+              <h2>Création de compte</h2>
+              <p>Rejoignez les talents du Africa Talent Summit</p>
+            </div>
+            <div class="form-body">
+
+              <!-- Stepper -->
+              <div class="stepper">
+                <div class="step active" data-step="1">
+                  <div class="step-circle">1</div>
+                  <div class="step-info">
+                    <strong>Contact</strong>
+                    <small>Vos informations</small>
+                  </div>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" data-step="2">
+                  <div class="step-circle">2</div>
+                  <div class="step-info">
+                    <strong>Matching</strong>
+                    <small>Votre profil</small>
+                  </div>
+                </div>
+              </div>
+
+              <form id="talent-form">
+                <!-- Step 1: Contact -->
+                <div class="form-step active" data-step="1">
+                  <h3 class="step-title">Informations de contact</h3>
+                  
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="nom">Nom *</label>
+                      <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="prenom">Prénom</label>
+                      <input type="text" id="prenom" name="prenom" placeholder="Votre prénom">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" placeholder="votre@email.com" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="secteur">Secteur d'activité *</label>
+                    <select id="secteur" name="secteur" required>
+                      <option value="">Sélectionnez votre secteur</option>
+                      <option value="tech">Technologie & IT</option>
+                      <option value="finance">Finance & Banque</option>
+                      <option value="sante">Santé & Pharma</option>
+                      <option value="energie">Énergie & Mines</option>
+                      <option value="agriculture">Agriculture & Agroalimentaire</option>
+                      <option value="commerce">Commerce & Distribution</option>
+                      <option value="industrie">Industrie & BTP</option>
+                      <option value="services">Services aux entreprises</option>
+                      <option value="education">Éducation & Formation</option>
+                      <option value="media">Médias & Communication</option>
+                      <option value="transport">Transport & Logistique</option>
+                      <option value="tourisme">Tourisme & Hôtellerie</option>
+                      <option value="assurance">Assurance & Mutuelle</option>
+                      <option value="immobilier">Immobilier</option>
+                      <option value="ONG">ONG & Associations</option>
+                      <option value="autre">Autre</option>
+                    </select>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="experience">Années d'expérience *</label>
+                      <select id="experience" name="experience" required>
+                        <option value="">Sélectionnez</option>
+                        <option value="0-2">0-2 ans</option>
+                        <option value="3-5">3-5 ans</option>
+                        <option value="6-10">6-10 ans</option>
+                        <option value="10+">10+ ans</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="ville">Ville</label>
+                      <input type="text" id="ville" name="ville" placeholder="Votre ville">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="pays">Pays *</label>
+                    <select id="pays" name="pays" required>
+                      <option value="">Sélectionnez votre pays</option>
+                      <option value="BF">Burkina Faso</option>
+                      <option value="CI">Côte d'Ivoire</option>
+                      <option value="FR">France</option>
+                      <option value="GA">Gabon</option>
+                      <option value="GN">Guinée</option>
+                      <option value="ML">Mali</option>
+                      <option value="NE">Niger</option>
+                      <option value="SN">Sénégal</option>
+                      <option value="TG">Togo</option>
+                      <option value="CM">Cameroun</option>
+                      <option value="CG">Congo</option>
+                      <option value="CD">RD Congo</option>
+                      <option value="MA">Maroc</option>
+                      <option value="DZ">Algérie</option>
+                      <option value="TN">Tunisie</option>
+                      <option value="EG">Égypte</option>
+                      <option value="ZA">Afrique du Sud</option>
+                      <option value="NG">Nigeria</option>
+                      <option value="KE">Kenya</option>
+                      <option value="ET">Éthiopie</option>
+                      <option value="BE">Belgique</option>
+                      <option value="CH">Suisse</option>
+                      <option value="CA">Canada</option>
+                      <option value="US">États-Unis</option>
+                      <option value="Autre">Autre</option>
+                    </select>
+                  </div>
+
+                  <div class="form-actions">
+                    <button type="button" class="btn btn-full" onclick="nextStep()">
+                      Continuer
+                      <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Step 2: Matching -->
+                <div class="form-step" data-step="2">
+                  <h3 class="step-title">Maximisez vos chances d'obtenir des entretiens grâce à notre matching intelligent</h3>
+                  <p style="font-size: 14px; color: var(--body-text); margin-bottom: 24px;">
+                    <em>(optionnel — vous pourrez le compléter plus tard)</em>
+                  </p>
+
+                  <div class="form-group">
+                    <label for="cv">CV <span class="optional">(optionnel)</span></label>
+                    <div class="file-upload" onclick="document.getElementById('cv-input').click()">
+                      <i class="fa-solid fa-cloud-upload-alt"></i>
+                      <p>Cliquez pour télécharger votre CV</p>
+                      <small>PDF, DOC ou DOCX (max 5 Mo)</small>
+                      <input type="file" id="cv-input" name="cv" accept=".pdf,.doc,.docx">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="poste">Poste souhaité <span class="optional">(optionnel)</span></label>
+                    <input type="text" id="poste" name="poste" placeholder="Ex: Chef de projet, Développeur Full Stack...">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="competences">Compétences <span class="optional">(optionnel)</span></label>
+                    <textarea id="competences" name="competences" placeholder="Listez vos compétences principales..."></textarea>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="pays-reloc">Pays souhaité de relocation <span class="optional">(optionnel)</span></label>
+                      <select id="pays-reloc" name="pays-reloc">
+                        <option value="">Peu importe</option>
+                        <option value="BF">Burkina Faso</option>
+                        <option value="CI">Côte d'Ivoire</option>
+                        <option value="FR">France</option>
+                        <option value="GA">Gabon</option>
+                        <option value="GN">Guinée</option>
+                        <option value="ML">Mali</option>
+                        <option value="NE">Niger</option>
+                        <option value="SN">Sénégal</option>
+                        <option value="TG">Togo</option>
+                        <option value="CM">Cameroun</option>
+                        <option value="CG">Congo</option>
+                        <option value="CD">RD Congo</option>
+                        <option value="MA">Maroc</option>
+                        <option value="DZ">Algérie</option>
+                        <option value="TN">Tunisie</option>
+                        <option value="EG">Égypte</option>
+                        <option value="ZA">Afrique du Sud</option>
+                        <option value="NG">Nigeria</option>
+                        <option value="KE">Kenya</option>
+                        <option value="ET">Éthiopie</option>
+                        <option value="BE">Belgique</option>
+                        <option value="CH">Suisse</option>
+                        <option value="CA">Canada</option>
+                        <option value="US">États-Unis</option>
+                        <option value="Autre">Autre</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="ville-reloc">Ville souhaitée de relocation <span class="optional">(optionnel)</span></label>
+                      <input type="text" id="ville-reloc" name="ville-reloc" placeholder="Ex: Abidjan, Dakar...">
+                    </div>
+                  </div>
+
+                  <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                      <i class="fa-solid fa-arrow-left"></i>
+                      Retour
+                    </button>
+                    <button type="submit" class="btn">
+                      <i class="fa-solid fa-paper-plane"></i>
+                      Accéder aux opportunités
+                    </button>
+                  </div>
+                </div>
+
+                <div class="form-footer">
+                  <p>
+                    <i class="fa-solid fa-shield-halved"></i>
+                    Sélection sur profil • Places limitées
+                  </p>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </div>
+
+  <!-- CONFIRMATION PAGE -->
+  <div class="confirm-page" id="confirm-page">
+    <section class="confirm-hero">
+      <div class="hero-content">
+        <h1 class="hero-title">
+          <span>Construisez la carrière qui</span>
+          <span class="highlight">façonnera l'Afrique de demain</span>
+        </h1>
+        <p class="hero-desc">
+          Rencontrez, les 5 et 6 novembre 2026, des entreprises panafricaines ambitieuses et accédez à des opportunités concrètes, sélectionnées pour leur impact et leur exigence.
+        </p>
+      </div>
+    </section>
+
+    <section class="confirm-form-section">
+      <div class="container">
+        <div class="confirm-form-card">
+          <div class="confirm-icon">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <h2>Merci pour votre inscription !</h2>
+          <p>Créez votre mot de passe pour activer votre compte</p>
+
+          <form id="password-form">
+            <div class="form-group">
+              <label for="password">Mot de passe *</label>
+              <input type="password" id="password" name="password" placeholder="Minimum 8 caractères" required minlength="8">
+            </div>
+
+            <div class="form-group">
+              <label for="password-confirm">Confirmer le mot de passe *</label>
+              <input type="password" id="password-confirm" name="password-confirm" placeholder="Confirmez votre mot de passe" required>
+            </div>
+
+            <div class="form-group">
+              <button type="submit" class="btn btn-full">
+                <i class="fa-solid fa-user-plus"></i>
+                Créer mon compte
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script>
+    /* ══ COUNTDOWN ══ */
+    (function countdown() {
+      const target = new Date('2026-11-05T09:00:00').getTime();
+      function update() {
+        const now = new Date().getTime(), diff = target - now;
+        if (diff <= 0) {
+          document.getElementById('countdown').innerHTML = '<span style="color:#f07c00;font-weight:700">Événement en cours !</span>';
+          return;
+        }
+        document.getElementById('cd-days').textContent = Math.floor(diff / 86400000);
+        document.getElementById('cd-hours').textContent = Math.floor(diff % 86400000 / 3600000);
+        document.getElementById('cd-mins').textContent = Math.floor(diff % 3600000 / 60000);
+        document.getElementById('cd-secs').textContent = Math.floor(diff % 60000 / 1000);
+      }
+      update();
+      setInterval(update, 1000);
+    })();
+
+    /* ══ SCROLL HEADER ══ */
+    const header = document.getElementById('site-header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 50);
+    }, { passive: true });
+
+    /* ══ BURGER ══ */
+    const menuToggle = document.getElementById('menu-toggle');
+    const siteNav = document.getElementById('site-nav');
+    if (menuToggle && siteNav) {
+      menuToggle.addEventListener('click', () => {
+        siteNav.classList.toggle('open');
+        menuToggle.classList.toggle('active');
+      });
+      document.addEventListener('click', (e) => {
+        if (!menuToggle.contains(e.target) && !siteNav.contains(e.target)) {
+          siteNav.classList.remove('open');
+          menuToggle.classList.remove('active');
+        }
+      });
+    }
+
+    let currentStep = 1;
+
+    function nextStep() {
+      // Validate required fields in step 1
+      const step1 = document.querySelector('.form-step[data-step="1"]');
+      const requiredFields = step1.querySelectorAll('[required]');
+      let isValid = true;
+
+      requiredFields.forEach(field => {
+        if (!field.value) {
+          field.style.borderColor = '#ef4444';
+          isValid = false;
+        } else {
+          field.style.borderColor = '';
+        }
+      });
+
+      if (!isValid) {
+        alert('Veuillez remplir tous les champs obligatoires.');
+        return;
+      }
+
+      // Move to step 2
+      document.querySelector('.form-step[data-step="1"]').classList.remove('active');
+      document.querySelector('.form-step[data-step="2"]').classList.add('active');
+      
+      document.querySelector('.step[data-step="1"]').classList.remove('active');
+      document.querySelector('.step[data-step="1"]').classList.add('done');
+      document.querySelector('.step[data-step="1"] .step-circle').innerHTML = '<i class="fa-solid fa-check"></i>';
+      
+      document.querySelector('.step[data-step="2"]').classList.add('active');
+      document.querySelector('.step-line').classList.add('done');
+
+      currentStep = 2;
+    }
+
+    function prevStep() {
+      document.querySelector('.form-step[data-step="2"]').classList.remove('active');
+      document.querySelector('.form-step[data-step="1"]').classList.add('active');
+      
+      document.querySelector('.step[data-step="2"]').classList.remove('active');
+      document.querySelector('.step[data-step="1"]').classList.remove('done');
+      document.querySelector('.step[data-step="1"] .step-circle').innerHTML = '1';
+      
+      document.querySelector('.step[data-step="1"]').classList.add('active');
+      document.querySelector('.step-line').classList.remove('done');
+
+      currentStep = 1;
+    }
+
+    // Form submission
+    document.getElementById('talent-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Show confirmation page
+      document.getElementById('main-page').style.display = 'none';
+      document.getElementById('confirm-page').classList.add('active');
+      document.getElementById('sticky-cta').classList.add('hidden');
+      
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Password form submission
+    document.getElementById('password-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const password = document.getElementById('password').value;
+      const passwordConfirm = document.getElementById('password-confirm').value;
+      
+      if (password !== passwordConfirm) {
+        alert('Les mots de passe ne correspondent pas.');
+        return;
+      }
+      
+      if (password.length < 8) {
+        alert('Le mot de passe doit contenir au moins 8 caractères.');
+        return;
+      }
+      
+      // In production, send data to backend
+      alert('Félicitations ! Votre compte a été créé avec succès. Vous allez être redirigé vers votre espace.');
+      
+      // Redirect to talent dashboard or landing
+      window.location.href = 'talent.html';
+    });
+
+    // Sticky bar hide/show on scroll up/down
+    let lastScroll = 0;
+    const stickyBar = document.getElementById('sticky-cta');
+
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+      
+      if (currentScroll <= 100) {
+        stickyBar.classList.remove('hidden');
+      } else if (currentScroll > lastScroll && currentScroll > 200) {
+        stickyBar.classList.add('hidden');
+      } else {
+        stickyBar.classList.remove('hidden');
+      }
+      
+      lastScroll = currentScroll;
+    });
+  </script>
+
+</body>
+</html>

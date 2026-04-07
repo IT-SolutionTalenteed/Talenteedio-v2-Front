@@ -19,6 +19,7 @@ import MesFavoris from '../components/MesFavoris.vue'
 import LegalPage from '../components/LegalPage.vue'
 import EditProfile from '../components/EditProfile.vue'
 import CompanyLanding from '../components/CompanyLanding.vue'
+import StaticPage from '../components/static/StaticPage.vue'
 
 // Admin form pages
 import JobContractForm from '../components/admin/JobContractForm.vue'
@@ -113,6 +114,73 @@ const routes = [
     path: '/legal/:slug',
     name: 'LegalPage',
     component: LegalPage
+  },
+  // Static pages
+  {
+    path: '/static/corporate',
+    name: 'StaticCorporate',
+    component: () => import('../components/static/StaticPage.vue'),
+    props: { page: 'corporate' }
+  },
+  {
+    path: '/static/company',
+    name: 'StaticCompany',
+    component: () => import('../components/static/StaticPage.vue'),
+    props: { page: 'company' }
+  },
+  {
+    path: '/static/entreprises',
+    name: 'StaticEntreprises',
+    component: () => import('../components/static/StaticPage.vue'),
+    props: { page: 'entreprises' }
+  },
+  {
+    path: '/static/talent',
+    name: 'StaticTalent',
+    component: () => import('../components/static/StaticPage.vue'),
+    props: { page: 'talent' }
+  },
+  {
+    path: '/static/talent-landing',
+    name: 'StaticTalentLanding',
+    component: () => import('../components/static/StaticPage.vue'),
+    props: { page: 'talent-landing' }
+  },
+  {
+    path: '/static/talent-confirm',
+    name: 'StaticTalentConfirm',
+    component: () => import('../components/static/StaticPage.vue'),
+    props: { page: 'talent-confirm' }
+  },
+  {
+    path: '/static/matching',
+    name: 'StaticMatching',
+    component: () => import('../components/static/StaticPage.vue'),
+    props: { page: 'matching' }
+  },
+  {
+    path: '/static/comment-ca-marche',
+    name: 'StaticCommentCaMarche',
+    component: () => import('../components/static/StaticPage.vue'),
+    props: { page: 'comment-ca-marche' }
+  },
+  {
+    path: '/static/jobs',
+    name: 'StaticJobs',
+    component: () => import('../components/static/StaticPage.vue'),
+    props: { page: 'jobs' }
+  },
+  {
+    path: '/static/talents',
+    name: 'StaticTalents',
+    component: () => import('../components/static/StaticPage.vue'),
+    props: { page: 'talents' }
+  },
+  {
+    path: '/static/corporate-landing',
+    name: 'StaticCorporateLanding',
+    component: () => import('../components/static/StaticPage.vue'),
+    props: { page: 'corporate-landing' }
   },
   {
     path: '/login',

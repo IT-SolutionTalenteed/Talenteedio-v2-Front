@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Espace Entreprises — Africa Talent Summit 2026</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    /* ══ MINI HERO ══ */
+    .corp-hero {
+      position: relative;
+      background: linear-gradient(160deg, #020830 0%, #040a5d 50%, #0d1a8a 100%);
+      color: #fff;
+      padding: 48px 0 40px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .corp-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        45deg, transparent, transparent 35px,
+        rgba(255,255,255,.015) 35px, rgba(255,255,255,.015) 70px
+      );
+    }
+
+    .corp-hero-content { position: relative; z-index: 1; }
+
+    .corp-event-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(240,124,0,.15);
+      border: 1.5px solid rgba(240,124,0,.4);
+      color: #f07c00;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      padding: 7px 18px;
+      border-radius: 50px;
+      margin-bottom: 20px;
+    }
+
+    .corp-hero-title {
+      font-size: clamp(22px, 3.5vw, 38px);
+      font-weight: 900;
+      text-transform: uppercase;
+      line-height: 1.2;
+      letter-spacing: -0.3px;
+      margin: 0 0 14px;
+    }
+
+    .corp-hero-title em {
+      font-style: normal;
+      color: #f07c00;
+    }
+
+    .corp-hero-desc {
+      font-size: clamp(14px, 1.8vw, 17px);
+      line-height: 1.7;
+      opacity: .85;
+      margin: 0 auto;
+      max-width: 680px;
+    }
+
+    /* ══ MAIN SECTION ══ */
+    .corp-section { padding: 60px 0 100px; background: var(--light-bg); }
+
+    /* ══ LOGOS STRIP ══ */
+    /* Sera affiché une fois les logos des entreprises participantes disponibles */
+    .corp-logos-strip { display: none; }
+
+    /* ══ PRICING SECTION ══ */
+    .pricing-section {
+      padding: 80px 0;
+      background: #fff;
+    }
+
+    .pricing-header {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 56px;
+    }
+
+    .pricing-header h2 {
+      font-size: clamp(26px, 3vw, 38px);
+      font-weight: 900;
+      color: var(--navy);
+      margin: 0 0 12px;
+    }
+
+    .pricing-header p {
+      font-size: 16px;
+      color: var(--body-text);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .pricing-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 40px 32px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.07);
+      border: 2px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      transition: transform .25s, box-shadow .25s;
+      position: relative;
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 48px rgba(0,0,0,.12);
+    }
+
+    .pricing-card.featured {
+      border-color: #f07c00;
+      box-shadow: 0 8px 40px rgba(240,124,0,.18);
+    }
+
+    .pricing-featured-badge {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #f07c00;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 6px 18px;
+      border-radius: 50px;
+      white-space: nowrap;
+    }
+
+    .pricing-tier {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .pricing-tier-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .tier-platinum .pricing-tier-icon { background: rgba(148,163,184,.15); color: #64748b; }
+    .tier-gold .pricing-tier-icon     { background: rgba(240,124,0,.12);    color: #f07c00; }
+    .tier-silver .pricing-tier-icon   { background: rgba(25,43,194,.1);     color: var(--blue); }
+
+    .pricing-tier-name {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--navy);
+    }
+
+    .tier-platinum .pricing-tier-name { color: #475569; }
+    .tier-gold .pricing-tier-name     { color: #c2600a; }
+    .tier-silver .pricing-tier-name   { color: var(--navy); }
+
+    .pricing-desc {
+      font-size: 14px;
+      color: var(--body-text);
+      line-height: 1.6;
+      margin: 0 0 24px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      flex: 1;
+    }
+
+    .pricing-features {
+      list-style: none;
+      margin: 0 0 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .pricing-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      color: #374151;
+    }
+
+    .pricing-features li i {
+      color: #22c55e;
+      font-size: 14px;
+      margin-top: 1px;
+      flex-shrink: 0;
+    }
+
+    .pricing-cta {
+      margin-top: auto;
+    }
+
+    .pricing-note {
+      text-align: center;
+      font-size: 12px;
+      color: var(--body-text);
+      margin: 10px 0 0;
+    }
+
+    .pricing-coming-soon {
+      font-size: 12.5px;
+      color: var(--body-text);
+      font-style: italic;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    /* ══ EVENT FOOTER SECTION ══ */
+    .event-footer-section {
+      background: var(--navy);
+      color: #fff;
+      padding: 80px 0;
+    }
+
+    .event-footer-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .event-footer-section h2 {
+      font-size: clamp(24px, 3vw, 38px);
+      font-weight: 900;
+      margin: 0 0 20px;
+      text-transform: uppercase;
+    }
+
+    .event-footer-section h2 em {
+      color: #f07c00;
+      font-style: normal;
+    }
+
+    .event-footer-section p {
+      font-size: 16px;
+      line-height: 1.8;
+      opacity: .8;
+      margin: 0 0 32px;
+    }
+
+    .event-kpis {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+      margin: 40px 0;
+    }
+
+    .event-kpi {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .event-kpi-number {
+      font-size: 44px;
+      font-weight: 900;
+      color: #f07c00;
+      line-height: 1;
+    }
+
+    .event-kpi-label {
+      font-size: 13px;
+      opacity: .7;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    /* ══ RESPONSIVE ══ */
+    @media (max-width: 960px) {
+      .content-layout { grid-template-columns: 1fr !important; }
+      .cta-section-sidebar { position: static !important; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 460px; margin: 0 auto; }
+    }
+
+    @media (max-width: 600px) {
+      .site-nav { display: none; }
+      .site-nav.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 80px; left: 0; right: 0;
+        background: #fff;
+        padding: 12px 0;
+        box-shadow: 0 8px 32px rgba(0,0,0,.1);
+        z-index: 999;
+      }
+      .site-nav.open ul { flex-direction: column; gap: 0; }
+      .site-nav.open ul a { padding: 14px 24px; display: block; font-size: 15px; }
+      .menu-toggle { display: flex; }
+      .header-btns .btn--sm { display: none; }
+      .form-row { grid-template-columns: 1fr; }
+      .event-kpis { gap: 28px; }
+      .event-kpi-number { font-size: 34px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ HEADER ══ -->
+  <header class="site-header" id="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <a href="/" class="site-logo">
+          <img src="assets/logo.png" alt="Talenteed" width="148" height="52">
+          <span class="site-tagline">Africa Talent Summit</span>
+        </a>
+        <nav class="site-nav" id="site-nav">
+          <ul>
+            <li><a href="/">Accueil</a></li>
+            <li><a href="talent-landing.html">Talents</a></li>
+            <li><a href="#contact-form">Nous rejoindre</a></li>
+            <li><a href="#pricing">Offres</a></li>
+          </ul>
+        </nav>
+        <div class="header-btns">
+          <a href="#contact-form" class="btn btn--orange btn--sm">
+            <i class="fa-solid fa-handshake"></i>
+            Devenir partenaire
+          </a>
+        </div>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ MINI HERO ══ -->
+  <section class="corp-hero">
+    <div class="container">
+      <div class="corp-hero-content">
+        <div class="corp-event-badge">
+          <i class="fa-solid fa-building"></i>
+          Africa Talent Summit — 5 &amp; 6 Novembre 2026
+        </div>
+        <h1 class="corp-hero-title">
+          Accédez aux talents que<br>
+          <em>votre croissance exige</em>
+        </h1>
+        <p class="corp-hero-desc">
+          Rencontrez, les 5 et 6 novembre 2026, 2&nbsp;000 profils hautement qualifiés, présélectionnés pour répondre aux besoins réels des entreprises opérant en Afrique.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FORMULAIRE + CTA STICKY ══ -->
+  <section class="corp-section" id="contact-form">
+    <div class="container">
+      <div class="content-layout">
+
+        <!-- Formulaire de contact -->
+        <div>
+          <div class="form-card">
+            <div class="form-header">
+              <h2 class="form-title">
+                <i class="fa-solid fa-building-circle-check"></i>
+                Rejoindre le Summit
+              </h2>
+              <p class="form-subtitle">Accédez aux meilleurs talents d'Afrique et de la diaspora</p>
+            </div>
+
+            <form id="corp-form" onsubmit="handleCorpSubmit(event)" novalidate>
+
+              <div class="form-section-title">
+                <i class="fa-solid fa-user-tie"></i>
+                Contact principal
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Nom <span class="required">*</span></label>
+                  <input name="nom" type="text" class="form-input" placeholder="Ex : Dupont" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Prénom</label>
+                  <input name="prenom" type="text" class="form-input" placeholder="Ex : Jean">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Email professionnel <span class="required">*</span></label>
+                <input name="email" type="email" class="form-input" placeholder="contact@entreprise.com" required>
+              </div>
+
+              <div class="form-section-title">
+                <i class="fa-solid fa-building"></i>
+                Informations entreprise
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Nom de l'entreprise <span class="required">*</span></label>
+                <input name="entreprise" type="text" class="form-input" placeholder="Ex : TechCorp Africa" required>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Secteur d'activité <span class="required">*</span></label>
+                  <select name="secteur" class="form-input" required>
+                    <option value="">Sélectionner...</option>
+                    <option>Banque / Finance</option>
+                    <option>Assurance</option>
+                    <option>Technologie / IT</option>
+                    <option>Santé</option>
+                    <option>Industrie</option>
+                    <option>Commerce / Distribution</option>
+                    <option>BTP / Immobilier</option>
+                    <option>Énergie / Mines</option>
+                    <option>Agriculture / Agroalimentaire</option>
+                    <option>Télécommunications</option>
+                    <option>Consulting / Conseil</option>
+                    <option>Éducation / Formation</option>
+                    <option>Transport / Logistique</option>
+                    <option>Autre</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Taille de l'entreprise</label>
+                  <select name="taille" class="form-input">
+                    <option value="">Sélectionner...</option>
+                    <option>1–10 employés</option>
+                    <option>11–50 employés</option>
+                    <option>51–200 employés</option>
+                    <option>201–500 employés</option>
+                    <option>500+ employés</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Ville</label>
+                  <input name="ville" type="text" class="form-input" placeholder="Ex : Abidjan">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Pays</label>
+                  <select name="pays" class="form-input">
+                    <option value="">Sélectionner...</option>
+                    <optgroup label="Europe">
+                      <option>France</option>
+                      <option>Luxembourg</option>
+                      <option>Belgique</option>
+                      <option>Suisse</option>
+                      <option>Royaume-Uni</option>
+                      <option>Allemagne</option>
+                      <option>Pays-Bas</option>
+                    </optgroup>
+                    <optgroup label="Afrique de l'Ouest">
+                      <option>Sénégal</option>
+                      <option>Côte d'Ivoire</option>
+                      <option>Mali</option>
+                      <option>Burkina Faso</option>
+                      <option>Ghana</option>
+                      <option>Nigeria</option>
+                      <option>Togo</option>
+                      <option>Bénin</option>
+                      <option>Guinée</option>
+                      <option>Niger</option>
+                    </optgroup>
+                    <optgroup label="Afrique Centrale">
+                      <option>Cameroun</option>
+                      <option>Congo (RDC)</option>
+                      <option>Congo (Brazzaville)</option>
+                      <option>Gabon</option>
+                    </optgroup>
+                    <optgroup label="Afrique du Nord">
+                      <option>Maroc</option>
+                      <option>Tunisie</option>
+                      <option>Algérie</option>
+                    </optgroup>
+                    <optgroup label="Afrique de l'Est & Australe">
+                      <option>Kenya</option>
+                      <option>Afrique du Sud</option>
+                      <option>Rwanda</option>
+                      <option>Éthiopie</option>
+                    </optgroup>
+                    <option>Autre</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-error" id="corp-error">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span id="corp-error-msg"></span>
+              </div>
+              <div class="form-success" id="corp-success">
+                <i class="fa-solid fa-check-circle"></i>
+                Votre demande a été envoyée ! Notre équipe vous contactera sous 24h.
+              </div>
+
+              <button type="submit" class="btn btn--blue btn--lg btn--block" id="corp-btn">
+                <i class="fa-solid fa-rocket"></i>
+                Soumettre ma candidature
+              </button>
+
+              <p class="form-note">
+                En soumettant ce formulaire, vous acceptez nos
+                <a href="/legal/terms-and-conditions">conditions d'utilisation</a> et notre
+                <a href="/legal/privacy-policy">politique de confidentialité</a>.
+              </p>
+            </form>
+          </div>
+        </div>
+
+        <!-- ══ STICKY CTA DROITE ══ -->
+        <div class="cta-section-sidebar">
+
+          <div class="cta-card">
+            <div class="cta-icon">
+              <i class="fa-solid fa-phone-volume"></i>
+            </div>
+            <h3 class="cta-title">Réserver un appel</h3>
+            <p class="cta-text">
+              Notre équipe est disponible pour vous présenter les opportunités du Summit et construire votre stratégie de recrutement.
+            </p>
+            <a href="https://calendly.com" target="_blank" rel="noopener"
+              class="btn btn--orange btn--lg btn--block">
+              <i class="fa-solid fa-calendar-check"></i>
+              Réserver un créneau
+            </a>
+          </div>
+
+          <!-- Avantages -->
+          <div class="benefits-list">
+            <div class="benefit-item">
+              <i class="fa-solid fa-users"></i>
+              <span>2 000+ talents présélectionnés</span>
+            </div>
+            <div class="benefit-item">
+              <i class="fa-solid fa-brain"></i>
+              <span>Matching IA par profil et poste</span>
+            </div>
+            <div class="benefit-item">
+              <i class="fa-solid fa-calendar-days"></i>
+              <span>Entretiens planifiés sur 2 jours</span>
+            </div>
+            <div class="benefit-item">
+              <i class="fa-solid fa-globe-africa"></i>
+              <span>Accès aux marchés panafricains</span>
+            </div>
+            <div class="benefit-item">
+              <i class="fa-solid fa-headset"></i>
+              <span>Accompagnement dédié</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ LOGOS DES ENTREPRISES PARTICIPANTES ══ -->
+  <!-- Sera affiché au fur et à mesure des partenaires signés -->
+  <div class="corp-logos-strip" aria-hidden="true">
+    <!-- Logo entreprise · Logo entreprise · Logo entreprise · Logo entreprise -->
+  </div>
+
+  <!-- ══ OFFRES DE PARTICIPATION ══ -->
+  <section class="pricing-section" id="pricing">
+    <div class="container">
+      <div class="pricing-header">
+        <span class="section-badge">Offres de partenariat</span>
+        <h2>Choisissez votre formule</h2>
+        <p>Des offres adaptées à vos ambitions de recrutement et à votre stratégie de marque employeur en Afrique.</p>
+      </div>
+
+      <div class="pricing-grid">
+
+        <!-- SILVER -->
+        <div class="pricing-card tier-silver">
+          <div class="pricing-tier">
+            <div class="pricing-tier-icon"><i class="fa-solid fa-medal"></i></div>
+            <span class="pricing-tier-name">Silver</span>
+          </div>
+          <p class="pricing-desc">
+            Idéal pour les entreprises souhaitant démarrer leur recrutement panafricain avec une présence ciblée.
+          </p>
+          <p class="pricing-coming-soon">
+            <i class="fa-solid fa-clock"></i> Détails à venir
+          </p>
+          <ul class="pricing-features">
+            <li><i class="fa-solid fa-check"></i> Accès à la plateforme de matching</li>
+            <li><i class="fa-solid fa-check"></i> Profil entreprise visible</li>
+            <li><i class="fa-solid fa-check"></i> Entretiens sur 2 jours</li>
+          </ul>
+          <div class="pricing-cta">
+            <a href="https://calendly.com" target="_blank" rel="noopener"
+              class="btn btn--block" style="border:2px solid var(--blue);color:var(--blue);background:#fff;justify-content:center">
+              <i class="fa-solid fa-calendar-check"></i>
+              Réserver un appel
+            </a>
+            <p class="pricing-note">Discutons de votre projet</p>
+          </div>
+        </div>
+
+        <!-- GOLD — featured -->
+        <div class="pricing-card tier-gold featured">
+          <div class="pricing-featured-badge">
+            <i class="fa-solid fa-star"></i> Le plus populaire
+          </div>
+          <div class="pricing-tier">
+            <div class="pricing-tier-icon"><i class="fa-solid fa-trophy"></i></div>
+            <span class="pricing-tier-name">Gold</span>
+          </div>
+          <p class="pricing-desc">
+            Pour les entreprises en forte croissance qui souhaitent se positionner comme employeurs de référence en Afrique.
+          </p>
+          <p class="pricing-coming-soon">
+            <i class="fa-solid fa-clock"></i> Détails à venir
+          </p>
+          <ul class="pricing-features">
+            <li><i class="fa-solid fa-check"></i> Tout l'offre Silver</li>
+            <li><i class="fa-solid fa-check"></i> Visibilité renforcée</li>
+            <li><i class="fa-solid fa-check"></i> Quota d'entretiens élargi</li>
+            <li><i class="fa-solid fa-check"></i> Support dédié</li>
+          </ul>
+          <div class="pricing-cta">
+            <a href="https://calendly.com" target="_blank" rel="noopener"
+              class="btn btn--orange btn--lg btn--block">
+              <i class="fa-solid fa-calendar-check"></i>
+              Réserver un appel
+            </a>
+            <p class="pricing-note">Sans engagement — premier échange gratuit</p>
+          </div>
+        </div>
+
+        <!-- PLATINUM -->
+        <div class="pricing-card tier-platinum">
+          <div class="pricing-tier">
+            <div class="pricing-tier-icon"><i class="fa-solid fa-gem"></i></div>
+            <span class="pricing-tier-name">Platinum</span>
+          </div>
+          <p class="pricing-desc">
+            Positionnement premium pour les grands groupes qui souhaitent une intégration totale et une visibilité maximale.
+          </p>
+          <p class="pricing-coming-soon">
+            <i class="fa-solid fa-clock"></i> Détails à venir
+          </p>
+          <ul class="pricing-features">
+            <li><i class="fa-solid fa-check"></i> Tout l'offre Gold</li>
+            <li><i class="fa-solid fa-check"></i> Partenariat exclusif</li>
+            <li><i class="fa-solid fa-check"></i> Branding événementiel</li>
+            <li><i class="fa-solid fa-check"></i> Accès VIP &amp; networking</li>
+            <li><i class="fa-solid fa-check"></i> Rapport post-événement</li>
+          </ul>
+          <div class="pricing-cta">
+            <a href="https://calendly.com" target="_blank" rel="noopener"
+              class="btn btn--block" style="border:2px solid #64748b;color:#475569;background:#fff;justify-content:center">
+              <i class="fa-solid fa-calendar-check"></i>
+              Réserver un appel
+            </a>
+            <p class="pricing-note">Offre sur-mesure — contactez-nous</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ À PROPOS DE L'ÉVÉNEMENT ══ -->
+  <section class="event-footer-section">
+    <div class="container">
+      <div class="event-footer-inner">
+
+        <span class="section-badge" style="background:rgba(240,124,0,.2);color:#f07c00">
+          Africa Talent Summit Luxembourg
+        </span>
+
+        <h2 style="margin-top:16px">
+          Le rendez-vous des <em>talents et des entreprises</em><br>
+          qui bâtissent l'Afrique de demain
+        </h2>
+
+        <p>
+          Les 5 et 6 novembre 2026, Luxembourg accueille la première édition de l'Africa Talent Summit — deux jours d'échanges, d'entretiens et de connexions entre les entreprises les plus ambitieuses d'Afrique et les talents de la diaspora.
+        </p>
+
+        <div class="event-kpis">
+          <div class="event-kpi">
+            <span class="event-kpi-number">2 000+</span>
+            <span class="event-kpi-label">Talents</span>
+          </div>
+          <div class="event-kpi">
+            <span class="event-kpi-number">2</span>
+            <span class="event-kpi-label">Jours</span>
+          </div>
+          <div class="event-kpi">
+            <span class="event-kpi-number">30+</span>
+            <span class="event-kpi-label">Pays représentés</span>
+          </div>
+          <div class="event-kpi">
+            <span class="event-kpi-number">100%</span>
+            <span class="event-kpi-label">Présélectionné</span>
+          </div>
+        </div>
+
+        <!-- Texte complémentaire sur l'événement — à compléter -->
+        <!-- Ajoutez ici le contenu de la slide suivante une fois disponible -->
+
+        <a href="#contact-form" class="btn btn--orange btn--lg" style="margin-top:8px">
+          <i class="fa-solid fa-handshake"></i>
+          Devenir partenaire
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FOOTER ══ -->
+  <footer class="site-footer">
+    <div class="footer-bg"></div>
+    <div class="footer-overlay"></div>
+    <div class="footer-inner">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-logo">
+              <img src="assets/logo.png" alt="Talenteed" width="180">
+            </div>
+            <p>L'Africa Talent Summit Luxembourg est la première plateforme stratégique européenne dédiée à la mobilisation de l'intelligence collective et des compétences rares de la diaspora, afin d'accélérer la performance des entreprises en Afrique.</p>
+            <div class="footer-socials">
+              <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+              <a href="https://x.com/" target="_blank" rel="noopener" aria-label="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+              <a href="https://www.linkedin.com/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+              <a href="https://wa.me/" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+            </div>
+          </div>
+          <div class="footer-col">
+            <h4>Contactez-nous</h4>
+            <div class="contact-item"><i class="fa-solid fa-phone"></i><a href="tel:+3522060162">+3522060162</a></div>
+            <div class="contact-item"><i class="fa-solid fa-location-dot"></i><span>57 avenue de la Gare, L-1611 Luxembourg</span></div>
+            <div class="contact-item"><i class="fa-solid fa-envelope"></i><a href="mailto:contact@africatalentsummit.com">contact@africatalentsummit.com</a></div>
+          </div>
+          <div class="footer-col">
+            <h4>Navigation</h4>
+            <ul>
+              <li><a href="talent-landing.html"><i class="fa-solid fa-chevron-right"></i> Espace Talents</a></li>
+              <li><a href="#pricing"><i class="fa-solid fa-chevron-right"></i> Offres Entreprises</a></li>
+              <li><a href="mailto:contact@africatalentsummit.com"><i class="fa-solid fa-chevron-right"></i> Presse et Média</a></li>
+              <li><a href="mailto:contact@africatalentsummit.com"><i class="fa-solid fa-chevron-right"></i> Partenariats</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Informations légales</h4>
+            <ul>
+              <li><a href="/legal/terms-and-conditions"><i class="fa-solid fa-chevron-right"></i> Conditions générales</a></li>
+              <li><a href="/legal/privacy-policy"><i class="fa-solid fa-chevron-right"></i> Confidentialité</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>© <script>document.write(new Date().getFullYear())</script> Solution Talenteed SARL R.C.S. Luxembourg B 255 801. Tous droits réservés. Africa Talent Summit Luxembourg est une marque déposée.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* ══ BURGER ══ */
+    const menuToggle = document.getElementById('menu-toggle');
+    const siteNav    = document.getElementById('site-nav');
+    menuToggle.addEventListener('click', () => {
+      menuToggle.classList.toggle('open');
+      siteNav.classList.toggle('open');
+    });
+
+    /* ══ SCROLL HEADER ══ */
+    window.addEventListener('scroll', () => {
+      document.getElementById('site-header').classList.toggle('scrolled', window.scrollY > 50);
+    }, { passive: true });
+
+    /* ══ FORMULAIRE CORPORATE ══ */
+    function showEl(id)  { document.getElementById(id).classList.add('visible'); }
+    function hideEl(id)  { document.getElementById(id).classList.remove('visible'); }
+
+    function handleCorpSubmit(e) {
+      e.preventDefault();
+      hideEl('corp-error');
+      hideEl('corp-success');
+
+      const nom      = document.querySelector('[name="nom"]').value.trim();
+      const email    = document.querySelector('[name="email"]').value.trim();
+      const entrep   = document.querySelector('[name="entreprise"]').value.trim();
+      const secteur  = document.querySelector('[name="secteur"]').value;
+      const errEl    = document.getElementById('corp-error');
+      const errMsg   = document.getElementById('corp-error-msg');
+
+      if (!nom || !email || !entrep || !secteur) {
+        errMsg.textContent = 'Veuillez remplir tous les champs obligatoires.';
+        errEl.classList.add('visible');
+        return;
+      }
+
+      const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRe.test(email)) {
+        errMsg.textContent = 'Adresse e-mail invalide.';
+        errEl.classList.add('visible');
+        return;
+      }
+
+      const btn = document.getElementById('corp-btn');
+      btn.innerHTML = '<span class="spinner"></span> Envoi en cours…';
+      btn.disabled  = true;
+
+      /* TODO: POST /api/public/ats/corporate/contact */
+      setTimeout(() => {
+        btn.innerHTML = '<i class="fa-solid fa-rocket"></i> Soumettre ma candidature';
+        btn.disabled  = false;
+        showEl('corp-success');
+        document.getElementById('corp-form').reset();
+      }, 1800);
+    }
+  </script>
+</body>
+</html>

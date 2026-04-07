@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jobs & Offres d'emploi — Africa Talent Summit 2026</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    /* ══ JOBS HERO ══ */
+    .jobs-hero {
+      position: relative;
+      background: linear-gradient(160deg, #020830 0%, #040a5d 50%, #0d1a8a 100%);
+      color: #fff;
+      padding: 56px 0 52px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .jobs-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        45deg, transparent, transparent 35px,
+        rgba(255,255,255,.015) 35px, rgba(255,255,255,.015) 70px
+      );
+    }
+
+    .jobs-hero-content { position: relative; z-index: 1; }
+
+    .jobs-event-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(240,124,0,.15);
+      border: 1.5px solid rgba(240,124,0,.4);
+      color: #f07c00;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      padding: 7px 18px;
+      border-radius: 50px;
+      margin-bottom: 20px;
+    }
+
+    .jobs-hero-title {
+      font-size: clamp(24px, 4vw, 42px);
+      font-weight: 900;
+      text-transform: uppercase;
+      line-height: 1.2;
+      letter-spacing: -0.3px;
+      margin: 0 0 16px;
+    }
+
+    .jobs-hero-title em {
+      font-style: normal;
+      color: #f07c00;
+    }
+
+    .jobs-hero-desc {
+      font-size: clamp(14px, 1.8vw, 17px);
+      line-height: 1.7;
+      opacity: .85;
+      margin: 0 auto;
+      max-width: 720px;
+    }
+
+    /* ══ SEARCH & FILTERS ══ */
+    .search-section {
+      background: #fff;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 72px;
+      z-index: 100;
+    }
+
+    .search-form {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+
+    .search-group {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .search-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--navy);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-bottom: 6px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      color: #1e293b;
+      transition: border-color .2s, box-shadow .2s;
+      background: #fff;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(25,43,194,.1);
+    }
+
+    .search-input::placeholder {
+      color: #94a3b8;
+    }
+
+    .search-btn {
+      padding: 12px 28px;
+      background: var(--orange);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .search-btn:hover {
+      background: #d96b00;
+      transform: translateY(-1px);
+    }
+
+    /* ══ JOBS SECTION ══ */
+    .jobs-section {
+      padding: 60px 0 100px;
+      background: var(--light-bg);
+    }
+
+    .jobs-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .jobs-count {
+      font-size: 15px;
+      color: var(--body-text);
+    }
+
+    .jobs-count strong {
+      color: var(--navy);
+      font-weight: 700;
+    }
+
+    .jobs-sort select {
+      padding: 10px 16px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      color: #1e293b;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .jobs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 24px;
+    }
+
+    .job-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.05);
+      border: 2px solid transparent;
+      transition: transform .25s, box-shadow .25s, border-color .25s;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .job-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,.1);
+      border-color: var(--blue);
+    }
+
+    .job-card-header {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .job-company-logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      background: var(--light-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+      border: 1px solid var(--border);
+    }
+
+    .job-card-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .job-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--navy);
+      margin: 0 0 6px;
+      line-height: 1.3;
+    }
+
+    .job-company {
+      font-size: 14px;
+      color: var(--body-text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .job-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .job-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .job-tag--location {
+      background: rgba(25,43,194,.08);
+      color: var(--blue);
+    }
+
+    .job-tag--type {
+      background: rgba(240,124,0,.1);
+      color: #c2600a;
+    }
+
+    .job-tag--sector {
+      background: rgba(22,163,74,.1);
+      color: #15803d;
+    }
+
+    .job-description {
+      font-size: 14px;
+      color: var(--body-text);
+      line-height: 1.6;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .job-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      margin-top: auto;
+    }
+
+    .job-meta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .job-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 13px;
+      color: var(--body-text);
+    }
+
+    .job-meta-item i {
+      color: var(--blue);
+      font-size: 12px;
+    }
+
+    .job-apply-btn {
+      padding: 10px 20px;
+      background: var(--orange);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .job-apply-btn:hover {
+      background: #d96b00;
+      transform: translateY(-1px);
+    }
+
+    .job-new-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #22c55e;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    /* ══ CATEGORIES SECTION ══ */
+    .categories-section {
+      padding: 80px 0;
+      background: #fff;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 48px;
+    }
+
+    .section-header h2 {
+      font-size: clamp(24px, 3vw, 36px);
+      font-weight: 900;
+      color: var(--navy);
+      margin: 0 0 12px;
+      text-transform: uppercase;
+    }
+
+    .section-header p {
+      font-size: 16px;
+      color: var(--body-text);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .category-card {
+      background: var(--light-bg);
+      border-radius: 14px;
+      padding: 24px 20px;
+      text-align: center;
+      transition: transform .25s, box-shadow .25s;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+
+    .category-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,.08);
+      border-color: var(--blue);
+    }
+
+    .category-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+      font-size: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+
+    .category-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      margin: 0 0 4px;
+    }
+
+    .category-count {
+      font-size: 13px;
+      color: var(--body-text);
+    }
+
+    /* ══ NEWSLETTER SECTION ══ */
+    .newsletter-section {
+      background: var(--navy);
+      color: #fff;
+      padding: 80px 0;
+    }
+
+    .newsletter-inner {
+      max-width: 560px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .newsletter-section h2 {
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 900;
+      margin: 0 0 14px;
+      text-transform: uppercase;
+    }
+
+    .newsletter-section h2 em {
+      color: #f07c00;
+      font-style: normal;
+    }
+
+    .newsletter-section p {
+      font-size: 15px;
+      line-height: 1.7;
+      opacity: .8;
+      margin: 0 0 28px;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .newsletter-input {
+      flex: 1;
+      min-width: 260px;
+      padding: 14px 18px;
+      border: 2px solid rgba(255,255,255,.2);
+      border-radius: 10px;
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .newsletter-input::placeholder {
+      color: rgba(255,255,255,.5);
+    }
+
+    .newsletter-input:focus {
+      outline: none;
+      border-color: #f07c00;
+      background: rgba(255,255,255,.12);
+    }
+
+    .newsletter-btn {
+      padding: 14px 28px;
+      background: #f07c00;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .newsletter-btn:hover {
+      background: #d96b00;
+    }
+
+    /* ══ RESPONSIVE ══ */
+    @media (max-width: 960px) {
+      .jobs-grid { grid-template-columns: 1fr; }
+      .categories-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 600px) {
+      .site-nav { display: none; }
+      .site-nav.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 80px; left: 0; right: 0;
+        background: #fff;
+        padding: 12px 0;
+        box-shadow: 0 8px 32px rgba(0,0,0,.1);
+        z-index: 999;
+      }
+      .site-nav.open ul { flex-direction: column; gap: 0; }
+      .site-nav.open ul a { padding: 14px 24px; display: block; font-size: 15px; }
+      .menu-toggle { display: flex; }
+      .header-btns .btn--sm { display: none; }
+      .search-form { flex-direction: column; }
+      .search-group { min-width: 100%; }
+      .categories-grid { grid-template-columns: 1fr 1fr; }
+      .job-footer { flex-direction: column; gap: 12px; align-items: flex-start; }
+      .job-apply-btn { width: 100%; justify-content: center; }
+      .newsletter-form { flex-direction: column; }
+      .newsletter-input { min-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ TOPBAR ══ -->
+  <div class="topbar">
+    <div class="container">
+      <div class="topbar-left">
+        <span class="topbar-dot"></span>
+        <span class="topbar-label">Africa Talent Summit 2026 — 5 & 6 Novembre, Abidjan</span>
+      </div>
+      <div class="countdown-blocks">
+        <div class="cd-block"><span class="cd-num" id="cd-days">---</span><span class="cd-unit">Jours</span></div>
+        <span class="cd-sep">:</span>
+        <div class="cd-block"><span class="cd-num" id="cd-hours">--</span><span class="cd-unit">Heures</span></div>
+        <span class="cd-sep">:</span>
+        <div class="cd-block"><span class="cd-num" id="cd-mins">--</span><span class="cd-unit">Min</span></div>
+        <span class="cd-sep">:</span>
+        <div class="cd-block"><span class="cd-num" id="cd-secs">--</span><span class="cd-unit">Sec</span></div>
+      </div>
+      <a href="talent-landing.html" class="topbar-link">
+        <i class="fa-solid fa-user-tie"></i> Postuler
+      </a>
+    </div>
+  </div>
+
+  <!-- ══ HEADER ══ -->
+  <header class="site-header" id="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <a href="/" class="site-logo">
+          <img src="assets/logo.png" alt="Talenteed" width="148" height="52">
+          <span class="site-tagline">Africa Talent Summit</span>
+        </a>
+        <nav class="site-nav" id="site-nav">
+          <ul>
+            <li><a href="/">Accueil</a></li>
+            <li><a href="talent-landing.html">Talents</a></li>
+            <li><a href="corporate-landing.html">Entreprises</a></li>
+            <li><a href="jobs.html" class="active">Jobs</a></li>
+            <li><a href="comment-ca-marche.html">Comment ça marche</a></li>
+          </ul>
+        </nav>
+        <div class="header-btns">
+          <a href="talent-landing.html" class="btn btn--orange btn--sm">
+            <i class="fa-solid fa-paper-plane"></i>
+            Rejoindre le Summit
+          </a>
+        </div>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ HERO ══ -->
+  <section class="jobs-hero">
+    <div class="container">
+      <div class="jobs-hero-content">
+        <div class="jobs-event-badge">
+          <i class="fa-solid fa-briefcase"></i>
+          Africa Talent Summit — 5 & 6 Novembre 2026
+        </div>
+        <h1 class="jobs-hero-title">
+          Trouvez le job<br>
+          <em>de vos rêves</em>
+        </h1>
+        <p class="jobs-hero-desc">
+          Découvrez +150 offres d'emploi proposées par des entreprises de premier plan opérant en Afrique et dans la diaspora. Postulez en quelques clics !
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ SEARCH & FILTERS ══ -->
+  <section class="search-section">
+    <div class="container">
+      <form class="search-form" onsubmit="handleSearch(event)">
+        <div class="search-group">
+          <label for="search-keyword"><i class="fa-solid fa-magnifying-glass"></i> Mot-clé</label>
+          <input type="text" id="search-keyword" class="search-input" placeholder="Ex : Développeur, Marketing, Manager...">
+        </div>
+        <div class="search-group">
+          <label for="search-location"><i class="fa-solid fa-location-dot"></i> Ville</label>
+          <select id="search-location" class="search-input">
+            <option value="">Toutes les villes</option>
+            <option>Abidjan</option>
+            <option>Dakar</option>
+            <option>Lagos</option>
+            <option>Nairobi</option>
+            <option>Cotonou</option>
+            <option>Yaoundé</option>
+            <option>Paris</option>
+            <option>Bruxelles</option>
+          </select>
+        </div>
+        <div class="search-group">
+          <label for="search-sector"><i class="fa-solid fa-industry"></i> Secteur</label>
+          <select id="search-sector" class="search-input">
+            <option value="">Tous les secteurs</option>
+            <option>Technologie / IT</option>
+            <option>Banque / Finance</option>
+            <option>Santé</option>
+            <option>Énergie</option>
+            <option>Commerce / Distribution</option>
+            <option>Télécommunications</option>
+            <option>Industrie</option>
+            <option>Conseil</option>
+          </select>
+        </div>
+        <div class="search-group">
+          <label for="search-type"><i class="fa-solid fa-clock"></i> Type de contrat</label>
+          <select id="search-type" class="search-input">
+            <option value="">Tous les types</option>
+            <option>CDI</option>
+            <option>CDD</option>
+            <option>Freelance</option>
+            <option>Stage</option>
+            <option>Alternance</option>
+          </select>
+        </div>
+        <button type="submit" class="search-btn">
+          <i class="fa-solid fa-search"></i> Rechercher
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ══ JOBS LISTING ══ -->
+  <section class="jobs-section">
+    <div class="container">
+      <div class="jobs-header">
+        <p class="jobs-count">
+          <strong>156</strong> offres disponibles
+        </p>
+        <div class="jobs-sort">
+          <select id="sort-select" onchange="sortJobs()">
+            <option value="recent">Plus récentes</option>
+            <option value="alpha">A → Z</option>
+            <option value="location">Par ville</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="jobs-grid" id="jobs-grid">
+        <!-- Job Card 1 -->
+        <article class="job-card" style="position: relative;">
+          <span class="job-new-badge">Nouveau</span>
+          <div class="job-card-header">
+            <div class="job-company-logo">🏦</div>
+            <div class="job-card-info">
+              <h3 class="job-title">Développeur Full Stack Senior</h3>
+              <p class="job-company"><i class="fa-solid fa-building"></i> Ecobank Côte d'Ivoire</p>
+            </div>
+          </div>
+          <div class="job-tags">
+            <span class="job-tag job-tag--location"><i class="fa-solid fa-location-dot"></i> Abidjan</span>
+            <span class="job-tag job-tag--type"><i class="fa-solid fa-file-contract"></i> CDI</span>
+            <span class="job-tag job-tag--sector"><i class="fa-solid fa-industry"></i> Banque</span>
+          </div>
+          <p class="job-description">
+            Nous recherchons un développeur Full Stack expérimenté pour renforcer notre équipe tech. Vous participerez au développement de nos applications mobiles et web banking.
+          </p>
+          <div class="job-footer">
+            <div class="job-meta">
+              <span class="job-meta-item"><i class="fa-solid fa-clock"></i> Temps plein</span>
+              <span class="job-meta-item"><i class="fa-solid fa-money-bill"></i> Compétitif</span>
+            </div>
+            <button class="job-apply-btn">
+              <i class="fa-solid fa-paper-plane"></i> Postuler
+            </button>
+          </div>
+        </article>
+
+        <!-- Job Card 2 -->
+        <article class="job-card">
+          <div class="job-card-header">
+            <div class="job-company-logo">💻</div>
+            <div class="job-card-info">
+              <h3 class="job-title">Chef de Projet Digital</h3>
+              <p class="job-company"><i class="fa-solid fa-building"></i> Orange Côte d'Ivoire</p>
+            </div>
+          </div>
+          <div class="job-tags">
+            <span class="job-tag job-tag--location"><i class="fa-solid fa-location-dot"></i> Abidjan</span>
+            <span class="job-tag job-tag--type"><i class="fa-solid fa-file-contract"></i> CDI</span>
+            <span class="job-tag job-tag--sector"><i class="fa-solid fa-industry"></i> Télécom</span>
+          </div>
+          <p class="job-description">
+            Pilotez nos projets digitaux et协调 nos équipes techniques pour delivers des solutions innovantes. Expérience en gestion de projet AGILE requise.
+          </p>
+          <div class="job-footer">
+            <div class="job-meta">
+              <span class="job-meta-item"><i class="fa-solid fa-clock"></i> Temps plein</span>
+              <span class="job-meta-item"><i class="fa-solid fa-money-bill"></i> À négocier</span>
+            </div>
+            <button class="job-apply-btn">
+              <i class="fa-solid fa-paper-plane"></i> Postuler
+            </button>
+          </div>
+        </article>
+
+        <!-- Job Card 3 -->
+        <article class="job-card">
+          <div class="job-card-header">
+            <div class="job-company-logo">⚡</div>
+            <div class="job-card-info">
+              <h3 class="job-title">Responsable Marketing Digital</h3>
+              <p class="job-company"><i class="fa-solid fa-building"></i> TotalEnergies CI</p>
+            </div>
+          </div>
+          <div class="job-tags">
+            <span class="job-tag job-tag--location"><i class="fa-solid fa-location-dot"></i> Abidjan</span>
+            <span class="job-tag job-tag--type"><i class="fa-solid fa-file-contract"></i> CDI</span>
+            <span class="job-tag job-tag--sector"><i class="fa-solid fa-industry"></i> Énergie</span>
+          </div>
+          <p class="job-description">
+            Développez notre présence digitale et concevez des stratégies marketing innovantes pour renforcer notre image de marque auprès des consommateurs.
+          </p>
+          <div class="job-footer">
+            <div class="job-meta">
+              <span class="job-meta-item"><i class="fa-solid fa-clock"></i> Temps plein</span>
+              <span class="job-meta-item"><i class="fa-solid fa-money-bill"></i> 800K - 1.2M FCFA</span>
+            </div>
+            <button class="job-apply-btn">
+              <i class="fa-solid fa-paper-plane"></i> Postuler
+            </button>
+          </div>
+        </article>
+
+        <!-- Job Card 4 -->
+        <article class="job-card">
+          <div class="job-card-header">
+            <div class="job-company-logo">🏥</div>
+            <div class="job-card-info">
+              <h3 class="job-title">Médecin Généraliste</h3>
+              <p class="job-company"><i class="fa-solid fa-building"></i> Groupe Hospitalier Pilgrim</p>
+            </div>
+          </div>
+          <div class="job-tags">
+            <span class="job-tag job-tag--location"><i class="fa-solid fa-location-dot"></i> Dakar</span>
+            <span class="job-tag job-tag--type"><i class="fa-solid fa-file-contract"></i> CDI</span>
+            <span class="job-tag job-tag--sector"><i class="fa-solid fa-industry"></i> Santé</span>
+          </div>
+          <p class="job-description">
+            Rejoignez notre équipe médicale pour assurer les consultations, le suivi des patients et la collaboration avec nos spécialistes.
+          </p>
+          <div class="job-footer">
+            <div class="job-meta">
+              <span class="job-meta-item"><i class="fa-solid fa-clock"></i> Temps plein</span>
+              <span class="job-meta-item"><i class="fa-solid fa-money-bill"></i> 1.5M - 2M FCFA</span>
+            </div>
+            <button class="job-apply-btn">
+              <i class="fa-solid fa-paper-plane"></i> Postuler
+            </button>
+          </div>
+        </article>
+
+        <!-- Job Card 5 -->
+        <article class="job-card">
+          <div class="job-card-header">
+            <div class="job-company-logo">📊</div>
+            <div class="job-card-info">
+              <h3 class="job-title">Data Analyst Senior</h3>
+              <p class="job-company"><i class="fa-solid fa-building"></i> MTN Côte d'Ivoire</p>
+            </div>
+          </div>
+          <div class="job-tags">
+            <span class="job-tag job-tag--location"><i class="fa-solid fa-location-dot"></i> Abidjan</span>
+            <span class="job-tag job-tag--type"><i class="fa-solid fa-file-contract"></i> CDI</span>
+            <span class="job-tag job-tag--sector"><i class="fa-solid fa-industry"></i> Télécom</span>
+          </div>
+          <p class="job-description">
+            Analysez nos données clients et opérateur pour optimiser nos services. Maîtrise de Python, SQL et outils de visualisation requis.
+          </p>
+          <div class="job-footer">
+            <div class="job-meta">
+              <span class="job-meta-item"><i class="fa-solid fa-clock"></i> Temps plein</span>
+              <span class="job-meta-item"><i class="fa-solid fa-money-bill"></i> Compétitif</span>
+            </div>
+            <button class="job-apply-btn">
+              <i class="fa-solid fa-paper-plane"></i> Postuler
+            </button>
+          </div>
+        </article>
+
+        <!-- Job Card 6 -->
+        <article class="job-card">
+          <div class="job-card-header">
+            <div class="job-company-logo">🏗️</div>
+            <div class="job-card-info">
+              <h3 class="job-title">Ingénieur BTP / Génie Civil</h3>
+              <p class="job-company"><i class="fa-solid fa-building"></i> Bolloré Transport & Logistics</p>
+            </div>
+          </div>
+          <div class="job-tags">
+            <span class="job-tag job-tag--location"><i class="fa-solid fa-location-dot"></i> Lagos</span>
+            <span class="job-tag job-tag--type"><i class="fa-solid fa-file-contract"></i> CDD</span>
+            <span class="job-tag job-tag--sector"><i class="fa-solid fa-industry"></i> Industrie</span>
+          </div>
+          <p class="job-description">
+            Supervisez les travaux de construction et de maintenance de nos infrastructures logistiques. Expérience de 5 ans minimum requise.
+          </p>
+          <div class="job-footer">
+            <div class="job-meta">
+              <span class="job-meta-item"><i class="fa-solid fa-clock"></i> Temps plein</span>
+              <span class="job-meta-item"><i class="fa-solid fa-money-bill"></i> 1.8M - 2.5M FCFA</span>
+            </div>
+            <button class="job-apply-btn">
+              <i class="fa-solid fa-paper-plane"></i> Postuler
+            </button>
+          </div>
+        </article>
+
+        <!-- Job Card 7 -->
+        <article class="job-card">
+          <div class="job-card-header">
+            <div class="job-company-logo">💰</div>
+            <div class="job-card-info">
+              <h3 class="job-title"> Auditeur Interne</h3>
+              <p class="job-company"><i class="fa-solid fa-building"></i> Société Générale Côte d'Ivoire</p>
+            </div>
+          </div>
+          <div class="job-tags">
+            <span class="job-tag job-tag--location"><i class="fa-solid fa-location-dot"></i> Abidjan</span>
+            <span class="job-tag job-tag--type"><i class="fa-solid fa-file-contract"></i> CDI</span>
+            <span class="job-tag job-tag--sector"><i class="fa-solid fa-industry"></i> Banque</span>
+          </div>
+          <p class="job-description">
+            Évaluez et améliorez l'efficacité de nos processus. Vous serez en charge des audits opérationnels et financiers.
+          </p>
+          <div class="job-footer">
+            <div class="job-meta">
+              <span class="job-meta-item"><i class="fa-solid fa-clock"></i> Temps plein</span>
+              <span class="job-meta-item"><i class="fa-solid fa-money-bill"></i> Compétitif</span>
+            </div>
+            <button class="job-apply-btn">
+              <i class="fa-solid fa-paper-plane"></i> Postuler
+            </button>
+          </div>
+        </article>
+
+        <!-- Job Card 8 -->
+        <article class="job-card">
+          <div class="job-card-header">
+            <div class="job-company-logo">🌾</div>
+            <div class="job-card-info">
+              <h3 class="job-title">Responsable Agronomie</h3>
+              <p class="job-company"><i class="fa-solid fa-building"></i> OCP Africa</p>
+            </div>
+          </div>
+          <div class="job-tags">
+            <span class="job-tag job-tag--location"><i class="fa-solid fa-location-dot"></i> Dakar</span>
+            <span class="job-tag job-tag--type"><i class="fa-solid fa-file-contract"></i> CDI</span>
+            <span class="job-tag job-tag--sector"><i class="fa-solid fa-industry"></i> Agriculture</span>
+          </div>
+          <p class="job-description">
+            Accompagnez les agriculteurs dans l'adoption de pratiques durables et optimisez les rendements grâce à nos solutions fertiles.
+          </p>
+          <div class="job-footer">
+            <div class="job-meta">
+              <span class="job-meta-item"><i class="fa-solid fa-clock"></i> Temps plein</span>
+              <span class="job-meta-item"><i class="fa-solid fa-money-bill"></i> 1.2M - 1.8M FCFA</span>
+            </div>
+            <button class="job-apply-btn">
+              <i class="fa-solid fa-paper-plane"></i> Postuler
+            </button>
+          </div>
+        </article>
+
+        <!-- Job Card 9 -->
+        <article class="job-card">
+          <div class="job-card-header">
+            <div class="job-company-logo">🎓</div>
+            <div class="job-card-info">
+              <h3 class="job-title">Formateur en Intelligence Artificielle</h3>
+              <p class="job-company"><i class="fa-solid fa-building"></i> African Leadership Academy</p>
+            </div>
+          </div>
+          <div class="job-tags">
+            <span class="job-tag job-tag--location"><i class="fa-solid fa-location-dot"></i> Nairobi</span>
+            <span class="job-tag job-tag--type"><i class="fa-solid fa-file-contract"></i> Freelance</span>
+            <span class="job-tag job-tag--sector"><i class="fa-solid fa-industry"></i> Éducation</span>
+          </div>
+          <p class="job-description">
+            Enseignez les fondamentaux de l'IA et du Machine Learning à nos étudiants talentueux来自非洲各地的学生.
+          </p>
+          <div class="job-footer">
+            <div class="job-meta">
+              <span class="job-meta-item"><i class="fa-solid fa-clock"></i> Temps partiel</span>
+              <span class="job-meta-item"><i class="fa-solid fa-money-bill"></i> À discuter</span>
+            </div>
+            <button class="job-apply-btn">
+              <i class="fa-solid fa-paper-plane"></i> Postuler
+            </button>
+          </div>
+        </article>
+      </div>
+
+      <!-- Load More -->
+      <div style="text-align: center; margin-top: 48px;">
+        <button class="search-btn" style="padding: 14px 40px; font-size: 15px;">
+          <i class="fa-solid fa-plus"></i> Voir plus d'offres
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CATEGORIES ══ -->
+  <section class="categories-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Explorer par secteur</h2>
+        <p>Trouvez l'opportunité qui correspond à votre profil parmi nos secteurs d'activité</p>
+      </div>
+      <div class="categories-grid">
+        <div class="category-card">
+          <div class="category-icon" style="color: #192bc2;"><i class="fa-solid fa-laptop-code"></i></div>
+          <h4 class="category-name">Technologie / IT</h4>
+          <p class="category-count">42 offres</p>
+        </div>
+        <div class="category-card">
+          <div class="category-icon" style="color: #f07c00;"><i class="fa-solid fa-chart-line"></i></div>
+          <h4 class="category-name">Banque / Finance</h4>
+          <p class="category-count">28 offres</p>
+        </div>
+        <div class="category-card">
+          <div class="category-icon" style="color: #22c55e;"><i class="fa-solid fa-broadcast-tower"></i></div>
+          <h4 class="category-name">Télécommunications</h4>
+          <p class="category-count">18 offres</p>
+        </div>
+        <div class="category-card">
+          <div class="category-icon" style="color: #ef4444;"><i class="fa-solid fa-bolt"></i></div>
+          <h4 class="category-name">Énergie / Mines</h4>
+          <p class="category-count">15 offres</p>
+        </div>
+        <div class="category-card">
+          <div class="category-icon" style="color: #8b5cf6;"><i class="fa-solid fa-stethoscope"></i></div>
+          <h4 class="category-name">Santé</h4>
+          <p class="category-count">14 offres</p>
+        </div>
+        <div class="category-card">
+          <div class="category-icon" style="color: #f59e0b;"><i class="fa-solid fa-truck-fast"></i></div>
+          <h4 class="category-name">Logistique / Transport</h4>
+          <p class="category-count">12 offres</p>
+        </div>
+        <div class="category-card">
+          <div class="category-icon" style="color: #06b6d4;"><i class="fa-solid fa-gavel"></i></div>
+          <h4 class="category-name">Conseil / Consulting</h4>
+          <p class="category-count">11 offres</p>
+        </div>
+        <div class="category-card">
+          <div class="category-icon" style="color: #84cc16;"><i class="fa-solid fa-wheat-awn"></i></div>
+          <h4 class="category-name">Agriculture / Agro</h4>
+          <p class="category-count">8 offres</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ NEWSLETTER ══ -->
+  <section class="newsletter-section">
+    <div class="container">
+      <div class="newsletter-inner">
+        <h2>Restez <em>informés</em></h2>
+        <p>Recevez les nouvelles offres et les actualités du Summit Africa Talent directement dans votre boîte mail.</p>
+        <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+          <input type="email" class="newsletter-input" placeholder="Votre adresse email" required>
+          <button type="submit" class="newsletter-btn">
+            <i class="fa-solid fa-envelope"></i> S'inscrire
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FOOTER ══ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">
+            <img src="assets/logo.png" alt="Talenteed" width="140" height="50">
+          </a>
+          <p class="footer-tagline">Africa Talent Summit 2026</p>
+          <p class="footer-desc">Le plus grand événement de recrutement en Afrique. Connecter les talents aux opportunités.</p>
+        </div>
+        <div class="footer-links">
+          <h4>Navigation</h4>
+          <ul>
+            <li><a href="/">Accueil</a></li>
+            <li><a href="talent-landing.html">Talents</a></li>
+            <li><a href="corporate-landing.html">Entreprises</a></li>
+            <li><a href="jobs.html">Jobs</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Événement</h4>
+          <ul>
+            <li><a href="comment-ca-marche.html">Comment ça marche</a></li>
+            <li><a href="matching.html">Matching</a></li>
+            <li><a href="company.html">Partenaires</a></li>
+            <li><a href="#">Programme</a></li>
+          </ul>
+        </div>
+        <div class="footer-contact">
+          <h4>Contact</h4>
+          <p><i class="fa-solid fa-envelope"></i> contact@talenteed.io</p>
+          <p><i class="fa-solid fa-phone"></i> +225 07 00 00 00 00</p>
+          <p><i class="fa-solid fa-location-dot"></i> Abidjan, Côte d'Ivoire</p>
+          <div class="footer-social">
+            <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Talenteed. Tous droits réservés.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Countdown Timer
+    function updateCountdown() {
+      const eventDate = new Date('2026-11-05T09:00:00').getTime();
+      const now = new Date().getTime();
+      const gap = eventDate - now;
+
+      if (gap <= 0) return;
+
+      const second = 1000;
+      const minute = second * 60;
+      const hour = minute * 60;
+      const day = hour * 24;
+
+      document.getElementById('cd-days').textContent = String(Math.floor(gap / day)).padStart(2, '0');
+      document.getElementById('cd-hours').textContent = String(Math.floor((gap % day) / hour)).padStart(2, '0');
+      document.getElementById('cd-mins').textContent = String(Math.floor((gap % hour) / minute)).padStart(2, '0');
+      document.getElementById('cd-secs').textContent = String(Math.floor((gap % minute) / second)).padStart(2, '0');
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // Mobile Menu
+    document.getElementById('menu-toggle')?.addEventListener('click', () => {
+      document.getElementById('site-nav')?.classList.toggle('open');
+    });
+
+    // Header scroll effect
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('site-header');
+      if (window.scrollY > 50) {
+        header?.classList.add('scrolled');
+      } else {
+        header?.classList.remove('scrolled');
+      }
+    });
+
+    // Search Handler
+    function handleSearch(e) {
+      e.preventDefault();
+      alert('Fonctionnalité de recherche en cours de développement. Revenez bientôt !');
+    }
+
+    // Sort Jobs
+    function sortJobs() {
+      const sortValue = document.getElementById('sort-select').value;
+      console.log('Sorting by:', sortValue);
+      // Sorting logic would go here
+    }
+
+    // Newsletter
+    function handleNewsletter(e) {
+      e.preventDefault();
+      alert('Merci pour votre inscription ! Vous recevrez bientôt nos actualités.');
+    }
+
+    // Apply buttons
+    document.querySelectorAll('.job-apply-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        window.location.href = 'talent-landing.html';
+      });
+    });
+  </script>
+</body>
+</html>
