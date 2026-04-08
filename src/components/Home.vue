@@ -195,28 +195,47 @@
             v-for="offre in offres.slice(0, 6)"
             :key="offre.id"
             :to="isLoggedIn ? `/annonces/${offre.id}` : `/login?redirect=${encodeURIComponent('/annonces/' + offre.id)}`"
-            class="offre-card offre-card--link"
+            class="home-offre-card"
           >
-            <!-- Visuel gauche -->
-            <div class="offre-visual">
-              <div class="offre-bg" :style="offre.image_url ? `background-image:url('${offre.image_url}')` : ''" :class="{ 'offre-bg--default': !offre.image_url }"></div>
-              <div class="offre-logo">
+            <!-- Image de l'offre -->
+            <div v-if="offre.image_url" class="home-offre-visual">
+              <div class="home-offre-bg" :style="`background-image:url('${offre.image_url}')`"></div>
+            </div>
+
+            <!-- Header : logo + entreprise + deadline -->
+            <div class="home-offre-head">
+              <div class="home-offre-logo">
                 <img v-if="offre.entreprise?.logo_url" :src="offre.entreprise.logo_url" :alt="offre.entreprise.nom" />
-                <span v-else class="offre-logo-initial">{{ offre.entreprise ? offre.entreprise.nom.charAt(0) : '?' }}</span>
+                <span v-else class="home-offre-logo-initial">{{ offre.entreprise ? offre.entreprise.nom.charAt(0) : '?' }}</span>
+              </div>
+              <div class="home-offre-company-info">
+                <span class="home-offre-company">{{ offre.entreprise?.nom || '—' }}</span>
+                <span v-if="offre.date_limite" class="home-offre-deadline">
+                  <i class="fa-solid fa-calendar-xmark"></i> {{ formatDate(offre.date_limite) }}
+                </span>
               </div>
             </div>
-            <!-- Contenu -->
-            <div class="offre-body">
-              <h3 class="offre-title">{{ offre.titre }}</h3>
-              <p class="offre-entreprise">{{ offre.entreprise?.nom || '—' }}</p>
-              <p class="offre-desc">{{ truncate(stripHtml(offre.mission), 110) }}</p>
-              <div class="offre-meta">
-                <span v-if="offre.localisation"><i class="fa-solid fa-location-dot"></i> {{ offre.localisation }}</span>
-                <span v-if="offre.date_limite"><i class="fa-solid fa-calendar"></i> {{ formatDate(offre.date_limite) }}</span>
-              </div>
+
+            <!-- Titre -->
+            <h3 class="home-offre-title">{{ offre.titre }}</h3>
+
+            <!-- Tags -->
+            <div class="home-offre-tags">
+              <span v-if="offre.localisation" class="tag tag--location">
+                <i class="fa-solid fa-location-dot"></i> {{ offre.localisation }}
+              </span>
+              <span v-for="c in offre.job_contracts" :key="c.id" class="tag tag--contract">{{ c.name }}</span>
+              <span v-for="s in offre.study_levels" :key="s.id" class="tag tag--study">{{ s.name }}</span>
             </div>
-            <!-- Action -->
-            <div class="offre-action">
+
+            <!-- Description -->
+            <p class="home-offre-desc">{{ truncate(stripHtml(offre.mission), 120) }}</p>
+
+            <!-- Footer -->
+            <div class="home-offre-footer">
+              <span class="home-offre-date" v-if="offre.created_at">
+                <i class="fa-regular fa-clock"></i> {{ timeAgo(offre.created_at) }}
+              </span>
               <span class="btn btn--blue btn--sm">{{ t('home.jobOffers.apply') }}</span>
             </div>
           </router-link>
@@ -404,6 +423,17 @@ function formatDate(str) {
   return new Date(str).toLocaleDateString(lang, { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
+function timeAgo(str) {
+  if (!str) return ''
+  const diff = Date.now() - new Date(str).getTime()
+  const m = Math.floor(diff / 60000)
+  if (m < 60) return locale.value === 'fr' ? `Il y a ${m} min` : `${m}m ago`
+  const h = Math.floor(m / 60)
+  if (h < 24) return locale.value === 'fr' ? `Il y a ${h}h` : `${h}h ago`
+  const d = Math.floor(h / 24)
+  return locale.value === 'fr' ? `Il y a ${d}j` : `${d}d ago`
+}
+
 function initFadeIn() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible') })
@@ -413,6 +443,17 @@ function initFadeIn() {
 </script>
 
 <style>
+/* ── Variables ─────────────────────────────────── */
+:root {
+  --navy:      #00235a;
+  --navy-head: #1c244b;
+  --blue:      #3a9bff;
+  --orange:    #f29f1f;
+  --border:    #e0e4ef;
+  --light-bg:  #f5f7fc;
+  --shadow-lg: 0 8px 32px rgba(0,35,90,.12);
+}
+
 /* ── Topbar countdown ─────────────────────────────────── */
 .topbar { background: #040a5d; height: 48px; display: flex; align-items: center; color: rgba(255,255,255,.6); }
 .topbar .container { display: flex; justify-content: space-between; align-items: center; }
@@ -721,44 +762,116 @@ function initFadeIn() {
   color: #fff;
 }
 /* ── Offres home ── */
+/* ── Grid ── */
 .home-offres-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
 }
-@media (max-width: 900px) { .home-offres-grid { grid-template-columns: 1fr; } }
-.offre-card {
-  background: #fff; border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,.06);
-  display: grid; grid-template-columns: 120px 1fr auto;
-  border: 1.5px solid transparent; overflow: hidden;
-  transition: border-color .2s, box-shadow .2s, transform .15s;
+@media (max-width: 1100px) { .home-offres-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px)  { .home-offres-grid { grid-template-columns: 1fr; } }
+
+/* ── Card ── */
+.home-offre-card {
+  position: relative;
+  background: #fff;
+  border-radius: 16px;
+  border: 1.5px solid var(--border);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color .2s, box-shadow .2s, transform .2s;
+  overflow: hidden;
 }
-.offre-card:hover { border-color: #192bc2; box-shadow: 0 6px 20px rgba(0,0,0,.10); transform: translateY(-2px); }
-.offre-card--link { text-decoration: none; }
-.offre-visual { position: relative; width: 120px; min-height: 110px; align-self: stretch; flex-shrink: 0; }
-.offre-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
-.offre-bg--default { background: linear-gradient(135deg, #040a5d 0%, #192bc2 100%); }
-.offre-visual .offre-logo {
+.home-offre-card:hover {
+  border-color: var(--blue);
+  box-shadow: 0 8px 32px rgba(0,35,90,.12);
+  transform: translateY(-3px);
+}
+
+/* Image bannière */
+.home-offre-visual {
+  margin: -20px -20px 0;
+  height: 100px;
+  position: relative;
+  border-radius: 16px 16px 0 0;
+  overflow: hidden;
+}
+.home-offre-bg {
   position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 48px; height: 48px; border-radius: 10px;
-  background: #fff; overflow: hidden;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,.18);
+  inset: 0;
+  background-size: cover;
+  background-position: center;
 }
-.offre-visual .offre-logo img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
-.offre-visual .offre-logo-initial { font-size: 18px; font-weight: 800; color: #192bc2; }
-.offre-body { padding: 14px 16px; min-width: 0; }
-.offre-title { font-size: 15px; font-weight: 700; color: #040a5d; margin: 0 0 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.offre-entreprise { font-size: 12px; color: #6b7280; margin: 0 0 6px; }
-.offre-desc { font-size: 12px; color: #6b7280; line-height: 1.5; margin: 0 0 8px; }
-.offre-meta { display: flex; gap: 12px; flex-wrap: wrap; font-size: 11px; color: #6b7280; }
-.offre-meta i { color: #f07c00; margin-right: 3px; }
-.offre-action { padding: 14px 14px 14px 0; display: flex; align-items: center; flex-shrink: 0; }
-@media (max-width: 480px) {
-  .offre-card { grid-template-columns: 90px 1fr; }
-  .offre-action { grid-column: 1 / -1; padding: 0 14px 14px; }
+
+/* Header */
+.home-offre-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.home-offre-logo {
+  width: 52px; height: 52px;
+  border-radius: 10px;
+  background: var(--light-bg);
+  border: 1.5px solid var(--border);
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.home-offre-logo img { width: 100%; height: 100%; object-fit: contain; padding: 6px; }
+.home-offre-logo-initial {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px; font-weight: 800; color: var(--blue);
+}
+.home-offre-company-info {
+  flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0;
+}
+.home-offre-company {
+  font-size: 13px; font-weight: 700; color: var(--navy);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.home-offre-deadline {
+  font-size: 11px; color: #9ca3af;
+}
+.home-offre-deadline i { color: var(--orange); margin-right: 3px; }
+
+/* Titre */
+.home-offre-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 20px; font-weight: 700;
+  color: var(--navy-head);
+  margin: 0; line-height: 1.2; letter-spacing: -.3px;
+}
+
+/* Tags */
+.home-offre-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11px; font-weight: 700;
+  padding: 3px 10px; border-radius: 50px;
+}
+.tag--location { background: #dbeafe; color: #1d4ed8; }
+.tag--contract { background: #fff7ed; color: #c2410c; }
+.tag--study    { background: #dcfce7; color: #15803d; }
+
+/* Description */
+.home-offre-desc {
+  font-size: 13px; color: #6b7280; line-height: 1.6; margin: 0; flex: 1;
+}
+
+/* Footer */
+.home-offre-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+.home-offre-date {
+  font-size: 12px; color: #9ca3af;
+  display: flex; align-items: center; gap: 5px;
 }
 </style>
