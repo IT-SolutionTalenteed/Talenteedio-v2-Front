@@ -1,1 +1,22 @@
 // Styles personnalisés de l'application
+
+// Désactiver le fond gris de Vuetify sur toutes les pages
+.v-application,
+.v-application.v-theme--light,
+.v-application__wrap,
+.v-layout,
+.v-layout--full-height,
+.v-locale--is-ltr,
+.v-main,
+.offre-detail-page,
+body,
+html {
+  background: #fff !important;
+  background-color: #fff !important;
+}
+
+// Forcer le fond blanc sur toutes les pages
+#app {
+  background: #fff !important;
+  min-height: 100vh;
+}

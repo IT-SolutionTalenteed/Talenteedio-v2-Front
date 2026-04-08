@@ -453,7 +453,7 @@ onMounted(() => {
 }
 @media (max-width: 900px) {
   .od-layout { grid-template-columns: 1fr; }
-  .od-sidebar { order: -1; }
+  .od-sidebar { order: 1; position: static; }
 }
 
 /* Blocs contenus */
@@ -474,7 +474,7 @@ onMounted(() => {
 .od-rich :deep(strong) { font-weight: 700; }
 
 /* Sidebar cards */
-.od-sidebar { display: flex; flex-direction: column; gap: 20px; position: sticky; top: 90px; }
+.od-sidebar { display: flex; flex-direction: column; gap: 20px; }
 .od-side-card {
   background: #fff; border-radius: 14px;
   padding: 24px; box-shadow: 0 2px 10px rgba(0,0,0,.06);
