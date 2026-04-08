@@ -25,6 +25,33 @@
     <section class="blog-body">
       <div class="container">
 
+        <!-- Featured article (premier de la liste) -->
+        <router-link
+          v-if="!loading && featuredArticle"
+          :to="`/blog/${featuredArticle.id}`"
+          class="featured-post"
+        >
+          <div class="featured-image">
+            <img v-if="featuredArticle.image_url" :src="featuredArticle.image_url" :alt="featuredArticle.title" />
+            <div v-else class="featured-image-placeholder"><i class="fa-solid fa-newspaper"></i></div>
+            <span class="featured-tag">{{ t('blog.featured') }}</span>
+          </div>
+          <div class="featured-content">
+            <div class="featured-meta">
+              <span v-if="featuredArticle.media_categories?.length">
+                <i class="fa-solid fa-folder" style="color:var(--orange)"></i>
+                {{ featuredArticle.media_categories[0].name }}
+              </span>
+              <span><i class="fa-regular fa-calendar" style="color:var(--orange)"></i> {{ formatDate(featuredArticle.created_at) }}</span>
+            </div>
+            <h2 class="featured-title">{{ featuredArticle.title }}</h2>
+            <p class="featured-excerpt">{{ truncate(stripHtml(featuredArticle.content), 180) }}</p>
+            <span class="featured-link">
+              {{ t('blog.card.readMore') }} <i class="fa-solid fa-arrow-right"></i>
+            </span>
+          </div>
+        </router-link>
+
         <!-- Tabs catégories -->
         <div class="cat-tabs-wrap">
           <button class="cat-arrow cat-arrow--left" @click="scrollTabs(-200)" :class="{ 'cat-arrow--hidden': !canScrollLeft }">
@@ -49,77 +76,124 @@
           </button>
         </div>
 
-        <!-- Skeleton -->
-        <div v-if="loading" class="blog-grid">
-          <div v-for="n in 9" :key="n" class="blog-card blog-card--skeleton">
-            <div class="sk-img"></div>
-            <div class="sk-body">
-              <div class="sk-line sk-line--sm"></div>
-              <div class="sk-line sk-line--lg"></div>
-              <div class="sk-line sk-line--md"></div>
+        <!-- Layout 2 colonnes -->
+        <div class="blog-layout">
+
+          <!-- Zone articles -->
+          <div class="blog-posts-area">
+
+            <!-- Skeleton -->
+            <div v-if="loading" class="blog-grid">
+              <div v-for="n in 6" :key="n" class="blog-card blog-card--skeleton">
+                <div class="sk-img"></div>
+                <div class="sk-body">
+                  <div class="sk-line sk-line--sm"></div>
+                  <div class="sk-line sk-line--lg"></div>
+                  <div class="sk-line sk-line--md"></div>
+                </div>
+              </div>
             </div>
+
+            <!-- Résultats -->
+            <div v-else-if="restArticles.length" class="blog-grid">
+              <router-link
+                v-for="a in restArticles"
+                :key="a.id"
+                :to="`/blog/${a.id}`"
+                class="blog-card"
+              >
+                <div class="blog-card-img">
+                  <img v-if="a.image_url" :src="a.image_url" :alt="a.title" />
+                  <div v-else class="blog-card-img-placeholder">
+                    <i class="fa-regular fa-image"></i>
+                  </div>
+                </div>
+                <div class="blog-card-body">
+                  <div class="blog-card-meta">
+                    <span v-if="a.media_categories?.length" class="blog-cat-badge">
+                      {{ a.media_categories[0].name }}
+                    </span>
+                    <span class="blog-date">
+                      <i class="fa-regular fa-clock"></i> {{ formatDate(a.created_at) }}
+                    </span>
+                  </div>
+                  <h3 class="blog-card-title">{{ a.title }}</h3>
+                  <p class="blog-card-excerpt">{{ truncate(stripHtml(a.content), 120) }}</p>
+                  <span class="blog-read-more">
+                    {{ t('blog.card.readMore') }} <i class="fa-solid fa-arrow-right"></i>
+                  </span>
+                </div>
+              </router-link>
+            </div>
+
+            <!-- Vide -->
+            <div v-else-if="!loading" class="blog-empty">
+              <div class="empty-icon"><i class="fa-solid fa-newspaper"></i></div>
+              <p class="empty-title">{{ t('blog.empty') }}</p>
+            </div>
+
+            <!-- Pagination -->
+            <div v-if="!loading && totalPages > 1" class="blog-pagination">
+              <button class="page-btn" :disabled="currentPage === 1" @click="goToPage(currentPage - 1)">
+                <i class="fa-solid fa-chevron-left"></i>
+              </button>
+              <template v-for="p in paginationPages" :key="p">
+                <span v-if="p === '...'" class="page-ellipsis">…</span>
+                <button v-else class="page-btn" :class="{ 'page-btn--active': p === currentPage }" @click="goToPage(p)">{{ p }}</button>
+              </template>
+              <button class="page-btn" :disabled="currentPage === totalPages" @click="goToPage(currentPage + 1)">
+                <i class="fa-solid fa-chevron-right"></i>
+              </button>
+            </div>
+
           </div>
-        </div>
 
-        <!-- Résultats -->
-        <div v-else-if="articles.length" class="blog-grid">
-          <router-link
-            v-for="a in articles"
-            :key="a.id"
-            :to="`/blog/${a.id}`"
-            class="blog-card"
-          >
-            <!-- Image -->
-            <div class="blog-card-img">
-              <img v-if="a.image_url" :src="a.image_url" :alt="a.title" />
-              <div v-else class="blog-card-img-placeholder">
-                <i class="fa-regular fa-image"></i>
+          <!-- Sidebar -->
+          <aside class="blog-sidebar">
+
+            <!-- Catégories widget -->
+            <div class="sidebar-widget" v-if="categories.length">
+              <h3 class="widget-title">
+                <i class="fa-solid fa-folder"></i>
+                {{ t('blog.sidebar.categories') }}
+              </h3>
+              <ul class="sidebar-cat-list">
+                <li v-for="cat in categories" :key="cat.id" @click="selectCategory(cat.id)" :class="{ 'sidebar-cat--active': activeCategory === cat.id }">
+                  <a><i class="fa-solid fa-chevron-right"></i> {{ cat.name }}</a>
+                  <span class="cat-count">{{ catCount(cat.id) }}</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Articles récents widget -->
+            <div class="sidebar-widget" v-if="restArticles.length">
+              <h3 class="widget-title">
+                <i class="fa-solid fa-fire"></i>
+                {{ t('blog.sidebar.recent') }}
+              </h3>
+              <div class="popular-posts">
+                <router-link
+                  v-for="a in restArticles.slice(0, 4)"
+                  :key="a.id"
+                  :to="`/blog/${a.id}`"
+                  class="popular-post"
+                >
+                  <div class="popular-thumb">
+                    <img v-if="a.image_url" :src="a.image_url" :alt="a.title" />
+                    <i v-else class="fa-solid fa-newspaper"></i>
+                  </div>
+                  <div class="popular-info">
+                    <h4>{{ truncate(a.title, 60) }}</h4>
+                    <span class="popular-date">
+                      <i class="fa-regular fa-calendar"></i> {{ formatDate(a.created_at) }}
+                    </span>
+                  </div>
+                </router-link>
               </div>
             </div>
 
-            <!-- Contenu -->
-            <div class="blog-card-body">
-              <div class="blog-card-meta">
-                <span v-if="a.media_categories?.length" class="blog-cat-badge">
-                  {{ a.media_categories[0].name }}
-                </span>
-                <span class="blog-date">
-                  <i class="fa-regular fa-clock"></i>
-                  {{ formatDate(a.created_at) }}
-                </span>
-              </div>
-              <h3 class="blog-card-title">{{ a.title }}</h3>
-              <p class="blog-card-excerpt">{{ truncate(stripHtml(a.content), 130) }}</p>
-              <span class="blog-read-more">
-                {{ t('blog.card.readMore') }} <i class="fa-solid fa-arrow-right"></i>
-              </span>
-            </div>
-          </router-link>
-        </div>
+          </aside>
 
-        <!-- Vide -->
-        <div v-else class="blog-empty">
-          <div class="empty-icon"><i class="fa-solid fa-newspaper"></i></div>
-          <p class="empty-title">{{ t('blog.empty') }}</p>
-        </div>
-
-        <!-- Pagination -->
-        <div v-if="!loading && totalPages > 1" class="blog-pagination">
-          <button class="page-btn" :disabled="currentPage === 1" @click="goToPage(currentPage - 1)">
-            <i class="fa-solid fa-chevron-left"></i>
-          </button>
-          <template v-for="p in paginationPages" :key="p">
-            <span v-if="p === '...'" class="page-ellipsis">…</span>
-            <button
-              v-else
-              class="page-btn"
-              :class="{ 'page-btn--active': p === currentPage }"
-              @click="goToPage(p)"
-            >{{ p }}</button>
-          </template>
-          <button class="page-btn" :disabled="currentPage === totalPages" @click="goToPage(currentPage + 1)">
-            <i class="fa-solid fa-chevron-right"></i>
-          </button>
         </div>
 
       </div>
@@ -199,6 +273,11 @@ const goToPage = (p) => {
   load()
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
+
+const featuredArticle = computed(() => articles.value[0] || null)
+const restArticles    = computed(() => articles.value.slice(1))
+
+const catCount = (catId) => articles.value.filter(a => a.media_categories?.some(c => c.id === catId)).length
 
 const paginationPages = computed(() => {
   const total = totalPages.value
@@ -385,14 +464,205 @@ onMounted(async () => {
 .cat-tab:hover { border-color: var(--blue); color: var(--blue); }
 .cat-tab--active { background: var(--navy); border-color: var(--navy); color: #fff; }
 
-/* ── Grid ── */
+/* ════════════════════════════════
+   FEATURED POST
+════════════════════════════════ */
+.featured-post {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,35,90,.10);
+  border: 1.5px solid var(--border);
+  margin-bottom: 32px;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow .2s, transform .2s;
+}
+.featured-post:hover {
+  box-shadow: 0 16px 48px rgba(0,35,90,.16);
+  transform: translateY(-3px);
+}
+
+.featured-image {
+  position: relative;
+  min-height: 280px;
+  max-height: 280px;
+  background: linear-gradient(135deg, #00235a, #1a3a8a);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.featured-image img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform .4s;
+}
+.featured-post:hover .featured-image img { transform: scale(1.04); }
+.featured-image-placeholder { font-size: 64px; color: rgba(255,255,255,.3); }
+
+.featured-tag {
+  position: absolute; top: 18px; left: 18px;
+  background: var(--orange); color: #fff;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  padding: 5px 14px; border-radius: 50px;
+}
+
+.featured-content {
+  padding: 36px 40px;
+  display: flex; flex-direction: column; justify-content: center; gap: 14px;
+}
+
+.featured-meta {
+  display: flex; align-items: center; gap: 16px;
+  font-size: 13px; color: #6b7280;
+}
+.featured-meta i { margin-right: 4px; }
+
+.featured-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(20px, 2.2vw, 28px);
+  font-weight: 800;
+  color: var(--navy);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.featured-excerpt {
+  font-size: 14px; color: #6b7280;
+  line-height: 1.7; margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.featured-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 700;
+  color: var(--orange);
+  transition: gap .2s;
+}
+.featured-post:hover .featured-link { gap: 12px; }
+
+/* ════════════════════════════════
+   LAYOUT 2 COLONNES
+════════════════════════════════ */
+.blog-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 32px;
+  align-items: start;
+}
+
+/* ── Grid articles ── */
 .blog-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
 }
-@media (max-width: 1024px) { .blog-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 600px)  { .blog-grid { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .blog-grid { grid-template-columns: 1fr; } }
+
+/* ════════════════════════════════
+   SIDEBAR
+════════════════════════════════ */
+.blog-sidebar {
+  display: flex; flex-direction: column; gap: 24px;
+  position: sticky; top: 90px;
+}
+
+.sidebar-widget {
+  background: #fff;
+  border-radius: 16px;
+  border: 1.5px solid var(--border);
+  padding: 22px;
+}
+
+.widget-title {
+  font-size: 15px; font-weight: 800;
+  color: var(--navy);
+  margin: 0 0 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+.widget-title i { color: var(--orange); }
+
+/* Catégories */
+.sidebar-cat-list {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.sidebar-cat-list li {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 12px; border-radius: 10px;
+  background: var(--light-bg); cursor: pointer;
+  transition: background .15s;
+}
+.sidebar-cat-list li:hover,
+.sidebar-cat--active { background: rgba(0,35,90,.08) !important; }
+.sidebar-cat-list a {
+  font-size: 13.5px; font-weight: 600; color: var(--navy);
+  display: flex; align-items: center; gap: 8px;
+  text-decoration: none;
+}
+.sidebar-cat-list a i { color: var(--orange); font-size: 11px; }
+.cat-count {
+  font-size: 11px; font-weight: 700; color: #6b7280;
+  background: #fff; padding: 2px 9px; border-radius: 50px;
+  border: 1px solid var(--border);
+}
+
+/* Articles récents */
+.popular-posts { display: flex; flex-direction: column; gap: 14px; }
+.popular-post {
+  display: flex; gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+  text-decoration: none; color: inherit;
+  transition: opacity .15s;
+}
+.popular-post:last-child { padding-bottom: 0; border-bottom: none; }
+.popular-post:hover { opacity: .8; }
+
+.popular-thumb {
+  width: 62px; height: 62px; border-radius: 10px;
+  background: linear-gradient(135deg, #00235a, #1a3a8a);
+  flex-shrink: 0; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.popular-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.popular-thumb i { font-size: 22px; color: rgba(255,255,255,.35); }
+
+.popular-info { flex: 1; min-width: 0; }
+.popular-info h4 {
+  font-size: 13px; font-weight: 700; color: var(--navy);
+  margin: 0 0 5px; line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.popular-date {
+  font-size: 11px; color: #9ca3af;
+  display: flex; align-items: center; gap: 4px;
+}
+.popular-date i { color: var(--orange); }
+
+/* Responsive layout */
+@media (max-width: 1024px) {
+  .blog-layout { grid-template-columns: 1fr; }
+  .blog-sidebar { position: static; flex-direction: row; flex-wrap: wrap; }
+  .sidebar-widget { flex: 1; min-width: 260px; }
+  .blog-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .featured-post { grid-template-columns: 1fr; }
+  .featured-image { min-height: 180px; max-height: 180px; }
+  .featured-content { padding: 24px; }
+  .sidebar-widget { min-width: 100%; }
+}
 
 /* ── Card ── */
 .blog-card {

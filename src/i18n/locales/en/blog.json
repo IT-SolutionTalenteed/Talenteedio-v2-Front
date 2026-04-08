@@ -10,6 +10,11 @@
   "card": {
     "readMore": "Read more"
   },
+  "featured": "Featured",
+  "sidebar": {
+    "categories": "Categories",
+    "recent": "Recent articles"
+  },
   "empty": "No articles available.",
   "detail": {
     "loading": "Loading article...",
