@@ -229,7 +229,12 @@ p { margin-bottom: 1em; }
   max-width: 620px;
   padding: 80px 0 60px;
 }
-.hero-right { flex: 0 0 42%; }
+.hero-right {
+  flex: 0 0 42%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .hero-date {
   font-family: var(--font-body);
   font-size: 24px;
@@ -267,8 +272,9 @@ p { margin-bottom: 1em; }
 
 /* Countdown inside hero */
 .countdown-inner {
-  display: flex;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
 }
 .cd-item { text-align: center; }
 .cd-box {
@@ -1298,6 +1304,9 @@ p { margin-bottom: 1em; }
   .menu-toggle { display: flex; }
   .hero { min-height: 520px; }
   .hero-title { font-size: 54px; }
+  .hero-inner { flex-direction: column; min-height: auto; }
+  .hero-content { flex: none; max-width: 100%; padding: 60px 0 32px; }
+  .hero-right { flex: none; width: 100%; justify-content: flex-start; padding-bottom: 48px; }
   .triple-watermark { font-size: 60px; }
   .cta-watermark, .mission-watermark { font-size: 80px; }
   .footer-grid { grid-template-columns: 1fr; }

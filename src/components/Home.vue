@@ -21,6 +21,8 @@
             <router-link to="/register" class="btn btn--blue btn--lg hero-btn">
               {{ t('home.hero.subscribe') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
             </router-link>
+          </div>
+          <div class="hero-right">
             <!-- Countdown -->
             <div class="countdown-inner" id="countdown">
               <div class="cd-item"><div class="cd-box"><span class="cd-num">{{ cd.days }}</span><span class="cd-label">{{ t('home.hero.days') }}</span></div></div>
@@ -29,7 +31,6 @@
               <div class="cd-item"><div class="cd-box"><span class="cd-num">{{ cd.seconds }}</span><span class="cd-label">{{ t('home.hero.seconds') }}</span></div></div>
             </div>
           </div>
-          <div class="hero-right"></div>
         </div>
       </div>
     </section>
