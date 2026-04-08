@@ -946,12 +946,12 @@ p { margin-bottom: 1em; }
 .section-event {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  min-height: 320px;
+  min-height: 280px;
 }
 .event-img {
   position: relative;
   overflow: hidden;
-  max-height: 900px;
+  max-height: 600px;
 }
 /* .event-img img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; } */
 .event-info {
@@ -960,7 +960,7 @@ p { margin-bottom: 1em; }
   background-image: url('https://africatalentsummit.com/wp-content/uploads/2026/02/Background-1-scaled.jpg');
   background-size: cover;
   background-position: center;
-  padding: 40px 44px;
+  padding: 50px 44px;
   display: flex;
   flex-direction: column;
   justify-content: center;
