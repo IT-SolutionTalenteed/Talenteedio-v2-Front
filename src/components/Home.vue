@@ -206,8 +206,11 @@
           <!-- Articles dynamiques (3 premiers) -->
           <template v-if="articles.length">
             <div v-for="article in articles.slice(0, 3)" :key="article.id" class="triple-card fade-in">
-              <div class="triple-card-img" v-if="article.image_url">
-                <img :src="article.image_url" :alt="article.title" loading="lazy">
+              <div class="triple-card-img">
+                <img v-if="article.image_url" :src="article.image_url" :alt="article.title" loading="lazy">
+                <div v-else class="triple-card-placeholder">
+                  <i class="fa-solid fa-newspaper"></i>
+                </div>
               </div>
               <div class="triple-card-body">
                 <div style="font-size:12px;color:var(--blue);margin-bottom:6px;">{{ formatDate(article.created_at) }}</div>
