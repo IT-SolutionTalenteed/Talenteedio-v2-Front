@@ -2,6 +2,7 @@
   <div>
     <!-- ══ TOPBAR ÉVÉNEMENT FEATURED ══ -->
     <div v-if="featuredEvent" class="topbar">
+      <router-link :to="`/evenements/${featuredEvent.id}`" class="topbar-mobile-link"></router-link>
       <div class="topbar-inner container">
         <div class="topbar-left">
           <span class="topbar-pulse"></span>
@@ -556,6 +557,8 @@ onUnmounted(() => {
   color: rgba(255,255,255,.3);
   padding-bottom: 2px;
 }
+
+.topbar-mobile-link { display: none; }
 
 .topbar-cta {
   display: inline-flex;
@@ -1165,5 +1168,9 @@ onUnmounted(() => {
   .site-logo img { height: 44px; }
   .topbar-evt { font-size: 11px; }
   .topbar-countdown { flex-shrink: 0; }
+  .topbar-mobile-link {
+    display: block;
+    position: absolute; inset: 0; z-index: 2;
+  }
 }
 </style>
