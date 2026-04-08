@@ -739,7 +739,7 @@ function initFadeIn() {
 .offre-visual { position: relative; width: 120px; min-height: 110px; align-self: stretch; flex-shrink: 0; }
 .offre-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
 .offre-bg--default { background: linear-gradient(135deg, #040a5d 0%, #192bc2 100%); }
-.offre-logo {
+.offre-visual .offre-logo {
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
@@ -748,8 +748,8 @@ function initFadeIn() {
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 2px 8px rgba(0,0,0,.18);
 }
-.offre-logo img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
-.offre-logo-initial { font-size: 18px; font-weight: 800; color: #192bc2; }
+.offre-visual .offre-logo img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+.offre-visual .offre-logo-initial { font-size: 18px; font-weight: 800; color: #192bc2; }
 .offre-body { padding: 14px 16px; min-width: 0; }
 .offre-title { font-size: 15px; font-weight: 700; color: #040a5d; margin: 0 0 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .offre-entreprise { font-size: 12px; color: #6b7280; margin: 0 0 6px; }

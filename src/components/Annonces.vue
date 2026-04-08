@@ -155,6 +155,11 @@
             :to="`/annonces/${offre.id}`"
             class="offre-card offre-card--link"
           >
+            <!-- Image de l'offre -->
+            <div v-if="offre.image_url" class="offre-card-visual">
+              <div class="offre-card-bg" :style="`background-image:url('${offre.image_url}');background-size:cover;background-position:center`"></div>
+            </div>
+
             <!-- Badge Nouveau (moins de 24h) -->
             <span v-if="isNew(offre.created_at)" class="badge-new">Nouveau</span>
 
@@ -878,6 +883,19 @@ onUnmounted(() => {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
   gap: 20px;
+}
+
+.offre-card-visual {
+  margin: -20px -20px 0;
+  height: 100px;
+  position: relative;
+  border-radius: 16px 16px 0 0;
+  overflow: hidden;
+}
+
+.offre-card-bg {
+  position: absolute;
+  inset: 0;
 }
 
 .offre-card {
