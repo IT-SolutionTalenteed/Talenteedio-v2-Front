@@ -46,10 +46,126 @@
 
         <!-- Nav desktop -->
         <nav class="site-nav" :class="{ 'site-nav--open': menuOpen }">
-          <button class="nav-close" @click="menuOpen = false" aria-label="Fermer">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
 
+          <!-- ══ MOBILE DRAWER ══ -->
+          <div class="mob-drawer" @click.self="menuOpen = false">
+            <div class="mob-panel" :class="{ 'mob-panel--open': menuOpen }">
+
+              <!-- Drawer header -->
+              <div class="mob-head">
+                <router-link to="/" class="mob-logo" @click="menuOpen = false">
+                  <img src="/logo.png" alt="Talenteed" height="44" />
+                </router-link>
+                <button class="mob-close" @click="menuOpen = false" aria-label="Fermer">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+
+              <!-- Drawer body -->
+              <div class="mob-body">
+                <ul class="mob-list">
+
+                  <!-- Accueil -->
+                  <li class="mob-item">
+                    <router-link to="/" exact-active-class="mob-link--active" class="mob-link" @click="menuOpen = false">
+                      <span class="mob-link-icon"><i class="fa-solid fa-house"></i></span>
+                      <span class="mob-link-label">{{ t('nav.home') }}</span>
+                      <i class="fa-solid fa-chevron-right mob-link-chev"></i>
+                    </router-link>
+                  </li>
+
+                  <!-- Annonces accordion -->
+                  <li class="mob-item mob-accordion" :class="{ 'mob-accordion--open': mobileAccordion === 'jobs' }">
+                    <button class="mob-link mob-acc-trigger" @click="mobileAccordion = mobileAccordion === 'jobs' ? null : 'jobs'">
+                      <span class="mob-link-icon"><i class="fa-solid fa-briefcase"></i></span>
+                      <span class="mob-link-label">{{ t('nav.announcements') }}</span>
+                      <i class="fa-solid fa-chevron-right mob-link-chev mob-acc-chev"></i>
+                    </button>
+                    <div class="mob-acc-body">
+                      <router-link to="/annonces" class="mob-sub-link" @click="menuOpen = false">
+                        <i class="fa-solid fa-briefcase"></i>
+                        <span>
+                          <strong>{{ t('nav.jobs') }}</strong>
+                          <small>{{ t('nav.jobsDesc') }}</small>
+                        </span>
+                      </router-link>
+                      <router-link to="/entreprises" class="mob-sub-link" @click="menuOpen = false">
+                        <i class="fa-solid fa-building"></i>
+                        <span>
+                          <strong>{{ t('nav.companies') }}</strong>
+                          <small>{{ t('nav.companiesDesc') }}</small>
+                        </span>
+                      </router-link>
+                    </div>
+                  </li>
+
+                  <!-- Événements accordion -->
+                  <li class="mob-item mob-accordion" :class="{ 'mob-accordion--open': mobileAccordion === 'events' }">
+                    <button class="mob-link mob-acc-trigger" @click="mobileAccordion = mobileAccordion === 'events' ? null : 'events'">
+                      <span class="mob-link-icon"><i class="fa-solid fa-calendar-days"></i></span>
+                      <span class="mob-link-label">{{ t('nav.events') }}</span>
+                      <i class="fa-solid fa-chevron-right mob-link-chev mob-acc-chev"></i>
+                    </button>
+                    <div class="mob-acc-body">
+                      <template v-if="categories.length">
+                        <router-link
+                          v-for="cat in categories"
+                          :key="cat.id"
+                          :to="`/evenements/categorie/${cat.id}`"
+                          class="mob-sub-link"
+                          @click="menuOpen = false"
+                        >
+                          <i class="fa-solid fa-calendar-check"></i>
+                          <span><strong>{{ cat.titre }}</strong></span>
+                        </router-link>
+                      </template>
+                      <div v-else class="mob-sub-empty">{{ t('nav.noEvents') }}</div>
+                    </div>
+                  </li>
+
+                  <!-- Blog -->
+                  <li class="mob-item">
+                    <router-link to="/blog" active-class="mob-link--active" class="mob-link" @click="menuOpen = false">
+                      <span class="mob-link-icon"><i class="fa-solid fa-newspaper"></i></span>
+                      <span class="mob-link-label">{{ t('nav.articles') }}</span>
+                      <i class="fa-solid fa-chevron-right mob-link-chev"></i>
+                    </router-link>
+                  </li>
+
+                </ul>
+              </div>
+
+              <!-- Drawer footer -->
+              <div class="mob-foot">
+                <!-- Langue -->
+                <div class="mob-lang">
+                  <button class="mob-lang-btn" :class="{ 'mob-lang-btn--active': locale === 'fr' }" @click="setLocale('fr')">
+                    🇫🇷 FR
+                  </button>
+                  <span class="mob-lang-sep">|</span>
+                  <button class="mob-lang-btn" :class="{ 'mob-lang-btn--active': locale === 'en' }" @click="setLocale('en')">
+                    🇬🇧 EN
+                  </button>
+                </div>
+                <!-- Auth -->
+                <div class="mob-auth" v-if="!isLoggedIn">
+                  <router-link to="/register" class="mob-btn mob-btn--outline" @click="menuOpen = false">{{ t('nav.subscription') }}</router-link>
+                  <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="mob-btn mob-btn--filled" @click="menuOpen = false">{{ t('nav.login') }}</router-link>
+                </div>
+                <div class="mob-auth" v-else>
+                  <router-link :to="dashboardRoute" class="mob-btn mob-btn--outline" @click="menuOpen = false">
+                    <i class="fa-solid fa-gauge"></i> {{ t('nav.dashboard') }}
+                  </router-link>
+                  <button class="mob-btn mob-btn--danger" @click="logout">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> {{ t('nav.logout') }}
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ══ DESKTOP NAV LIST (hidden on mobile) ══ -->
           <ul class="nav-list">
             <li>
               <router-link to="/" exact-active-class="nav-link--active" class="nav-link" @click="menuOpen = false">
@@ -242,9 +358,10 @@ const router  = useRouter()
 const { locale, t } = useI18n()
 
 const categories    = ref([])
-const isScrolled    = ref(false)
-const menuOpen      = ref(false)
-const activeMega    = ref(null)
+const isScrolled      = ref(false)
+const menuOpen        = ref(false)
+const activeMega      = ref(null)
+const mobileAccordion = ref(null)
 const featuredEvent = ref(null)
 const countdown     = ref({ days: '00', hours: '00', minutes: '00', seconds: '00' })
 let   countdownTimer = null
@@ -285,6 +402,7 @@ watch(() => route.fullPath, () => {
   if (isLoggedIn.value && userRole.value === 'talent') loadFavoris()
   menuOpen.value = favoriOpen.value = userOpen.value = false
   activeMega.value = null
+  mobileAccordion.value = null
 })
 
 function onClickOutside(e) {
@@ -865,11 +983,18 @@ onUnmounted(() => {
 .burger--open span:nth-child(2) { opacity: 0; }
 .burger--open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-/* Bouton fermer nav mobile */
+/* Bouton fermer nav mobile — masqué sur desktop */
 .nav-close { display: none; }
 
 /* Container */
 .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+
+/* ════════════════════════════════
+   MOBILE DRAWER — structure
+════════════════════════════════ */
+.mob-drawer {
+  display: none;
+}
 
 /* ════════════════════════════════
    RESPONSIVE
@@ -877,60 +1002,175 @@ onUnmounted(() => {
 @media (max-width: 900px) {
   .burger { display: flex; }
 
+  /* site-nav devient un conteneur plein écran transparent quand ouvert */
   .site-nav {
     display: none;
-    position: fixed; inset: 0; z-index: 1100;
-    background: #00235a;
-    flex-direction: column; align-items: center; justify-content: flex-start;
-    padding: 72px 24px 40px; overflow-y: auto;
   }
-  .site-nav--open { display: flex; }
+  .site-nav--open {
+    display: block;
+    position: fixed; inset: 0; z-index: 1100;
+  }
 
-  .nav-close {
+  /* nav-list desktop caché sur mobile */
+  .nav-list { display: none; }
+
+  /* Drawer overlay */
+  .mob-drawer {
+    display: block;
+    position: fixed; inset: 0; z-index: 1100;
+    background: rgba(0, 35, 90, .45);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  /* Panneau latéral */
+  .mob-panel {
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: min(340px, 92vw);
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -8px 0 48px rgba(0,35,90,.18);
+    transform: translateX(100%);
+    transition: transform .32s cubic-bezier(.4,0,.2,1);
+    overflow: hidden;
+  }
+  .mob-panel--open {
+    transform: translateX(0);
+  }
+
+  /* ── Header drawer ── */
+  .mob-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid #eef0f6;
+    flex-shrink: 0;
+    background: #fff;
+  }
+  .mob-logo { display: flex; align-items: center; text-decoration: none; }
+  .mob-logo img { height: 40px; width: auto; }
+  .mob-close {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: #f5f7fc; border: none; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    position: absolute; top: 18px; right: 18px;
-    width: 44px; height: 44px; border-radius: 50%;
-    background: rgba(255,255,255,.12); border: 1.5px solid rgba(255,255,255,.2);
-    color: #fff; font-size: 20px; cursor: pointer;
+    font-size: 16px; color: #374151;
+    transition: background .15s, color .15s;
+  }
+  .mob-close:hover { background: #fee2e2; color: #ef4444; }
+
+  /* ── Body drawer ── */
+  .mob-body {
+    flex: 1; overflow-y: auto;
+    padding: 8px 12px;
+  }
+  .mob-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+
+  /* Row standard */
+  .mob-item { border-radius: 12px; overflow: hidden; }
+  .mob-link {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 16px; width: 100%;
+    text-decoration: none; background: none; border: none; cursor: pointer;
+    color: #1e293b; font-family: 'Open Sans', sans-serif;
+    font-size: 15px; font-weight: 600;
+    border-radius: 12px;
+    transition: background .15s, color .15s;
+  }
+  .mob-link:hover, .mob-link--active { background: #f0f4ff; color: #00235a; }
+  .mob-link--active .mob-link-icon { background: #00235a; color: #fff; }
+
+  .mob-link-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: #f5f7fc; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: #3a9bff; flex-shrink: 0;
+    transition: background .15s, color .15s;
+  }
+  .mob-link-label { flex: 1; text-align: left; }
+  .mob-link-chev {
+    font-size: 11px; color: #c5cdd8;
+    transition: transform .25s, color .15s;
+    flex-shrink: 0;
+  }
+  .mob-link:hover .mob-link-chev { color: #3a9bff; }
+
+  /* Accordion trigger chevron rotation */
+  .mob-acc-trigger { width: 100%; }
+  .mob-accordion--open .mob-acc-chev { transform: rotate(90deg); color: #3a9bff; }
+  .mob-accordion--open > .mob-acc-trigger { background: #f0f4ff; color: #00235a; }
+  .mob-accordion--open > .mob-acc-trigger .mob-link-icon { background: #00235a; color: #fff; }
+
+  /* Accordion body */
+  .mob-acc-body {
+    max-height: 0; overflow: hidden;
+    transition: max-height .3s cubic-bezier(.4,0,.2,1);
+    padding: 0 8px;
+  }
+  .mob-accordion--open .mob-acc-body { max-height: 400px; }
+
+  .mob-sub-link {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 12px; text-decoration: none;
+    border-radius: 10px; margin-bottom: 2px;
+    color: #374151;
     transition: background .15s;
   }
-  .nav-close:hover { background: rgba(255,255,255,.22); }
-
-  .nav-list { flex-direction: column; gap: 2px; width: 100%; max-width: 340px; }
-
-  .nav-link {
-    color: rgba(255,255,255,.8); font-size: 15px; padding: 11px 16px;
-    width: 100%; border-radius: 10px;
+  .mob-sub-link:hover { background: #f5f7fc; }
+  .mob-sub-link > i {
+    font-size: 13px; color: #3a9bff; margin-top: 3px; flex-shrink: 0; width: 16px; text-align: center;
   }
-  .nav-link::after { display: none; }
-  .nav-link:hover, .nav-link--active { background: rgba(255,255,255,.1); color: #fff; }
+  .mob-sub-link > span { display: flex; flex-direction: column; gap: 2px; }
+  .mob-sub-link strong { font-size: 13.5px; font-weight: 700; color: #00235a; display: block; }
+  .mob-sub-link small  { font-size: 11.5px; color: #94a3b8; line-height: 1.4; display: block; }
+  .mob-sub-empty { padding: 12px 12px; font-size: 13px; color: #94a3b8; font-style: italic; }
 
-  .has-mega::after { display: none; }
-  .mega-trigger { color: rgba(255,255,255,.4) !important; font-size: 11px !important;
-    letter-spacing: 1.5px; padding: 14px 16px 6px !important; cursor: default; text-transform: uppercase; }
-  .mega-trigger .nav-chevron { display: none; }
-
-  .mega-panel {
-    display: flex !important;
-    flex-direction: column;
-    position: static; transform: none;
-    box-shadow: none; border: none;
-    background: transparent;
-    min-width: unset; opacity: 1; pointer-events: auto;
-    padding: 0 0 10px;
+  /* ── Footer drawer ── */
+  .mob-foot {
+    flex-shrink: 0;
+    padding: 16px 20px;
+    border-top: 1px solid #eef0f6;
+    background: #fafbff;
+    display: flex; flex-direction: column; gap: 12px;
   }
-  .mega-aside { display: none; }
-  .mega-links { padding: 0; gap: 2px; }
-  .mega-link {
-    padding: 10px 16px; border-radius: 10px;
-    color: rgba(255,255,255,.85);
-  }
-  .mega-link:hover { background: rgba(255,255,255,.1); }
-  .mega-link-body strong { color: rgba(255,255,255,.9); font-size: 14px; }
-  .mega-link-body small  { color: rgba(255,255,255,.5); font-size: 12px; }
-  .mega-link-icon { background: rgba(255,255,255,.1); color: #f29f1f; }
-  .mega-link-arrow { display: none; }
 
+  /* Langue switcher */
+  .mob-lang {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .mob-lang-sep { color: #d1d5db; font-size: 14px; }
+  .mob-lang-btn {
+    background: none; border: 1.5px solid #e5e7eb; padding: 5px 14px;
+    border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
+    color: #6b7280; font-family: 'Open Sans', sans-serif;
+    transition: all .15s;
+  }
+  .mob-lang-btn--active {
+    border-color: #00235a; color: #00235a; background: #f0f4ff;
+  }
+
+  /* Auth buttons */
+  .mob-auth { display: flex; flex-direction: column; gap: 8px; }
+  .mob-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 12px 18px; border-radius: 10px;
+    font-size: 14px; font-weight: 700; text-decoration: none;
+    font-family: 'Open Sans', sans-serif; cursor: pointer; border: 2px solid transparent;
+    transition: all .15s;
+  }
+  .mob-btn--outline {
+    background: #fff; color: #00235a; border-color: #e0e4ef;
+  }
+  .mob-btn--outline:hover { border-color: #00235a; background: #f0f4ff; }
+  .mob-btn--filled {
+    background: #00235a; color: #fff; border-color: #00235a;
+  }
+  .mob-btn--filled:hover { background: #001a45; }
+  .mob-btn--danger {
+    background: #fff5f5; color: #ef4444; border-color: #fee2e2;
+  }
+  .mob-btn--danger:hover { background: #fee2e2; }
+
+  /* Hide desktop-only elements on mobile */
   .header-actions .lang-wrap,
   .header-actions .fav-wrap { display: none; }
   .topbar-cta { display: none; }
