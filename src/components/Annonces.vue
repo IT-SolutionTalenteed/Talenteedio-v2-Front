@@ -4,173 +4,229 @@
 
     <!-- ══ HERO ══ -->
     <section class="annonces-hero">
-      <div class="container">
-        <span class="label-white">{{ t('annonces.hero.label') }}</span>
-        <h1>{{ t('annonces.hero.title') }}</h1>
-        <p>{{ t('annonces.hero.description') }}</p>
+      <div class="hero-stripes"></div>
+      <div class="container hero-inner">
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          {{ t('annonces.hero.label') }}
+        </div>
+        <h1 class="hero-title">
+          {{ t('annonces.hero.title').split(' ').slice(0, -2).join(' ') }}
+          <em>{{ t('annonces.hero.title').split(' ').slice(-2).join(' ') }}</em>
+        </h1>
+        <p class="hero-sub">{{ t('annonces.hero.description') }}</p>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <span class="hero-stat-num">{{ pagination.total || '—' }}</span>
+            <span class="hero-stat-lbl">{{ t('annonces.results.countPlural') }}</span>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- ══ CONTENU ══ -->
-    <section class="annonces-body">
-      <div class="container">
-        <div class="annonces-layout">
-
-          <!-- ── Sidebar filtres ── -->
-          <aside class="annonces-sidebar">
-            <div class="filter-card">
-              <h3 class="filter-title"><i class="fa-solid fa-sliders"></i> {{ t('annonces.filters.title') }}</h3>
-
-              <!-- Keywords -->
-              <div class="filter-group">
-                <label class="filter-label">{{ t('annonces.filters.keywords') }}</label>
-                <div class="filter-input-wrap">
-                  <i class="fa-solid fa-magnifying-glass"></i>
-                  <input v-model="filters.search" type="text" :placeholder="t('annonces.filters.keywordsPlaceholder')" @input="debouncedSearch" />
-                </div>
-              </div>
-
-              <!-- Localisation -->
-              <div class="filter-group">
-                <label class="filter-label">{{ t('annonces.filters.location') }}</label>
-                <div class="filter-input-wrap">
-                  <i class="fa-solid fa-location-dot"></i>
-                  <input v-model="filters.localisation" type="text" :placeholder="t('annonces.filters.locationPlaceholder')" @input="debouncedSearch" />
-                </div>
-              </div>
-
-              <!-- Type de contrat -->
-              <div class="filter-group">
-                <label class="filter-label">{{ t('annonces.filters.jobType') }}</label>
-                <div class="filter-checkboxes">
-                  <label v-for="c in referentiels.job_contracts" :key="c.id" class="filter-check">
-                    <input type="checkbox" :value="c.id" v-model="filters.job_contract_ids" @change="applyFilters" />
-                    <span>{{ c.name }}</span>
-                  </label>
-                </div>
-              </div>
-
-              <!-- Date de publication -->
-              <div class="filter-group">
-                <label class="filter-label">{{ t('annonces.filters.publicationDate') }}</label>
-                <div class="filter-radios">
-                  <label v-for="d in dateRanges" :key="d.value" class="filter-radio">
-                    <input type="radio" :value="d.value" v-model="filters.date_range" @change="applyFilters" />
-                    <span>{{ d.label }}</span>
-                  </label>
-                </div>
-              </div>
-
-              <!-- Niveau d'expérience -->
-              <div class="filter-group">
-                <label class="filter-label">{{ t('annonces.filters.studyLevel') }}</label>
-                <div class="filter-checkboxes">
-                  <label v-for="s in referentiels.study_levels" :key="s.id" class="filter-check">
-                    <input type="checkbox" :value="s.id" v-model="filters.study_level_ids" @change="applyFilters" />
-                    <span>{{ s.name }}</span>
-                  </label>
-                </div>
-              </div>
-
-              <!-- Reset -->
-              <button class="btn-reset" @click="resetFilters">
-                <i class="fa-solid fa-rotate-left"></i> {{ t('annonces.filters.reset') }}
-              </button>
+    <!-- ══ BARRE DE RECHERCHE STICKY ══ -->
+    <div class="search-sticky-wrap">
+      <div class="search-bar container">
+        <!-- Mot-clé -->
+        <div class="sb-group">
+          <i class="fa-solid fa-magnifying-glass sb-icon"></i>
+          <input
+            class="sb-input"
+            type="text"
+            v-model="filters.search"
+            placeholder="Titre du poste..."
+            @input="debouncedSearch"
+          />
+        </div>
+        <!-- Localisation -->
+        <div class="sb-group">
+          <i class="fa-solid fa-location-dot sb-icon"></i>
+          <input
+            class="sb-input"
+            type="text"
+            v-model="filters.localisation"
+            placeholder="Ville, pays..."
+            @input="debouncedSearch"
+          />
+        </div>
+        <!-- Type de contrat -->
+        <div class="sb-group sb-group--select">
+          <i class="fa-solid fa-briefcase sb-icon"></i>
+          <select class="sb-select" v-model="contractFilter" @change="applyFilters">
+            <option value="">Type d'emploi</option>
+            <option v-for="c in referentiels.job_contracts" :key="c.id" :value="c.id">{{ c.name }}</option>
+          </select>
+        </div>
+        <!-- Date de publication -->
+        <div class="sb-group sb-group--select">
+          <i class="fa-solid fa-clock sb-icon"></i>
+          <select class="sb-select" v-model="filters.date_range" @change="applyFilters">
+            <option value="">Tous</option>
+            <option v-for="d in dateRanges.filter(d => d.value)" :key="d.value" :value="d.value">{{ d.label }}</option>
+          </select>
+        </div>
+        <!-- Niveau d'études — multiselect custom -->
+        <div class="sb-group sb-group--multi" ref="studyDropRef">
+          <i class="fa-solid fa-graduation-cap sb-icon"></i>
+          <button class="sb-multi-btn" @click.stop="studyDropOpen = !studyDropOpen" type="button">
+            <span v-if="filters.study_level_ids.length === 0">Niveau d'études</span>
+            <span v-else>{{ filters.study_level_ids.length }} niveau(x)</span>
+            <i class="fa-solid fa-chevron-down sb-caret" :class="{ 'sb-caret--open': studyDropOpen }"></i>
+          </button>
+          <div class="sb-dropdown" v-show="studyDropOpen">
+            <label
+              v-for="s in referentiels.study_levels"
+              :key="s.id"
+              class="sb-dropdown-item"
+            >
+              <input type="checkbox" :value="s.id" v-model="filters.study_level_ids" @change="applyFilters" />
+              <span class="sb-check-box"></span>
+              {{ s.name }}
+            </label>
+            <div class="sb-dropdown-footer" v-if="filters.study_level_ids.length">
+              <button @click="filters.study_level_ids = []; applyFilters()">Effacer</button>
             </div>
-          </aside>
-
-          <!-- ── Liste offres ── -->
-          <div class="annonces-list">
-
-            <!-- Barre résultats -->
-            <div class="annonces-bar">
-              <span class="annonces-count" v-if="!loading">
-                <strong>{{ pagination.total }}</strong> {{ pagination.total !== 1 ? t('annonces.results.countPlural') : t('annonces.results.count') }} {{ pagination.total !== 1 ? t('annonces.results.foundPlural') : t('annonces.results.found') }}
-              </span>
-              <span class="annonces-count" v-else>{{ t('annonces.results.loading') }}</span>
-            </div>
-
-            <!-- Skeleton loader -->
-            <div v-if="loading" class="offres-grid">
-              <div v-for="n in 8" :key="n" class="offre-card offre-card--skeleton">
-                <div class="sk-visual"></div>
-                <div class="sk-lines">
-                  <div class="sk-line sk-line--lg"></div>
-                  <div class="sk-line sk-line--sm"></div>
-                  <div class="sk-line sk-line--md"></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Résultats -->
-            <div v-else-if="offres.length" class="offres-grid">
-              <router-link v-for="offre in offres" :key="offre.id" :to="`/annonces/${offre.id}`" class="offre-card offre-card--link">
-                <!-- Visuel gauche : image de fond + logo -->
-                <div class="offre-visual">
-                  <div
-                    class="offre-bg"
-                    :style="offre.image_url ? `background-image: url('${offre.image_url}')` : ''"
-                    :class="{ 'offre-bg--default': !offre.image_url }"
-                  ></div>
-                  <div class="offre-logo">
-                    <img v-if="offre.entreprise?.logo_url" :src="offre.entreprise.logo_url" :alt="offre.entreprise.nom" />
-                    <span v-else class="offre-logo-initial">
-                      {{ offre.entreprise ? offre.entreprise.nom.charAt(0) : '?' }}
-                    </span>
-                  </div>
-                </div>
-                <!-- Contenu -->
-                <div class="offre-body">
-                  <div class="offre-tags">
-                    <span v-for="c in offre.job_contracts" :key="c.id" class="tag tag--blue">{{ c.name }}</span>
-                  </div>
-                  <h3 class="offre-title">{{ offre.titre }}</h3>
-                  <p class="offre-entreprise">{{ offre.entreprise?.nom || t('annonces.card.companyNotSpecified') }}</p>
-                  <p class="offre-desc">{{ truncate(stripHtml(offre.mission), 110) }}</p>
-                  <div class="offre-meta">
-                    <span v-if="offre.localisation">
-                      <i class="fa-solid fa-location-dot"></i> {{ offre.localisation }}
-                    </span>
-                    <span v-if="offre.date_limite">
-                      <i class="fa-solid fa-calendar"></i> {{ formatDate(offre.date_limite) }}
-                    </span>
-                  </div>
-                </div>
-                <!-- Action -->
-                <div class="offre-action">
-                  <button
-                    class="btn-favori"
-                    :class="{ 'btn-favori--active': isFavoriId(offre.id) }"
-                    :title="isFavoriId(offre.id) ? t('annonces.card.removeFromFavorites') : t('annonces.card.addToFavorites')"
-                    @click.stop.prevent="toggleFavori(offre.id)"
-                  >
-                    <i :class="isFavoriId(offre.id) ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
-                  </button>
-                  <span class="btn btn--blue btn--sm">{{ t('annonces.card.viewOffer') }}</span>
-                </div>
-              </router-link>
-            </div>
-
-            <!-- Vide -->
-            <div v-else class="annonces-empty">
-              <i class="fa-solid fa-folder-open"></i>
-              <p>{{ t('annonces.empty.title') }}</p>
-              <button class="btn-reset" @click="resetFilters">{{ t('annonces.empty.action') }}</button>
-            </div>
-
-            <!-- Pagination -->
-            <div v-if="pagination.last_page > 1" class="annonces-pagination">
-              <button
-                v-for="page in paginationPages"
-                :key="page"
-                :class="['page-btn', { 'page-btn--active': page === pagination.current_page, 'page-btn--dots': page === '...' }]"
-                :disabled="page === '...'"
-                @click="page !== '...' && loadPage(page)"
-              >{{ page }}</button>
-            </div>
-
           </div>
         </div>
+        <!-- Bouton recherche -->
+        <button class="sb-btn" @click="applyFilters">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          Rechercher
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ FILTRES NIVEAU ÉTUDE + CONTENU ══ -->
+    <section class="annonces-body">
+      <div class="container">
+
+        <!-- Barre de résultats + filtres chips -->
+        <div class="results-header">
+          <div class="results-left">
+            <span class="results-count" v-if="!loading">
+              <strong>{{ pagination.total }}</strong>
+              {{ pagination.total !== 1 ? t('annonces.results.countPlural') : t('annonces.results.count') }}
+              {{ pagination.total !== 1 ? t('annonces.results.foundPlural') : t('annonces.results.found') }}
+            </span>
+            <span class="results-count" v-else>{{ t('annonces.results.loading') }}</span>
+
+            <!-- Chips actifs -->
+            <div class="active-chips">
+              <span v-if="filters.search" class="chip chip--active">
+                <i class="fa-solid fa-magnifying-glass"></i> {{ filters.search }}
+                <button @click="filters.search=''; applyFilters()"><i class="fa-solid fa-xmark"></i></button>
+              </span>
+              <span v-if="filters.localisation" class="chip chip--active">
+                <i class="fa-solid fa-location-dot"></i> {{ filters.localisation }}
+                <button @click="filters.localisation=''; applyFilters()"><i class="fa-solid fa-xmark"></i></button>
+              </span>
+              <span v-if="filters.job_contract_ids.length" class="chip chip--active">
+                <i class="fa-solid fa-briefcase"></i> {{ filters.job_contract_ids.length }} contrat(s)
+                <button @click="filters.job_contract_ids=[]; applyFilters()"><i class="fa-solid fa-xmark"></i></button>
+              </span>
+            </div>
+          </div>
+
+          <div class="results-right">
+            <button class="btn-reset" v-if="hasActiveFilters" @click="resetFilters">
+              <i class="fa-solid fa-rotate-left"></i> {{ t('annonces.filters.reset') }}
+            </button>
+          </div>
+        </div>
+
+        <!-- ── Skeleton ── -->
+        <div v-if="loading" class="offres-grid">
+          <div v-for="n in 8" :key="n" class="offre-card offre-card--skeleton">
+            <div class="sk-logo"></div>
+            <div class="sk-lines">
+              <div class="sk-line sk-line--lg"></div>
+              <div class="sk-line sk-line--sm"></div>
+              <div class="sk-line sk-line--md"></div>
+              <div class="sk-line sk-line--xs"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Résultats ── -->
+        <div v-else-if="offres.length" class="offres-grid">
+          <router-link
+            v-for="(offre, idx) in offres"
+            :key="offre.id"
+            :to="`/annonces/${offre.id}`"
+            class="offre-card offre-card--link"
+          >
+            <!-- Badge Nouveau (moins de 24h) -->
+            <span v-if="isNew(offre.created_at)" class="badge-new">Nouveau</span>
+
+            <!-- Header carte : logo + entreprise -->
+            <div class="offre-head">
+              <div class="offre-logo">
+                <img v-if="offre.entreprise?.logo_url" :src="offre.entreprise.logo_url" :alt="offre.entreprise.nom" />
+                <span v-else class="offre-logo-initial">
+                  {{ offre.entreprise ? offre.entreprise.nom.charAt(0) : '?' }}
+                </span>
+              </div>
+              <div class="offre-company-info">
+                <span class="offre-company">{{ offre.entreprise?.nom || t('annonces.card.companyNotSpecified') }}</span>
+                <span v-if="offre.date_limite" class="offre-deadline">
+                  <i class="fa-solid fa-calendar-xmark"></i> {{ formatDate(offre.date_limite) }}
+                </span>
+              </div>
+              <button
+                class="btn-favori"
+                :class="{ 'btn-favori--active': isFavoriId(offre.id) }"
+                :title="isFavoriId(offre.id) ? t('annonces.card.removeFromFavorites') : t('annonces.card.addToFavorites')"
+                @click.stop.prevent="toggleFavori(offre.id)"
+              >
+                <i :class="isFavoriId(offre.id) ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
+              </button>
+            </div>
+
+            <!-- Titre offre -->
+            <h3 class="offre-title">{{ offre.titre }}</h3>
+
+            <!-- Tags -->
+            <div class="offre-tags">
+              <span v-if="offre.localisation" class="tag tag--location">
+                <i class="fa-solid fa-location-dot"></i> {{ offre.localisation }}
+              </span>
+              <span v-for="c in offre.job_contracts" :key="c.id" class="tag tag--contract">{{ c.name }}</span>
+              <span v-for="s in offre.study_levels" :key="s.id" class="tag tag--study">{{ s.name }}</span>
+            </div>
+
+            <!-- Description -->
+            <p class="offre-desc">{{ truncate(stripHtml(offre.mission), 120) }}</p>
+
+            <!-- Footer carte -->
+            <div class="offre-footer">
+              <span class="offre-date" v-if="offre.created_at">
+                <i class="fa-regular fa-clock"></i> {{ timeAgo(offre.created_at) }}
+              </span>
+              <span class="btn btn--blue btn--sm">{{ t('annonces.card.viewOffer') }}</span>
+            </div>
+          </router-link>
+        </div>
+
+        <!-- ── Vide ── -->
+        <div v-else class="annonces-empty">
+          <div class="empty-icon">
+            <i class="fa-solid fa-folder-open"></i>
+          </div>
+          <p class="empty-title">{{ t('annonces.empty.title') }}</p>
+          <button class="btn btn--blue" @click="resetFilters">{{ t('annonces.empty.action') }}</button>
+        </div>
+
+        <!-- ── Pagination ── -->
+        <div v-if="pagination.last_page > 1" class="annonces-pagination">
+          <button
+            v-for="page in paginationPages"
+            :key="page"
+            :class="['page-btn', { 'page-btn--active': page === pagination.current_page, 'page-btn--dots': page === '...' }]"
+            :disabled="page === '...'"
+            @click="page !== '...' && loadPage(page)"
+          >{{ page }}</button>
+        </div>
+
       </div>
     </section>
 
@@ -179,7 +235,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, computed } from 'vue'
+import { ref, reactive, onMounted, onUnmounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
@@ -195,6 +251,13 @@ const loading      = ref(false)
 const pagination   = ref({ current_page: 1, last_page: 1, total: 0 })
 
 const { favoris, loadFavoris, toggleFavori: _toggleFavori, isFavoriId } = useFavoris()
+
+// ── Multiselect niveau d'études ───────────────────────────
+const studyDropOpen = ref(false)
+const studyDropRef  = ref(null)
+const onClickOutsideStudy = (e) => {
+  if (studyDropRef.value && !studyDropRef.value.contains(e.target)) studyDropOpen.value = false
+}
 
 const dateRanges = computed(() => [
   { value: '',          label: t('annonces.dateRanges.all') },
@@ -213,13 +276,24 @@ const filters = reactive({
   date_range:       '',
 })
 
+// Single contract select helper (maps to job_contract_ids[])
+const contractFilter = computed({
+  get: () => filters.job_contract_ids[0] ?? '',
+  set: (val) => { filters.job_contract_ids = val ? [val] : [] }
+})
+
+const hasActiveFilters = computed(() =>
+  filters.search || filters.localisation || filters.job_contract_ids.length ||
+  filters.study_level_ids.length || filters.date_range
+)
+
 // ── Chargement ─────────────────────────────────────────────
 const loadPage = async (page = 1) => {
   loading.value = true
   try {
     const params = {
       page,
-      per_page: 8,
+      per_page: 9,
       ...(filters.search       && { search:       filters.search }),
       ...(filters.localisation && { localisation: filters.localisation }),
       ...(filters.date_range   && { date_range:   filters.date_range }),
@@ -294,6 +368,22 @@ const formatDate = (str) => {
   return new Date(str).toLocaleDateString(lang, { day: 'numeric', month: 'short', year: 'numeric' })
 }
 
+const isNew = (dateStr) => {
+  if (!dateStr) return false
+  return (Date.now() - new Date(dateStr).getTime()) < 86400000
+}
+
+const timeAgo = (dateStr) => {
+  if (!dateStr) return ''
+  const diff = Date.now() - new Date(dateStr).getTime()
+  const h = Math.floor(diff / 3600000)
+  if (h < 1) return 'Il y a moins d\'1h'
+  if (h < 24) return `Il y a ${h}h`
+  const d = Math.floor(h / 24)
+  if (d < 7) return `Il y a ${d}j`
+  return formatDate(dateStr)
+}
+
 const toggleFavori = async (offreId) => {
   const offre = offres.value.find(o => o.id === offreId)
   if (offre) await _toggleFavori(offre)
@@ -303,54 +393,82 @@ onMounted(() => {
   loadPage()
   loadReferentiels()
   loadFavoris()
+  document.addEventListener('click', onClickOutsideStudy)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', onClickOutsideStudy)
 })
 </script>
 
 <style scoped>
-.annonces-page { min-height: 100vh; background: var(--light-bg, #f5f7fa); }
+/* ── Import fonts ── */
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600;700&display=swap');
 
-/* ── Hero ── */
+/* ── Variables ── */
+:root {
+  --orange: #f29f1f;
+  --blue: #3a9bff;
+  --navy: #00235a;
+  --navy-head: #1c244b;
+  --navy-deep: #000c52;
+  --light-bg: #f5f7fc;
+  --border: #e0e4ef;
+  --radius-lg: 14px;
+  --shadow: 0 4px 20px rgba(0,0,0,0.10);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.18);
+}
+
+.annonces-page {
+  min-height: 100vh;
+  background: var(--light-bg);
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* ════════════════════════════════
+   HERO
+════════════════════════════════ */
 .annonces-hero {
   background: url('/images/Gemini_Generated_Image_xyh87qxyh87qxyh8.png') center/cover no-repeat;
+  position: relative;
+  overflow: hidden;
   padding: 0;
   color: #fff;
-  position: relative;
   height: 80vh;
   min-height: 500px;
   display: flex;
   align-items: center;
 }
-.annonces-hero::before {
+
+.hero-stripes {
+  display: none;
+}
+
+/* Overlay sombre */
+.annonces-hero::after {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.3);
+  inset: 0;
+  background: rgba(0,0,0,.35);
   z-index: 0;
 }
-.annonces-hero .container {
+
+.hero-inner {
   position: relative;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+  justify-content: center;
 }
-.annonces-hero h1 { 
-  font-size: 56px; 
-  font-weight: 800; 
-  margin: 12px 0 20px;
-  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
-  line-height: 1.2;
-}
-.annonces-hero p  { 
-  font-size: 22px; 
-  opacity: .95;
-  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
-  max-width: 650px;
-  line-height: 1.5;
-}
-.label-white {
-  display: inline-block;
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   background: rgba(255,255,255,.25);
+  border: none;
   color: #fff;
   font-size: 12px;
   font-weight: 700;
@@ -360,159 +478,709 @@ onMounted(() => {
   border-radius: 50px;
   margin-bottom: 16px;
   backdrop-filter: blur(10px);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 10px rgba(0,0,0,.15);
 }
 
-/* ── Layout ── */
-.annonces-body   { padding: 48px 0 80px; }
-.annonces-layout { display: grid; grid-template-columns: 280px 1fr; gap: 32px; align-items: start; }
-@media (max-width: 900px) { .annonces-layout { grid-template-columns: 1fr; } }
+.hero-badge-dot {
+  display: none;
+}
 
-/* ── Sidebar ── */
-.annonces-sidebar { position: sticky; top: 90px; }
-.filter-card {
-  background: #fff;
-  border-radius: 14px;
-  padding: 24px;
-  box-shadow: 0 2px 12px rgba(0,0,0,.07);
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .5; transform: scale(.8); }
 }
-.filter-title {
-  font-size: 15px; font-weight: 700; color: var(--navy);
-  margin: 0 0 20px; display: flex; align-items: center; gap: 8px;
+
+.hero-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 56px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-transform: uppercase;
+  margin: 0 0 20px;
+  color: #fff;
+  text-shadow: 0 2px 20px rgba(0,0,0,.3);
 }
-.filter-group  { margin-bottom: 20px; }
-.filter-label  { display: block; font-size: 12px; font-weight: 700; color: var(--navy); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; }
-.filter-input-wrap {
+
+.hero-title em {
+  color: var(--orange);
+  font-style: normal;
+}
+
+.hero-sub {
+  font-size: 22px;
+  color: rgba(255,255,255,.95);
+  line-height: 1.5;
+  max-width: 650px;
+  margin: 0 0 24px;
+  text-shadow: 0 1px 10px rgba(0,0,0,.2);
+  opacity: .95;
+}
+
+.hero-stats {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hero-stat-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 36px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+  text-shadow: 0 2px 10px rgba(0,0,0,.2);
+}
+
+.hero-stat-lbl {
+  font-size: 12px;
+  color: rgba(255,255,255,.7);
+  text-transform: uppercase;
+  letter-spacing: .8px;
+}
+
+.hero-stat-sep {
+  width: 1px;
+  height: 36px;
+  background: rgba(255,255,255,.35);
+}
+
+/* ════════════════════════════════
+   BARRE RECHERCHE STICKY
+════════════════════════════════ */
+.search-sticky-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--navy, #00235a);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 4px 24px rgba(0,0,35,.4);
+}
+
+.search-bar {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr 0.9fr 0.9fr 0.9fr auto;
+  gap: 0;
+  height: 60px;
+  align-items: stretch;
+}
+
+.sb-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-right: 1px solid rgba(255,255,255,.1);
+}
+
+.sb-group:last-of-type {
+  border-right: none;
+}
+
+.sb-icon {
+  position: absolute;
+  left: 14px;
+  color: rgba(255,255,255,.4);
+  font-size: 12px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.sb-input,
+.sb-select {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0 14px 0 38px;
+  font-size: 13px;
+  color: #fff;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.sb-input::placeholder {
+  color: rgba(255,255,255,.35);
+}
+
+.sb-select {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  color: rgba(255,255,255,.75);
+}
+
+.sb-select option {
+  background: var(--navy, #00235a);
+  color: #fff;
+}
+
+/* ── Multiselect niveau d'études ── */
+.sb-group--multi {
   position: relative;
 }
-.filter-input-wrap i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--body-text); font-size: 13px; }
-.filter-input-wrap input {
-  width: 100%; padding: 9px 12px 9px 34px;
-  border: 1.5px solid var(--border, #e2e8f0);
-  border-radius: 8px; font-size: 13px; color: var(--navy);
-  box-sizing: border-box;
-  transition: border-color .15s;
+
+.sb-multi-btn {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0 14px 0 38px;
+  font-size: 13px;
+  color: rgba(255,255,255,.75);
+  font-family: 'Open Sans', sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+  white-space: nowrap;
 }
-.filter-input-wrap input:focus { outline: none; border-color: var(--blue); }
-.filter-checkboxes, .filter-radios { display: flex; flex-direction: column; gap: 8px; }
-.filter-check, .filter-radio {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 13px; color: var(--navy); cursor: pointer;
+
+.sb-caret {
+  margin-left: auto;
+  font-size: 10px;
+  opacity: .5;
+  transition: transform .2s;
 }
-.filter-check input, .filter-radio input { accent-color: var(--blue); width: 15px; height: 15px; }
-.btn-reset {
-  width: 100%; padding: 9px; background: var(--light-bg, #f5f7fa);
-  border: 1.5px solid var(--border, #e2e8f0); border-radius: 8px;
-  font-size: 13px; font-weight: 600; color: var(--navy); cursor: pointer;
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-  transition: background .15s;
-  margin-top: 4px;
+
+.sb-caret--open { transform: rotate(180deg); }
+
+.sb-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 220px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.18);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  z-index: 200;
 }
-.btn-reset:hover { background: #e2e8f0; }
+
+.sb-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--navy);
+  cursor: pointer;
+  transition: background .1s;
+}
+
+.sb-dropdown-item:hover { background: var(--light-bg); }
+
+.sb-dropdown-item input[type="checkbox"] {
+  display: none;
+}
+
+.sb-check-box {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1.5px solid var(--border);
+  background: #fff;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .15s;
+}
+
+.sb-dropdown-item input:checked ~ .sb-check-box {
+  background: var(--blue);
+  border-color: var(--blue);
+}
+
+.sb-dropdown-item input:checked ~ .sb-check-box::after {
+  content: '';
+  width: 8px;
+  height: 5px;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(-45deg) translateY(-1px);
+  display: block;
+}
+
+.sb-dropdown-footer {
+  padding: 8px 14px;
+  border-top: 1px solid var(--border);
+  background: var(--light-bg);
+}
+
+.sb-dropdown-footer button {
+  background: none;
+  border: none;
+  font-size: 12px;
+  font-weight: 700;
+  color: #f43f5e;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* ── Bouton rechercher ── */
+.sb-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 24px;
+  background: var(--orange);
+  border: none;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .2s;
+  white-space: nowrap;
+}
+
+.sb-btn:hover {
+  background: #d98c0f;
+}
+
+@media (max-width: 1100px) {
+  .search-bar {
+    grid-template-columns: 1fr 1fr 1fr;
+    height: auto;
+    flex-wrap: wrap;
+  }
+  .sb-group { height: 52px; }
+  .sb-btn { grid-column: 1 / -1; height: 48px; justify-content: center; }
+}
+
+@media (max-width: 700px) {
+  .search-bar { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 480px) {
+  .search-bar { grid-template-columns: 1fr; }
+}
+
+/* ════════════════════════════════
+   CORPS ANNONCES
+════════════════════════════════ */
+.annonces-body { padding: 36px 0 80px; }
 
 /* ── Barre résultats ── */
-.annonces-bar   { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-.annonces-count { font-size: 14px; color: var(--body-text); }
-.annonces-count strong { color: var(--navy); font-weight: 700; }
+.results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
 
-/* ── Grille offres ── */
-.offres-grid { display: flex; flex-direction: column; gap: 16px; }
+.results-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.results-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.results-count {
+  font-size: 14px;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.results-count strong {
+  color: var(--navy);
+  font-weight: 700;
+}
+
+/* ── Chips filtres actifs ── */
+.active-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 50px;
+  border: 1.5px solid var(--border);
+  background: #fff;
+  color: var(--navy);
+  cursor: pointer;
+  transition: all .15s;
+  user-select: none;
+}
+
+.chip input { display: none; }
+
+.chip:hover { border-color: var(--blue); color: var(--blue); }
+
+.chip--active {
+  background: #e8f3ff;
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+.chip--active button {
+  background: none;
+  border: none;
+  color: var(--blue);
+  cursor: pointer;
+  padding: 0;
+  margin-left: 2px;
+  font-size: 11px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+
+
+.btn-reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all .15s;
+  white-space: nowrap;
+}
+
+.btn-reset:hover { border-color: #f43f5e; color: #f43f5e; background: #fff0f3; }
+
+/* ════════════════════════════════
+   GRILLE OFFRES
+════════════════════════════════ */
+.offres-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 20px;
+}
 
 .offre-card {
-  background: #fff; border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,.06);
-  padding: 0;
-  display: grid; grid-template-columns: 160px 1fr auto;
-  gap: 0; align-items: center;
-  border: 1.5px solid transparent;
-  overflow: hidden;
-  transition: border-color .2s, box-shadow .2s, transform .15s;
-}
-.offre-card:hover { border-color: var(--blue); box-shadow: 0 6px 20px rgba(0,0,0,.10); transform: translateY(-2px); }
-.offre-card--link { text-decoration: none; }
-
-/* Visuel gauche */
-.offre-visual {
   position: relative;
-  width: 160px;
-  height: 100%;
-  min-height: 110px;
-  flex-shrink: 0;
-  align-self: stretch;
+  background: #fff;
+  border-radius: 16px;
+  border: 1.5px solid var(--border);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color .2s, box-shadow .2s, transform .2s;
+  overflow: hidden;
 }
-.offre-bg {
-  position: absolute; inset: 0;
-  background-size: cover; background-position: center;
-  border-radius: 0;
+
+.offre-card:hover {
+  border-color: var(--blue);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-3px);
 }
-.offre-bg--default {
-  background: linear-gradient(135deg, #040a5d 0%, #192bc2 100%);
-}
-.offre-logo {
+
+/* Badge nouveau */
+.badge-new {
   position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 52px; height: 52px; border-radius: 10px;
-  background: #fff; overflow: hidden;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,.18);
+  top: 16px;
+  right: 16px;
+  background: #10b981;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 50px;
 }
-.offre-logo img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
-.offre-logo-initial { font-size: 20px; font-weight: 800; color: var(--blue); }
 
-.offre-body { padding: 16px 20px; }
-.offre-action { padding: 16px 16px 16px 0; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+/* Header carte */
+.offre-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 
-.offre-tags   { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
-.tag { font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 50px; }
-.tag--blue { background: #e8f0fe; color: var(--blue); }
+.offre-logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  background: var(--light-bg);
+  border: 1.5px solid var(--border);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
 
-.offre-title      { font-size: 16px; font-weight: 700; color: var(--navy); margin: 0 0 3px; }
-.offre-entreprise { font-size: 13px; color: var(--body-text); margin: 0 0 8px; }
-.offre-desc       { font-size: 13px; color: var(--body-text); line-height: 1.5; margin: 0 0 10px; }
-.offre-meta       { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--body-text); }
-.offre-meta i     { color: var(--orange); margin-right: 4px; }
+.offre-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 6px;
+}
 
-.offre-action { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.offre-logo-initial {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--blue);
+}
 
+.offre-company-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.offre-company {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--navy);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.offre-deadline {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.offre-deadline i { color: var(--orange); margin-right: 3px; }
+
+/* Favori */
 .btn-favori {
-  background: none; border: none; cursor: pointer;
-  font-size: 18px; color: #cbd5e1; padding: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #d1d5db;
+  padding: 4px;
   transition: color .2s, transform .15s;
   line-height: 1;
+  flex-shrink: 0;
 }
-.btn-favori:hover        { color: #f43f5e; transform: scale(1.15); }
-.btn-favori--active      { color: #f43f5e; }
 
-/* ── Skeleton ── */
-.offre-card--skeleton { pointer-events: none; }
-.sk-visual { width: 160px; align-self: stretch; min-height: 110px; background: #e9ecef; animation: shimmer 1.2s infinite; }
-.sk-lines { flex: 1; display: flex; flex-direction: column; gap: 8px; padding: 16px 20px; }
-.sk-line { height: 12px; border-radius: 6px; background: #e9ecef; animation: shimmer 1.2s infinite; }
-.sk-line--lg { width: 60%; }
-.sk-line--md { width: 40%; }
+.btn-favori:hover { color: #f43f5e; transform: scale(1.2); }
+.btn-favori--active { color: #f43f5e; }
+
+/* Titre */
+.offre-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--navy-head);
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -.3px;
+}
+
+/* Tags */
+.offre-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 50px;
+}
+
+.tag--location { background: #dbeafe; color: #1d4ed8; }
+.tag--contract { background: #fff7ed; color: #c2410c; }
+.tag--study    { background: #dcfce7; color: #15803d; }
+
+/* Description */
+.offre-desc {
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0;
+  flex: 1;
+}
+
+/* Footer carte */
+.offre-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+
+.offre-date {
+  font-size: 12px;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Boutons globaux */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 13px;
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: .3px;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all .2s;
+}
+
+.btn--blue { background: var(--blue); color: #fff; }
+.btn--blue:hover { background: #2584e8; box-shadow: 0 4px 14px rgba(58,155,255,.4); }
+.btn--sm { padding: 6px 16px; font-size: 12px; }
+
+/* ════════════════════════════════
+   SKELETON
+════════════════════════════════ */
+.offre-card--skeleton { pointer-events: none; gap: 16px; }
+
+.sk-logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  background: #e9ecef;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.sk-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.sk-line {
+  height: 12px;
+  border-radius: 6px;
+  background: #e9ecef;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.sk-line--lg { width: 65%; height: 18px; }
+.sk-line--md { width: 45%; }
 .sk-line--sm { width: 80%; }
-@keyframes shimmer { 0%,100% { opacity: 1 } 50% { opacity: .4 } }
+.sk-line--xs { width: 30%; }
 
-/* ── Vide ── */
-.annonces-empty { text-align: center; padding: 60px 0; color: var(--body-text); }
-.annonces-empty i { font-size: 48px; opacity: .3; margin-bottom: 16px; display: block; }
-.annonces-empty p { font-size: 15px; margin-bottom: 16px; }
-
-/* ── Pagination ── */
-.annonces-pagination { display: flex; justify-content: center; gap: 8px; margin-top: 32px; flex-wrap: wrap; }
-.page-btn {
-  width: 38px; height: 38px; border-radius: 8px; border: 1.5px solid var(--border, #e2e8f0);
-  background: #fff; font-size: 13px; font-weight: 600; color: var(--navy);
-  cursor: pointer; transition: all .15s; display: flex; align-items: center; justify-content: center;
+@keyframes shimmer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .4; }
 }
-.page-btn:hover:not(:disabled)    { border-color: var(--blue); color: var(--blue); }
-.page-btn--active                  { background: var(--blue); border-color: var(--blue); color: #fff; }
-.page-btn--dots                    { border: none; background: transparent; cursor: default; }
 
-@media (max-width: 640px) {
-  .offre-card { grid-template-columns: 100px 1fr; }
-  .offre-visual { min-height: 90px; }
-  .offre-action { grid-column: 1 / -1; padding: 0 16px 16px; flex-direction: row; justify-content: flex-end; }
+/* ════════════════════════════════
+   ÉTAT VIDE
+════════════════════════════════ */
+.annonces-empty {
+  text-align: center;
+  padding: 80px 0;
+  grid-column: 1 / -1;
+}
+
+.empty-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--light-bg);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+}
+
+.empty-icon i { font-size: 32px; color: #d1d5db; }
+
+.empty-title {
+  font-size: 16px;
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+/* ════════════════════════════════
+   PAGINATION
+════════════════════════════════ */
+.annonces-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+
+.page-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  background: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Barlow Condensed', sans-serif;
+  color: var(--navy);
+  cursor: pointer;
+  transition: all .15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-btn:hover:not(:disabled) { border-color: var(--blue); color: var(--blue); }
+.page-btn--active { background: var(--navy); border-color: var(--navy); color: #fff; }
+.page-btn--dots { border: none; background: transparent; cursor: default; font-size: 16px; }
+
+/* ════════════════════════════════
+   RESPONSIVE
+════════════════════════════════ */
+@media (max-width: 768px) {
+  .hero-title { font-size: 38px; }
+  .offres-grid { grid-template-columns: 1fr; }
+  .results-header { flex-direction: column; align-items: flex-start; }
+  .results-right { width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .hero-title { font-size: 30px; }
+  .annonces-hero { padding: 36px 0 48px; }
 }
 </style>
