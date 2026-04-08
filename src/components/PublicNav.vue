@@ -45,127 +45,7 @@
         </router-link>
 
         <!-- Nav desktop -->
-        <nav class="site-nav" :class="{ 'site-nav--open': menuOpen }">
-
-          <!-- ══ MOBILE DRAWER ══ -->
-          <div class="mob-drawer" @click.self="menuOpen = false">
-            <div class="mob-panel" :class="{ 'mob-panel--open': menuOpen }">
-
-              <!-- Drawer header -->
-              <div class="mob-head">
-                <router-link to="/" class="mob-logo" @click="menuOpen = false">
-                  <img src="/logo.png" alt="Talenteed" height="44" />
-                </router-link>
-                <button class="mob-close" @click="menuOpen = false" aria-label="Fermer">
-                  <i class="fa-solid fa-xmark"></i>
-                </button>
-              </div>
-
-              <!-- Drawer body -->
-              <div class="mob-body">
-                <ul class="mob-list">
-
-                  <!-- Accueil -->
-                  <li class="mob-item">
-                    <router-link to="/" exact-active-class="mob-link--active" class="mob-link" @click="menuOpen = false">
-                      <span class="mob-link-icon"><i class="fa-solid fa-house"></i></span>
-                      <span class="mob-link-label">{{ t('nav.home') }}</span>
-                      <i class="fa-solid fa-chevron-right mob-link-chev"></i>
-                    </router-link>
-                  </li>
-
-                  <!-- Annonces accordion -->
-                  <li class="mob-item mob-accordion" :class="{ 'mob-accordion--open': mobileAccordion === 'jobs' }">
-                    <button class="mob-link mob-acc-trigger" @click="mobileAccordion = mobileAccordion === 'jobs' ? null : 'jobs'">
-                      <span class="mob-link-icon"><i class="fa-solid fa-briefcase"></i></span>
-                      <span class="mob-link-label">{{ t('nav.announcements') }}</span>
-                      <i class="fa-solid fa-chevron-right mob-link-chev mob-acc-chev"></i>
-                    </button>
-                    <div class="mob-acc-body">
-                      <router-link to="/annonces" class="mob-sub-link" @click="menuOpen = false">
-                        <i class="fa-solid fa-briefcase"></i>
-                        <span>
-                          <strong>{{ t('nav.jobs') }}</strong>
-                          <small>{{ t('nav.jobsDesc') }}</small>
-                        </span>
-                      </router-link>
-                      <router-link to="/entreprises" class="mob-sub-link" @click="menuOpen = false">
-                        <i class="fa-solid fa-building"></i>
-                        <span>
-                          <strong>{{ t('nav.companies') }}</strong>
-                          <small>{{ t('nav.companiesDesc') }}</small>
-                        </span>
-                      </router-link>
-                    </div>
-                  </li>
-
-                  <!-- Événements accordion -->
-                  <li class="mob-item mob-accordion" :class="{ 'mob-accordion--open': mobileAccordion === 'events' }">
-                    <button class="mob-link mob-acc-trigger" @click="mobileAccordion = mobileAccordion === 'events' ? null : 'events'">
-                      <span class="mob-link-icon"><i class="fa-solid fa-calendar-days"></i></span>
-                      <span class="mob-link-label">{{ t('nav.events') }}</span>
-                      <i class="fa-solid fa-chevron-right mob-link-chev mob-acc-chev"></i>
-                    </button>
-                    <div class="mob-acc-body">
-                      <template v-if="categories.length">
-                        <router-link
-                          v-for="cat in categories"
-                          :key="cat.id"
-                          :to="`/evenements/categorie/${cat.id}`"
-                          class="mob-sub-link"
-                          @click="menuOpen = false"
-                        >
-                          <i class="fa-solid fa-calendar-check"></i>
-                          <span><strong>{{ cat.titre }}</strong></span>
-                        </router-link>
-                      </template>
-                      <div v-else class="mob-sub-empty">{{ t('nav.noEvents') }}</div>
-                    </div>
-                  </li>
-
-                  <!-- Blog -->
-                  <li class="mob-item">
-                    <router-link to="/blog" active-class="mob-link--active" class="mob-link" @click="menuOpen = false">
-                      <span class="mob-link-icon"><i class="fa-solid fa-newspaper"></i></span>
-                      <span class="mob-link-label">{{ t('nav.articles') }}</span>
-                      <i class="fa-solid fa-chevron-right mob-link-chev"></i>
-                    </router-link>
-                  </li>
-
-                </ul>
-              </div>
-
-              <!-- Drawer footer -->
-              <div class="mob-foot">
-                <!-- Langue -->
-                <div class="mob-lang">
-                  <button class="mob-lang-btn" :class="{ 'mob-lang-btn--active': locale === 'fr' }" @click="setLocale('fr')">
-                    🇫🇷 FR
-                  </button>
-                  <span class="mob-lang-sep">|</span>
-                  <button class="mob-lang-btn" :class="{ 'mob-lang-btn--active': locale === 'en' }" @click="setLocale('en')">
-                    🇬🇧 EN
-                  </button>
-                </div>
-                <!-- Auth -->
-                <div class="mob-auth" v-if="!isLoggedIn">
-                  <router-link to="/register" class="mob-btn mob-btn--outline" @click="menuOpen = false">{{ t('nav.subscription') }}</router-link>
-                  <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="mob-btn mob-btn--filled" @click="menuOpen = false">{{ t('nav.login') }}</router-link>
-                </div>
-                <div class="mob-auth" v-else>
-                  <router-link :to="dashboardRoute" class="mob-btn mob-btn--outline" @click="menuOpen = false">
-                    <i class="fa-solid fa-gauge"></i> {{ t('nav.dashboard') }}
-                  </router-link>
-                  <button class="mob-btn mob-btn--danger" @click="logout">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i> {{ t('nav.logout') }}
-                  </button>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          <!-- ══ DESKTOP NAV LIST (hidden on mobile) ══ -->
+        <nav class="site-nav">
           <ul class="nav-list">
             <li>
               <router-link to="/" exact-active-class="nav-link--active" class="nav-link" @click="menuOpen = false">
@@ -248,7 +128,7 @@
           </ul>
         </nav>
 
-        <!-- Actions droite -->
+        <!-- Actions droite (desktop) -->
         <div class="header-actions">
 
           <!-- Favoris talent -->
@@ -342,6 +222,121 @@
 
       </div>
     </header>
+
+    <!-- ══ MOBILE DRAWER (outside header, sibling) ══ -->
+    <Transition name="mob-overlay">
+      <div v-if="menuOpen" class="mob-drawer" @click.self="menuOpen = false">
+        <div class="mob-panel mob-panel--open">
+
+          <!-- Drawer header -->
+          <div class="mob-head">
+            <router-link to="/" class="mob-logo" @click="menuOpen = false">
+              <img src="/logo.png" alt="Talenteed" height="44" />
+            </router-link>
+            <button class="mob-close" @click="menuOpen = false" aria-label="Fermer">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <!-- Drawer body -->
+          <div class="mob-body">
+            <ul class="mob-list">
+
+              <!-- Accueil -->
+              <li class="mob-item">
+                <router-link to="/" exact-active-class="mob-link--active" class="mob-link" @click="menuOpen = false">
+                  <span class="mob-link-icon"><i class="fa-solid fa-house"></i></span>
+                  <span class="mob-link-label">{{ t('nav.home') }}</span>
+                  <i class="fa-solid fa-chevron-right mob-link-chev"></i>
+                </router-link>
+              </li>
+
+              <!-- Annonces accordion -->
+              <li class="mob-item mob-accordion" :class="{ 'mob-accordion--open': mobileAccordion === 'jobs' }">
+                <button class="mob-link mob-acc-trigger" @click="mobileAccordion = mobileAccordion === 'jobs' ? null : 'jobs'">
+                  <span class="mob-link-icon"><i class="fa-solid fa-briefcase"></i></span>
+                  <span class="mob-link-label">{{ t('nav.announcements') }}</span>
+                  <i class="fa-solid fa-chevron-right mob-link-chev mob-acc-chev"></i>
+                </button>
+                <div class="mob-acc-body">
+                  <router-link to="/annonces" class="mob-sub-link" @click="menuOpen = false">
+                    <i class="fa-solid fa-briefcase"></i>
+                    <span>
+                      <strong>{{ t('nav.jobs') }}</strong>
+                      <small>{{ t('nav.jobsDesc') }}</small>
+                    </span>
+                  </router-link>
+                  <router-link to="/entreprises" class="mob-sub-link" @click="menuOpen = false">
+                    <i class="fa-solid fa-building"></i>
+                    <span>
+                      <strong>{{ t('nav.companies') }}</strong>
+                      <small>{{ t('nav.companiesDesc') }}</small>
+                    </span>
+                  </router-link>
+                </div>
+              </li>
+
+              <!-- Événements accordion -->
+              <li class="mob-item mob-accordion" :class="{ 'mob-accordion--open': mobileAccordion === 'events' }">
+                <button class="mob-link mob-acc-trigger" @click="mobileAccordion = mobileAccordion === 'events' ? null : 'events'">
+                  <span class="mob-link-icon"><i class="fa-solid fa-calendar-days"></i></span>
+                  <span class="mob-link-label">{{ t('nav.events') }}</span>
+                  <i class="fa-solid fa-chevron-right mob-link-chev mob-acc-chev"></i>
+                </button>
+                <div class="mob-acc-body">
+                  <template v-if="categories.length">
+                    <router-link
+                      v-for="cat in categories"
+                      :key="cat.id"
+                      :to="`/evenements/categorie/${cat.id}`"
+                      class="mob-sub-link"
+                      @click="menuOpen = false"
+                    >
+                      <i class="fa-solid fa-calendar-check"></i>
+                      <span><strong>{{ cat.titre }}</strong></span>
+                    </router-link>
+                  </template>
+                  <div v-else class="mob-sub-empty">{{ t('nav.noEvents') }}</div>
+                </div>
+              </li>
+
+              <!-- Blog -->
+              <li class="mob-item">
+                <router-link to="/blog" active-class="mob-link--active" class="mob-link" @click="menuOpen = false">
+                  <span class="mob-link-icon"><i class="fa-solid fa-newspaper"></i></span>
+                  <span class="mob-link-label">{{ t('nav.articles') }}</span>
+                  <i class="fa-solid fa-chevron-right mob-link-chev"></i>
+                </router-link>
+              </li>
+
+            </ul>
+          </div>
+
+          <!-- Drawer footer -->
+          <div class="mob-foot">
+            <div class="mob-lang">
+              <button class="mob-lang-btn" :class="{ 'mob-lang-btn--active': locale === 'fr' }" @click="setLocale('fr')">🇫🇷 FR</button>
+              <span class="mob-lang-sep">|</span>
+              <button class="mob-lang-btn" :class="{ 'mob-lang-btn--active': locale === 'en' }" @click="setLocale('en')">🇬🇧 EN</button>
+            </div>
+            <div class="mob-auth" v-if="!isLoggedIn">
+              <router-link to="/register" class="mob-btn mob-btn--outline" @click="menuOpen = false">{{ t('nav.subscription') }}</router-link>
+              <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="mob-btn mob-btn--filled" @click="menuOpen = false">{{ t('nav.login') }}</router-link>
+            </div>
+            <div class="mob-auth" v-else>
+              <router-link :to="dashboardRoute" class="mob-btn mob-btn--outline" @click="menuOpen = false">
+                <i class="fa-solid fa-gauge"></i> {{ t('nav.dashboard') }}
+              </router-link>
+              <button class="mob-btn mob-btn--danger" @click="logout">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> {{ t('nav.logout') }}
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </Transition>
+
   </div>
 </template>
 
@@ -972,6 +967,15 @@ onUnmounted(() => {
 .drop-enter-active, .drop-leave-active { transition: opacity .16s ease, transform .16s ease; }
 .drop-enter-from, .drop-leave-to { opacity: 0; transform: translateY(-6px); }
 
+/* Transition overlay mobile drawer */
+.mob-overlay-enter-active { transition: opacity .25s ease; }
+.mob-overlay-leave-active { transition: opacity .25s ease; }
+.mob-overlay-enter-from, .mob-overlay-leave-to { opacity: 0; }
+.mob-overlay-enter-active .mob-panel { transition: transform .32s cubic-bezier(.4,0,.2,1); }
+.mob-overlay-leave-active .mob-panel { transition: transform .28s cubic-bezier(.4,0,.2,1); }
+.mob-overlay-enter-from .mob-panel { transform: translateX(100%); }
+.mob-overlay-leave-to .mob-panel { transform: translateX(100%); }
+
 /* Burger */
 .burger {
   display: none;
@@ -990,10 +994,13 @@ onUnmounted(() => {
 .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
 
 /* ════════════════════════════════
-   MOBILE DRAWER — structure
+   MOBILE DRAWER — toujours en dehors du flux desktop
 ════════════════════════════════ */
 .mob-drawer {
-  display: none;
+  position: fixed; inset: 0; z-index: 1100;
+  background: rgba(0, 35, 90, .45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 /* ════════════════════════════════
@@ -1001,27 +1008,7 @@ onUnmounted(() => {
 ════════════════════════════════ */
 @media (max-width: 900px) {
   .burger { display: flex; }
-
-  /* site-nav devient un conteneur plein écran transparent quand ouvert */
-  .site-nav {
-    display: none;
-  }
-  .site-nav--open {
-    display: block;
-    position: fixed; inset: 0; z-index: 1100;
-  }
-
-  /* nav-list desktop caché sur mobile */
-  .nav-list { display: none; }
-
-  /* Drawer overlay */
-  .mob-drawer {
-    display: block;
-    position: fixed; inset: 0; z-index: 1100;
-    background: rgba(0, 35, 90, .45);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-  }
+  .site-nav { display: none; }
 
   /* Panneau latéral */
   .mob-panel {
@@ -1032,12 +1019,7 @@ onUnmounted(() => {
     display: flex;
     flex-direction: column;
     box-shadow: -8px 0 48px rgba(0,35,90,.18);
-    transform: translateX(100%);
-    transition: transform .32s cubic-bezier(.4,0,.2,1);
     overflow: hidden;
-  }
-  .mob-panel--open {
-    transform: translateX(0);
   }
 
   /* ── Header drawer ── */
@@ -1174,14 +1156,14 @@ onUnmounted(() => {
   .header-actions .lang-wrap,
   .header-actions .fav-wrap { display: none; }
   .topbar-cta { display: none; }
-  .topbar-evt { max-width: 180px; }
+  .topbar-evt { max-width: 160px; }
 }
 
 @media (max-width: 600px) {
   .header-actions { display: none; }
   .burger { margin-left: auto; }
   .site-logo img { height: 44px; }
-  .topbar-evt { max-width: 120px; }
-  .topbar-countdown { display: none; }
+  .topbar-evt { font-size: 11px; }
+  .topbar-countdown { flex-shrink: 0; }
 }
 </style>
