@@ -278,7 +278,7 @@
                 <span v-else class="home-offre-logo-initial">{{ offre.entreprise ? offre.entreprise.nom.charAt(0) : '?' }}</span>
               </div>
               <div class="home-offre-company-info">
-                <span class="home-offre-company">{{ offre.entreprise?.nom || '—' }}</span>
+                <span class="home-offre-company">{{ offre.entreprise?.nom || '' }}</span>
                 <span v-if="offre.date_limite" class="home-offre-deadline">
                   <i class="fa-solid fa-calendar-xmark"></i> {{ formatDate(offre.date_limite) }}
                 </span>
