@@ -6,6 +6,8 @@ const toFormData = (data) => {
     if (val === null || val === undefined) continue
     if (Array.isArray(val)) {
       val.forEach(v => fd.append(`${key}[]`, v))
+    } else if (typeof val === 'boolean') {
+      fd.append(key, val ? '1' : '0')
     } else {
       fd.append(key, val)
     }
