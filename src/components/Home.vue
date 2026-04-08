@@ -151,9 +151,9 @@
     <section v-if="event && event.entreprises && event.entreprises.length" class="section-partners">
       <div class="container">
         <div class="partners-header fade-in">
-          <span class="label-blue">{{ t('home.partners.label') }}</span>
-          <h2>{{ t('home.partners.title') }}</h2>
-          <p>{{ t('home.partners.description') }}</p>
+          <span class="partners-label">{{ t('home.partners.label') }}</span>
+          <h2 class="partners-title">{{ t('home.partners.title') }}</h2>
+          <p class="partners-desc">{{ t('home.partners.description') }}</p>
         </div>
       </div>
       <!-- Carrousel infini pleine largeur -->
@@ -389,7 +389,7 @@ const carouselSlides = computed(() => {
 const carouselDuration = computed(() => {
   const slideWidth = window.innerWidth * 0.20 // 25vw en px
   const totalWidth = carouselSlides.value.length * slideWidth
-  return Math.round(totalWidth / 60)
+  return Math.round(totalWidth / 55) // Réduit de 60 à 55 pour ralentir
 })
 
 // ── Chargement des données ─────────────────────────────────
@@ -657,9 +657,20 @@ function initFadeIn() {
 }
 @media (max-width: 1024px) {
   .quicklinks-grid { grid-template-columns: repeat(2, 1fr); }
+  .partners-title { font-size: 42px; }
+  .partner-slide { width: 30vw; }
+  .partners-carousel-track { gap: 40px; }
 }
 @media (max-width: 600px) {
   .quicklinks-grid { grid-template-columns: 1fr; }
+  .partners-title { font-size: 34px; }
+  .partners-title::after { width: 70px; height: 3px; }
+  .partners-desc { font-size: 16px; }
+  .partners-label { font-size: 11px; padding: 6px 16px; }
+  .partner-slide { width: 40vw; }
+  .partner-logo-big { width: 90px; height: 90px; }
+  .partner-slide-name { font-size: 12px; }
+  .partners-carousel-track { gap: 48px; }
 }
 .ql-card {
   display: flex;
@@ -727,16 +738,72 @@ function initFadeIn() {
 
 /* ── Section partenaires ──────────────────────────────── */
 .section-partners {
-  padding: 80px 0 60px;
-  background: #fff;
+  padding: 100px 0 80px;
+  background: linear-gradient(180deg, #f8fafb 0%, #ffffff 100%);
   overflow: hidden;
+  position: relative;
+}
+.section-partners::before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(58,155,255,0.06) 0%, transparent 70%);
+  pointer-events: none;
 }
 .partners-header {
   text-align: center;
-  margin-bottom: 48px;
+  margin-bottom: 60px;
+  position: relative;
+  z-index: 1;
 }
-.partners-header h2 { margin: 8px 0 12px; }
-.partners-header p  { color: var(--body-text); font-size: 16px; }
+.partners-label {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #fff;
+  background: linear-gradient(135deg, var(--blue) 0%, #5db0ff 100%);
+  padding: 8px 22px;
+  border-radius: 50px;
+  margin-bottom: 24px;
+  position: relative;
+}
+.partners-title {
+  font-family: 'Archivo', 'Barlow Condensed', sans-serif;
+  font-size: 54px;
+  font-weight: 900;
+  line-height: 1.15;
+  color: var(--navy-head);
+  margin: 0 0 20px;
+  letter-spacing: -0.5px;
+  position: relative;
+  padding-bottom: 20px;
+}
+.partners-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--blue) 0%, var(--orange) 100%);
+  border-radius: 2px;
+}
+.partners-desc {
+  font-size: 18px;
+  line-height: 1.7;
+  color: #64748b;
+  max-width: 640px;
+  margin: 0 auto;
+  font-weight: 400;
+}
 
 /* Carrousel infini */
 .partners-carousel-outer {
@@ -748,7 +815,7 @@ function initFadeIn() {
 }
 .partners-carousel-track {
   display: flex;
-  gap: 0;
+  gap: 32px;
   width: max-content;
   animation: partners-scroll 20s linear infinite;
 }
