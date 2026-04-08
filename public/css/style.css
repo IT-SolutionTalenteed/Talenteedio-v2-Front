@@ -302,6 +302,71 @@ p { margin-bottom: 1em; }
   font-weight: 400;
 }
 
+/* Countdown circles */
+.countdown-circles {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  align-items: flex-start;
+}
+.cc-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.cc-svg-wrap {
+  position: relative;
+  width: 110px;
+  height: 110px;
+}
+.cc-svg {
+  width: 110px;
+  height: 110px;
+  transform: rotate(-90deg);
+  filter: drop-shadow(0 0 8px rgba(255,255,255,0.15));
+}
+.cc-track {
+  fill: none;
+  stroke: rgba(255,255,255,0.12);
+  stroke-width: 4;
+  stroke-dasharray: 4 4;
+}
+.cc-progress {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 326.7;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.8s ease;
+}
+.cc-progress--days    { stroke: url(#grad-days);    filter: drop-shadow(0 0 5px #f29f1f); }
+.cc-progress--hours   { stroke: url(#grad-hours);   filter: drop-shadow(0 0 5px #3a9bff); }
+.cc-progress--minutes { stroke: url(#grad-minutes); filter: drop-shadow(0 0 5px #f07c00); }
+.cc-progress--seconds { stroke: url(#grad-seconds); filter: drop-shadow(0 0 5px #ff6b6b); }
+.cc-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cc-num {
+  font-family: 'Archivo', var(--font-head);
+  font-size: 30px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+  letter-spacing: 2px;
+}
+.cc-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
 /* ========================================================
    SECTION : RÉPONDRE AU DÉFI
    ======================================================== */
@@ -1311,6 +1376,10 @@ p { margin-bottom: 1em; }
   .cta-watermark, .mission-watermark { font-size: 80px; }
   .footer-grid { grid-template-columns: 1fr; }
   .countdown-inner { max-width: 100%; }
+  .countdown-circles { gap: 14px; flex-wrap: wrap; justify-content: center; }
+  .cc-svg-wrap { width: 90px; height: 90px; }
+  .cc-svg { width: 90px; height: 90px; }
+  .cc-num { font-size: 24px; }
   .topbar-left { gap: 14px; font-size: 12px; }
   .defi-text h1 { font-size: 30px; }
   .lux-content h2 { font-size: 40px; }

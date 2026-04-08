@@ -23,12 +23,79 @@
             </router-link>
           </div>
           <div class="hero-right">
-            <!-- Countdown -->
-            <div class="countdown-inner" id="countdown">
-              <div class="cd-item"><div class="cd-box"><span class="cd-num">{{ cd.days }}</span><span class="cd-label">{{ t('home.hero.days') }}</span></div></div>
-              <div class="cd-item"><div class="cd-box"><span class="cd-num">{{ cd.hours }}</span><span class="cd-label">{{ t('home.hero.hours') }}</span></div></div>
-              <div class="cd-item"><div class="cd-box"><span class="cd-num">{{ cd.minutes }}</span><span class="cd-label">{{ t('home.hero.minutes') }}</span></div></div>
-              <div class="cd-item"><div class="cd-box"><span class="cd-num">{{ cd.seconds }}</span><span class="cd-label">{{ t('home.hero.seconds') }}</span></div></div>
+            <!-- Countdown circles -->
+            <div class="countdown-circles" id="countdown">
+
+              <!-- SVG defs pour les dégradés -->
+              <svg width="0" height="0" style="position:absolute">
+                <defs>
+                  <linearGradient id="grad-days" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#f29f1f"/>
+                    <stop offset="100%" stop-color="#fff5cc"/>
+                  </linearGradient>
+                  <linearGradient id="grad-hours" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#3a9bff"/>
+                    <stop offset="100%" stop-color="#c0e0ff"/>
+                  </linearGradient>
+                  <linearGradient id="grad-minutes" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#f07c00"/>
+                    <stop offset="100%" stop-color="#f29f1f"/>
+                  </linearGradient>
+                  <linearGradient id="grad-seconds" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#f29f1f"/>
+                    <stop offset="100%" stop-color="#ff6b6b"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+
+              <div class="cc-item">
+                <div class="cc-svg-wrap">
+                  <svg class="cc-svg" viewBox="0 0 120 120">
+                    <circle class="cc-track" cx="60" cy="60" r="52"/>
+                    <circle class="cc-progress cc-progress--days" cx="60" cy="60" r="52"
+                      :style="`stroke-dashoffset: ${326.7 - (326.7 * (parseInt(cd.days) % 365) / 365)}`"/>
+                  </svg>
+                  <div class="cc-text"><span class="cc-num">{{ cd.days }}</span></div>
+                </div>
+                <span class="cc-label">{{ t('home.hero.days') }}</span>
+              </div>
+
+              <div class="cc-item">
+                <div class="cc-svg-wrap">
+                  <svg class="cc-svg" viewBox="0 0 120 120">
+                    <circle class="cc-track" cx="60" cy="60" r="52"/>
+                    <circle class="cc-progress cc-progress--hours" cx="60" cy="60" r="52"
+                      :style="`stroke-dashoffset: ${326.7 - (326.7 * parseInt(cd.hours) / 24)}`"/>
+                  </svg>
+                  <div class="cc-text"><span class="cc-num">{{ cd.hours }}</span></div>
+                </div>
+                <span class="cc-label">{{ t('home.hero.hours') }}</span>
+              </div>
+
+              <div class="cc-item">
+                <div class="cc-svg-wrap">
+                  <svg class="cc-svg" viewBox="0 0 120 120">
+                    <circle class="cc-track" cx="60" cy="60" r="52"/>
+                    <circle class="cc-progress cc-progress--minutes" cx="60" cy="60" r="52"
+                      :style="`stroke-dashoffset: ${326.7 - (326.7 * parseInt(cd.minutes) / 60)}`"/>
+                  </svg>
+                  <div class="cc-text"><span class="cc-num">{{ cd.minutes }}</span></div>
+                </div>
+                <span class="cc-label">{{ t('home.hero.minutes') }}</span>
+              </div>
+
+              <div class="cc-item">
+                <div class="cc-svg-wrap">
+                  <svg class="cc-svg" viewBox="0 0 120 120">
+                    <circle class="cc-track" cx="60" cy="60" r="52"/>
+                    <circle class="cc-progress cc-progress--seconds" cx="60" cy="60" r="52"
+                      :style="`stroke-dashoffset: ${326.7 - (326.7 * parseInt(cd.seconds) / 60)}`"/>
+                  </svg>
+                  <div class="cc-text"><span class="cc-num">{{ cd.seconds }}</span></div>
+                </div>
+                <span class="cc-label">{{ t('home.hero.seconds') }}</span>
+              </div>
+
             </div>
           </div>
         </div>
