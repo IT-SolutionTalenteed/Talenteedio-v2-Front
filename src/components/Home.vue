@@ -337,12 +337,55 @@
           <i class="fa-solid fa-location-dot"></i>
           <span>{{ event.ville }}{{ event.pays ? ', ' + event.pays : '' }}</span>
         </div>
-        <div class="event-countdown">
-          <div class="ecd-item"><span class="ecd-num">{{ pad(cd.days, 3) }}</span><span class="ecd-label">{{ t('home.hero.days') }}</span></div>
-          <div class="ecd-item"><span class="ecd-num">{{ pad(cd.hours, 2) }}</span><span class="ecd-label">{{ t('home.hero.hours') }}</span></div>
-          <div class="ecd-item"><span class="ecd-num">{{ pad(cd.minutes, 2) }}</span><span class="ecd-label">{{ t('home.hero.minutes') }}</span></div>
-          <div class="ecd-item"><span class="ecd-num">{{ pad(cd.seconds, 2) }}</span><span class="ecd-label">{{ t('home.hero.seconds') }}</span></div>
+        
+        <!-- Countdown circles (même style que hero) -->
+        <div class="event-countdown-circles">
+          <div class="ecc-item">
+            <div class="ecc-svg-wrap">
+              <svg class="ecc-svg" viewBox="0 0 120 120">
+                <circle class="ecc-track" cx="60" cy="60" r="52"/>
+                <circle class="ecc-progress ecc-progress--days" cx="60" cy="60" r="52"
+                  :style="`stroke-dashoffset: ${326.7 - (326.7 * (parseInt(cd.days) % 365) / 365)}`"/>
+              </svg>
+              <div class="ecc-text"><span class="ecc-num">{{ cd.days }}</span></div>
+            </div>
+            <span class="ecc-label">{{ t('home.hero.days') }}</span>
+          </div>
+          <div class="ecc-item">
+            <div class="ecc-svg-wrap">
+              <svg class="ecc-svg" viewBox="0 0 120 120">
+                <circle class="ecc-track" cx="60" cy="60" r="52"/>
+                <circle class="ecc-progress ecc-progress--hours" cx="60" cy="60" r="52"
+                  :style="`stroke-dashoffset: ${326.7 - (326.7 * parseInt(cd.hours) / 24)}`"/>
+              </svg>
+              <div class="ecc-text"><span class="ecc-num">{{ cd.hours }}</span></div>
+            </div>
+            <span class="ecc-label">{{ t('home.hero.hours') }}</span>
+          </div>
+          <div class="ecc-item">
+            <div class="ecc-svg-wrap">
+              <svg class="ecc-svg" viewBox="0 0 120 120">
+                <circle class="ecc-track" cx="60" cy="60" r="52"/>
+                <circle class="ecc-progress ecc-progress--minutes" cx="60" cy="60" r="52"
+                  :style="`stroke-dashoffset: ${326.7 - (326.7 * parseInt(cd.minutes) / 60)}`"/>
+              </svg>
+              <div class="ecc-text"><span class="ecc-num">{{ cd.minutes }}</span></div>
+            </div>
+            <span class="ecc-label">{{ t('home.hero.minutes') }}</span>
+          </div>
+          <div class="ecc-item">
+            <div class="ecc-svg-wrap">
+              <svg class="ecc-svg" viewBox="0 0 120 120">
+                <circle class="ecc-track" cx="60" cy="60" r="52"/>
+                <circle class="ecc-progress ecc-progress--seconds" cx="60" cy="60" r="52"
+                  :style="`stroke-dashoffset: ${326.7 - (326.7 * parseInt(cd.seconds) / 60)}`"/>
+              </svg>
+              <div class="ecc-text"><span class="ecc-num">{{ cd.seconds }}</span></div>
+            </div>
+            <span class="ecc-label">{{ t('home.hero.seconds') }}</span>
+          </div>
         </div>
+        
         <router-link :to="`/evenements/${event.id}`" class="btn btn--blue btn--lg" style="position:relative;z-index:2;">
           {{ t('home.eventSection.participate') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
         </router-link>
