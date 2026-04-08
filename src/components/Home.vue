@@ -206,10 +206,8 @@
           <!-- Articles dynamiques (3 premiers) -->
           <template v-if="articles.length">
             <div v-for="article in articles.slice(0, 3)" :key="article.id" class="triple-card fade-in">
-              <div class="triple-card-img">
-                <img v-if="article.image_url" :src="article.image_url" :alt="article.title" loading="lazy">
-                <img v-else src="https://africatalentsummit.com/wp-content/uploads/2026/02/staff-tech-accounting-discussion-office-development-feedback-budget-communication-business-project-group-collaboration-financial-firm-people-planning-with-team-scaled.jpg"
-                     :alt="article.title" loading="lazy">
+              <div class="triple-card-img" v-if="article.image_url">
+                <img :src="article.image_url" :alt="article.title" loading="lazy">
               </div>
               <div class="triple-card-body">
                 <div style="font-size:12px;color:var(--blue);margin-bottom:6px;">{{ formatDate(article.created_at) }}</div>
