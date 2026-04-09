@@ -67,70 +67,56 @@
             <div class="ed-main">
 
               <!-- À propos -->
-              <div class="ed-block">
+              <div v-if="entreprise.description" class="ed-block">
                 <h2 class="ed-block-title"><i class="fa-solid fa-circle-info"></i> {{ t('entreprises.detail.about') }} {{ entreprise.nom }}</h2>
-                <p v-if="entreprise.description" class="ed-description">{{ entreprise.description }}</p>
-                <p v-else class="ed-empty">—</p>
+                <p class="ed-description">{{ entreprise.description }}</p>
               </div>
 
               <!-- Informations de recrutement -->
-              <div class="ed-block">
+              <div v-if="offres.length || allSkills.length || allExperiences.length || allJobModes.length || firstProfilRecherche" class="ed-block">
                 <h2 class="ed-block-title"><i class="fa-solid fa-user-tie"></i> {{ t('entreprises.detail.recruitmentInfo') }}</h2>
 
                 <!-- Postes à pourvoir -->
-                <div class="ed-recruit-row">
+                <div v-if="offres.length" class="ed-recruit-row">
                   <div class="ed-recruit-label-col"><i class="fa-solid fa-briefcase"></i> {{ t('entreprises.detail.openPositions') }}</div>
                   <div class="ed-recruit-value-col">
-                    <template v-if="offres.length">
-                      <span v-for="o in offres" :key="o.id" class="tag tag--blue">{{ o.titre }}</span>
-                    </template>
-                    <span v-else class="ed-recruit-empty">—</span>
+                    <span v-for="o in offres" :key="o.id" class="tag tag--blue">{{ o.titre }}</span>
                   </div>
                 </div>
 
                 <!-- Compétences requises -->
-                <div class="ed-recruit-row">
+                <div v-if="allSkills.length" class="ed-recruit-row">
                   <div class="ed-recruit-label-col"><i class="fa-solid fa-code"></i> {{ t('entreprises.detail.requiredSkills') }}</div>
                   <div class="ed-recruit-value-col">
-                    <template v-if="allSkills.length">
-                      <span v-for="s in allSkills" :key="s" class="tag tag--gray">{{ s }}</span>
-                    </template>
-                    <span v-else class="ed-recruit-empty">—</span>
+                    <span v-for="s in allSkills" :key="s" class="tag tag--gray">{{ s }}</span>
                   </div>
                 </div>
 
                 <!-- Expérience requise -->
-                <div class="ed-recruit-row">
+                <div v-if="allExperiences.length" class="ed-recruit-row">
                   <div class="ed-recruit-label-col"><i class="fa-solid fa-chart-line"></i> {{ t('entreprises.detail.requiredExperience') }}</div>
                   <div class="ed-recruit-value-col">
-                    <template v-if="allExperiences.length">
-                      <span v-for="e in allExperiences" :key="e" class="tag tag--orange">{{ e }}</span>
-                    </template>
-                    <span v-else class="ed-recruit-empty">—</span>
+                    <span v-for="e in allExperiences" :key="e" class="tag tag--orange">{{ e }}</span>
                   </div>
                 </div>
 
                 <!-- Heures de travail -->
-                <div class="ed-recruit-row">
+                <div v-if="allJobModes.length" class="ed-recruit-row">
                   <div class="ed-recruit-label-col"><i class="fa-solid fa-clock"></i> {{ t('entreprises.detail.workModes') }}</div>
                   <div class="ed-recruit-value-col">
-                    <template v-if="allJobModes.length">
-                      <span v-for="m in allJobModes" :key="m" class="tag tag--blue">{{ m }}</span>
-                    </template>
-                    <span v-else class="ed-recruit-empty">—</span>
+                    <span v-for="m in allJobModes" :key="m" class="tag tag--blue">{{ m }}</span>
                   </div>
                 </div>
 
                 <!-- Profil recherché -->
-                <div class="ed-recruit-row ed-recruit-row--full">
+                <div v-if="firstProfilRecherche" class="ed-recruit-row ed-recruit-row--full">
                   <div class="ed-recruit-label-col"><i class="fa-solid fa-user-check"></i> {{ t('entreprises.detail.profileSought') }}</div>
-                  <div v-if="firstProfilRecherche" class="ed-recruit-value-col ed-rich" v-html="firstProfilRecherche"></div>
-                  <span v-else class="ed-recruit-empty">—</span>
+                  <div class="ed-recruit-value-col ed-rich" v-html="firstProfilRecherche"></div>
                 </div>
               </div>
 
               <!-- Offres d'emploi -->
-              <div class="ed-block">
+              <div v-if="offres.length" class="ed-block">
                 <h2 class="ed-block-title">
                   <i class="fa-solid fa-briefcase"></i> {{ t('entreprises.detail.jobOffers') }}
                   <span class="ed-count">{{ offres.length }}</span>
@@ -154,12 +140,12 @@
               </div>
 
               <!-- Événements à venir -->
-              <div class="ed-block">
+              <div v-if="evenements.length" class="ed-block">
                 <h2 class="ed-block-title">
                   <i class="fa-solid fa-calendar-days"></i> {{ t('entreprises.detail.upcomingEventsTitle') }}
                   <span class="ed-count">{{ evenements.length }}</span>
                 </h2>
-                <div v-if="evenements.length" class="ed-events-list">
+                <div class="ed-events-list">
                   <div v-for="ev in evenements" :key="ev.id" class="ed-event-card">
                     <div class="ed-event-date">
                       <span class="ed-event-day">{{ new Date(ev.date_debut).getDate() }}</span>
@@ -170,16 +156,15 @@
                     </div>
                   </div>
                 </div>
-                <p v-else class="ed-empty">—</p>
               </div>
 
               <!-- Articles & Actualités -->
-              <div class="ed-block">
+              <div v-if="articles.length" class="ed-block">
                 <h2 class="ed-block-title">
                   <i class="fa-solid fa-newspaper"></i> {{ t('entreprises.detail.publishedArticles') }}
                   <span class="ed-count">{{ articles.length }}</span>
                 </h2>
-                <div v-if="articles.length" class="ed-articles-grid">
+                <div class="ed-articles-grid">
                   <router-link v-for="a in articles" :key="a.id" :to="`/blog/${a.id}`" class="ed-article-card">
                     <div class="ed-article-img">
                       <img v-if="a.image_url" :src="a.image_url" :alt="a.title" />
@@ -192,14 +177,13 @@
                     </div>
                   </router-link>
                 </div>
-                <p v-else class="ed-empty">—</p>
               </div>
 
             </div>
 
             <!-- ── Sidebar ── -->
             <aside class="ed-sidebar">
-              <div class="ed-side-card">
+              <div v-if="entreprise.activity_sector || entreprise.ville || entreprise.pays || entreprise.site_web" class="ed-side-card">
                 <h3 class="ed-side-title">{{ t('entreprises.detail.information') }}</h3>
                 <ul class="ed-info-list">
                   <li v-if="entreprise.activity_sector">
@@ -215,10 +199,9 @@
                     <div><span class="ed-info-label">{{ t('entreprises.detail.website') }}</span><a :href="entreprise.site_web" target="_blank" rel="noopener">{{ entreprise.site_web }}</a></div>
                   </li>
                 </ul>
-                <p v-if="!entreprise.activity_sector && !entreprise.ville && !entreprise.pays && !entreprise.site_web" class="ed-empty">—</p>
               </div>
 
-              <div class="ed-side-card">
+              <div v-if="entreprise.adresse || entreprise.telephone" class="ed-side-card">
                 <h3 class="ed-side-title">{{ t('entreprises.detail.contact') }}</h3>
                 <ul class="ed-info-list">
                   <li v-if="entreprise.adresse">
@@ -230,7 +213,6 @@
                     <div><span class="ed-info-label">{{ t('entreprises.detail.phone') }}</span><span>{{ entreprise.telephone }}</span></div>
                   </li>
                 </ul>
-                <p v-if="!entreprise.adresse && !entreprise.telephone" class="ed-empty">—</p>
               </div>
 
               <div class="ed-side-card ed-side-cta">
@@ -324,46 +306,136 @@ onMounted(load)
 /* ── Hero ── */
 .ed-hero {
   background: linear-gradient(135deg, #192bc2 0%, #2687e9 100%);
-  padding: 48px 0;
+  padding: 60px 0;
+  position: relative;
+  overflow: hidden;
+}
+.ed-hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.ed-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -5%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(242,159,31,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
 }
 .ed-hero-inner {
   display: grid;
   grid-template-columns: 100px 1fr auto;
-  gap: 28px; align-items: start;
+  gap: 28px; 
+  align-items: start;
+  position: relative;
+  z-index: 1;
 }
 @media (max-width: 768px) {
   .ed-hero-inner { grid-template-columns: 80px 1fr; }
   .ed-hero-stats { grid-column: 1 / -1; flex-direction: row; }
+  .ed-hero { padding: 40px 0; }
 }
 
 .ed-hero-logo {
-  width: 90px; height: 90px; border-radius: 14px;
-  background: #fff; overflow: hidden;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 16px rgba(0,0,0,.18); flex-shrink: 0;
+  width: 100px; 
+  height: 100px; 
+  border-radius: 16px;
+  background: #fff; 
+  overflow: hidden;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(0,0,0,.25); 
+  flex-shrink: 0;
+  border: 3px solid rgba(255,255,255,.2);
 }
-.ed-hero-logo img { width: 100%; height: 100%; object-fit: contain; padding: 6px; }
-.ed-hero-initial  { font-size: 32px; font-weight: 800; color: var(--blue); }
+.ed-hero-logo img { width: 100%; height: 100%; object-fit: contain; padding: 8px; }
+.ed-hero-initial  { font-size: 36px; font-weight: 800; color: var(--blue); }
 
-.ed-badges { display: flex; gap: 8px; margin-bottom: 8px; }
+.ed-badges { display: flex; gap: 8px; margin-bottom: 12px; }
 .badge-participant {
   background: linear-gradient(135deg, #f49f0a, #ffb52e);
-  color: #fff; font-size: 11px; font-weight: 700;
-  padding: 3px 12px; border-radius: 50px;
-  display: inline-flex; align-items: center; gap: 5px;
+  color: #fff; 
+  font-size: 11px; 
+  font-weight: 700;
+  padding: 5px 14px; 
+  border-radius: 50px;
+  display: inline-flex; 
+  align-items: center; 
+  gap: 5px;
+  box-shadow: 0 4px 12px rgba(244,159,10,.3);
+  border: 1px solid rgba(255,255,255,.3);
 }
 
-.ed-hero-title { font-size: 30px; font-weight: 800; color: #fff; margin: 0 0 12px; }
-.ed-hero-meta  { display: flex; flex-wrap: wrap; gap: 14px; }
-.ed-hero-meta span { font-size: 14px; color: rgba(255,255,255,.85); display: flex; align-items: center; gap: 6px; }
-.ed-hero-meta i    { color: rgba(255,255,255,.6); }
-.ed-hero-link      { font-size: 14px; color: rgba(255,255,255,.85); text-decoration: none; display: flex; align-items: center; gap: 6px; }
+.ed-hero-title { 
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 38px; 
+  font-weight: 900; 
+  color: #fff; 
+  margin: 0 0 16px;
+  text-shadow: 0 2px 12px rgba(0,0,0,.2);
+}
+.ed-hero-meta  { display: flex; flex-wrap: wrap; gap: 20px; }
+.ed-hero-meta span { 
+  font-size: 14px; 
+  color: rgba(255,255,255,.9); 
+  display: flex; 
+  align-items: center; 
+  gap: 7px;
+  font-weight: 500;
+}
+.ed-hero-meta i { color: rgba(255,255,255,.7); font-size: 15px; }
+.ed-hero-link { 
+  font-size: 14px; 
+  color: rgba(255,255,255,.9); 
+  text-decoration: none; 
+  display: flex; 
+  align-items: center; 
+  gap: 7px;
+  font-weight: 500;
+  transition: color .2s;
+}
 .ed-hero-link:hover { color: #fff; text-decoration: underline; }
 
-.ed-hero-stats { display: flex; flex-direction: column; gap: 12px; align-items: flex-end; }
-.ed-stat { text-align: center; background: rgba(255,255,255,.15); border-radius: 10px; padding: 12px 20px; }
-.ed-stat-num   { display: block; font-size: 24px; font-weight: 800; color: #fff; line-height: 1; }
-.ed-stat-label { display: block; font-size: 11px; color: rgba(255,255,255,.75); margin-top: 4px; }
+.ed-hero-stats { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 14px; 
+  align-items: flex-end; 
+}
+.ed-stat { 
+  text-align: center; 
+  background: rgba(255,255,255,.2); 
+  border-radius: 12px; 
+  padding: 14px 24px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,.25);
+  min-width: 120px;
+}
+.ed-stat-num { 
+  display: block; 
+  font-size: 28px; 
+  font-weight: 800; 
+  color: #fff; 
+  line-height: 1; 
+}
+.ed-stat-label { 
+  display: block; 
+  font-size: 11px; 
+  color: rgba(255,255,255,.8); 
+  margin-top: 6px;
+  font-weight: 600;
+}
 
 /* ── Corps ── */
 .ed-body { padding: 48px 0 80px; }
@@ -374,7 +446,7 @@ onMounted(load)
 }
 @media (max-width: 900px) {
   .ed-layout { grid-template-columns: 1fr; }
-  .ed-sidebar { order: -1; }
+  .ed-sidebar { order: 1; }
 }
 
 .ed-block {
@@ -487,7 +559,7 @@ onMounted(load)
 .ed-article-date i { color: var(--blue); }
 
 /* Sidebar */
-.ed-sidebar { display: flex; flex-direction: column; gap: 20px; position: sticky; top: 90px; }
+.ed-sidebar { display: flex; flex-direction: column; gap: 20px; }
 .ed-side-card {
   background: #fff; border-radius: 14px;
   padding: 24px; box-shadow: 0 2px 10px rgba(0,0,0,.06);
