@@ -145,7 +145,7 @@ onMounted(load)
 </script>
 
 <style scoped>
-.article-detail-page { min-height: 100vh; background: var(--light-bg, #f5f7fa); }
+.article-detail-page { min-height: 100vh; }
 
 .artd-loading {
   min-height: 50vh; display: flex; flex-direction: column;
@@ -194,7 +194,7 @@ onMounted(load)
 }
 @media (max-width: 900px) {
   .artd-layout { grid-template-columns: 1fr; }
-  .artd-sidebar { order: -1; }
+  .artd-sidebar { order: 1; }
 }
 
 /* Contenu article */
@@ -231,7 +231,7 @@ onMounted(load)
 .artd-back:hover { gap: 12px; }
 
 /* Sidebar */
-.artd-sidebar { display: flex; flex-direction: column; gap: 20px; position: sticky; top: 90px; }
+.artd-sidebar { display: flex; flex-direction: column; gap: 20px; }
 .artd-side-card {
   background: #fff; border-radius: 14px;
   padding: 24px; box-shadow: 0 2px 10px rgba(0,0,0,.06);
