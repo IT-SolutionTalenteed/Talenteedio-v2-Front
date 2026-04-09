@@ -1,7 +1,6 @@
 <template>
   <div class="ev-detail-page">
     <PublicNav />
-    <div class="ev-detail-content">
 
     <!-- Loading -->
     <div v-if="loading" class="evd-loading">
@@ -479,7 +478,6 @@
       </div>
 
     </template>
-    </div>
     <Footer />
   </div>
 </template>
@@ -770,16 +768,7 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.ev-detail-page { 
-  min-height: 100vh; 
-  background: #fff;
-  display: flex;
-  flex-direction: column;
-}
-
-.ev-detail-content {
-  flex: 1;
-}
+.ev-detail-page { min-height: 100vh; background: #fff; }
 
 .evd-loading {
   min-height: 50vh; display: flex; flex-direction: column;
