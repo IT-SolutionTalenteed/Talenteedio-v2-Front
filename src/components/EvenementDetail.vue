@@ -768,7 +768,7 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.ev-detail-page { min-height: 100vh; background: var(--light-bg, #f5f7fa); }
+.ev-detail-page { min-height: 100vh; background: #fff; }
 
 .evd-loading {
   min-height: 50vh; display: flex; flex-direction: column;
@@ -855,7 +855,7 @@ onMounted(async () => {
 }
 @media (max-width: 960px) {
   .evd-layout { grid-template-columns: 1fr; }
-  .evd-sidebar { order: -1; }
+  .evd-sidebar { order: 1; }
 }
 
 /* Blocs */
@@ -1083,7 +1083,7 @@ onMounted(async () => {
 .evd-block-title.evd-cta-login-block { color: #fff !important; }
 
 /* ── Sidebar ── */
-.evd-sidebar { display: flex; flex-direction: column; gap: 20px; position: sticky; top: 90px; }
+.evd-sidebar { display: flex; flex-direction: column; gap: 20px; }
 .evd-side-card {
   background: #fff; border-radius: 14px;
   padding: 24px; box-shadow: 0 2px 10px rgba(0,0,0,.06);
