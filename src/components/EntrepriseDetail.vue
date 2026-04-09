@@ -294,7 +294,7 @@ onMounted(load)
 </script>
 
 <style scoped>
-.entreprise-detail-page { min-height: 100vh; background: var(--light-bg, #f5f7fa); }
+.entreprise-detail-page { min-height: 100vh; }
 
 .ed-loading {
   min-height: 50vh; display: flex; flex-direction: column;
