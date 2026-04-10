@@ -139,6 +139,78 @@
       50% { transform: translateX(-50%) translateY(8px); }
     }
 
+    /* ══ LOGO CAROUSEL ══ */
+    .logo-carousel-wrap {
+      background: #0a0a0a;
+      overflow: hidden;
+      padding: 18px 0;
+      position: relative;
+    }
+
+    .logo-carousel-wrap::before,
+    .logo-carousel-wrap::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 80px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .logo-carousel-wrap::before { left: 0;  background: linear-gradient(to right, #0a0a0a, transparent); }
+    .logo-carousel-wrap::after  { right: 0; background: linear-gradient(to left,  #0a0a0a, transparent); }
+
+    .logo-track {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      width: max-content;
+      animation: marquee 28s linear infinite;
+    }
+
+    .logo-track:hover { animation-play-state: paused; }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    .logo-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 48px;
+      border-right: 1px solid rgba(255,255,255,.08);
+      height: 48px;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      color: rgba(255,255,255,.55);
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+      line-height: 1.2;
+      text-align: center;
+      font-family: 'Arial', sans-serif;
+      transition: color .2s;
+    }
+
+    .logo-track:hover .logo-item:hover .logo-text { color: rgba(255,255,255,.9); }
+
+    .logo-text--sm   { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+    .logo-text--bold { font-weight: 900; font-size: 17px; }
+    .logo-text--light { font-weight: 300; font-size: 20px; letter-spacing: 2px; }
+    .logo-text--border {
+      border: 2px solid rgba(255,255,255,.4);
+      border-radius: 4px;
+      padding: 2px 10px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
     /* ══ EVENT SECTION ══ */
     .ats-section {
       padding: 80px 0 100px;
@@ -466,6 +538,30 @@
       <span>Découvrir</span>
     </div>
   </section>
+
+  <!-- ══ LOGO CAROUSEL ══ -->
+  <div class="logo-carousel-wrap">
+    <div class="logo-track">
+      <div class="logo-item"><span class="logo-text logo-text--sm">SOCIÉTÉ<br>GÉNÉRALE</span></div>
+      <div class="logo-item"><span class="logo-text">Spotify</span></div>
+      <div class="logo-item"><span class="logo-text">vodafone</span></div>
+      <div class="logo-item"><span class="logo-text">American Airlines</span></div>
+      <div class="logo-item"><span class="logo-text logo-text--bold">duolingo</span></div>
+      <div class="logo-item"><span class="logo-text logo-text--light">EY</span></div>
+      <div class="logo-item"><span class="logo-text logo-text--border">Ford</span></div>
+      <div class="logo-item"><span class="logo-text">Infosys</span></div>
+      <div class="logo-item"><span class="logo-text logo-text--sm">mercado<br>libre</span></div>
+      <div class="logo-item"><span class="logo-text logo-text--sm">SOCIÉTÉ<br>GÉNÉRALE</span></div>
+      <div class="logo-item"><span class="logo-text">Spotify</span></div>
+      <div class="logo-item"><span class="logo-text">vodafone</span></div>
+      <div class="logo-item"><span class="logo-text">American Airlines</span></div>
+      <div class="logo-item"><span class="logo-text logo-text--bold">duolingo</span></div>
+      <div class="logo-item"><span class="logo-text logo-text--light">EY</span></div>
+      <div class="logo-item"><span class="logo-text logo-text--border">Ford</span></div>
+      <div class="logo-item"><span class="logo-text">Infosys</span></div>
+      <div class="logo-item"><span class="logo-text logo-text--sm">mercado<br>libre</span></div>
+    </div>
+  </div>
 
   <!-- ══ SECTION PRINCIPALE ══ -->
   <section class="ats-section">
