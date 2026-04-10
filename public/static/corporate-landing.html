@@ -292,8 +292,8 @@
                   </select>
                 </div>
                 <div class="form-group">
-                  <label class="form-label">Taille de l'entreprise</label>
-                  <select name="taille" class="form-input">
+                  <label class="form-label">Taille de l'entreprise <span class="required">*</span></label>
+                  <select name="taille" class="form-input" required>
                     <option value="">Sélectionner...</option>
                     <option>1–10 employés</option>
                     <option>11–50 employés</option>
@@ -545,10 +545,11 @@
       const tel      = document.querySelector('[name="telephone"]').value.trim();
       const entrep   = document.querySelector('[name="entreprise"]').value.trim();
       const secteur  = document.querySelector('[name="secteur"]').value;
+      const taille   = document.querySelector('[name="taille"]').value;
       const errEl    = document.getElementById('corp-error');
       const errMsg   = document.getElementById('corp-error-msg');
 
-      if (!nom || !email || !tel || !entrep || !secteur) {
+      if (!nom || !email || !tel || !entrep || !secteur || !taille) {
         errMsg.textContent = 'Veuillez remplir tous les champs obligatoires.';
         errEl.classList.add('visible');
         return;
