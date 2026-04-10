@@ -410,7 +410,7 @@ onMounted(async () => {
    CORPS
 ════════════════════════════════ */
 .blog-body {
-  background: var(--light-bg);
+  background: #fff;
   padding: 32px 0 80px;
 }
 
@@ -569,7 +569,6 @@ onMounted(async () => {
 ════════════════════════════════ */
 .blog-sidebar {
   display: flex; flex-direction: column; gap: 24px;
-  position: sticky; top: 90px;
 }
 
 .sidebar-widget {

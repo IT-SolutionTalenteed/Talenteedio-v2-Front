@@ -1,22 +1,31 @@
 // Styles personnalisés de l'application
 
-// Désactiver le fond gris de Vuetify sur toutes les pages
-.v-application,
-.v-application.v-theme--light,
-.v-application__wrap,
-.v-layout,
-.v-layout--full-height,
-.v-locale--is-ltr,
-.v-main,
+// Désactiver le fond gris de Vuetify sur les pages publiques uniquement
 .offre-detail-page,
-body,
-html {
+.entreprise-detail-page,
+.article-detail-page {
   background: #fff !important;
   background-color: #fff !important;
 }
 
-// Forcer le fond blanc sur toutes les pages
-#app {
+.offre-detail-page .v-application,
+.offre-detail-page .v-application.v-theme--light,
+.offre-detail-page .v-application__wrap,
+.offre-detail-page .v-layout,
+.offre-detail-page .v-layout--full-height,
+.offre-detail-page .v-locale--is-ltr,
+.entreprise-detail-page .v-application,
+.entreprise-detail-page .v-application.v-theme--light,
+.entreprise-detail-page .v-application__wrap,
+.entreprise-detail-page .v-layout,
+.entreprise-detail-page .v-layout--full-height,
+.entreprise-detail-page .v-locale--is-ltr,
+.article-detail-page .v-application,
+.article-detail-page .v-application.v-theme--light,
+.article-detail-page .v-application__wrap,
+.article-detail-page .v-layout,
+.article-detail-page .v-layout--full-height,
+.article-detail-page .v-locale--is-ltr {
   background: #fff !important;
-  min-height: 100vh;
+  background-color: #fff !important;
 }
