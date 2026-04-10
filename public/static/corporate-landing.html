@@ -74,162 +74,6 @@
     /* Sera affiché une fois les logos des entreprises participantes disponibles */
     .corp-logos-strip { display: none; }
 
-    /* ══ PRICING SECTION ══ */
-    .pricing-section {
-      padding: 80px 0;
-      background: #fff;
-    }
-
-    .pricing-header {
-      text-align: center;
-      max-width: 700px;
-      margin: 0 auto 56px;
-    }
-
-    .pricing-header h2 {
-      font-size: clamp(26px, 3vw, 38px);
-      font-weight: 900;
-      color: var(--navy);
-      margin: 0 0 12px;
-    }
-
-    .pricing-header p {
-      font-size: 16px;
-      color: var(--body-text);
-      line-height: 1.6;
-      margin: 0;
-    }
-
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 28px;
-      align-items: stretch;
-    }
-
-    .pricing-card {
-      background: #fff;
-      border-radius: 20px;
-      padding: 40px 32px;
-      box-shadow: 0 4px 20px rgba(0,0,0,.07);
-      border: 2px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      transition: transform .25s, box-shadow .25s;
-      position: relative;
-    }
-
-    .pricing-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 16px 48px rgba(0,0,0,.12);
-    }
-
-    .pricing-card.featured {
-      border-color: #f07c00;
-      box-shadow: 0 8px 40px rgba(240,124,0,.18);
-    }
-
-    .pricing-featured-badge {
-      position: absolute;
-      top: -14px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #f07c00;
-      color: #fff;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      padding: 6px 18px;
-      border-radius: 50px;
-      white-space: nowrap;
-    }
-
-    .pricing-tier {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .pricing-tier-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      flex-shrink: 0;
-    }
-
-    .tier-platinum .pricing-tier-icon { background: rgba(148,163,184,.15); color: #64748b; }
-    .tier-gold .pricing-tier-icon     { background: rgba(240,124,0,.12);    color: #f07c00; }
-    .tier-silver .pricing-tier-icon   { background: rgba(25,43,194,.1);     color: var(--blue); }
-
-    .pricing-tier-name {
-      font-size: 22px;
-      font-weight: 900;
-      color: var(--navy);
-    }
-
-    .tier-platinum .pricing-tier-name { color: #475569; }
-    .tier-gold .pricing-tier-name     { color: #c2600a; }
-    .tier-silver .pricing-tier-name   { color: var(--navy); }
-
-    .pricing-desc {
-      font-size: 14px;
-      color: var(--body-text);
-      line-height: 1.6;
-      margin: 0 0 24px;
-      padding-bottom: 24px;
-      border-bottom: 1px solid var(--border);
-      flex: 1;
-    }
-
-    .pricing-features {
-      list-style: none;
-      margin: 0 0 28px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .pricing-features li {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      font-size: 14px;
-      color: #374151;
-    }
-
-    .pricing-features li i {
-      color: #22c55e;
-      font-size: 14px;
-      margin-top: 1px;
-      flex-shrink: 0;
-    }
-
-    .pricing-cta {
-      margin-top: auto;
-    }
-
-    .pricing-note {
-      text-align: center;
-      font-size: 12px;
-      color: var(--body-text);
-      margin: 10px 0 0;
-    }
-
-    .pricing-coming-soon {
-      font-size: 12.5px;
-      color: var(--body-text);
-      font-style: italic;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
     /* ══ EVENT FOOTER SECTION ══ */
     .event-footer-section {
       background: var(--navy);
@@ -337,7 +181,7 @@
             <li><a href="/">Accueil</a></li>
             <li><a href="talent-landing.html">Talents</a></li>
             <li><a href="#contact-form">Nous rejoindre</a></li>
-            <li><a href="#pricing">Offres</a></li>
+            <li><a href="#contact-form">Nous contacter</a></li>
           </ul>
         </nav>
         <div class="header-btns">
@@ -409,6 +253,11 @@
               <div class="form-group">
                 <label class="form-label">Email professionnel <span class="required">*</span></label>
                 <input name="email" type="email" class="form-input" placeholder="contact@entreprise.com" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Téléphone <span class="required">*</span></label>
+                <input name="telephone" type="tel" class="form-input" placeholder="Ex : +352 691 000 000" required>
               </div>
 
               <div class="form-section-title">
@@ -511,14 +360,10 @@
                 <i class="fa-solid fa-triangle-exclamation"></i>
                 <span id="corp-error-msg"></span>
               </div>
-              <div class="form-success" id="corp-success">
-                <i class="fa-solid fa-check-circle"></i>
-                Votre demande a été envoyée ! Notre équipe vous contactera sous 24h.
-              </div>
 
-              <button type="submit" class="btn btn--blue btn--lg btn--block" id="corp-btn">
-                <i class="fa-solid fa-rocket"></i>
-                Soumettre ma candidature
+              <button type="submit" class="btn btn--orange btn--lg btn--block" id="corp-btn">
+                <i class="fa-solid fa-handshake"></i>
+                Devenir partenaire
               </button>
 
               <p class="form-note">
@@ -570,114 +415,6 @@
               <i class="fa-solid fa-headset"></i>
               <span>Accompagnement dédié</span>
             </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ══ LOGOS DES ENTREPRISES PARTICIPANTES ══ -->
-  <!-- Sera affiché au fur et à mesure des partenaires signés -->
-  <div class="corp-logos-strip" aria-hidden="true">
-    <!-- Logo entreprise · Logo entreprise · Logo entreprise · Logo entreprise -->
-  </div>
-
-  <!-- ══ OFFRES DE PARTICIPATION ══ -->
-  <section class="pricing-section" id="pricing">
-    <div class="container">
-      <div class="pricing-header">
-        <span class="section-badge">Offres de partenariat</span>
-        <h2>Choisissez votre formule</h2>
-        <p>Des offres adaptées à vos ambitions de recrutement et à votre stratégie de marque employeur en Afrique.</p>
-      </div>
-
-      <div class="pricing-grid">
-
-        <!-- SILVER -->
-        <div class="pricing-card tier-silver">
-          <div class="pricing-tier">
-            <div class="pricing-tier-icon"><i class="fa-solid fa-medal"></i></div>
-            <span class="pricing-tier-name">Silver</span>
-          </div>
-          <p class="pricing-desc">
-            Idéal pour les entreprises souhaitant démarrer leur recrutement panafricain avec une présence ciblée.
-          </p>
-          <p class="pricing-coming-soon">
-            <i class="fa-solid fa-clock"></i> Détails à venir
-          </p>
-          <ul class="pricing-features">
-            <li><i class="fa-solid fa-check"></i> Accès à la plateforme de matching</li>
-            <li><i class="fa-solid fa-check"></i> Profil entreprise visible</li>
-            <li><i class="fa-solid fa-check"></i> Entretiens sur 2 jours</li>
-          </ul>
-          <div class="pricing-cta">
-            <a href="https://calendly.com" target="_blank" rel="noopener"
-              class="btn btn--block" style="border:2px solid var(--blue);color:var(--blue);background:#fff;justify-content:center">
-              <i class="fa-solid fa-calendar-check"></i>
-              Réserver un appel
-            </a>
-            <p class="pricing-note">Discutons de votre projet</p>
-          </div>
-        </div>
-
-        <!-- GOLD — featured -->
-        <div class="pricing-card tier-gold featured">
-          <div class="pricing-featured-badge">
-            <i class="fa-solid fa-star"></i> Le plus populaire
-          </div>
-          <div class="pricing-tier">
-            <div class="pricing-tier-icon"><i class="fa-solid fa-trophy"></i></div>
-            <span class="pricing-tier-name">Gold</span>
-          </div>
-          <p class="pricing-desc">
-            Pour les entreprises en forte croissance qui souhaitent se positionner comme employeurs de référence en Afrique.
-          </p>
-          <p class="pricing-coming-soon">
-            <i class="fa-solid fa-clock"></i> Détails à venir
-          </p>
-          <ul class="pricing-features">
-            <li><i class="fa-solid fa-check"></i> Tout l'offre Silver</li>
-            <li><i class="fa-solid fa-check"></i> Visibilité renforcée</li>
-            <li><i class="fa-solid fa-check"></i> Quota d'entretiens élargi</li>
-            <li><i class="fa-solid fa-check"></i> Support dédié</li>
-          </ul>
-          <div class="pricing-cta">
-            <a href="https://calendly.com" target="_blank" rel="noopener"
-              class="btn btn--orange btn--lg btn--block">
-              <i class="fa-solid fa-calendar-check"></i>
-              Réserver un appel
-            </a>
-            <p class="pricing-note">Sans engagement — premier échange gratuit</p>
-          </div>
-        </div>
-
-        <!-- PLATINUM -->
-        <div class="pricing-card tier-platinum">
-          <div class="pricing-tier">
-            <div class="pricing-tier-icon"><i class="fa-solid fa-gem"></i></div>
-            <span class="pricing-tier-name">Platinum</span>
-          </div>
-          <p class="pricing-desc">
-            Positionnement premium pour les grands groupes qui souhaitent une intégration totale et une visibilité maximale.
-          </p>
-          <p class="pricing-coming-soon">
-            <i class="fa-solid fa-clock"></i> Détails à venir
-          </p>
-          <ul class="pricing-features">
-            <li><i class="fa-solid fa-check"></i> Tout l'offre Gold</li>
-            <li><i class="fa-solid fa-check"></i> Partenariat exclusif</li>
-            <li><i class="fa-solid fa-check"></i> Branding événementiel</li>
-            <li><i class="fa-solid fa-check"></i> Accès VIP &amp; networking</li>
-            <li><i class="fa-solid fa-check"></i> Rapport post-événement</li>
-          </ul>
-          <div class="pricing-cta">
-            <a href="https://calendly.com" target="_blank" rel="noopener"
-              class="btn btn--block" style="border:2px solid #64748b;color:#475569;background:#fff;justify-content:center">
-              <i class="fa-solid fa-calendar-check"></i>
-              Réserver un appel
-            </a>
-            <p class="pricing-note">Offre sur-mesure — contactez-nous</p>
           </div>
         </div>
 
@@ -762,7 +499,7 @@
             <h4>Navigation</h4>
             <ul>
               <li><a href="talent-landing.html"><i class="fa-solid fa-chevron-right"></i> Espace Talents</a></li>
-              <li><a href="#pricing"><i class="fa-solid fa-chevron-right"></i> Offres Entreprises</a></li>
+              <li><a href="#contact-form"><i class="fa-solid fa-chevron-right"></i> Devenir partenaire</a></li>
               <li><a href="mailto:contact@africatalentsummit.com"><i class="fa-solid fa-chevron-right"></i> Presse et Média</a></li>
               <li><a href="mailto:contact@africatalentsummit.com"><i class="fa-solid fa-chevron-right"></i> Partenariats</a></li>
             </ul>
@@ -799,22 +536,19 @@
     }, { passive: true });
 
     /* ══ FORMULAIRE CORPORATE ══ */
-    function showEl(id)  { document.getElementById(id).classList.add('visible'); }
-    function hideEl(id)  { document.getElementById(id).classList.remove('visible'); }
-
     function handleCorpSubmit(e) {
       e.preventDefault();
-      hideEl('corp-error');
-      hideEl('corp-success');
+      document.getElementById('corp-error').classList.remove('visible');
 
       const nom      = document.querySelector('[name="nom"]').value.trim();
       const email    = document.querySelector('[name="email"]').value.trim();
+      const tel      = document.querySelector('[name="telephone"]').value.trim();
       const entrep   = document.querySelector('[name="entreprise"]').value.trim();
       const secteur  = document.querySelector('[name="secteur"]').value;
       const errEl    = document.getElementById('corp-error');
       const errMsg   = document.getElementById('corp-error-msg');
 
-      if (!nom || !email || !entrep || !secteur) {
+      if (!nom || !email || !tel || !entrep || !secteur) {
         errMsg.textContent = 'Veuillez remplir tous les champs obligatoires.';
         errEl.classList.add('visible');
         return;
@@ -833,11 +567,8 @@
 
       /* TODO: POST /api/public/ats/corporate/contact */
       setTimeout(() => {
-        btn.innerHTML = '<i class="fa-solid fa-rocket"></i> Soumettre ma candidature';
-        btn.disabled  = false;
-        showEl('corp-success');
-        document.getElementById('corp-form').reset();
-      }, 1800);
+        window.location.href = '/static/corporate-confirm.html';
+      }, 1200);
     }
   </script>
 </body>
