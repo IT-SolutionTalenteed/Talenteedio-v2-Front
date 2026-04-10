@@ -324,11 +324,7 @@
       </div>
     </section>
     <section class="section-event" v-if="event">
-      <div class="event-img">
-        <img src="https://africatalentsummit.com/wp-content/uploads/2026/02/back-thinking-window-with-business-black-man-standing-his-office-looking-city-view-id-scaled.jpg"
-             alt="Professionnel africain" loading="lazy">
-      </div>
-      <div class="event-info fade-in">
+      <div class="event-info fade-in visible">
         <div class="event-info-arc"></div>
         <div class="event-info-arc2"></div>
         <span class="event-date">{{ eventDateRange }}</span>
@@ -1053,4 +1049,170 @@ function initFadeIn() {
   font-size: 12px; color: #9ca3af;
   display: flex; align-items: center; gap: 5px;
 }
+
+/* ── Section Event ── */
+.section-event {
+  padding: 80px 0;
+  background: linear-gradient(135deg, #040a5d 0%, #192bc2 100%);
+  position: relative;
+  overflow: hidden;
+  min-height: 500px;
+}
+
+.event-info {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+  color: #fff;
+  z-index: 2;
+}
+
+.event-info-arc,
+.event-info-arc2 {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.event-info-arc {
+  top: -100px;
+  left: -100px;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+}
+
+.event-info-arc2 {
+  bottom: -100px;
+  right: -100px;
+  background: radial-gradient(circle, rgba(242,159,31,0.3) 0%, transparent 70%);
+}
+
+.event-date {
+  display: inline-block;
+  background: rgba(255,255,255,0.2);
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.event-info h2 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 48px;
+  font-weight: 800;
+  margin: 0 0 20px;
+  line-height: 1.2;
+  color: #fff;
+}
+
+.event-location {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 18px;
+  margin-bottom: 40px;
+  color: rgba(255,255,255,0.9);
+}
+
+.event-countdown-circles {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin: 40px 0;
+}
+
+.ecc-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.ecc-svg-wrap {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+
+.ecc-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.ecc-track {
+  fill: none;
+  stroke: rgba(255,255,255,0.2);
+  stroke-width: 6;
+}
+
+.ecc-progress {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 326.7;
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+.ecc-progress--days { stroke: url(#grad-days); }
+.ecc-progress--hours { stroke: url(#grad-hours); }
+.ecc-progress--minutes { stroke: url(#grad-minutes); }
+.ecc-progress--seconds { stroke: url(#grad-seconds); }
+
+.ecc-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.ecc-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+}
+
+.ecc-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.7);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 768px) {
+  .event-info h2 {
+    font-size: 32px;
+  }
+  
+  .event-countdown-circles {
+    gap: 16px;
+  }
+  
+  .ecc-svg-wrap {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .ecc-num {
+    font-size: 22px;
+  }
+}
+
 </style>
