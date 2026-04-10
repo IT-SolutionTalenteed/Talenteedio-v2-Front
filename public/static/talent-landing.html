@@ -141,10 +141,12 @@
 
     /* ══ LOGO CAROUSEL ══ */
     .logo-carousel-wrap {
-      background: #0a0a0a;
+      background: linear-gradient(180deg, #040a5d 0%, #0d1a8a 100%);
       overflow: hidden;
-      padding: 18px 0;
+      padding: 20px 0;
       position: relative;
+      border-top: 1px solid rgba(255,255,255,.06);
+      border-bottom: 1px solid rgba(255,255,255,.06);
     }
 
     .logo-carousel-wrap::before,
@@ -152,20 +154,20 @@
       content: '';
       position: absolute;
       top: 0; bottom: 0;
-      width: 80px;
+      width: 100px;
       z-index: 2;
       pointer-events: none;
     }
 
-    .logo-carousel-wrap::before { left: 0;  background: linear-gradient(to right, #0a0a0a, transparent); }
-    .logo-carousel-wrap::after  { right: 0; background: linear-gradient(to left,  #0a0a0a, transparent); }
+    .logo-carousel-wrap::before { left: 0;  background: linear-gradient(to right, #040a5d, transparent); }
+    .logo-carousel-wrap::after  { right: 0; background: linear-gradient(to left,  #0d1a8a, transparent); }
 
     .logo-track {
       display: flex;
       align-items: center;
       gap: 0;
       width: max-content;
-      animation: marquee 28s linear infinite;
+      animation: marquee 32s linear infinite;
     }
 
     .logo-track:hover { animation-play-state: paused; }
@@ -175,40 +177,45 @@
       to   { transform: translateX(-50%); }
     }
 
+    @media (prefers-reduced-motion: reduce) {
+      .logo-track { animation: none; }
+    }
+
     .logo-item {
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0 48px;
-      border-right: 1px solid rgba(255,255,255,.08);
-      height: 48px;
+      padding: 0 44px;
+      border-right: 1px solid rgba(255,255,255,.1);
+      height: 40px;
       flex-shrink: 0;
+      cursor: default;
     }
 
     .logo-text {
-      color: rgba(255,255,255,.55);
-      font-size: 15px;
+      color: rgba(255,255,255,.45);
+      font-size: 14px;
       font-weight: 600;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.4px;
       white-space: nowrap;
       line-height: 1.2;
       text-align: center;
-      font-family: 'Arial', sans-serif;
-      transition: color .2s;
+      font-family: inherit;
+      transition: color .25s ease;
     }
 
-    .logo-track:hover .logo-item:hover .logo-text { color: rgba(255,255,255,.9); }
+    .logo-item:hover .logo-text { color: rgba(255,255,255,.85); }
 
-    .logo-text--sm   { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
-    .logo-text--bold { font-weight: 900; font-size: 17px; }
-    .logo-text--light { font-weight: 300; font-size: 20px; letter-spacing: 2px; }
+    .logo-text--sm    { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; }
+    .logo-text--bold  { font-weight: 900; font-size: 16px; letter-spacing: -0.3px; }
+    .logo-text--light { font-weight: 300; font-size: 18px; letter-spacing: 3px; }
     .logo-text--border {
-      border: 2px solid rgba(255,255,255,.4);
-      border-radius: 4px;
-      padding: 2px 10px;
-      font-size: 13px;
+      border: 1.5px solid rgba(255,255,255,.3);
+      border-radius: 3px;
+      padding: 3px 10px;
+      font-size: 12px;
       font-weight: 700;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
     }
 
     /* ══ EVENT SECTION ══ */
