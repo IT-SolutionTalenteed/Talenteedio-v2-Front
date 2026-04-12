@@ -832,7 +832,7 @@ function initFadeIn() {
 .logo-carousel-wrap {
   background: linear-gradient(180deg, #040a5d 0%, #0d1a8a 100%);
   overflow: hidden;
-  padding: 20px 0;
+  padding: 36px 0;
   position: relative;
   border-top: 1px solid rgba(255,255,255,.06);
   border-bottom: 1px solid rgba(255,255,255,.06);
@@ -864,18 +864,18 @@ function initFadeIn() {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 44px;
+  padding: 0 48px;
   border-right: 1px solid rgba(255,255,255,.1);
-  height: 40px;
+  height: 64px;
   flex-shrink: 0;
   text-decoration: none;
 }
 .logo-img {
-  max-height: 28px;
+  max-height: 44px;
+  max-width: 140px;
   width: auto;
   object-fit: contain;
-  filter: brightness(0) invert(1);
-  opacity: 0.6;
+  opacity: 0.75;
   transition: opacity .2s;
 }
 .logo-item:hover .logo-img { opacity: 1; }
