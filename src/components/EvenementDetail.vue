@@ -164,29 +164,82 @@
                 <p class="evd-matching-intro">{{ t('evenements.detail.matchingIntro') }}</p>
 
                 <div v-if="!matchingResultats" class="evd-matching-form">
+                  <!-- Poste recherché -->
                   <div class="evd-form-row">
                     <label class="evd-form-label">{{ t('evenements.detail.jobSought') }} <span class="req">*</span></label>
                     <input v-model="matchingForm.poste_recherche" type="text" class="evd-form-input" :placeholder="t('evenements.detail.jobSoughtPlaceholder')" />
                   </div>
+
+                  <!-- CV upload + extraction auto -->
                   <div class="evd-form-row">
-                    <label class="evd-form-label">{{ t('evenements.detail.keySkills') }}</label>
-                    <select v-model="matchingForm.competences_ids" multiple class="evd-form-select" size="6">
-                      <option v-for="sk in skills" :key="sk.id" :value="sk.name">{{ sk.name }}</option>
-                    </select>
-                    <small class="evd-form-hint">{{ t('evenements.detail.multiSelectHint') }}</small>
-                  </div>
-                  <div class="evd-form-row">
-                    <label class="evd-form-label">{{ t('evenements.detail.cvLabel') }}</label>
+                    <label class="evd-form-label">
+                      {{ t('evenements.detail.cvLabel') }}
+                      <span v-if="parsingCv" class="evd-parsing-badge">
+                        <i class="fa-solid fa-spinner fa-spin"></i> Extraction des compétences…
+                      </span>
+                      <span v-else-if="cvFile" class="evd-parsed-badge">
+                        <i class="fa-solid fa-check"></i> {{ cvFile.name }}
+                      </span>
+                    </label>
                     <div class="evd-file-input" @click="$refs.cvInput.click()">
                       <i class="fa-solid fa-upload"></i>
                       <span>{{ cvFile ? cvFile.name : t('evenements.detail.cvDropzone') }}</span>
                     </div>
-                    <input ref="cvInput" type="file" accept=".pdf,.doc,.docx" @change="e => cvFile = e.target.files[0]" style="display:none;" />
+                    <input ref="cvInput" type="file" accept=".pdf,.doc,.docx" @change="onCvChange" style="display:none;" />
+                    <small class="evd-form-hint">Le contenu du CV sera analysé pour pré-remplir les compétences.</small>
                   </div>
+
+                  <!-- Compétences (auto-remplies depuis le CV) -->
+                  <div class="evd-form-row">
+                    <label class="evd-form-label">Compétences <small style="font-weight:400;color:#6b7280">(pré-rempli depuis votre CV — modifiable)</small></label>
+                    <textarea v-model="matchingForm.competences" class="evd-form-input" rows="2" placeholder="Ex: PHP, Laravel, React, JavaScript…"></textarea>
+                  </div>
+
+                  <!-- Secteur d'activité souhaité -->
+                  <div class="evd-form-row">
+                    <label class="evd-form-label">Secteur d'activité souhaité</label>
+                    <select v-model="matchingForm.secteur_souhaite_id" class="evd-form-select-single">
+                      <option :value="null">Peu importe</option>
+                      <option v-for="s in activitySectors" :key="s.id" :value="s.id">{{ s.name }}</option>
+                    </select>
+                  </div>
+
+                  <!-- Pays souhaités -->
+                  <div class="evd-form-row">
+                    <label class="evd-form-label">Pays où je souhaite travailler <small style="font-weight:400;color:#6b7280">(laissez vide = flexible)</small></label>
+                    <div class="evd-tag-input">
+                      <div v-if="matchingForm.pays_souhaites.length" class="evd-tags">
+                        <span v-for="p in matchingForm.pays_souhaites" :key="p" class="evd-tag">
+                          {{ p }} <button type="button" @click="removeTag('pays_souhaites', p)">×</button>
+                        </span>
+                      </div>
+                      <div class="evd-tag-row">
+                        <input v-model="paysInput" class="evd-form-input evd-tag-field" placeholder="Ex: France, Canada…" @keydown.enter.prevent="addTag('pays_souhaites', paysInput)" />
+                        <button type="button" class="btn btn--outline-nav btn--sm" @click="addTag('pays_souhaites', paysInput)">+</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Villes souhaitées -->
+                  <div class="evd-form-row">
+                    <label class="evd-form-label">Villes souhaitées <small style="font-weight:400;color:#6b7280">(laissez vide = flexible)</small></label>
+                    <div class="evd-tag-input">
+                      <div v-if="matchingForm.villes_souhaitees.length" class="evd-tags">
+                        <span v-for="v in matchingForm.villes_souhaitees" :key="v" class="evd-tag">
+                          {{ v }} <button type="button" @click="removeTag('villes_souhaitees', v)">×</button>
+                        </span>
+                      </div>
+                      <div class="evd-tag-row">
+                        <input v-model="villesInput" class="evd-form-input evd-tag-field" placeholder="Ex: Paris, Lyon…" @keydown.enter.prevent="addTag('villes_souhaitees', villesInput)" />
+                        <button type="button" class="btn btn--outline-nav btn--sm" @click="addTag('villes_souhaitees', villesInput)">+</button>
+                      </div>
+                    </div>
+                  </div>
+
                   <div v-if="matchingError" class="evd-error">
                     <i class="fa-solid fa-triangle-exclamation"></i> {{ matchingError }}
                   </div>
-                  <button class="btn btn--blue btn--lg evd-matching-btn" :disabled="!matchingForm.poste_recherche || matchingLoading" @click="lancerMatching">
+                  <button class="btn btn--blue btn--lg evd-matching-btn" :disabled="!matchingForm.poste_recherche || matchingLoading || parsingCv" @click="lancerMatching">
                     <i class="fa-solid fa-wand-magic-sparkles" v-if="!matchingLoading"></i>
                     <i class="fa-solid fa-spinner fa-spin" v-else></i>
                     {{ matchingLoading ? t('evenements.detail.analyzing') : t('evenements.detail.launchMatching') }}
@@ -499,7 +552,6 @@ const route   = useRoute()
 // ── Data ──────────────────────────────────────────────────────
 const evenement = ref(null)
 const loading   = ref(true)
-const skills    = ref([])
 
 // ── Auth ──────────────────────────────────────────────────────
 const isLoggedIn   = ref(!!localStorage.getItem('token'))
@@ -508,12 +560,23 @@ const isTalent     = computed(() => isLoggedIn.value && userRole.value === 'tale
 const isEntreprise = computed(() => isLoggedIn.value && userRole.value === 'entreprise')
 
 // ── Matching ──────────────────────────────────────────────────
-const matchingForm      = ref({ poste_recherche: '', competences_ids: [] })
-const matchingLoading   = ref(false)
-const matchingError     = ref('')
-const matchingResultats = ref(null)
+const matchingForm = ref({
+  poste_recherche:     '',
+  competences:         '',
+  pays_souhaites:      [],
+  villes_souhaitees:   [],
+  secteur_souhaite_id: null,
+})
+const matchingLoading      = ref(false)
+const matchingError        = ref('')
+const matchingResultats    = ref(null)
 const matchingEntrepriseId = ref(null)
-const cvFile            = ref(null)
+const cvFile               = ref(null)
+const cvPath               = ref(null)
+const parsingCv            = ref(false)
+const activitySectors      = ref([])
+const paysInput            = ref('')
+const villesInput          = ref('')
 
 // ── Réservation ───────────────────────────────────────────────
 const rdvEntreprise = ref(null)
@@ -636,12 +699,46 @@ const load = async () => {
   }
 }
 
-// ── Chargement skills (pour le formulaire matching) ───────────
-const loadSkills = async () => {
+// ── Chargement secteurs d'activité ───────────────────────────
+const loadActivitySectors = async () => {
   try {
-    const res = await api.get('/skills')
-    skills.value = res.data
+    const res = await api.get('/activity-sectors')
+    activitySectors.value = res.data
   } catch {}
+}
+
+// ── CV upload + extraction compétences ───────────────────────
+const onCvChange = async (e) => {
+  const file = e.target.files?.[0] ?? null
+  cvFile.value = file
+  cvPath.value = null
+  if (!file) return
+  parsingCv.value = true
+  try {
+    const fd = new FormData()
+    fd.append('cv', file)
+    const res = await api.post('/talent/cv/parse', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
+    cvPath.value = res.data.cv_path ?? null
+    if (res.data.competences?.length) {
+      matchingForm.value.competences = res.data.competences.join(', ')
+    }
+  } catch {
+    // silencieux — le talent peut saisir manuellement
+  } finally {
+    parsingCv.value = false
+  }
+}
+
+// ── Tag helpers (pays / villes) ───────────────────────────────
+const addTag = (field, val) => {
+  const v = (val ?? '').trim()
+  if (!v || matchingForm.value[field].includes(v)) return
+  matchingForm.value[field] = [...matchingForm.value[field], v]
+  if (field === 'pays_souhaites') paysInput.value = ''
+  else villesInput.value = ''
+}
+const removeTag = (field, val) => {
+  matchingForm.value[field] = matchingForm.value[field].filter(x => x !== val)
 }
 
 // ── Matching ──────────────────────────────────────────────────
@@ -652,10 +749,15 @@ const lancerMatching = async () => {
   try {
     const fd = new FormData()
     fd.append('poste_recherche', matchingForm.value.poste_recherche)
-    if (matchingForm.value.competences_ids.length) {
-      fd.append('competences', matchingForm.value.competences_ids.join(', '))
+    if (matchingForm.value.competences) fd.append('competences', matchingForm.value.competences)
+    if (cvPath.value) {
+      fd.append('cv_path', cvPath.value)
+    } else if (cvFile.value) {
+      fd.append('cv', cvFile.value)
     }
-    if (cvFile.value) fd.append('cv', cvFile.value)
+    matchingForm.value.pays_souhaites.forEach(p => fd.append('pays_souhaites[]', p))
+    matchingForm.value.villes_souhaitees.forEach(v => fd.append('villes_souhaitees[]', v))
+    if (matchingForm.value.secteur_souhaite_id) fd.append('secteur_souhaite_id', matchingForm.value.secteur_souhaite_id)
 
     const res = await api.post(`/talent/evenements/${evenement.value.id}/matching`, fd, {
       headers: { 'Content-Type': 'multipart/form-data' }
@@ -670,8 +772,9 @@ const lancerMatching = async () => {
 
 const resetMatching = () => {
   matchingResultats.value = null
-  matchingForm.value = { poste_recherche: '', competences_ids: [] }
+  matchingForm.value = { poste_recherche: '', competences: '', pays_souhaites: [], villes_souhaitees: [], secteur_souhaite_id: null }
   cvFile.value = null
+  cvPath.value = null
   matchingError.value = ''
 }
 
@@ -758,7 +861,7 @@ const scoreClass = (score) => {
 onMounted(async () => {
   await load()
   if (isTalent.value) {
-    loadSkills()
+    loadActivitySectors()
     loadMesEntretiens()
   }
   if (isEntreprise.value) {
@@ -1017,6 +1120,27 @@ onMounted(async () => {
 .evd-file-input i { font-size: 18px; color: var(--blue); }
 
 .evd-matching-btn { align-self: flex-start; display: flex; align-items: center; gap: 8px; }
+
+.evd-form-select-single {
+  width: 100%; padding: 8px 12px; border: 1.5px solid var(--border, #e2e8f0);
+  border-radius: 8px; font-size: 13px; color: var(--navy); outline: none;
+  background: #fff; transition: border-color .15s;
+}
+.evd-form-select-single:focus { border-color: var(--blue); }
+
+.evd-parsing-badge { margin-left: 8px; font-size: 11px; color: var(--blue); font-weight: 500; }
+.evd-parsed-badge  { margin-left: 8px; font-size: 11px; color: #16a34a; font-weight: 500; }
+
+.evd-tag-input { display: flex; flex-direction: column; gap: 8px; }
+.evd-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.evd-tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(255,111,0,.1); border: 1px solid rgba(255,111,0,.3);
+  color: var(--navy); font-size: 12px; padding: 2px 8px; border-radius: 20px;
+}
+.evd-tag button { background: none; border: none; cursor: pointer; color: #6b7280; font-size: 14px; line-height: 1; padding: 0; }
+.evd-tag-row { display: flex; gap: 8px; align-items: center; }
+.evd-tag-field { flex: 1; margin: 0; }
 .evd-matching-btn:disabled { opacity: .6; cursor: not-allowed; }
 
 .evd-error {
