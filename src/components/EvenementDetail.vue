@@ -191,8 +191,15 @@
 
                   <!-- Compétences (auto-remplies depuis le CV) -->
                   <div class="evd-form-row">
-                    <label class="evd-form-label">Compétences <small style="font-weight:400;color:#6b7280">(pré-rempli depuis votre CV — modifiable)</small></label>
+                    <label class="evd-form-label">
+                      Compétences *
+                      <small style="font-weight:400;color:#6b7280">(pré-rempli depuis votre CV — modifiable)</small>
+                    </label>
                     <textarea v-model="matchingForm.competences" class="evd-form-input" rows="2" placeholder="Ex: PHP, Laravel, React, JavaScript…"></textarea>
+                    <small v-if="cvParsed && !matchingForm.competences" class="evd-form-hint evd-hint-warn">
+                      <i class="fa-solid fa-triangle-exclamation"></i>
+                      Aucune compétence extraite du CV — veuillez les saisir manuellement.
+                    </small>
                   </div>
 
                   <!-- Secteur d'activité souhaité -->
@@ -214,7 +221,10 @@
                         </span>
                       </div>
                       <div class="evd-tag-row">
-                        <input v-model="paysInput" class="evd-form-input evd-tag-field" placeholder="Ex: France, Canada…" @keydown.enter.prevent="addTag('pays_souhaites', paysInput)" />
+                        <input v-model="paysInput" list="pays-list" class="evd-form-input evd-tag-field" placeholder="Ex: France, Canada…" @keydown.enter.prevent="addTag('pays_souhaites', paysInput)" />
+                        <datalist id="pays-list">
+                          <option v-for="c in countryNames" :key="c" :value="c" />
+                        </datalist>
                         <button type="button" class="btn btn--outline-nav btn--sm" @click="addTag('pays_souhaites', paysInput)">+</button>
                       </div>
                     </div>
@@ -544,6 +554,7 @@ import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
 import ShareCard from './ShareCard.vue'
 import api from '../services/api.js'
+import { useCountries } from '../composables/useCountries.js'
 
 const { t, locale } = useI18n()
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
@@ -574,9 +585,11 @@ const matchingEntrepriseId = ref(null)
 const cvFile               = ref(null)
 const cvPath               = ref(null)
 const parsingCv            = ref(false)
+const cvParsed             = ref(false)   // true quand parsing terminé (succès ou échec)
 const activitySectors      = ref([])
 const paysInput            = ref('')
 const villesInput          = ref('')
+const countryNames         = computed(() => useCountries('fr').map(c => c.name))
 
 // ── Réservation ───────────────────────────────────────────────
 const rdvEntreprise = ref(null)
@@ -712,6 +725,7 @@ const onCvChange = async (e) => {
   const file = e.target.files?.[0] ?? null
   cvFile.value = file
   cvPath.value = null
+  cvParsed.value = false
   if (!file) return
   parsingCv.value = true
   try {
@@ -726,6 +740,7 @@ const onCvChange = async (e) => {
     // silencieux — le talent peut saisir manuellement
   } finally {
     parsingCv.value = false
+    cvParsed.value = true
   }
 }
 
@@ -775,6 +790,7 @@ const resetMatching = () => {
   matchingForm.value = { poste_recherche: '', competences: '', pays_souhaites: [], villes_souhaitees: [], secteur_souhaite_id: null }
   cvFile.value = null
   cvPath.value = null
+  cvParsed.value = false
   matchingError.value = ''
 }
 
@@ -1130,6 +1146,7 @@ onMounted(async () => {
 
 .evd-parsing-badge { margin-left: 8px; font-size: 11px; color: var(--blue); font-weight: 500; }
 .evd-parsed-badge  { margin-left: 8px; font-size: 11px; color: #16a34a; font-weight: 500; }
+.evd-hint-warn     { color: #d97706; font-size: 12px; display: flex; align-items: center; gap: 4px; margin-top: 4px; }
 
 .evd-tag-input { display: flex; flex-direction: column; gap: 8px; }
 .evd-tags { display: flex; flex-wrap: wrap; gap: 6px; }
