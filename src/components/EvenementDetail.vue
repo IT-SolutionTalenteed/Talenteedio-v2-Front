@@ -214,20 +214,15 @@
                   <!-- Pays souhaités -->
                   <div class="evd-form-row">
                     <label class="evd-form-label">Pays où je souhaite travailler <small style="font-weight:400;color:#6b7280">(laissez vide = flexible)</small></label>
-                    <div class="evd-tag-input">
-                      <div v-if="matchingForm.pays_souhaites.length" class="evd-tags">
-                        <span v-for="p in matchingForm.pays_souhaites" :key="p" class="evd-tag">
-                          {{ p }} <button type="button" @click="removeTag('pays_souhaites', p)">×</button>
-                        </span>
-                      </div>
-                      <div class="evd-tag-row">
-                        <input v-model="paysInput" list="pays-list" class="evd-form-input evd-tag-field" placeholder="Ex: France, Canada…" @keydown.enter.prevent="addTag('pays_souhaites', paysInput)" />
-                        <datalist id="pays-list">
-                          <option v-for="c in countryNames" :key="c" :value="c" />
-                        </datalist>
-                        <button type="button" class="btn btn--outline-nav btn--sm" @click="addTag('pays_souhaites', paysInput)">+</button>
-                      </div>
+                    <div class="evd-tags" v-if="matchingForm.pays_souhaites.length">
+                      <span v-for="p in matchingForm.pays_souhaites" :key="p" class="evd-tag">
+                        {{ p }} <button type="button" @click="removeTag('pays_souhaites', p)">×</button>
+                      </span>
                     </div>
+                    <select class="evd-form-select-single" @change="e => { addTag('pays_souhaites', e.target.value); e.target.value = '' }">
+                      <option value="">— Choisir un pays —</option>
+                      <option v-for="cn in countryNames.filter(n => !matchingForm.pays_souhaites.includes(n))" :key="cn" :value="cn">{{ cn }}</option>
+                    </select>
                   </div>
 
                   <!-- Villes souhaitées -->
@@ -587,7 +582,6 @@ const cvPath               = ref(null)
 const parsingCv            = ref(false)
 const cvParsed             = ref(false)   // true quand parsing terminé (succès ou échec)
 const activitySectors      = ref([])
-const paysInput            = ref('')
 const villesInput          = ref('')
 const countryNames         = computed(() => useCountries('fr').map(c => c.name))
 
@@ -749,8 +743,7 @@ const addTag = (field, val) => {
   const v = (val ?? '').trim()
   if (!v || matchingForm.value[field].includes(v)) return
   matchingForm.value[field] = [...matchingForm.value[field], v]
-  if (field === 'pays_souhaites') paysInput.value = ''
-  else villesInput.value = ''
+  if (field === 'villes_souhaitees') villesInput.value = ''
 }
 const removeTag = (field, val) => {
   matchingForm.value[field] = matchingForm.value[field].filter(x => x !== val)
