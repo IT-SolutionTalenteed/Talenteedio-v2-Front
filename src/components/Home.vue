@@ -167,7 +167,8 @@
             class="logo-item"
           >
             <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom" class="logo-img">
-            <span v-else class="logo-text">{{ entreprise.nom }}</span>
+            <span v-else class="logo-initial">{{ entreprise.nom.charAt(0).toUpperCase() }}</span>
+            <span class="logo-name">{{ entreprise.nom }}</span>
           </router-link>
           <!-- Set B — duplication pour boucle infinie (translateX -50%) -->
           <router-link
@@ -178,7 +179,8 @@
             aria-hidden="true"
           >
             <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom" class="logo-img">
-            <span v-else class="logo-text">{{ entreprise.nom }}</span>
+            <span v-else class="logo-initial">{{ entreprise.nom.charAt(0).toUpperCase() }}</span>
+            <span class="logo-name">{{ entreprise.nom }}</span>
           </router-link>
         </div>
       </div>
@@ -832,7 +834,7 @@ function initFadeIn() {
 .logo-carousel-wrap {
   background: linear-gradient(180deg, #040a5d 0%, #0d1a8a 100%);
   overflow: hidden;
-  padding: 36px 0;
+  padding: 24px 0;
   position: relative;
   border-top: 1px solid rgba(255,255,255,.06);
   border-bottom: 1px solid rgba(255,255,255,.06);
@@ -862,33 +864,49 @@ function initFadeIn() {
 }
 .logo-item {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 10px;
   padding: 0 48px;
   border-right: 1px solid rgba(255,255,255,.1);
-  height: 64px;
+  height: 100px;
   flex-shrink: 0;
   text-decoration: none;
 }
 .logo-img {
   max-height: 44px;
-  max-width: 140px;
+  max-width: 120px;
   width: auto;
   object-fit: contain;
   opacity: 0.75;
   transition: opacity .2s;
 }
 .logo-item:hover .logo-img { opacity: 1; }
-.logo-text {
-  color: rgba(255,255,255,.45);
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.4px;
-  white-space: nowrap;
-  line-height: 1.2;
-  text-align: center;
+.logo-initial {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 800;
+  color: rgba(255,255,255,.85);
+  flex-shrink: 0;
 }
-.logo-item:hover .logo-text { color: rgba(255,255,255,.85); }
+.logo-name {
+  color: rgba(255,255,255,.55);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  text-align: center;
+  transition: color .2s;
+}
+.logo-item:hover .logo-name { color: rgba(255,255,255,.9); }
 .partners-cta {
   text-align: center;
   margin-top: 36px;
