@@ -156,34 +156,29 @@
           <p class="partners-desc">{{ t('home.partners.description') }}</p>
         </div>
       </div>
-      <!-- Carrousel infini pleine largeur -->
-      <div class="partners-carousel-outer">
-        <div class="partners-carousel-track" :style="`animation-duration:${carouselDuration}s`">
+      <!-- Carrousel infini pleine largeur — style logo-track -->
+      <div class="logo-carousel-wrap">
+        <div class="logo-track">
+          <!-- Set A -->
           <router-link
             v-for="(entreprise, i) in carouselSlides"
             :key="`a${i}`"
             to="/entreprises"
-            class="partner-slide"
+            class="logo-item"
           >
-            <div class="partner-logo-big">
-              <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom">
-              <span v-else class="partner-logo-initial">{{ entreprise.nom.charAt(0).toUpperCase() }}</span>
-            </div>
-            <span class="partner-slide-name">{{ entreprise.nom }}</span>
+            <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom" class="logo-img">
+            <span v-else class="logo-text">{{ entreprise.nom }}</span>
           </router-link>
-          <!-- Duplication pour boucle infinie (translateX -50%) -->
+          <!-- Set B — duplication pour boucle infinie (translateX -50%) -->
           <router-link
             v-for="(entreprise, i) in carouselSlides"
             :key="`b${i}`"
             to="/entreprises"
-            class="partner-slide"
+            class="logo-item"
             aria-hidden="true"
           >
-            <div class="partner-logo-big">
-              <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom">
-              <span v-else class="partner-logo-initial">{{ entreprise.nom.charAt(0).toUpperCase() }}</span>
-            </div>
-            <span class="partner-slide-name">{{ entreprise.nom }}</span>
+            <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom" class="logo-img">
+            <span v-else class="logo-text">{{ entreprise.nom }}</span>
           </router-link>
         </div>
       </div>
@@ -424,12 +419,6 @@ const carouselSlides = computed(() => {
   const result = []
   for (let i = 0; i < repeatCount; i++) result.push(...logos)
   return result
-})
-// Durée basée sur 60px/s pour une vitesse constante quelle que soit la quantité
-const carouselDuration = computed(() => {
-  const slideWidth = window.innerWidth * 0.20 // 25vw en px
-  const totalWidth = carouselSlides.value.length * slideWidth
-  return Math.round(totalWidth / 55) // Réduit de 60 à 55 pour ralentir
 })
 
 // ── Chargement des données ─────────────────────────────────
@@ -698,8 +687,6 @@ function initFadeIn() {
 @media (max-width: 1024px) {
   .quicklinks-grid { grid-template-columns: repeat(2, 1fr); }
   .partners-title { font-size: 42px; }
-  .partner-slide { width: 30vw; }
-  .partners-carousel-track { gap: 40px; }
 }
 @media (max-width: 600px) {
   .quicklinks-grid { grid-template-columns: 1fr; }
@@ -707,10 +694,6 @@ function initFadeIn() {
   .partners-title::after { width: 70px; height: 3px; }
   .partners-desc { font-size: 16px; }
   .partners-label { font-size: 11px; padding: 6px 16px; }
-  .partner-slide { width: 40vw; }
-  .partner-logo-big { width: 90px; height: 90px; }
-  .partner-slide-name { font-size: 12px; }
-  .partners-carousel-track { gap: 48px; }
 }
 .ql-card {
   display: flex;
@@ -846,74 +829,66 @@ function initFadeIn() {
 }
 
 /* Carrousel infini */
-.partners-carousel-outer {
-  width: 100%;
+.logo-carousel-wrap {
+  background: linear-gradient(180deg, #040a5d 0%, #0d1a8a 100%);
   overflow: hidden;
-  padding: 16px 0 24px;
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
-  mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  padding: 20px 0;
+  position: relative;
+  border-top: 1px solid rgba(255,255,255,.06);
+  border-bottom: 1px solid rgba(255,255,255,.06);
 }
-.partners-carousel-track {
+.logo-carousel-wrap::before,
+.logo-carousel-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 100px;
+  z-index: 2;
+  pointer-events: none;
+}
+.logo-carousel-wrap::before { left: 0;  background: linear-gradient(to right, #040a5d, transparent); }
+.logo-carousel-wrap::after  { right: 0; background: linear-gradient(to left,  #0d1a8a, transparent); }
+.logo-track {
   display: flex;
-  gap: 32px;
-  width: max-content;
-  animation: partners-scroll 20s linear infinite;
-}
-
-@keyframes partners-scroll {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-.partner-slide {
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 14px;
-  flex-shrink: 0;
-  width: 20vw;
-  text-decoration: none;
-  cursor: pointer;
+  gap: 0;
+  width: max-content;
+  animation: marquee 32s linear infinite;
 }
-.partner-logo-big {
-  width: 110px;
-  height: 110px;
-  border-radius: 18px;
-  overflow: hidden;
-  background: #fff;
+.logo-track:hover { animation-play-state: paused; }
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.logo-item {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 18px rgba(0,0,0,.10);
-  border: 1.5px solid #e8edf5;
-  transition: box-shadow .2s, transform .2s;
+  padding: 0 44px;
+  border-right: 1px solid rgba(255,255,255,.1);
+  height: 40px;
+  flex-shrink: 0;
+  text-decoration: none;
 }
-.partner-slide:hover .partner-logo-big {
-  box-shadow: 0 8px 28px rgba(0,0,0,.16);
-  transform: translateY(-4px);
-}
-.partner-logo-big img {
-  width: 100%;
-  height: 100%;
+.logo-img {
+  max-height: 28px;
+  width: auto;
   object-fit: contain;
-  padding: 10px;
+  filter: brightness(0) invert(1);
+  opacity: 0.6;
+  transition: opacity .2s;
 }
-.partner-logo-initial {
-  font-size: 38px;
-  font-weight: 800;
-  color: var(--blue, #192bc2);
-  line-height: 1;
-}
-.partner-slide-name {
-  font-size: 13px;
+.logo-item:hover .logo-img { opacity: 1; }
+.logo-text {
+  color: rgba(255,255,255,.45);
+  font-size: 14px;
   font-weight: 600;
-  color: var(--navy, #040a5d);
-  text-align: center;
-  line-height: 1.3;
-  max-width: 140px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  letter-spacing: 0.4px;
   white-space: nowrap;
+  line-height: 1.2;
+  text-align: center;
 }
+.logo-item:hover .logo-text { color: rgba(255,255,255,.85); }
 .partners-cta {
   text-align: center;
   margin-top: 36px;
