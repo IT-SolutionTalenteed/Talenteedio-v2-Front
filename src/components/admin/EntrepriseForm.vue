@@ -25,8 +25,7 @@
               variant="outlined"
               density="compact"
               required
-              :disabled="isEdit"
-              :hint="!isEdit ? 'Un email avec les identifiants sera envoyé à cette adresse.' : ''"
+              :hint="!isEdit ? 'Un email avec les identifiants sera envoyé à cette adresse.' : 'Email de connexion de l\'entreprise'"
               persistent-hint
             />
           </v-col>
