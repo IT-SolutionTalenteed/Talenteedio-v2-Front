@@ -25,6 +25,7 @@
           </p>
 
           <MatchingForm
+            ref="matchingFormEvRef"
             v-model="formEv"
             :activity-sectors="activitySectors"
             :parsing-cv="parsingCvEv"
@@ -77,6 +78,7 @@
             Trouvez les offres les plus adaptées à votre profil parmi toutes les offres disponibles sur la plateforme.
           </p>
           <MatchingForm
+            ref="matchingFormGlobalRef"
             v-model="formGlobal"
             :activity-sectors="activitySectors"
             :parsing-cv="parsingCvGlobal"
@@ -110,7 +112,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, defineAsyncComponent } from 'vue'
+import { ref, onMounted } from 'vue'
 import evenementService from '../../services/talent/evenementService.js'
 import api from '../../services/api.js'
 
@@ -135,13 +137,15 @@ const selectedEvenement = ref(null)
 const resultatsEv       = ref(null)
 const loadingEv         = ref(false)
 const parsingCvEv       = ref(false)
-const formEv = ref(defaultForm())
+const formEv            = ref(defaultForm())
+const matchingFormEvRef = ref(null)   // ref vers le composant MatchingForm (tab événement)
 
 // ── État matching global ──────────────────────────────────────────────────────
-const resultatsGlobal = ref(null)
-const loadingGlobal   = ref(false)
-const parsingCvGlobal = ref(false)
-const formGlobal = ref(defaultForm())
+const resultatsGlobal      = ref(null)
+const loadingGlobal        = ref(false)
+const parsingCvGlobal      = ref(false)
+const formGlobal           = ref(defaultForm())
+const matchingFormGlobalRef = ref(null) // ref vers le composant MatchingForm (tab global)
 
 function defaultForm() {
   return {
@@ -173,7 +177,7 @@ onMounted(async () => {
 })
 
 // ── Upload CV → extraction compétences ───────────────────────────────────────
-async function parseCvAndFill(file, form, parsingRef) {
+async function parseCvAndFill(file, form, parsingRef, formRef) {
   if (!file) return
   parsingRef.value = true
   try {
@@ -188,11 +192,12 @@ async function parseCvAndFill(file, form, parsingRef) {
     // silencieux — le talent peut saisir manuellement
   } finally {
     parsingRef.value = false
+    formRef?.value?.markCvParsed?.()
   }
 }
 
-const onCvChangeEv     = (file) => { formEv.value.cvFile = file; parseCvAndFill(file, formEv.value, parsingCvEv) }
-const onCvChangeGlobal = (file) => { formGlobal.value.cvFile = file; parseCvAndFill(file, formGlobal.value, parsingCvGlobal) }
+const onCvChangeEv     = (file) => { formEv.value.cvFile = file; parseCvAndFill(file, formEv.value, parsingCvEv, matchingFormEvRef) }
+const onCvChangeGlobal = (file) => { formGlobal.value.cvFile = file; parseCvAndFill(file, formGlobal.value, parsingCvGlobal, matchingFormGlobalRef) }
 
 // ── Matching événement ────────────────────────────────────────────────────────
 const ouvrirMatchingEv = (ev) => {
