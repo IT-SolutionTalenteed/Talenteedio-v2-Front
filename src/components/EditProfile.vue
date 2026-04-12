@@ -49,7 +49,7 @@
         <v-col cols="12" sm="6">
           <v-text-field
             v-model="form.ville"
-            label="Ville"
+            label="Ville actuelle"
             variant="outlined"
             density="comfortable"
             prepend-inner-icon="mdi-map-marker-outline"
@@ -58,10 +58,63 @@
         <v-col cols="12" sm="6">
           <v-text-field
             v-model="form.pays"
-            label="Pays"
+            label="Pays actuel"
             variant="outlined"
             density="comfortable"
             prepend-inner-icon="mdi-earth"
+          />
+        </v-col>
+      </v-row>
+
+      <!-- Préférences de mobilité (matching) -->
+      <v-divider class="my-4" />
+      <div class="text-body-2 font-weight-medium text-medium-emphasis mb-3">
+        <v-icon size="16" class="mr-1">mdi-map-search-outline</v-icon>
+        Préférences de mobilité
+        <span class="text-caption ml-1">(utilisées par le matching IA)</span>
+      </div>
+      <v-row dense>
+        <v-col cols="12" sm="6">
+          <v-combobox
+            v-model="form.pays_souhaites"
+            label="Pays où je souhaite travailler"
+            variant="outlined"
+            density="comfortable"
+            multiple
+            chips
+            closable-chips
+            prepend-inner-icon="mdi-earth"
+            hint="Laisser vide = flexible"
+            persistent-hint
+          />
+        </v-col>
+        <v-col cols="12" sm="6">
+          <v-combobox
+            v-model="form.villes_souhaitees"
+            label="Villes souhaitées"
+            variant="outlined"
+            density="comfortable"
+            multiple
+            chips
+            closable-chips
+            prepend-inner-icon="mdi-city-variant-outline"
+            hint="Laisser vide = flexible"
+            persistent-hint
+          />
+        </v-col>
+        <v-col cols="12">
+          <v-autocomplete
+            v-model="form.secteur_souhaite_id"
+            :items="activitySectors"
+            item-title="name"
+            item-value="id"
+            label="Secteur d'activité souhaité"
+            variant="outlined"
+            density="comfortable"
+            prepend-inner-icon="mdi-briefcase-outline"
+            clearable
+            hint="Laisser vide = peu importe"
+            persistent-hint
           />
         </v-col>
       </v-row>
@@ -153,10 +206,14 @@ const snackMsg = ref('')
 const showCurrent = ref(false)
 const showNew = ref(false)
 const showConfirm = ref(false)
+const activitySectors = ref([])
 
 const form = ref({
   first_name: '', last_name: '', titre_poste: '',
   telephone: '', ville: '', pays: '',
+  pays_souhaites: [],
+  villes_souhaitees: [],
+  secteur_souhaite_id: null,
   email: '',
   current_password: '', password: '', password_confirmation: '',
 })
@@ -167,16 +224,24 @@ const showSnack = (msg, color = 'success') => {
 
 onMounted(async () => {
   try {
-    const res = await api.get('/user')
-    const u = res.data
+    const [userRes, sectorsRes] = await Promise.all([
+      api.get('/user'),
+      api.get('/activity-sectors'),
+    ])
+    const u = userRes.data
     const nameParts = (u.name || '').trim().split(' ')
-    form.value.first_name  = u.first_name  || nameParts[0] || ''
-    form.value.last_name   = u.last_name   || nameParts.slice(1).join(' ') || ''
-    form.value.email       = u.email       || ''
-    form.value.telephone   = u.telephone   || ''
-    form.value.ville       = u.ville       || ''
-    form.value.pays        = u.pays        || ''
-    form.value.titre_poste = u.titre_poste || ''
+    form.value.first_name         = u.first_name  || nameParts[0] || ''
+    form.value.last_name          = u.last_name   || nameParts.slice(1).join(' ') || ''
+    form.value.email              = u.email       || ''
+    form.value.telephone          = u.telephone   || ''
+    form.value.ville              = u.ville       || ''
+    form.value.pays               = u.pays        || ''
+    form.value.titre_poste        = u.titre_poste || ''
+    form.value.pays_souhaites     = u.pays_souhaites    || []
+    form.value.villes_souhaitees  = u.villes_souhaitees || []
+    form.value.secteur_souhaite_id = u.secteur_souhaite_id || null
+
+    activitySectors.value = sectorsRes.data
   } catch {
     showSnack('Erreur chargement profil', 'error')
   }
@@ -186,13 +251,16 @@ const save = async () => {
   loading.value = true
   try {
     const payload = {
-      first_name:  form.value.first_name,
-      last_name:   form.value.last_name,
-      email:       form.value.email,
-      telephone:   form.value.telephone,
-      ville:       form.value.ville,
-      pays:        form.value.pays,
-      titre_poste: form.value.titre_poste,
+      first_name:          form.value.first_name,
+      last_name:           form.value.last_name,
+      email:               form.value.email,
+      telephone:           form.value.telephone,
+      ville:               form.value.ville,
+      pays:                form.value.pays,
+      titre_poste:         form.value.titre_poste,
+      pays_souhaites:      form.value.pays_souhaites,
+      villes_souhaitees:   form.value.villes_souhaitees,
+      secteur_souhaite_id: form.value.secteur_souhaite_id || null,
     }
     if (form.value.password) {
       payload.current_password      = form.value.current_password
