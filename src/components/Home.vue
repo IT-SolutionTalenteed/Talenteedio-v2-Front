@@ -868,7 +868,7 @@ function initFadeIn() {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 0 48px;
+  padding: 0 64px;
   border-right: 1px solid #e8edf5;
   height: 100px;
   flex-shrink: 0;
