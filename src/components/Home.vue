@@ -832,12 +832,12 @@ function initFadeIn() {
 
 /* Carrousel infini */
 .logo-carousel-wrap {
-  background: linear-gradient(180deg, #040a5d 0%, #0d1a8a 100%);
+  background: #fff;
   overflow: hidden;
   padding: 24px 0;
   position: relative;
-  border-top: 1px solid rgba(255,255,255,.06);
-  border-bottom: 1px solid rgba(255,255,255,.06);
+  border-top: 1px solid #e8edf5;
+  border-bottom: 1px solid #e8edf5;
 }
 .logo-carousel-wrap::before,
 .logo-carousel-wrap::after {
@@ -848,8 +848,8 @@ function initFadeIn() {
   z-index: 2;
   pointer-events: none;
 }
-.logo-carousel-wrap::before { left: 0;  background: linear-gradient(to right, #040a5d, transparent); }
-.logo-carousel-wrap::after  { right: 0; background: linear-gradient(to left,  #0d1a8a, transparent); }
+.logo-carousel-wrap::before { left: 0;  background: linear-gradient(to right, #fff, transparent); }
+.logo-carousel-wrap::after  { right: 0; background: linear-gradient(to left,  #fff, transparent); }
 .logo-track {
   display: flex;
   align-items: center;
@@ -869,7 +869,7 @@ function initFadeIn() {
   justify-content: center;
   gap: 10px;
   padding: 0 48px;
-  border-right: 1px solid rgba(255,255,255,.1);
+  border-right: 1px solid #e8edf5;
   height: 100px;
   flex-shrink: 0;
   text-decoration: none;
@@ -879,7 +879,7 @@ function initFadeIn() {
   max-width: 120px;
   width: auto;
   object-fit: contain;
-  opacity: 0.75;
+  opacity: 0.8;
   transition: opacity .2s;
 }
 .logo-item:hover .logo-img { opacity: 1; }
@@ -887,18 +887,18 @@ function initFadeIn() {
   width: 44px;
   height: 44px;
   border-radius: 10px;
-  background: rgba(255,255,255,.15);
-  border: 1px solid rgba(255,255,255,.2);
+  background: #f0f4ff;
+  border: 1px solid #dce4f8;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 18px;
   font-weight: 800;
-  color: rgba(255,255,255,.85);
+  color: var(--blue, #192bc2);
   flex-shrink: 0;
 }
 .logo-name {
-  color: rgba(255,255,255,.55);
+  color: #64748b;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.3px;
@@ -906,7 +906,7 @@ function initFadeIn() {
   text-align: center;
   transition: color .2s;
 }
-.logo-item:hover .logo-name { color: rgba(255,255,255,.9); }
+.logo-item:hover .logo-name { color: var(--navy, #040a5d); }
 .partners-cta {
   text-align: center;
   margin-top: 36px;
