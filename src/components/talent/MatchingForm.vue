@@ -35,13 +35,15 @@
     <v-textarea
       :model-value="modelValue.competences"
       @update:model-value="emit('update:modelValue', { ...modelValue, competences: $event })"
-      label="Compétences"
+      label="Compétences *"
       variant="outlined"
       density="comfortable"
       rows="2"
-      placeholder="Ex: PHP, Laravel, React, JavaScript... (auto-rempli depuis votre CV)"
-      hint="Pré-rempli automatiquement depuis votre CV — modifiable"
+      placeholder="Ex: PHP, Laravel, React, JavaScript…"
+      :hint="modelValue.competences ? 'Pré-rempli depuis votre CV — modifiable' : 'Aucune compétence extraite du CV — veuillez les saisir manuellement'"
       persistent-hint
+      :error="!parsingCv && !modelValue.competences && modelValue.cvFile !== null && cvParsed"
+      :error-messages="!parsingCv && !modelValue.competences && cvParsed ? ['Aucune compétence extraite — merci de les saisir'] : []"
       class="mb-3"
     />
 
@@ -66,6 +68,7 @@
     <v-combobox
       :model-value="modelValue.pays_souhaites"
       @update:model-value="emit('update:modelValue', { ...modelValue, pays_souhaites: $event })"
+      :items="countryNames"
       label="Pays où je souhaite travailler"
       variant="outlined"
       density="comfortable"
@@ -115,18 +118,32 @@
 </template>
 
 <script setup>
+import { ref, computed } from 'vue'
+import { useCountries } from '../../composables/useCountries.js'
+
 const props = defineProps({
-  modelValue:    { type: Object, required: true },
+  modelValue:      { type: Object, required: true },
   activitySectors: { type: Array, default: () => [] },
-  parsingCv:     { type: Boolean, default: false },
-  loading:       { type: Boolean, default: false },
+  parsingCv:       { type: Boolean, default: false },
+  loading:         { type: Boolean, default: false },
 })
 
 const emit = defineEmits(['update:modelValue', 'cv-change', 'submit', 'cancel'])
 
+// true dès qu'un CV a été uploadé et que le parsing est terminé
+const cvParsed = ref(false)
+
+const countries   = useCountries('fr')
+const countryNames = computed(() => countries.map(c => c.name))
+
 const onCvChange = (e) => {
   const file = e.target.files?.[0] ?? null
+  cvParsed.value = false
   emit('update:modelValue', { ...props.modelValue, cvFile: file })
   emit('cv-change', file)
 }
+
+// appelé depuis le parent quand le parsing est terminé
+const markCvParsed = () => { cvParsed.value = true }
+defineExpose({ markCvParsed })
 </script>
