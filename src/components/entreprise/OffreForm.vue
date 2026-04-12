@@ -28,14 +28,6 @@
           </v-col>
           <v-col cols="12" md="6">
             <v-text-field
-              v-model="form.fourchette_salariale"
-              label="Fourchette salariale"
-              variant="outlined"
-              density="comfortable"
-            />
-          </v-col>
-          <v-col cols="12" md="6">
-            <v-text-field
               v-model="form.date_limite"
               label="Date limite"
               type="date"
@@ -43,7 +35,32 @@
               density="comfortable"
             />
           </v-col>
+          <v-col cols="12" md="6">
+            <v-text-field
+              v-model="form.salaire_min"
+              label="Salaire minimum"
+              type="number"
+              placeholder="ex: 35000"
+              variant="outlined"
+              density="comfortable"
+            />
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-text-field
+              v-model="form.salaire_max"
+              label="Salaire maximum"
+              type="number"
+              placeholder="ex: 45000"
+              variant="outlined"
+              density="comfortable"
+            />
+          </v-col>
         </v-row>
+
+        <div class="mb-4">
+          <div class="text-body-2 font-weight-medium mb-1">Client</div>
+          <WysiwygEditor v-model="form.client" />
+        </div>
 
         <div class="mb-4">
           <div class="text-body-2 font-weight-medium mb-1">Mission</div>
@@ -59,25 +76,46 @@
         </div>
 
         <v-row>
-          <v-col cols="12" md="4">
+          <v-col cols="12" md="6">
             <ComboboxMultiple
               v-model="form.job_contract_ids"
               label="Contrats de travail"
               :items="referentiels.job_contracts"
             />
           </v-col>
-          <v-col cols="12" md="4">
+          <v-col cols="12" md="6">
             <ComboboxMultiple
               v-model="form.job_mode_ids"
               label="Modes de travail"
               :items="referentiels.job_modes"
             />
           </v-col>
-          <v-col cols="12" md="4">
+          <v-col cols="12" md="6">
             <ComboboxMultiple
               v-model="form.skill_ids"
               label="Compétences"
               :items="referentiels.skills"
+            />
+          </v-col>
+          <v-col cols="12" md="6">
+            <ComboboxMultiple
+              v-model="form.experience_ids"
+              label="Expériences requises"
+              :items="referentiels.experiences"
+            />
+          </v-col>
+          <v-col cols="12" md="6">
+            <ComboboxMultiple
+              v-model="form.study_level_ids"
+              label="Formations requises"
+              :items="referentiels.study_levels"
+            />
+          </v-col>
+          <v-col cols="12" md="6">
+            <ComboboxMultiple
+              v-model="form.language_ids"
+              label="Langues"
+              :items="referentiels.languages"
             />
           </v-col>
         </v-row>
@@ -106,7 +144,7 @@ const route = useRoute()
 
 const isEdit = computed(() => !!route.params.id)
 const saving = ref(false)
-const referentiels = ref({ job_contracts: [], job_modes: [], skills: [], study_levels: [], experiences: [] })
+const referentiels = ref({ job_contracts: [], job_modes: [], skills: [], study_levels: [], experiences: [], languages: [] })
 
 const snackbar = ref(false)
 const snackColor = ref('success')
@@ -116,9 +154,9 @@ const showSnack = (msg, color = 'success') => {
 }
 
 const emptyForm = () => ({
-  titre: '', mission: '', profil_recherche: '', description: '',
-  localisation: '', fourchette_salariale: '', date_limite: '',
-  job_contract_ids: [], job_mode_ids: [], skill_ids: [], study_level_ids: [], experience_ids: []
+  titre: '', client: '', mission: '', profil_recherche: '', description: '',
+  localisation: '', salaire_min: '', salaire_max: '', fourchette_salariale: '', date_limite: '',
+  job_contract_ids: [], job_mode_ids: [], skill_ids: [], study_level_ids: [], experience_ids: [], language_ids: []
 })
 const form = ref(emptyForm())
 
@@ -135,10 +173,13 @@ const loadOffre = async () => {
     const item = res.data
     form.value = {
       titre: item.titre,
+      client: item.client || '',
       mission: item.mission || '',
       profil_recherche: item.profil_recherche || '',
       description: item.description || '',
       localisation: item.localisation || '',
+      salaire_min: item.salaire_min || '',
+      salaire_max: item.salaire_max || '',
       fourchette_salariale: item.fourchette_salariale || '',
       date_limite: item.date_limite || '',
       job_contract_ids: item.job_contracts?.map(c => c.id) || [],
@@ -146,6 +187,7 @@ const loadOffre = async () => {
       skill_ids: item.skills?.map(s => s.id) || [],
       study_level_ids: item.study_levels?.map(s => s.id) || [],
       experience_ids: item.experiences?.map(e => e.id) || [],
+      language_ids: item.languages?.map(l => l.id) || [],
     }
   } catch {
     showSnack('Erreur lors du chargement de l\'offre', 'error')

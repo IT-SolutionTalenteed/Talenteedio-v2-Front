@@ -12,13 +12,19 @@
             <v-text-field v-model="form.titre" label="Titre *" variant="outlined" density="compact" required />
           </v-col>
           <v-col cols="12" md="6">
-            <v-text-field v-model="form.client" label="Client" variant="outlined" density="compact" />
-          </v-col>
-          <v-col cols="12" md="6">
             <v-text-field v-model="form.localisation" label="Localisation" variant="outlined" density="compact" />
           </v-col>
+
+          <v-col cols="12">
+            <div class="text-caption text-medium-emphasis mb-1">Client</div>
+            <WysiwygEditor v-model="form.client" />
+          </v-col>
+
           <v-col cols="12" md="6">
-            <v-text-field v-model="form.fourchette_salariale" label="Fourchette salariale" placeholder="ex: 35k€ - 45k€" variant="outlined" density="compact" />
+            <v-text-field v-model="form.salaire_min" label="Salaire minimum" type="number" placeholder="ex: 35000" variant="outlined" density="compact" />
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-text-field v-model="form.salaire_max" label="Salaire maximum" type="number" placeholder="ex: 45000" variant="outlined" density="compact" />
           </v-col>
           <v-col cols="12" md="6">
             <v-text-field v-model="form.date_mise_en_ligne" label="Date de mise en ligne" type="date" variant="outlined" density="compact" />
@@ -84,7 +90,7 @@
             />
           </v-col>
 
-          <v-col cols="12" md="4">
+          <v-col cols="12" md="6">
             <ComboboxMultiple
               v-model="form.skill_ids"
               label="Compétences requises"
@@ -92,7 +98,15 @@
             />
           </v-col>
 
-          <v-col cols="12" md="4">
+          <v-col cols="12" md="6">
+            <ComboboxMultiple
+              v-model="form.experience_ids"
+              label="Expériences requises"
+              :items="referentiels.experiences"
+            />
+          </v-col>
+
+          <v-col cols="12" md="6">
             <ComboboxMultiple
               v-model="form.study_level_ids"
               label="Formations requises"
@@ -100,11 +114,11 @@
             />
           </v-col>
 
-          <v-col cols="12" md="4">
+          <v-col cols="12" md="6">
             <ComboboxMultiple
-              v-model="form.experience_ids"
-              label="Expériences requises"
-              :items="referentiels.experiences"
+              v-model="form.language_ids"
+              label="Langues"
+              :items="referentiels.languages"
             />
           </v-col>
         </v-row>
@@ -131,7 +145,7 @@ const router = useRouter()
 
 const isEdit = computed(() => !!route.params.id)
 const saving = ref(false)
-const referentiels = ref({ job_contracts: [], job_modes: [], skills: [], study_levels: [], experiences: [] })
+const referentiels = ref({ job_contracts: [], job_modes: [], skills: [], study_levels: [], experiences: [], languages: [] })
 
 const snackbar = ref(false)
 const snackMsg = ref('')
@@ -143,10 +157,10 @@ const showSnack = (msg, color = 'success') => {
 }
 
 const emptyForm = () => ({
-  titre: '', client: '', localisation: '', salaire: '', fourchette_salariale: '',
+  titre: '', client: '', localisation: '', salaire: '', salaire_min: '', salaire_max: '', fourchette_salariale: '',
   date_mise_en_ligne: '', date_limite: '', mission: '', profil_recherche: '',
   a_propos: '', liste_offre: '', description: '',
-  job_contract_ids: [], job_mode_ids: [], skill_ids: [], study_level_ids: [], experience_ids: [],
+  job_contract_ids: [], job_mode_ids: [], skill_ids: [], study_level_ids: [], experience_ids: [], language_ids: [],
   image: null, remove_image: false
 })
 
@@ -189,6 +203,8 @@ const loadOffre = async () => {
         client: offre.client || '',
         localisation: offre.localisation || '',
         salaire: offre.salaire || '',
+        salaire_min: offre.salaire_min || '',
+        salaire_max: offre.salaire_max || '',
         fourchette_salariale: offre.fourchette_salariale || '',
         date_mise_en_ligne: offre.date_mise_en_ligne ? offre.date_mise_en_ligne.substring(0, 10) : '',
         date_limite: offre.date_limite ? offre.date_limite.substring(0, 10) : '',
@@ -202,6 +218,7 @@ const loadOffre = async () => {
         skill_ids: offre.skills?.map(c => c.id) || [],
         study_level_ids: offre.study_levels?.map(c => c.id) || [],
         experience_ids: offre.experiences?.map(c => c.id) || [],
+        language_ids: offre.languages?.map(c => c.id) || [],
         image: null,
         remove_image: false,
       }
