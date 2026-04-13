@@ -32,7 +32,8 @@ const currentYear = new Date().getFullYear()
   background: #040a5d; 
   color: rgba(255,255,255,.85); 
   overflow: hidden;
-  margin-top: auto;
+  width: 100%;
+  flex-shrink: 0;
 }
 .footer-bg { 
   position: absolute; 
