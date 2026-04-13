@@ -1,5 +1,6 @@
 <template>
-  <div class="favoris-page">
+  <div class="page-wrapper">
+    <div class="favoris-page">
     <PublicNav />
 
     <!-- ══ HERO ══ -->
@@ -79,6 +80,10 @@
 
       </div>
     </section>
+
+    </div>
+
+    <!-- ══ FOOTER ══ -->
     <Footer />
   </div>
 </template>
