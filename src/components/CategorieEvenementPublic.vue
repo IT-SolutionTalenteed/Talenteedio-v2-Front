@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page-wrapper">
   <PublicNav />
   <div class="cat-event-page" v-if="categorie">
 
@@ -167,7 +167,9 @@
     <p>{{ t('evenements.notFound') }}</p>
     <router-link to="/" class="btn btn--blue" style="margin-top:16px;">{{ t('evenements.backHome') }}</router-link>
   </div>
-    <Footer />
+
+  <!-- ══ FOOTER ══ -->
+  <Footer />
   </div>
 </template>
 
