@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="page-wrapper">
+    <div class="page-content">
 
     <PublicNav />
 
@@ -385,9 +386,10 @@
       </div>
     </section>
 
+    </div>
+
     <!-- ══ FOOTER ══ -->
     <Footer />
-
   </div>
 </template>
 
