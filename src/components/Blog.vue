@@ -1,5 +1,6 @@
 <template>
-  <div class="blog-page">
+  <div class="page-wrapper">
+    <div class="blog-page">
     <PublicNav />
 
     <!-- ══ HERO ══ -->
@@ -199,6 +200,9 @@
       </div>
     </section>
 
+    </div>
+
+    <!-- ══ FOOTER ══ -->
     <Footer />
   </div>
 </template>
