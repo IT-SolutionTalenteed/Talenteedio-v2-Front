@@ -1,5 +1,6 @@
 <template>
-  <div class="article-detail-page">
+  <div class="page-wrapper">
+    <div class="article-detail-page">
     <PublicNav />
 
     <!-- Loading -->
@@ -104,6 +105,10 @@
       </section>
 
     </template>
+
+    </div>
+
+    <!-- ══ FOOTER ══ -->
     <Footer />
   </div>
 </template>
