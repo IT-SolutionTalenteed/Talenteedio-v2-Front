@@ -1,5 +1,6 @@
 <template>
-  <div class="ev-detail-page">
+  <div class="page-wrapper">
+    <div class="ev-detail-page">
     <PublicNav />
 
     <!-- Loading -->
@@ -536,6 +537,10 @@
       </div>
 
     </template>
+
+    </div>
+
+    <!-- ══ FOOTER ══ -->
     <Footer />
   </div>
 </template>
