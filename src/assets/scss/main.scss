@@ -29,3 +29,45 @@
   background: #fff !important;
   background-color: #fff !important;
 }
+
+// Page wrapper pour permettre au footer d'être en dehors du contenu principal
+.page-wrapper {
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 100vh !important;
+  width: 100% !important;
+}
+
+.page-content,
+.blog-page,
+.annonces-page,
+.company-landing,
+.entreprises-page,
+.legal-page,
+.offre-detail-page,
+.article-detail-page,
+.ev-detail-page,
+.favoris-page,
+.entreprise-detail-page,
+.cat-event-page {
+  flex: 1 0 auto !important;
+  width: 100%;
+}
+
+// S'assurer que le footer est visible et reste en bas
+.site-footer {
+  width: 100% !important;
+  flex-shrink: 0 !important;
+  margin-top: auto !important;
+}
+
+// Pour les pages avec peu de contenu, forcer le footer en bas
+.v-application {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.v-application__wrap {
+  flex: 1 0 auto;
+}
