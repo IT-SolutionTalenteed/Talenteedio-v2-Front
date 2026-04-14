@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../components/Home.vue'
 import Login from '../components/Login.vue'
 import Register from '../components/Register.vue'
+import TalentRegister from '../components/TalentRegister.vue'
+import TalentConfirm from '../components/TalentConfirm.vue'
 import AdminDashboard from '../components/AdminDashboard.vue'
 import TalentDashboard from '../components/TalentDashboard.vue'
 import EntrepriseDashboard from '../components/EntrepriseDashboard.vue'
@@ -123,6 +125,16 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: Register
+  },
+  {
+    path: '/talent-register',
+    name: 'TalentRegister',
+    component: TalentRegister
+  },
+  {
+    path: '/talent-confirm',
+    name: 'TalentConfirm',
+    component: TalentConfirm
   },
   {
     path: '/auth/google/callback',
