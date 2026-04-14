@@ -46,24 +46,24 @@
     <!-- Logo Carousel -->
     <div class="logo-carousel-wrap">
       <div class="logo-track">
-        <div class="logo-item"><span class="logo-text logo-text--sm">SOCIÉTÉ<br>GÉNÉRALE</span></div>
-        <div class="logo-item"><span class="logo-text">Spotify</span></div>
-        <div class="logo-item"><span class="logo-text">vodafone</span></div>
-        <div class="logo-item"><span class="logo-text">American Airlines</span></div>
-        <div class="logo-item"><span class="logo-text logo-text--bold">duolingo</span></div>
-        <div class="logo-item"><span class="logo-text logo-text--light">EY</span></div>
-        <div class="logo-item"><span class="logo-text logo-text--border">Ford</span></div>
-        <div class="logo-item"><span class="logo-text">Infosys</span></div>
-        <div class="logo-item"><span class="logo-text logo-text--sm">mercado<br>libre</span></div>
-        <div class="logo-item"><span class="logo-text logo-text--sm">SOCIÉTÉ<br>GÉNÉRALE</span></div>
-        <div class="logo-item"><span class="logo-text">Spotify</span></div>
-        <div class="logo-item"><span class="logo-text">vodafone</span></div>
-        <div class="logo-item"><span class="logo-text">American Airlines</span></div>
-        <div class="logo-item"><span class="logo-text logo-text--bold">duolingo</span></div>
-        <div class="logo-item"><span class="logo-text logo-text--light">EY</span></div>
-        <div class="logo-item"><span class="logo-text logo-text--border">Ford</span></div>
-        <div class="logo-item"><span class="logo-text">Infosys</span></div>
-        <div class="logo-item"><span class="logo-text logo-text--sm">mercado<br>libre</span></div>
+        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
+        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
+        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
+        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
+        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
+        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
+        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
+        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
+        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
+        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
+        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
+        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
+        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
+        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
+        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
+        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
+        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
+        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
       </div>
     </div>
 
@@ -712,29 +712,16 @@ onUnmounted(() => {
   cursor: default;
 }
 
-.logo-text {
-  color: rgba(255,255,255,.45);
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.4px;
-  white-space: nowrap;
-  line-height: 1.2;
-  text-align: center;
-  transition: color .25s ease;
+.logo-img {
+  height: 32px;
+  width: auto;
+  filter: brightness(0) invert(1);
+  opacity: 0.6;
+  transition: opacity .25s ease;
 }
 
-.logo-item:hover .logo-text { color: rgba(255,255,255,.85); }
-
-.logo-text--sm    { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; }
-.logo-text--bold  { font-weight: 900; font-size: 16px; letter-spacing: -0.3px; }
-.logo-text--light { font-weight: 300; font-size: 18px; letter-spacing: 3px; }
-.logo-text--border {
-  border: 1.5px solid rgba(255,255,255,.3);
-  border-radius: 3px;
-  padding: 3px 10px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
+.logo-item:hover .logo-img {
+  opacity: 1;
 }
 
 /* Main Section */
