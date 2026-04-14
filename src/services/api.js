@@ -61,4 +61,9 @@ export const authService = {
   getUser: () => api.get('/user')
 }
 
+export const atsService = {
+  register: (formData) => api.post('/public/ats/register', formData),
+  setPassword: (data) => api.post('/public/ats/set-password', data)
+}
+
 export default api
