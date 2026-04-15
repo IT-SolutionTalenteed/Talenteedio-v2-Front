@@ -1,5 +1,7 @@
 <template>
   <div class="corporate-landing">
+    <PublicNav />
+    
     <!-- ══ MINI HERO ══ -->
     <section class="corp-hero">
       <div class="container">
@@ -22,8 +24,8 @@
     <!-- ══ LOGO CAROUSEL ══ -->
     <div class="logo-carousel-wrap">
       <div class="logo-track">
-        <div v-for="(logo, index) in duplicatedLogos" :key="index" class="logo-item">
-          <span :class="['logo-text', logo.class]" v-html="logo.text"></span>
+        <div v-for="n in 18" :key="n" class="logo-item">
+          <img src="/logo.png" alt="Talenteed" class="logo-img">
         </div>
       </div>
     </div>
@@ -201,12 +203,21 @@
         </div>
       </div>
     </section>
+
+    <Footer />
   </div>
 </template>
 
 <script>
+import PublicNav from './PublicNav.vue'
+import Footer from './Footer.vue'
+
 export default {
   name: 'CorporateLanding',
+  components: {
+    PublicNav,
+    Footer
+  },
   data() {
     return {
       formData: {
@@ -222,17 +233,6 @@ export default {
       },
       error: '',
       isSubmitting: false,
-      logos: [
-        { text: 'SOCIÉTÉ<br>GÉNÉRALE', class: 'logo-text--sm' },
-        { text: 'Spotify', class: '' },
-        { text: 'vodafone', class: '' },
-        { text: 'American Airlines', class: '' },
-        { text: 'duolingo', class: 'logo-text--bold' },
-        { text: 'EY', class: 'logo-text--light' },
-        { text: 'Ford', class: 'logo-text--border' },
-        { text: 'Infosys', class: '' },
-        { text: 'mercado<br>libre', class: 'logo-text--sm' }
-      ],
       secteurs: [
         'Banque / Finance',
         'Assurance',
@@ -293,11 +293,6 @@ export default {
       ]
     }
   },
-  computed: {
-    duplicatedLogos() {
-      return [...this.logos, ...this.logos]
-    }
-  },
   methods: {
     handleSubmit() {
       this.error = ''
@@ -328,6 +323,8 @@ export default {
 </script>
 
 <style scoped>
+@import '/static/assets/css/main.css';
+
 /* ══ MINI HERO ══ */
 .corp-hero {
   position: relative;
@@ -441,30 +438,16 @@ export default {
   cursor: default;
 }
 
-.logo-text {
-  color: rgba(255,255,255,.45);
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.4px;
-  white-space: nowrap;
-  line-height: 1.2;
-  text-align: center;
-  font-family: inherit;
-  transition: color .25s ease;
+.logo-img {
+  height: 32px;
+  width: auto;
+  filter: brightness(0) invert(1);
+  opacity: 0.6;
+  transition: opacity .25s ease;
 }
 
-.logo-item:hover .logo-text { color: rgba(255,255,255,.85); }
-
-.logo-text--sm    { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; }
-.logo-text--bold  { font-weight: 900; font-size: 16px; letter-spacing: -0.3px; }
-.logo-text--light { font-weight: 300; font-size: 18px; letter-spacing: 3px; }
-.logo-text--border {
-  border: 1.5px solid rgba(255,255,255,.3);
-  border-radius: 3px;
-  padding: 3px 10px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
+.logo-item:hover .logo-img {
+  opacity: 1;
 }
 
 /* ══ MAIN SECTION ══ */
