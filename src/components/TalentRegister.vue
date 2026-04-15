@@ -48,24 +48,9 @@
     <!-- Logo Carousel -->
     <div class="logo-carousel-wrap">
       <div class="logo-track">
-        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
-        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
-        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
-        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
-        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
-        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
-        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
-        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
-        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
-        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
-        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
-        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
-        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
-        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
-        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
-        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
-        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
-        <div class="logo-item"><img src="/logo.png" alt="Talenteed" class="logo-img"></div>
+        <div v-for="n in 18" :key="n" class="logo-item">
+          <img src="/logo.png" alt="Talenteed" class="logo-img">
+        </div>
       </div>
     </div>
 
