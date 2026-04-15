@@ -1,5 +1,7 @@
 <template>
   <div>
+    <PublicNav />
+    
     <!-- Mobile Fixed CTA -->
     <div class="mobile-cta-bar" v-show="showMobileCta">
       <a href="#register-section" class="btn btn--orange btn--lg">
@@ -386,12 +388,16 @@
         </div>
       </div>
     </section>
+
+    <Footer />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
+import PublicNav from './PublicNav.vue'
+import Footer from './Footer.vue'
 import api from '../services/api.js'
 
 const router = useRouter()

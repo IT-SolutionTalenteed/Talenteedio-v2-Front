@@ -4,6 +4,8 @@ import Login from '../components/Login.vue'
 import Register from '../components/Register.vue'
 import TalentRegister from '../components/TalentRegister.vue'
 import TalentConfirm from '../components/TalentConfirm.vue'
+import CorporateLanding from '../components/CorporateLanding.vue'
+import CorporateConfirm from '../components/CorporateConfirm.vue'
 import AdminDashboard from '../components/AdminDashboard.vue'
 import TalentDashboard from '../components/TalentDashboard.vue'
 import EntrepriseDashboard from '../components/EntrepriseDashboard.vue'
@@ -135,6 +137,16 @@ const routes = [
     path: '/talent-confirm',
     name: 'TalentConfirm',
     component: TalentConfirm
+  },
+  {
+    path: '/corporate-landing',
+    name: 'CorporateLanding',
+    component: CorporateLanding
+  },
+  {
+    path: '/corporate-confirm',
+    name: 'CorporateConfirm',
+    component: CorporateConfirm
   },
   {
     path: '/auth/google/callback',

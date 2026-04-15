@@ -1,5 +1,7 @@
 <template>
   <div>
+    <PublicNav />
+    
     <!-- Mini Hero -->
     <div class="confirm-hero">
       <div class="container">
@@ -134,12 +136,16 @@
         </div>
       </div>
     </section>
+
+    <Footer />
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import PublicNav from './PublicNav.vue'
+import Footer from './Footer.vue'
 import api from '../services/api.js'
 
 const router = useRouter()
