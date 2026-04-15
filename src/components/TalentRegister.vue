@@ -512,6 +512,8 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+@import '/static/assets/css/main.css';
+
 /* Variables CSS */
 :root {
   --navy: #041a57;
