@@ -225,6 +225,8 @@ const handleCreate = async () => {
 </script>
 
 <style scoped>
+@import '/static/assets/css/main.css';
+
 /* Variables */
 :root {
   --navy: #041a57;
