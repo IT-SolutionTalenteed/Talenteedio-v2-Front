@@ -1,5 +1,7 @@
 <template>
   <div class="corporate-confirm">
+    <PublicNav />
+    
     <!-- ══ MINI HERO ══ -->
     <div class="confirm-hero">
       <div class="container">
@@ -154,12 +156,21 @@
         </p>
       </div>
     </div>
+
+    <Footer />
   </div>
 </template>
 
 <script>
+import PublicNav from './PublicNav.vue'
+import Footer from './Footer.vue'
+
 export default {
   name: 'CorporateConfirm',
+  components: {
+    PublicNav,
+    Footer
+  },
   data() {
     return {
       password: '',
@@ -232,6 +243,8 @@ export default {
 </script>
 
 <style scoped>
+@import '/static/assets/css/main.css';
+
 /* ══ MINI HERO ══ */
 .confirm-hero {
   background: linear-gradient(160deg, #020830 0%, #040a5d 60%, #0d1a8a 100%);
