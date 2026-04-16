@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../components/Home.vue'
 import Login from '../components/Login.vue'
 import Register from '../components/Register.vue'
+import ProfileSelection from '../components/ProfileSelection.vue'
 import TalentRegister from '../components/TalentRegister.vue'
 import TalentConfirm from '../components/TalentConfirm.vue'
 import CorporateLanding from '../components/CorporateLanding.vue'
@@ -129,6 +130,11 @@ const routes = [
     component: Register
   },
   {
+    path: '/profile-selection',
+    name: 'ProfileSelection',
+    component: ProfileSelection
+  },
+  {
     path: '/talent-register',
     name: 'TalentRegister',
     component: TalentRegister
@@ -139,8 +145,8 @@ const routes = [
     component: TalentConfirm
   },
   {
-    path: '/corporate-landing',
-    name: 'CorporateLanding',
+    path: '/corporate-register',
+    name: 'CorporateRegister',
     component: CorporateLanding
   },
   {

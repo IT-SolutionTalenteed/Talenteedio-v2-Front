@@ -190,7 +190,7 @@
 
           <!-- Non-connecté -->
           <template v-if="!isLoggedIn">
-            <router-link to="/register" class="btn-nav btn-nav--outline">{{ t('nav.subscription') }}</router-link>
+            <router-link to="/profile-selection" class="btn-nav btn-nav--outline">{{ t('nav.subscription') }}</router-link>
             <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn-nav btn-nav--filled">{{ t('nav.login') }}</router-link>
           </template>
 
