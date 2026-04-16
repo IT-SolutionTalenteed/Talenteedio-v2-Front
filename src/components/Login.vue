@@ -83,7 +83,7 @@
 
         <p class="auth-switch">
           {{ t('auth.login.noAccount') }}
-          <router-link to="/register">{{ t('auth.login.createAccount') }}</router-link>
+          <router-link to="/profile-selection">{{ t('auth.login.createAccount') }}</router-link>
         </p>
       </div>
     </div>

@@ -19,7 +19,7 @@
             </p>
             <p class="hero-desc" v-else>{{ t('home.hero.defaultDescription') }}</p>
             <p class="hero-cta-label">{{ t('home.hero.subscriptionsOpen') }}</p>
-            <router-link to="/register" class="btn btn--blue btn--lg hero-btn">
+            <router-link to="/profile-selection" class="btn btn--blue btn--lg hero-btn">
               {{ t('home.hero.subscribe') }} <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
             </router-link>
           </div>

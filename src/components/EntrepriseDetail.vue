@@ -218,7 +218,7 @@
 
               <div class="ed-side-card ed-side-cta">
                 <p>{{ t('entreprises.detail.interestedInCompany') }}</p>
-                <router-link to="/register" class="btn btn--blue" style="display:block;text-align:center;">
+                <router-link to="/profile-selection" class="btn btn--blue" style="display:block;text-align:center;">
                   {{ t('entreprises.detail.createAccount') }}
                 </router-link>
                 <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--outline" style="display:block;text-align:center;margin-top:8px;">

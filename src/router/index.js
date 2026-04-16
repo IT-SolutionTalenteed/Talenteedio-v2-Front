@@ -124,11 +124,11 @@ const routes = [
     name: 'Login',
     component: Login
   },
-  {
-    path: '/register',
-    name: 'Register',
-    component: Register
-  },
+  // {
+  //   path: '/register',
+  //   name: 'Register',
+  //   component: Register
+  // },
   {
     path: '/profile-selection',
     name: 'ProfileSelection',
