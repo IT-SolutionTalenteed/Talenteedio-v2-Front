@@ -46,11 +46,31 @@
     </section>
 
     <!-- Logo Carousel -->
-    <div class="logo-carousel-wrap">
+    <div v-if="carouselSlides.length" class="logo-carousel-wrap">
       <div class="logo-track">
-        <div v-for="n in 18" :key="n" class="logo-item">
-          <img src="/logo.png" alt="Talenteed" class="logo-img">
-        </div>
+        <!-- Set A -->
+        <router-link
+          v-for="(entreprise, i) in carouselSlides"
+          :key="`a${i}`"
+          to="/entreprises"
+          class="logo-item"
+        >
+          <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom" class="logo-img">
+          <span v-else class="logo-initial">{{ entreprise.nom.charAt(0).toUpperCase() }}</span>
+          <span class="logo-name">{{ entreprise.nom }}</span>
+        </router-link>
+        <!-- Set B — duplication pour boucle infinie (translateX -50%) -->
+        <router-link
+          v-for="(entreprise, i) in carouselSlides"
+          :key="`b${i}`"
+          to="/entreprises"
+          class="logo-item"
+          aria-hidden="true"
+        >
+          <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom" class="logo-img">
+          <span v-else class="logo-initial">{{ entreprise.nom.charAt(0).toUpperCase() }}</span>
+          <span class="logo-name">{{ entreprise.nom }}</span>
+        </router-link>
       </div>
     </div>
 
@@ -366,13 +386,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
 import api from '../services/api.js'
 
 const router = useRouter()
+const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
 const heroRef = ref(null)
 const showMobileCta = ref(false)
@@ -385,6 +406,7 @@ const step2Success = ref(false)
 // Données de référence chargées depuis l'API
 const activitySectors = ref([])
 const experiences = ref([])
+const event = ref(null)
 
 const form = ref({
   nom: '',
@@ -399,6 +421,17 @@ const form = ref({
   competences: '',
   pays_relocation: '',
   ville_relocation: ''
+})
+
+// ── Carrousel infini ───────────────────────────────────────
+// Répète les logos jusqu'à avoir ≥10 items pour couvrir toute la largeur
+const carouselSlides = computed(() => {
+  if (!event.value?.entreprises?.length) return []
+  const logos = event.value.entreprises
+  const repeatCount = Math.max(1, Math.ceil(10 / logos.length))
+  const result = []
+  for (let i = 0; i < repeatCount; i++) result.push(...logos)
+  return result
 })
 
 const handleScroll = () => {
@@ -496,13 +529,15 @@ const handleSubmit = async () => {
 onMounted(async () => {
   // Charger les référentiels depuis l'API
   try {
-    const [sectorsRes, expRes] = await Promise.all([
+    const [sectorsRes, expRes, evRes] = await Promise.all([
       api.get('/public/ats/activity-sectors'),
-      api.get('/public/ats/experiences')
+      api.get('/public/ats/experiences'),
+      api.get(`${apiBase}/public/featured-event`)
     ])
     
     activitySectors.value = sectorsRes.data.data
     experiences.value = expRes.data.data
+    event.value = evRes.data
   } catch (err) {
     console.error('Erreur chargement référentiels:', err)
   }
@@ -707,6 +742,8 @@ onUnmounted(() => {
   height: 40px;
   flex-shrink: 0;
   cursor: default;
+  text-decoration: none;
+  gap: 12px;
 }
 
 .logo-img {
@@ -719,6 +756,32 @@ onUnmounted(() => {
 
 .logo-item:hover .logo-img {
   opacity: 1;
+}
+
+.logo-initial {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.15);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.logo-name {
+  color: rgba(255,255,255,.7);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: color .25s ease;
+}
+
+.logo-item:hover .logo-name {
+  color: rgba(255,255,255,.95);
 }
 
 /* Main Section */
