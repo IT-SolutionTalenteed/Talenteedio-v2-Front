@@ -87,9 +87,11 @@
                 <div class="form-row">
                   <div class="form-group">
                     <label class="form-label">Secteur d'activité <span class="required">*</span></label>
-                    <select v-model="formData.secteur" class="form-input" required>
+                    <select v-model="formData.secteur_souhaite_id" class="form-input" required>
                       <option value="">Sélectionner...</option>
-                      <option v-for="secteur in secteurs" :key="secteur">{{ secteur }}</option>
+                      <option v-for="secteur in activitySectors" :key="secteur.id" :value="secteur.id">
+                        {{ secteur.name }}
+                      </option>
                     </select>
                   </div>
                   <div class="form-group">
@@ -211,6 +213,7 @@
 <script>
 import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
+import api from '../services/api.js'
 
 export default {
   name: 'CorporateLanding',
@@ -226,29 +229,14 @@ export default {
         email: '',
         telephone: '',
         entreprise: '',
-        secteur: '',
+        secteur_souhaite_id: '',
         taille: '',
         ville: '',
         pays: ''
       },
       error: '',
       isSubmitting: false,
-      secteurs: [
-        'Banque / Finance',
-        'Assurance',
-        'Technologie / IT',
-        'Santé',
-        'Industrie',
-        'Commerce / Distribution',
-        'BTP / Immobilier',
-        'Énergie / Mines',
-        'Agriculture / Agroalimentaire',
-        'Télécommunications',
-        'Consulting / Conseil',
-        'Éducation / Formation',
-        'Transport / Logistique',
-        'Autre'
-      ],
+      activitySectors: [],
       tailles: [
         '1–10 employés',
         '11–50 employés',
@@ -293,13 +281,21 @@ export default {
       ]
     }
   },
+  async mounted() {
+    try {
+      const res = await api.get('/public/ats/activity-sectors')
+      this.activitySectors = res.data.data
+    } catch (err) {
+      console.error('Erreur chargement secteurs:', err)
+    }
+  },
   methods: {
-    handleSubmit() {
+    async handleSubmit() {
       this.error = ''
 
-      const { nom, email, telephone, entreprise, secteur, taille } = this.formData
+      const { nom, email, telephone, entreprise, secteur_souhaite_id, taille } = this.formData
 
-      if (!nom || !email || !telephone || !entreprise || !secteur || !taille) {
+      if (!nom || !email || !telephone || !entreprise || !secteur_souhaite_id || !taille) {
         this.error = 'Veuillez remplir tous les champs obligatoires.'
         return
       }
@@ -312,11 +308,29 @@ export default {
 
       this.isSubmitting = true
 
-      // TODO: POST /api/public/ats/corporate/contact
-      setTimeout(() => {
-        this.$router.push('/corporate-confirm')
-        // ou window.location.href = '/static/corporate-confirm.html'
-      }, 1200)
+      try {
+        await api.post('/public/ats/corporate/register', {
+          first_name: this.formData.prenom,
+          last_name: this.formData.nom,
+          email: this.formData.email,
+          telephone: this.formData.telephone,
+          entreprise: this.formData.entreprise,
+          secteur_souhaite_id: this.formData.secteur_souhaite_id,
+          taille_entreprise: this.formData.taille,
+          ville: this.formData.ville,
+          pays: this.formData.pays
+        })
+
+        this.$router.push({
+          name: 'CorporateConfirm',
+          query: { email: this.formData.email }
+        })
+      } catch (err) {
+        console.error('Erreur inscription:', err)
+        this.error = err.response?.data?.message || 'Une erreur est survenue. Veuillez réessayer.'
+      } finally {
+        this.isSubmitting = false
+      }
     }
   }
 }

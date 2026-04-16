@@ -132,34 +132,21 @@
 
                 <div class="form-group">
                   <label class="form-label">Secteur d'activité <span class="required">*</span></label>
-                  <select v-model="form.secteur" class="form-input">
+                  <select v-model="form.secteur_souhaite_id" class="form-input">
                     <option value="">Sélectionner...</option>
-                    <option>Banque / Finance</option>
-                    <option>Assurance</option>
-                    <option>Technologie / IT</option>
-                    <option>Santé</option>
-                    <option>Industrie</option>
-                    <option>Commerce / Distribution</option>
-                    <option>BTP / Immobilier</option>
-                    <option>Énergie / Mines</option>
-                    <option>Agriculture / Agroalimentaire</option>
-                    <option>Télécommunications</option>
-                    <option>Consulting / Conseil</option>
-                    <option>Éducation / Formation</option>
-                    <option>Transport / Logistique</option>
-                    <option>Autre</option>
+                    <option v-for="sector in activitySectors" :key="sector.id" :value="sector.id">
+                      {{ sector.name }}
+                    </option>
                   </select>
                 </div>
 
                 <div class="form-group">
                   <label class="form-label">Années d'expérience <span class="required">*</span></label>
-                  <select v-model="form.experience" class="form-input">
+                  <select v-model="form.experience_id" class="form-input">
                     <option value="">Sélectionner...</option>
-                    <option>Moins d'1 an</option>
-                    <option>1–3 ans</option>
-                    <option>3–5 ans</option>
-                    <option>5–10 ans</option>
-                    <option>10+ ans</option>
+                    <option v-for="exp in experiences" :key="exp.id" :value="exp.id">
+                      {{ exp.name }}
+                    </option>
                   </select>
                 </div>
 
@@ -395,12 +382,16 @@ const step1Error = ref('')
 const step2Error = ref('')
 const step2Success = ref(false)
 
+// Données de référence chargées depuis l'API
+const activitySectors = ref([])
+const experiences = ref([])
+
 const form = ref({
   nom: '',
   prenom: '',
   email: '',
-  secteur: '',
-  experience: '',
+  secteur_souhaite_id: '',
+  experience_id: '',
   ville: '',
   pays: '',
   cv: null,
@@ -420,7 +411,7 @@ const handleScroll = () => {
 const goToStep2 = () => {
   step1Error.value = ''
   
-  if (!form.value.nom || !form.value.email || !form.value.secteur || !form.value.experience || !form.value.pays) {
+  if (!form.value.nom || !form.value.email || !form.value.secteur_souhaite_id || !form.value.experience_id || !form.value.pays) {
     step1Error.value = 'Veuillez remplir tous les champs obligatoires.'
     return
   }
@@ -456,28 +447,28 @@ const handleSubmit = async () => {
   
   try {
     const formData = new FormData()
-    formData.append('name', `${form.value.prenom} ${form.value.nom}`.trim())
+    formData.append('first_name', form.value.prenom || '')
+    formData.append('last_name', form.value.nom)
     formData.append('email', form.value.email)
-    formData.append('secteur', form.value.secteur)
-    formData.append('experience', form.value.experience)
+    formData.append('secteur_souhaite_id', form.value.secteur_souhaite_id)
+    formData.append('experience_id', form.value.experience_id)
     formData.append('ville', form.value.ville || '')
     formData.append('pays', form.value.pays)
-    formData.append('role', 'talent')
     
     if (form.value.cv) {
       formData.append('cv', form.value.cv)
     }
     if (form.value.poste) {
-      formData.append('poste', form.value.poste)
+      formData.append('titre_poste', form.value.poste)
     }
     if (form.value.competences) {
       formData.append('competences', form.value.competences)
     }
     if (form.value.pays_relocation) {
-      formData.append('pays_relocation', form.value.pays_relocation)
+      formData.append('pays_souhaites', JSON.stringify([form.value.pays_relocation]))
     }
     if (form.value.ville_relocation) {
-      formData.append('ville_relocation', form.value.ville_relocation)
+      formData.append('villes_souhaitees', JSON.stringify([form.value.ville_relocation]))
     }
     
     const response = await api.post('/public/ats/register', formData, {
@@ -502,7 +493,20 @@ const handleSubmit = async () => {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
+  // Charger les référentiels depuis l'API
+  try {
+    const [sectorsRes, expRes] = await Promise.all([
+      api.get('/public/ats/activity-sectors'),
+      api.get('/public/ats/experiences')
+    ])
+    
+    activitySectors.value = sectorsRes.data.data
+    experiences.value = expRes.data.data
+  } catch (err) {
+    console.error('Erreur chargement référentiels:', err)
+  }
+  
   window.addEventListener('scroll', handleScroll, { passive: true })
 })
 
