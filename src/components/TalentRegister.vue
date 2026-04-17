@@ -6,9 +6,9 @@
     <div class="mobile-cta-bar" v-show="showMobileCta">
       <a href="#register-section" class="btn btn--orange btn--lg">
         <i class="fa-solid fa-arrow-right"></i>
-        Accéder aux opportunités
+        {{ t('talentRegister.mobileCta.button') }}
       </a>
-      <p class="mobile-note">Sélection sur profil • Places limitées</p>
+      <p class="mobile-note">{{ t('talentRegister.mobileCta.note') }}</p>
     </div>
 
     <!-- Hero Section -->
@@ -16,32 +16,32 @@
       <div class="ats-hero-content">
         <div class="ats-event-badge">
           <i class="fa-solid fa-calendar-days"></i>
-          Africa Talent Summit — 5 &amp; 6 Novembre 2026
+          {{ t('talentRegister.hero.eventBadge') }}
         </div>
 
         <h1 class="ats-hero-title">
-          Construisez la carrière qui<br>
-          façonnera <em>l'Afrique de demain</em>
+          {{ t('talentRegister.hero.title') }}<br>
+          <em>{{ t('talentRegister.hero.titleHighlight') }}</em>
         </h1>
 
         <p class="ats-hero-desc">
-          Rencontrez, les 5 et 6 novembre 2026, des entreprises panafricaines ambitieuses et accédez à des opportunités concrètes, sélectionnées pour leur impact et leur exigence.
+          {{ t('talentRegister.hero.description') }}
         </p>
 
         <div class="ats-hero-actions">
           <a href="#register-section" class="btn btn--orange">
             <i class="fa-solid fa-arrow-right"></i>
-            Accéder aux opportunités
+            {{ t('talentRegister.hero.button') }}
           </a>
           <span class="ats-selection-note">
-            Sélection sur profil &bull; Places limitées
+            {{ t('talentRegister.hero.selectionNote') }}
           </span>
         </div>
       </div>
 
       <div class="ats-scroll-hint">
         <i class="fa-solid fa-chevron-down"></i>
-        <span>Découvrir</span>
+        <span>{{ t('talentRegister.hero.scrollHint') }}</span>
       </div>
     </section>
 
@@ -79,13 +79,13 @@
       <div class="container">
         <!-- Intro -->
         <div class="ats-intro">
-          <h2>L'Afrique n'a jamais eu autant besoin de talents comme le vôtre.</h2>
+          <h2>{{ t('talentRegister.intro.title') }}</h2>
           <ul class="ats-bullets">
-            <li><i class="fa-solid fa-circle-dot"></i> Accédez à des opportunités concrètes.</li>
-            <li><i class="fa-solid fa-circle-dot"></i> Rencontrez des entreprises ambitieuses.</li>
-            <li><i class="fa-solid fa-circle-dot"></i> Travaillez sur des projets qui comptent vraiment.</li>
+            <li><i class="fa-solid fa-circle-dot"></i> {{ t('talentRegister.intro.bullets.opportunities') }}</li>
+            <li><i class="fa-solid fa-circle-dot"></i> {{ t('talentRegister.intro.bullets.companies') }}</li>
+            <li><i class="fa-solid fa-circle-dot"></i> {{ t('talentRegister.intro.bullets.projects') }}</li>
           </ul>
-          <p class="ats-soustitre">Ne regardez plus le futur se construire. Faites-en partie.</p>
+          <p class="ats-soustitre">{{ t('talentRegister.intro.subtitle') }}</p>
         </div>
 
         <!-- Layout 2 colonnes -->
@@ -96,9 +96,9 @@
               <div class="form-header">
                 <h2 class="form-title">
                   <i class="fa-solid fa-user-check"></i>
-                  Rejoindre le Summit
+                  {{ t('talentRegister.form.title') }}
                 </h2>
-                <p class="form-subtitle">Complétez votre profil pour accéder aux opportunités</p>
+                <p class="form-subtitle">{{ t('talentRegister.form.subtitle') }}</p>
               </div>
 
               <!-- Stepper -->
@@ -111,8 +111,8 @@
                     <template v-else>1</template>
                   </div>
                   <div class="step-info">
-                    <strong>Contact</strong>
-                    <small>Informations de base</small>
+                    <strong>{{ t('talentRegister.form.stepper.step1.title') }}</strong>
+                    <small>{{ t('talentRegister.form.stepper.step1.subtitle') }}</small>
                   </div>
                 </div>
                 <div class="stepper-line" :class="{ done: currentStep > 1 }"></div>
@@ -121,8 +121,8 @@
                     <i class="fa-solid fa-brain" style="font-size:13px"></i>
                   </div>
                   <div class="step-info">
-                    <strong>Matching IA</strong>
-                    <small>Optionnel — compléter plus tard</small>
+                    <strong>{{ t('talentRegister.form.stepper.step2.title') }}</strong>
+                    <small>{{ t('talentRegister.form.stepper.step2.subtitle') }}</small>
                   </div>
                 </div>
               </div>
@@ -131,29 +131,29 @@
               <div v-show="currentStep === 1">
                 <div class="form-section-title">
                   <i class="fa-solid fa-address-card"></i>
-                  Vos informations
+                  {{ t('talentRegister.form.step1.sectionTitle') }}
                 </div>
 
                 <div class="form-row">
                   <div class="form-group">
-                    <label class="form-label">Nom <span class="required">*</span></label>
-                    <input v-model="form.nom" type="text" class="form-input" placeholder="Ex : Diallo">
+                    <label class="form-label">{{ t('talentRegister.form.step1.lastName') }} <span class="required">*</span></label>
+                    <input v-model="form.nom" type="text" class="form-input" :placeholder="t('talentRegister.form.step1.lastNamePlaceholder')">
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Prénom</label>
-                    <input v-model="form.prenom" type="text" class="form-input" placeholder="Ex : Aminata">
+                    <label class="form-label">{{ t('talentRegister.form.step1.firstName') }}</label>
+                    <input v-model="form.prenom" type="text" class="form-input" :placeholder="t('talentRegister.form.step1.firstNamePlaceholder')">
                   </div>
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Email <span class="required">*</span></label>
-                  <input v-model="form.email" type="email" class="form-input" placeholder="votre@email.com">
+                  <label class="form-label">{{ t('talentRegister.form.step1.email') }} <span class="required">*</span></label>
+                  <input v-model="form.email" type="email" class="form-input" :placeholder="t('talentRegister.form.step1.emailPlaceholder')">
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Secteur d'activité <span class="required">*</span></label>
+                  <label class="form-label">{{ t('talentRegister.form.step1.sector') }} <span class="required">*</span></label>
                   <select v-model="form.secteur_souhaite_id" class="form-input">
-                    <option value="">Sélectionner...</option>
+                    <option value="">{{ t('talentRegister.form.step1.select') }}</option>
                     <option v-for="sector in activitySectors" :key="sector.id" :value="sector.id">
                       {{ sector.name }}
                     </option>
@@ -161,9 +161,9 @@
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Années d'expérience <span class="required">*</span></label>
+                  <label class="form-label">{{ t('talentRegister.form.step1.experience') }} <span class="required">*</span></label>
                   <select v-model="form.experience_id" class="form-input">
-                    <option value="">Sélectionner...</option>
+                    <option value="">{{ t('talentRegister.form.step1.select') }}</option>
                     <option v-for="exp in experiences" :key="exp.id" :value="exp.id">
                       {{ exp.name }}
                     </option>
@@ -172,14 +172,14 @@
 
                 <div class="form-row">
                   <div class="form-group">
-                    <label class="form-label">Ville</label>
-                    <input v-model="form.ville" type="text" class="form-input" placeholder="Ex : Dakar">
+                    <label class="form-label">{{ t('talentRegister.form.step1.city') }}</label>
+                    <input v-model="form.ville" type="text" class="form-input" :placeholder="t('talentRegister.form.step1.cityPlaceholder')">
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Pays <span class="required">*</span></label>
+                    <label class="form-label">{{ t('talentRegister.form.step1.country') }} <span class="required">*</span></label>
                     <select v-model="form.pays" class="form-input">
-                      <option value="">Sélectionner...</option>
-                      <optgroup label="Europe">
+                      <option value="">{{ t('talentRegister.form.step1.select') }}</option>
+                      <optgroup :label="t('talentRegister.form.countries.europe')">
                         <option>France</option>
                         <option>Luxembourg</option>
                         <option>Belgique</option>
@@ -191,11 +191,11 @@
                         <option>Italie</option>
                         <option>Portugal</option>
                       </optgroup>
-                      <optgroup label="Amérique du Nord">
+                      <optgroup :label="t('talentRegister.form.countries.northAmerica')">
                         <option>Canada</option>
                         <option>États-Unis</option>
                       </optgroup>
-                      <optgroup label="Afrique de l'Ouest">
+                      <optgroup :label="t('talentRegister.form.countries.westAfrica')">
                         <option>Sénégal</option>
                         <option>Côte d'Ivoire</option>
                         <option>Mali</option>
@@ -209,26 +209,26 @@
                         <option>Mauritanie</option>
                         <option>Cap-Vert</option>
                       </optgroup>
-                      <optgroup label="Afrique Centrale">
+                      <optgroup :label="t('talentRegister.form.countries.centralAfrica')">
                         <option>Cameroun</option>
                         <option>Congo (RDC)</option>
                         <option>Congo (Brazzaville)</option>
                         <option>Gabon</option>
                         <option>Tchad</option>
                       </optgroup>
-                      <optgroup label="Afrique du Nord">
+                      <optgroup :label="t('talentRegister.form.countries.northAfrica')">
                         <option>Maroc</option>
                         <option>Tunisie</option>
                         <option>Algérie</option>
                       </optgroup>
-                      <optgroup label="Afrique de l'Est & Australe">
+                      <optgroup :label="t('talentRegister.form.countries.eastAfrica')">
                         <option>Kenya</option>
                         <option>Tanzanie</option>
                         <option>Éthiopie</option>
                         <option>Afrique du Sud</option>
                         <option>Rwanda</option>
                       </optgroup>
-                      <option>Autre</option>
+                      <option>{{ t('talentRegister.form.countries.other') }}</option>
                     </select>
                   </div>
                 </div>
@@ -239,12 +239,12 @@
                 </div>
 
                 <button type="button" class="btn btn--blue btn--lg btn--block" @click="goToStep2">
-                  Suivant — Matching IA
+                  {{ t('talentRegister.form.step1.nextButton') }}
                   <i class="fa-solid fa-arrow-right"></i>
                 </button>
 
                 <p class="form-note">
-                  L'étape suivante est optionnelle. Vous pourrez la compléter depuis votre espace personnel.
+                  {{ t('talentRegister.form.step1.note') }}
                 </p>
               </div>
 
@@ -252,37 +252,37 @@
               <div v-show="currentStep === 2">
                 <div class="form-section-title">
                   <i class="fa-solid fa-brain"></i>
-                  Matching Intelligent
+                  {{ t('talentRegister.form.step2.sectionTitle') }}
                 </div>
                 <p style="font-size:14px;color:var(--body-text);margin:0 0 24px;line-height:1.6">
-                  Maximisez vos chances d'obtenir des entretiens grâce à notre matching intelligent.
-                  <strong style="color:var(--navy)">Optionnel — vous pourrez le compléter plus tard.</strong>
+                  {{ t('talentRegister.form.step2.description') }}
+                  <strong style="color:var(--navy)">{{ t('talentRegister.form.step2.optional') }}</strong>
                 </p>
 
                 <div class="form-group">
                   <label class="form-label">
-                    CV
-                    <small style="font-weight:400;color:var(--body-text)">&nbsp;— PDF, Word, max 5 Mo</small>
+                    {{ t('talentRegister.form.step2.cv') }}
+                    <small style="font-weight:400;color:var(--body-text)">{{ t('talentRegister.form.step2.cvNote') }}</small>
                   </label>
                   <input @change="handleFileUpload" type="file" class="form-input" accept=".pdf,.doc,.docx" style="padding:10px 12px">
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Poste souhaité</label>
-                  <input v-model="form.poste" type="text" class="form-input" placeholder="Ex : Directeur Financier, Ingénieur Data…">
+                  <label class="form-label">{{ t('talentRegister.form.step2.position') }}</label>
+                  <input v-model="form.poste" type="text" class="form-input" :placeholder="t('talentRegister.form.step2.positionPlaceholder')">
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Compétences clés</label>
+                  <label class="form-label">{{ t('talentRegister.form.step2.skills') }}</label>
                   <textarea v-model="form.competences" class="form-input form-textarea" rows="3"
-                    placeholder="Ex : Python, Finance d'entreprise, Management d'équipes, Marketing digital…"></textarea>
+                    :placeholder="t('talentRegister.form.step2.skillsPlaceholder')"></textarea>
                 </div>
 
                 <div class="form-row">
                   <div class="form-group">
-                    <label class="form-label">Pays souhaité de relocation</label>
+                    <label class="form-label">{{ t('talentRegister.form.step2.relocationCountry') }}</label>
                     <select v-model="form.pays_relocation" class="form-input">
-                      <option value="">Indifférent</option>
+                      <option value="">{{ t('talentRegister.form.step2.indifferent') }}</option>
                       <option>Sénégal</option>
                       <option>Côte d'Ivoire</option>
                       <option>Maroc</option>
@@ -297,12 +297,12 @@
                       <option>Gabon</option>
                       <option>Congo (RDC)</option>
                       <option>Rwanda</option>
-                      <option>Autre</option>
+                      <option>{{ t('talentRegister.form.countries.other') }}</option>
                     </select>
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Ville souhaitée de relocation</label>
-                    <input v-model="form.ville_relocation" type="text" class="form-input" placeholder="Ex : Abidjan, Dakar…">
+                    <label class="form-label">{{ t('talentRegister.form.step2.relocationCity') }}</label>
+                    <input v-model="form.ville_relocation" type="text" class="form-input" :placeholder="t('talentRegister.form.step2.relocationCityPlaceholder')">
                   </div>
                 </div>
 
@@ -312,27 +312,27 @@
                 </div>
                 <div v-if="step2Success" class="form-success visible">
                   <i class="fa-solid fa-check-circle"></i>
-                  Inscription enregistrée ! Redirection en cours…
+                  {{ t('talentRegister.form.step2.success') }}
                 </div>
 
                 <div style="display:flex;gap:12px;flex-wrap:wrap">
                   <button type="button" class="btn"
                     style="border:2px solid var(--border);color:var(--navy);background:#fff"
                     @click="goToStep1">
-                    <i class="fa-solid fa-arrow-left"></i> Retour
+                    <i class="fa-solid fa-arrow-left"></i> {{ t('talentRegister.form.step2.backButton') }}
                   </button>
                   <button type="button" class="btn btn--orange btn--lg" style="flex:1;justify-content:center"
                     :disabled="loading" @click="handleSubmit">
                     <span v-if="loading" class="spinner"></span>
                     <template v-else>
                       <i class="fa-solid fa-check"></i>
-                      Soumettre mon inscription
+                      {{ t('talentRegister.form.step2.submitButton') }}
                     </template>
                   </button>
                 </div>
 
                 <p class="form-note">
-                  Vous pourrez compléter le matching IA depuis votre espace personnel après inscription.
+                  {{ t('talentRegister.form.step2.note') }}
                 </p>
               </div>
             </div>
@@ -345,34 +345,34 @@
                 <div class="sticky-icon">
                   <i class="fa-solid fa-rocket"></i>
                 </div>
-                <h3 class="sticky-title">Accéder aux opportunités</h3>
+                <h3 class="sticky-title">{{ t('talentRegister.stickyCta.title') }}</h3>
                 <p class="sticky-text">
-                  Des entreprises panafricaines ambitieuses vous attendent les <strong>5 et 6 novembre 2026</strong> à Luxembourg.
+                  {{ t('talentRegister.stickyCta.text') }} <strong>{{ t('talentRegister.stickyCta.date') }}</strong> {{ t('talentRegister.stickyCta.location') }}
                 </p>
                 <a href="#register-section" class="btn btn--orange btn--lg btn--block">
                   <i class="fa-solid fa-arrow-right"></i>
-                  Candidater maintenant
+                  {{ t('talentRegister.stickyCta.button') }}
                 </a>
                 <p class="sticky-note">
                   <i class="fa-solid fa-filter"></i>
-                  Sélection sur profil &bull; Places limitées
+                  {{ t('talentRegister.stickyCta.note') }}
                 </p>
                 <hr class="sticky-divider">
                 <div class="sticky-feature">
                   <i class="fa-solid fa-check-circle"></i>
-                  <span>Accès aux offres panafricaines</span>
+                  <span>{{ t('talentRegister.stickyCta.features.access') }}</span>
                 </div>
                 <div class="sticky-feature">
                   <i class="fa-solid fa-check-circle"></i>
-                  <span>Matching IA avec les entreprises</span>
+                  <span>{{ t('talentRegister.stickyCta.features.matching') }}</span>
                 </div>
                 <div class="sticky-feature">
                   <i class="fa-solid fa-check-circle"></i>
-                  <span>Entretiens en direct — Luxembourg</span>
+                  <span>{{ t('talentRegister.stickyCta.features.interviews') }}</span>
                 </div>
                 <div class="sticky-feature">
                   <i class="fa-solid fa-check-circle"></i>
-                  <span>Inscription 100 % gratuite</span>
+                  <span>{{ t('talentRegister.stickyCta.features.free') }}</span>
                 </div>
               </div>
             </div>
@@ -388,11 +388,13 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
 import api from '../services/api.js'
 
 const router = useRouter()
+const { t } = useI18n()
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
 const heroRef = ref(null)
@@ -445,13 +447,13 @@ const goToStep2 = () => {
   step1Error.value = ''
   
   if (!form.value.nom || !form.value.email || !form.value.secteur_souhaite_id || !form.value.experience_id || !form.value.pays) {
-    step1Error.value = 'Veuillez remplir tous les champs obligatoires.'
+    step1Error.value = t('talentRegister.form.step1.errors.required')
     return
   }
   
   const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!emailRe.test(form.value.email)) {
-    step1Error.value = 'Adresse e-mail invalide.'
+    step1Error.value = t('talentRegister.form.step1.errors.invalidEmail')
     return
   }
   

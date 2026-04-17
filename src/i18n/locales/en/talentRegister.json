@@ -1,0 +1,101 @@
+{
+  "mobileCta": {
+    "button": "Access opportunities",
+    "note": "Profile-based selection • Limited places"
+  },
+  "hero": {
+    "eventBadge": "Africa Talent Summit — November 5 & 6, 2026",
+    "title": "Build the career that will shape",
+    "titleHighlight": "tomorrow's Africa",
+    "description": "Meet ambitious pan-African companies on November 5 and 6, 2026, and access concrete opportunities, selected for their impact and excellence.",
+    "button": "Access opportunities",
+    "selectionNote": "Profile-based selection • Limited places",
+    "scrollHint": "Discover"
+  },
+  "intro": {
+    "title": "Africa has never needed talents like you more.",
+    "bullets": {
+      "opportunities": "Access concrete opportunities.",
+      "companies": "Meet ambitious companies.",
+      "projects": "Work on projects that truly matter."
+    },
+    "subtitle": "Don't just watch the future being built. Be part of it."
+  },
+  "form": {
+    "title": "Join the Summit",
+    "subtitle": "Complete your profile to access opportunities",
+    "stepper": {
+      "step1": {
+        "title": "Contact",
+        "subtitle": "Basic information"
+      },
+      "step2": {
+        "title": "AI Matching",
+        "subtitle": "Optional — complete later"
+      }
+    },
+    "step1": {
+      "sectionTitle": "Your information",
+      "lastName": "Last name",
+      "lastNamePlaceholder": "E.g.: Smith",
+      "firstName": "First name",
+      "firstNamePlaceholder": "E.g.: John",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "sector": "Industry sector",
+      "experience": "Years of experience",
+      "city": "City",
+      "cityPlaceholder": "E.g.: Dakar",
+      "country": "Country",
+      "select": "Select...",
+      "nextButton": "Next — AI Matching",
+      "note": "The next step is optional. You can complete it from your personal space.",
+      "errors": {
+        "required": "Please fill in all required fields.",
+        "invalidEmail": "Invalid email address."
+      }
+    },
+    "step2": {
+      "sectionTitle": "Smart Matching",
+      "description": "Maximize your chances of getting interviews with our smart matching.",
+      "optional": "Optional — you can complete it later.",
+      "cv": "Resume",
+      "cvNote": "— PDF, Word, max 5 MB",
+      "position": "Desired position",
+      "positionPlaceholder": "E.g.: Financial Director, Data Engineer…",
+      "skills": "Key skills",
+      "skillsPlaceholder": "E.g.: Python, Corporate Finance, Team Management, Digital Marketing…",
+      "relocationCountry": "Desired relocation country",
+      "relocationCity": "Desired relocation city",
+      "relocationCityPlaceholder": "E.g.: Abidjan, Dakar…",
+      "indifferent": "No preference",
+      "backButton": "Back",
+      "submitButton": "Submit my registration",
+      "success": "Registration saved! Redirecting...",
+      "note": "You can complete the AI matching from your personal space after registration."
+    },
+    "countries": {
+      "europe": "Europe",
+      "northAmerica": "North America",
+      "westAfrica": "West Africa",
+      "centralAfrica": "Central Africa",
+      "northAfrica": "North Africa",
+      "eastAfrica": "East & Southern Africa",
+      "other": "Other"
+    }
+  },
+  "stickyCta": {
+    "title": "Access opportunities",
+    "text": "Ambitious pan-African companies are waiting for you on",
+    "date": "November 5 and 6, 2026",
+    "location": "in Luxembourg.",
+    "button": "Apply now",
+    "note": "Profile-based selection • Limited places",
+    "features": {
+      "access": "Access to pan-African opportunities",
+      "matching": "AI matching with companies",
+      "interviews": "Live interviews — Luxembourg",
+      "free": "100% free registration"
+    }
+  }
+}

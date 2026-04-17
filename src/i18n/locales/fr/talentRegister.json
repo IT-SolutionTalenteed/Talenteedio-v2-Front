@@ -1,0 +1,101 @@
+{
+  "mobileCta": {
+    "button": "Accéder aux opportunités",
+    "note": "Sélection sur profil • Places limitées"
+  },
+  "hero": {
+    "eventBadge": "Africa Talent Summit — 5 & 6 Novembre 2026",
+    "title": "Construisez la carrière qui façonnera",
+    "titleHighlight": "l'Afrique de demain",
+    "description": "Rencontrez, les 5 et 6 novembre 2026, des entreprises panafricaines ambitieuses et accédez à des opportunités concrètes, sélectionnées pour leur impact et leur exigence.",
+    "button": "Accéder aux opportunités",
+    "selectionNote": "Sélection sur profil • Places limitées",
+    "scrollHint": "Découvrir"
+  },
+  "intro": {
+    "title": "L'Afrique n'a jamais eu autant besoin de talents comme le vôtre.",
+    "bullets": {
+      "opportunities": "Accédez à des opportunités concrètes.",
+      "companies": "Rencontrez des entreprises ambitieuses.",
+      "projects": "Travaillez sur des projets qui comptent vraiment."
+    },
+    "subtitle": "Ne regardez plus le futur se construire. Faites-en partie."
+  },
+  "form": {
+    "title": "Rejoindre le Summit",
+    "subtitle": "Complétez votre profil pour accéder aux opportunités",
+    "stepper": {
+      "step1": {
+        "title": "Contact",
+        "subtitle": "Informations de base"
+      },
+      "step2": {
+        "title": "Matching IA",
+        "subtitle": "Optionnel — compléter plus tard"
+      }
+    },
+    "step1": {
+      "sectionTitle": "Vos informations",
+      "lastName": "Nom",
+      "lastNamePlaceholder": "Ex : Diallo",
+      "firstName": "Prénom",
+      "firstNamePlaceholder": "Ex : Aminata",
+      "email": "Email",
+      "emailPlaceholder": "votre@email.com",
+      "sector": "Secteur d'activité",
+      "experience": "Années d'expérience",
+      "city": "Ville",
+      "cityPlaceholder": "Ex : Dakar",
+      "country": "Pays",
+      "select": "Sélectionner...",
+      "nextButton": "Suivant — Matching IA",
+      "note": "L'étape suivante est optionnelle. Vous pourrez la compléter depuis votre espace personnel.",
+      "errors": {
+        "required": "Veuillez remplir tous les champs obligatoires.",
+        "invalidEmail": "Adresse e-mail invalide."
+      }
+    },
+    "step2": {
+      "sectionTitle": "Matching Intelligent",
+      "description": "Maximisez vos chances d'obtenir des entretiens grâce à notre matching intelligent.",
+      "optional": "Optionnel — vous pourrez le compléter plus tard.",
+      "cv": "CV",
+      "cvNote": "— PDF, Word, max 5 Mo",
+      "position": "Poste souhaité",
+      "positionPlaceholder": "Ex : Directeur Financier, Ingénieur Data…",
+      "skills": "Compétences clés",
+      "skillsPlaceholder": "Ex : Python, Finance d'entreprise, Management d'équipes, Marketing digital…",
+      "relocationCountry": "Pays souhaité de relocation",
+      "relocationCity": "Ville souhaitée de relocation",
+      "relocationCityPlaceholder": "Ex : Abidjan, Dakar…",
+      "indifferent": "Indifférent",
+      "backButton": "Retour",
+      "submitButton": "Soumettre mon inscription",
+      "success": "Inscription enregistrée ! Redirection en cours…",
+      "note": "Vous pourrez compléter le matching IA depuis votre espace personnel après inscription."
+    },
+    "countries": {
+      "europe": "Europe",
+      "northAmerica": "Amérique du Nord",
+      "westAfrica": "Afrique de l'Ouest",
+      "centralAfrica": "Afrique Centrale",
+      "northAfrica": "Afrique du Nord",
+      "eastAfrica": "Afrique de l'Est & Australe",
+      "other": "Autre"
+    }
+  },
+  "stickyCta": {
+    "title": "Accéder aux opportunités",
+    "text": "Des entreprises panafricaines ambitieuses vous attendent les",
+    "date": "5 et 6 novembre 2026",
+    "location": "à Luxembourg.",
+    "button": "Candidater maintenant",
+    "note": "Sélection sur profil • Places limitées",
+    "features": {
+      "access": "Accès aux offres panafricaines",
+      "matching": "Matching IA avec les entreprises",
+      "interviews": "Entretiens en direct — Luxembourg",
+      "free": "Inscription 100 % gratuite"
+    }
+  }
+}
