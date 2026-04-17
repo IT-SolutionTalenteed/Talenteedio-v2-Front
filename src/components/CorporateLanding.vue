@@ -316,7 +316,6 @@ export default {
         { number: '100%', label: this.t('corporateLanding.eventFooter.kpis.preselected') }
       ]
     },
-  computed: {
     carouselSlides() {
       if (!this.event?.entreprises?.length) return []
       const logos = this.event.entreprises
