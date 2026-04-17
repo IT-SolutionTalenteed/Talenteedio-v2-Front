@@ -14,6 +14,7 @@ import frProfileSelection from './locales/fr/profileSelection.json'
 import frTalentRegister from './locales/fr/talentRegister.json'
 import frCorporateLanding from './locales/fr/corporateLanding.json'
 import frCorporateConfirm from './locales/fr/corporateConfirm.json'
+import frTalentConfirm from './locales/fr/talentConfirm.json'
 
 // Import English translations
 import enCommon from './locales/en/common.json'
@@ -29,6 +30,7 @@ import enProfileSelection from './locales/en/profileSelection.json'
 import enTalentRegister from './locales/en/talentRegister.json'
 import enCorporateLanding from './locales/en/corporateLanding.json'
 import enCorporateConfirm from './locales/en/corporateConfirm.json'
+import enTalentConfirm from './locales/en/talentConfirm.json'
 
 // Merge translations with proper nesting
 const fr = {
@@ -44,7 +46,8 @@ const fr = {
   profileSelection: frProfileSelection,
   talentRegister: frTalentRegister,
   corporateLanding: frCorporateLanding,
-  corporateConfirm: frCorporateConfirm
+  corporateConfirm: frCorporateConfirm,
+  talentConfirm: frTalentConfirm
 }
 
 const en = {
@@ -60,7 +63,8 @@ const en = {
   profileSelection: enProfileSelection,
   talentRegister: enTalentRegister,
   corporateLanding: enCorporateLanding,
-  corporateConfirm: enCorporateConfirm
+  corporateConfirm: enCorporateConfirm,
+  talentConfirm: enTalentConfirm
 }
 
 const i18n = createI18n({

@@ -1,0 +1,41 @@
+{
+  "hero": {
+    "eventLabel": "Africa Talent Summit — 5 & 6 Novembre 2026",
+    "title": "Construisez la carrière qui façonnera l'Afrique de demain"
+  },
+  "confirmation": {
+    "title": "Merci pour votre inscription !",
+    "subtitle": "Votre profil a bien été enregistré. Créez votre mot de passe pour accéder à votre espace personnel et finaliser votre candidature.",
+    "note": "Un e-mail de confirmation vous sera envoyé une fois votre compte créé. Pensez à compléter votre",
+    "noteStrong": "Matching IA",
+    "noteEnd": "pour maximiser vos chances d'obtenir des rendez-vous avec les entreprises participantes."
+  },
+  "password": {
+    "sectionTitle": "Choisissez votre mot de passe",
+    "label": "Mot de passe",
+    "placeholder": "Minimum 8 caractères",
+    "confirmLabel": "Confirmer le mot de passe",
+    "confirmPlaceholder": "Retapez votre mot de passe",
+    "toggleLabel": "Afficher/masquer",
+    "strength": {
+      "veryWeak": "Très faible",
+      "weak": "Faible",
+      "medium": "Moyen",
+      "strong": "Fort",
+      "veryStrong": "Très fort"
+    },
+    "errors": {
+      "tooShort": "Le mot de passe doit contenir au moins 8 caractères.",
+      "noMatch": "Les mots de passe ne correspondent pas.",
+      "generic": "Une erreur est survenue. Veuillez réessayer."
+    }
+  },
+  "form": {
+    "submit": "Créer le compte",
+    "successMessage": "Compte créé avec succès ! Connexion en cours…",
+    "note": "En créant un compte, vous acceptez nos",
+    "terms": "conditions d'utilisation",
+    "and": "et notre",
+    "privacy": "politique de confidentialité"
+  }
+}

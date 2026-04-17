@@ -8,10 +8,10 @@
         <div class="confirm-hero-inner">
           <span class="confirm-event-label">
             <i class="fa-solid fa-calendar-days"></i>&nbsp;
-            Africa Talent Summit — 5 &amp; 6 Novembre 2026
+            {{ t('talentConfirm.hero.eventLabel') }}
           </span>
           <p class="confirm-hero-title">
-            Construisez la carrière qui façonnera l'Afrique de demain
+            {{ t('talentConfirm.hero.title') }}
           </p>
         </div>
       </div>
@@ -25,9 +25,9 @@
             <i class="fa-solid fa-party-horn"></i>
           </div>
 
-          <h1 class="confirm-title">Merci pour votre inscription !</h1>
+          <h1 class="confirm-title">{{ t('talentConfirm.confirmation.title') }}</h1>
           <p class="confirm-subtitle">
-            Votre profil a bien été enregistré. Créez votre mot de passe pour accéder à votre espace personnel et finaliser votre candidature.
+            {{ t('talentConfirm.confirmation.subtitle') }}
           </p>
 
           <hr class="confirm-divider">
@@ -35,24 +35,24 @@
           <div class="confirm-note">
             <i class="fa-solid fa-circle-info"></i>
             <span>
-              Un e-mail de confirmation vous sera envoyé une fois votre compte créé. Pensez à compléter votre <strong>Matching IA</strong> pour maximiser vos chances d'obtenir des rendez-vous avec les entreprises participantes.
+              {{ t('talentConfirm.confirmation.note') }} <strong>{{ t('talentConfirm.confirmation.noteStrong') }}</strong> {{ t('talentConfirm.confirmation.noteEnd') }}
             </span>
           </div>
 
           <div class="confirm-section-label">
             <i class="fa-solid fa-lock"></i>
-            Choisissez votre mot de passe
+            {{ t('talentConfirm.password.sectionTitle') }}
           </div>
 
           <form @submit.prevent="handleCreate" novalidate>
             <div class="form-group">
-              <label class="form-label">Mot de passe <span class="required">*</span></label>
+              <label class="form-label">{{ t('talentConfirm.password.label') }} <span class="required">*</span></label>
               <div style="position:relative">
                 <input 
                   v-model="password" 
                   :type="showPassword ? 'text' : 'password'" 
                   class="form-input"
-                  placeholder="Minimum 8 caractères" 
+                  :placeholder="t('talentConfirm.password.placeholder')" 
                   required 
                   minlength="8"
                   style="padding-right:44px"
@@ -62,7 +62,7 @@
                   type="button" 
                   @click="showPassword = !showPassword"
                   style="position:absolute;right:12px;top:50%;transform:translateY(-50%);border:none;background:none;cursor:pointer;color:var(--body-text);font-size:15px"
-                  aria-label="Afficher/masquer"
+                  :aria-label="t('talentConfirm.password.toggleLabel')"
                 >
                   <i :class="showPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
                 </button>
@@ -70,13 +70,13 @@
             </div>
 
             <div class="form-group">
-              <label class="form-label">Confirmer le mot de passe <span class="required">*</span></label>
+              <label class="form-label">{{ t('talentConfirm.password.confirmLabel') }} <span class="required">*</span></label>
               <div style="position:relative">
                 <input 
                   v-model="passwordConfirmation" 
                   :type="showPasswordConfirm ? 'text' : 'password'"
                   class="form-input" 
-                  placeholder="Retapez votre mot de passe" 
+                  :placeholder="t('talentConfirm.password.confirmPlaceholder')" 
                   required
                   style="padding-right:44px"
                 >
@@ -84,7 +84,7 @@
                   type="button" 
                   @click="showPasswordConfirm = !showPasswordConfirm"
                   style="position:absolute;right:12px;top:50%;transform:translateY(-50%);border:none;background:none;cursor:pointer;color:var(--body-text);font-size:15px"
-                  aria-label="Afficher/masquer"
+                  :aria-label="t('talentConfirm.password.toggleLabel')"
                 >
                   <i :class="showPasswordConfirm ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
                 </button>
@@ -116,21 +116,21 @@
             </div>
             <div v-if="success" class="form-success visible">
               <i class="fa-solid fa-check-circle"></i>
-              Compte créé avec succès ! Connexion en cours…
+              {{ t('talentConfirm.form.successMessage') }}
             </div>
 
             <button type="submit" class="btn btn--blue btn--lg btn--block" :disabled="loading">
               <span v-if="loading" class="spinner"></span>
               <template v-else>
                 <i class="fa-solid fa-user-check"></i>
-                Créer le compte
+                {{ t('talentConfirm.form.submit') }}
               </template>
             </button>
 
             <p class="form-note">
-              En créant un compte, vous acceptez nos
-              <router-link to="/legal/terms-and-conditions">conditions d'utilisation</router-link> et notre
-              <router-link to="/legal/privacy-policy">politique de confidentialité</router-link>.
+              {{ t('talentConfirm.form.note') }}
+              <router-link to="/legal/terms-and-conditions">{{ t('talentConfirm.form.terms') }}</router-link> {{ t('talentConfirm.form.and') }}
+              <router-link to="/legal/privacy-policy">{{ t('talentConfirm.form.privacy') }}</router-link>.
             </p>
           </form>
         </div>
@@ -144,10 +144,12 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
 import api from '../services/api.js'
 
+const { t } = useI18n()
 const router = useRouter()
 const route = useRoute()
 
@@ -171,11 +173,11 @@ const strengthLevel = computed(() => {
   if (/[^A-Za-z0-9]/.test(val)) score++
 
   const levels = [
-    { width: '20%',  color: '#ef4444', text: 'Très faible' },
-    { width: '40%',  color: '#f97316', text: 'Faible' },
-    { width: '60%',  color: '#eab308', text: 'Moyen' },
-    { width: '80%',  color: '#22c55e', text: 'Fort' },
-    { width: '100%', color: '#16a34a', text: 'Très fort' },
+    { width: '20%',  color: '#ef4444', text: t('talentConfirm.password.strength.veryWeak') },
+    { width: '40%',  color: '#f97316', text: t('talentConfirm.password.strength.weak') },
+    { width: '60%',  color: '#eab308', text: t('talentConfirm.password.strength.medium') },
+    { width: '80%',  color: '#22c55e', text: t('talentConfirm.password.strength.strong') },
+    { width: '100%', color: '#16a34a', text: t('talentConfirm.password.strength.veryStrong') },
   ]
 
   return levels[Math.min(score - 1, 4)] || levels[0]
@@ -190,12 +192,12 @@ const handleCreate = async () => {
   success.value = false
 
   if (password.value.length < 8) {
-    error.value = 'Le mot de passe doit contenir au moins 8 caractères.'
+    error.value = t('talentConfirm.password.errors.tooShort')
     return
   }
 
   if (password.value !== passwordConfirmation.value) {
-    error.value = 'Les mots de passe ne correspondent pas.'
+    error.value = t('talentConfirm.password.errors.noMatch')
     return
   }
 
@@ -217,7 +219,7 @@ const handleCreate = async () => {
     }, 1200)
   } catch (err) {
     console.error('Erreur création mot de passe:', err)
-    error.value = err.response?.data?.message || 'Une erreur est survenue. Veuillez réessayer.'
+    error.value = err.response?.data?.message || t('talentConfirm.password.errors.generic')
   } finally {
     loading.value = false
   }
