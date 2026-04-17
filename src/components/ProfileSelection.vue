@@ -8,15 +8,15 @@
         <div class="hero-content">
           <div class="event-badge">
             <i class="fa-solid fa-calendar-days"></i>
-            Africa Talent Summit — 5 &amp; 6 Novembre 2026
+            {{ t('profileSelection.hero.eventBadge') }}
           </div>
           
           <h1 class="hero-title">
-            Choisissez votre profil
+            {{ t('profileSelection.hero.title') }}
           </h1>
           
           <p class="hero-subtitle">
-            Rejoignez le premier sommet panafricain dédié aux talents et aux entreprises qui construisent l'Afrique de demain
+            {{ t('profileSelection.hero.subtitle') }}
           </p>
         </div>
       </div>
@@ -33,39 +33,39 @@
               <i class="fa-solid fa-user-tie"></i>
             </div>
             
-            <h2 class="card-title">Je suis un Talent</h2>
+            <h2 class="card-title">{{ t('profileSelection.talent.title') }}</h2>
             
             <p class="card-description">
-              Accédez à des opportunités de carrière exceptionnelles auprès d'entreprises panafricaines ambitieuses
+              {{ t('profileSelection.talent.description') }}
             </p>
             
             <ul class="card-features">
               <li>
                 <i class="fa-solid fa-check-circle"></i>
-                <span>Accès aux offres panafricaines</span>
+                <span>{{ t('profileSelection.talent.features.access') }}</span>
               </li>
               <li>
                 <i class="fa-solid fa-check-circle"></i>
-                <span>Matching IA avec les entreprises</span>
+                <span>{{ t('profileSelection.talent.features.matching') }}</span>
               </li>
               <li>
                 <i class="fa-solid fa-check-circle"></i>
-                <span>Entretiens en direct à Luxembourg</span>
+                <span>{{ t('profileSelection.talent.features.interviews') }}</span>
               </li>
               <li>
                 <i class="fa-solid fa-check-circle"></i>
-                <span>Inscription 100% gratuite</span>
+                <span>{{ t('profileSelection.talent.features.free') }}</span>
               </li>
             </ul>
             
             <button class="card-btn talent-btn">
-              <span>S'inscrire comme Talent</span>
+              <span>{{ t('profileSelection.talent.button') }}</span>
               <i class="fa-solid fa-arrow-right"></i>
             </button>
             
             <div class="card-badge">
               <i class="fa-solid fa-users"></i>
-              2 000+ talents attendus
+              {{ t('profileSelection.talent.badge') }}
             </div>
           </div>
 
@@ -75,39 +75,39 @@
               <i class="fa-solid fa-building"></i>
             </div>
             
-            <h2 class="card-title">Je suis une Entreprise</h2>
+            <h2 class="card-title">{{ t('profileSelection.company.title') }}</h2>
             
             <p class="card-description">
-              Recrutez les meilleurs talents d'Afrique et de la diaspora pour accélérer votre croissance
+              {{ t('profileSelection.company.description') }}
             </p>
             
             <ul class="card-features">
               <li>
                 <i class="fa-solid fa-check-circle"></i>
-                <span>2 000+ talents présélectionnés</span>
+                <span>{{ t('profileSelection.company.features.talents') }}</span>
               </li>
               <li>
                 <i class="fa-solid fa-check-circle"></i>
-                <span>Matching IA par profil et poste</span>
+                <span>{{ t('profileSelection.company.features.matching') }}</span>
               </li>
               <li>
                 <i class="fa-solid fa-check-circle"></i>
-                <span>Entretiens planifiés sur 2 jours</span>
+                <span>{{ t('profileSelection.company.features.interviews') }}</span>
               </li>
               <li>
                 <i class="fa-solid fa-check-circle"></i>
-                <span>Accompagnement dédié</span>
+                <span>{{ t('profileSelection.company.features.support') }}</span>
               </li>
             </ul>
             
             <button class="card-btn entreprise-btn">
-              <span>S'inscrire comme Entreprise</span>
+              <span>{{ t('profileSelection.company.button') }}</span>
               <i class="fa-solid fa-arrow-right"></i>
             </button>
             
             <div class="card-badge">
               <i class="fa-solid fa-briefcase"></i>
-              150+ entreprises participantes
+              {{ t('profileSelection.company.badge') }}
             </div>
           </div>
 
@@ -119,28 +119,28 @@
     <section class="info-section">
       <div class="container">
         <div class="info-content">
-          <h3 class="info-title">Pourquoi participer au Summit ?</h3>
+          <h3 class="info-title">{{ t('profileSelection.whyParticipate.title') }}</h3>
           <div class="info-grid">
             <div class="info-item">
               <div class="info-icon">
                 <i class="fa-solid fa-globe-africa"></i>
               </div>
-              <h4>Portée panafricaine</h4>
-              <p>Connectez-vous avec des acteurs de 30+ pays africains</p>
+              <h4>{{ t('profileSelection.whyParticipate.panAfrican.title') }}</h4>
+              <p>{{ t('profileSelection.whyParticipate.panAfrican.description') }}</p>
             </div>
             <div class="info-item">
               <div class="info-icon">
                 <i class="fa-solid fa-brain"></i>
               </div>
-              <h4>Matching intelligent</h4>
-              <p>Notre IA optimise les rencontres selon vos besoins</p>
+              <h4>{{ t('profileSelection.whyParticipate.smartMatching.title') }}</h4>
+              <p>{{ t('profileSelection.whyParticipate.smartMatching.description') }}</p>
             </div>
             <div class="info-item">
               <div class="info-icon">
                 <i class="fa-solid fa-handshake"></i>
               </div>
-              <h4>Opportunités concrètes</h4>
-              <p>Des entretiens qualifiés, pas de simples rencontres</p>
+              <h4>{{ t('profileSelection.whyParticipate.opportunities.title') }}</h4>
+              <p>{{ t('profileSelection.whyParticipate.opportunities.description') }}</p>
             </div>
           </div>
         </div>
@@ -153,10 +153,12 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
 
 const router = useRouter()
+const { t } = useI18n()
 
 const goToTalentRegister = () => {
   router.push({ name: 'TalentRegister' })

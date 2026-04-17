@@ -10,6 +10,7 @@ import frEntreprises from './locales/fr/entreprises.json'
 import frBlog from './locales/fr/blog.json'
 import frEvenements from './locales/fr/evenements.json'
 import frCompany from './locales/fr/company.json'
+import frProfileSelection from './locales/fr/profileSelection.json'
 
 // Import English translations
 import enCommon from './locales/en/common.json'
@@ -21,6 +22,7 @@ import enEntreprises from './locales/en/entreprises.json'
 import enBlog from './locales/en/blog.json'
 import enEvenements from './locales/en/evenements.json'
 import enCompany from './locales/en/company.json'
+import enProfileSelection from './locales/en/profileSelection.json'
 
 // Merge translations with proper nesting
 const fr = {
@@ -32,7 +34,8 @@ const fr = {
   entreprises: frEntreprises,
   blog: frBlog,
   evenements: frEvenements,
-  company: frCompany
+  company: frCompany,
+  profileSelection: frProfileSelection
 }
 
 const en = {
@@ -44,7 +47,8 @@ const en = {
   entreprises: enEntreprises,
   blog: enBlog,
   evenements: enEvenements,
-  company: enCompany
+  company: enCompany,
+  profileSelection: enProfileSelection
 }
 
 const i18n = createI18n({
