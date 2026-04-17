@@ -1,0 +1,12 @@
+{
+  "mySpace": "Mon espace",
+  "title": "Mes favoris",
+  "subtitle": "Retrouvez toutes les offres que vous avez sauvegardées",
+  "emptyTitle": "Aucun favori pour le moment",
+  "emptyDesc": "Parcourez les offres d'emploi et ajoutez-les à vos favoris pour les retrouver facilement ici.",
+  "browseOffers": "Parcourir les offres",
+  "saved": "favori sauvegardé",
+  "savedPlural": "favoris sauvegardés",
+  "viewOffer": "Voir l'offre",
+  "remove": "Retirer des favoris"
+}
