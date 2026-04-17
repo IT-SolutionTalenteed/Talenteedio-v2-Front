@@ -8,14 +8,14 @@
         <div class="corp-hero-content">
           <div class="corp-event-badge">
             <i class="fa-solid fa-building"></i>
-            Africa Talent Summit — 5 &amp; 6 Novembre 2026
+            {{ t('corporateLanding.hero.eventBadge') }}
           </div>
           <h1 class="corp-hero-title">
-            Accédez aux talents que<br>
-            <em>votre croissance exige</em>
+            {{ t('corporateLanding.hero.title') }}<br>
+            <em>{{ t('corporateLanding.hero.titleEmphasis') }}</em>
           </h1>
           <p class="corp-hero-desc">
-            Rencontrez, les 5 et 6 novembre 2026, 2&nbsp;000 profils hautement qualifiés, présélectionnés pour répondre aux besoins réels des entreprises opérant en Afrique.
+            {{ t('corporateLanding.hero.description') }}
           </p>
         </div>
       </div>
@@ -61,63 +61,63 @@
               <div class="form-header">
                 <h2 class="form-title">
                   <i class="fa-solid fa-building-circle-check"></i>
-                  Rejoindre le Summit
+                  {{ t('corporateLanding.form.title') }}
                 </h2>
-                <p class="form-subtitle">Accédez aux meilleurs talents d'Afrique et de la diaspora</p>
+                <p class="form-subtitle">{{ t('corporateLanding.form.subtitle') }}</p>
               </div>
 
               <form @submit.prevent="handleSubmit" novalidate>
 
                 <div class="form-section-title">
                   <i class="fa-solid fa-user-tie"></i>
-                  Contact principal
+                  {{ t('corporateLanding.form.contactSection') }}
                 </div>
 
                 <div class="form-row">
                   <div class="form-group">
-                    <label class="form-label">Nom <span class="required">*</span></label>
-                    <input v-model="formData.nom" type="text" class="form-input" placeholder="Ex : Dupont" required>
+                    <label class="form-label">{{ t('corporateLanding.form.fields.lastName') }} <span class="required">*</span></label>
+                    <input v-model="formData.nom" type="text" class="form-input" :placeholder="t('corporateLanding.form.placeholders.lastName')" required>
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Prénom</label>
-                    <input v-model="formData.prenom" type="text" class="form-input" placeholder="Ex : Jean">
+                    <label class="form-label">{{ t('corporateLanding.form.fields.firstName') }}</label>
+                    <input v-model="formData.prenom" type="text" class="form-input" :placeholder="t('corporateLanding.form.placeholders.firstName')">
                   </div>
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Email professionnel <span class="required">*</span></label>
-                  <input v-model="formData.email" type="email" class="form-input" placeholder="contact@entreprise.com" required>
+                  <label class="form-label">{{ t('corporateLanding.form.fields.email') }} <span class="required">*</span></label>
+                  <input v-model="formData.email" type="email" class="form-input" :placeholder="t('corporateLanding.form.placeholders.email')" required>
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Téléphone <span class="required">*</span></label>
-                  <input v-model="formData.telephone" type="tel" class="form-input" placeholder="Ex : +352 691 000 000" required>
+                  <label class="form-label">{{ t('corporateLanding.form.fields.phone') }} <span class="required">*</span></label>
+                  <input v-model="formData.telephone" type="tel" class="form-input" :placeholder="t('corporateLanding.form.placeholders.phone')" required>
                 </div>
 
                 <div class="form-section-title">
                   <i class="fa-solid fa-building"></i>
-                  Informations entreprise
+                  {{ t('corporateLanding.form.companySection') }}
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Nom de l'entreprise <span class="required">*</span></label>
-                  <input v-model="formData.entreprise" type="text" class="form-input" placeholder="Ex : TechCorp Africa" required>
+                  <label class="form-label">{{ t('corporateLanding.form.fields.company') }} <span class="required">*</span></label>
+                  <input v-model="formData.entreprise" type="text" class="form-input" :placeholder="t('corporateLanding.form.placeholders.company')" required>
                 </div>
 
                 <div class="form-row">
                   <div class="form-group">
-                    <label class="form-label">Secteur d'activité <span class="required">*</span></label>
+                    <label class="form-label">{{ t('corporateLanding.form.fields.sector') }} <span class="required">*</span></label>
                     <select v-model="formData.secteur_souhaite_id" class="form-input" required>
-                      <option value="">Sélectionner...</option>
+                      <option value="">{{ t('corporateLanding.form.placeholders.sector') }}</option>
                       <option v-for="secteur in activitySectors" :key="secteur.id" :value="secteur.id">
                         {{ secteur.name }}
                       </option>
                     </select>
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Taille de l'entreprise <span class="required">*</span></label>
+                    <label class="form-label">{{ t('corporateLanding.form.fields.size') }} <span class="required">*</span></label>
                     <select v-model="formData.taille" class="form-input" required>
-                      <option value="">Sélectionner...</option>
+                      <option value="">{{ t('corporateLanding.form.placeholders.size') }}</option>
                       <option v-for="taille in tailles" :key="taille">{{ taille }}</option>
                     </select>
                   </div>
@@ -125,17 +125,17 @@
 
                 <div class="form-row">
                   <div class="form-group">
-                    <label class="form-label">Ville</label>
-                    <input v-model="formData.ville" type="text" class="form-input" placeholder="Ex : Abidjan">
+                    <label class="form-label">{{ t('corporateLanding.form.fields.city') }}</label>
+                    <input v-model="formData.ville" type="text" class="form-input" :placeholder="t('corporateLanding.form.placeholders.city')">
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Pays</label>
+                    <label class="form-label">{{ t('corporateLanding.form.fields.country') }}</label>
                     <select v-model="formData.pays" class="form-input">
-                      <option value="">Sélectionner...</option>
+                      <option value="">{{ t('corporateLanding.form.placeholders.country') }}</option>
                       <optgroup v-for="region in paysParRegion" :key="region.label" :label="region.label">
                         <option v-for="pays in region.pays" :key="pays">{{ pays }}</option>
                       </optgroup>
-                      <option>Autre</option>
+                      <option>{{ t('corporateLanding.regions.other') }}</option>
                     </select>
                   </div>
                 </div>
@@ -149,14 +149,14 @@
                   <span v-if="isSubmitting" class="spinner"></span>
                   <template v-else>
                     <i class="fa-solid fa-handshake"></i>
-                    Devenir partenaire
+                    {{ t('corporateLanding.form.submit') }}
                   </template>
                 </button>
 
                 <p class="form-note">
-                  En soumettant ce formulaire, vous acceptez nos
-                  <a href="/legal/terms-and-conditions">conditions d'utilisation</a> et notre
-                  <a href="/legal/privacy-policy">politique de confidentialité</a>.
+                  {{ t('corporateLanding.form.note') }}
+                  <a href="/legal/terms-and-conditions">{{ t('corporateLanding.form.terms') }}</a> {{ t('corporateLanding.form.and') }}
+                  <a href="/legal/privacy-policy">{{ t('corporateLanding.form.privacy') }}</a>.
                 </p>
               </form>
             </div>
@@ -169,14 +169,14 @@
               <div class="cta-icon">
                 <i class="fa-solid fa-phone-volume"></i>
               </div>
-              <h3 class="cta-title">Réserver un appel</h3>
+              <h3 class="cta-title">{{ t('corporateLanding.cta.title') }}</h3>
               <p class="cta-text">
-                Notre équipe est disponible pour vous présenter les opportunités du Summit et construire votre stratégie de recrutement.
+                {{ t('corporateLanding.cta.description') }}
               </p>
               <a href="https://calendly.com" target="_blank" rel="noopener"
                 class="btn btn--orange btn--lg btn--block">
                 <i class="fa-solid fa-calendar-check"></i>
-                Réserver un créneau
+                {{ t('corporateLanding.cta.button') }}
               </a>
             </div>
 
@@ -199,16 +199,16 @@
         <div class="event-footer-inner">
 
           <span class="section-badge" style="background:rgba(240,124,0,.2);color:#f07c00">
-            Africa Talent Summit Luxembourg
+            {{ t('corporateLanding.eventFooter.badge') }}
           </span>
 
           <h2 style="margin-top:16px">
-            Le rendez-vous des <em>talents et des entreprises</em><br>
-            qui bâtissent l'Afrique de demain
+            {{ t('corporateLanding.eventFooter.title') }} <em>{{ t('corporateLanding.eventFooter.titleEmphasis') }}</em><br>
+            {{ t('corporateLanding.eventFooter.titleEnd') }}
           </h2>
 
           <p>
-            Les 5 et 6 novembre 2026, Luxembourg accueille la première édition de l'Africa Talent Summit — deux jours d'échanges, d'entretiens et de connexions entre les entreprises les plus ambitieuses d'Afrique et les talents de la diaspora.
+            {{ t('corporateLanding.eventFooter.description') }}
           </p>
 
           <div class="event-kpis">
@@ -220,7 +220,7 @@
 
           <a href="#contact-form" class="btn btn--orange btn--lg" style="margin-top:8px">
             <i class="fa-solid fa-handshake"></i>
-            Devenir partenaire
+            {{ t('corporateLanding.eventFooter.button') }}
           </a>
         </div>
       </div>
@@ -231,6 +231,7 @@
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n'
 import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
 import api from '../services/api.js'
@@ -240,6 +241,10 @@ export default {
   components: {
     PublicNav,
     Footer
+  },
+  setup() {
+    const { t } = useI18n()
+    return { t }
   },
   data() {
     return {
@@ -257,51 +262,60 @@ export default {
       error: '',
       isSubmitting: false,
       activitySectors: [],
-      event: null,
-      tailles: [
-        '1–10 employés',
-        '11–50 employés',
-        '51–200 employés',
-        '201–500 employés',
-        '500+ employés'
-      ],
-      paysParRegion: [
+      event: null
+    }
+  },
+  computed: {
+    tailles() {
+      return [
+        this.t('corporateLanding.sizes.1-10'),
+        this.t('corporateLanding.sizes.11-50'),
+        this.t('corporateLanding.sizes.51-200'),
+        this.t('corporateLanding.sizes.201-500'),
+        this.t('corporateLanding.sizes.500+')
+      ]
+    },
+    paysParRegion() {
+      return [
         {
-          label: 'Europe',
+          label: this.t('corporateLanding.regions.europe'),
           pays: ['France', 'Luxembourg', 'Belgique', 'Suisse', 'Royaume-Uni', 'Allemagne', 'Pays-Bas']
         },
         {
-          label: 'Afrique de l\'Ouest',
+          label: this.t('corporateLanding.regions.westAfrica'),
           pays: ['Sénégal', 'Côte d\'Ivoire', 'Mali', 'Burkina Faso', 'Ghana', 'Nigeria', 'Togo', 'Bénin', 'Guinée', 'Niger']
         },
         {
-          label: 'Afrique Centrale',
+          label: this.t('corporateLanding.regions.centralAfrica'),
           pays: ['Cameroun', 'Congo (RDC)', 'Congo (Brazzaville)', 'Gabon']
         },
         {
-          label: 'Afrique du Nord',
+          label: this.t('corporateLanding.regions.northAfrica'),
           pays: ['Maroc', 'Tunisie', 'Algérie']
         },
         {
-          label: 'Afrique de l\'Est & Australe',
+          label: this.t('corporateLanding.regions.eastSouthAfrica'),
           pays: ['Kenya', 'Afrique du Sud', 'Rwanda', 'Éthiopie']
         }
-      ],
-      benefits: [
-        { icon: 'fa-solid fa-users', text: '2 000+ talents présélectionnés' },
-        { icon: 'fa-solid fa-brain', text: 'Matching IA par profil et poste' },
-        { icon: 'fa-solid fa-calendar-days', text: 'Entretiens planifiés sur 2 jours' },
-        { icon: 'fa-solid fa-globe-africa', text: 'Accès aux marchés panafricains' },
-        { icon: 'fa-solid fa-headset', text: 'Accompagnement dédié' }
-      ],
-      kpis: [
-        { number: '2 000+', label: 'Talents' },
-        { number: '2', label: 'Jours' },
-        { number: '30+', label: 'Pays représentés' },
-        { number: '100%', label: 'Présélectionné' }
       ]
-    }
-  },
+    },
+    benefits() {
+      return [
+        { icon: 'fa-solid fa-users', text: this.t('corporateLanding.benefits.talents') },
+        { icon: 'fa-solid fa-brain', text: this.t('corporateLanding.benefits.matching') },
+        { icon: 'fa-solid fa-calendar-days', text: this.t('corporateLanding.benefits.interviews') },
+        { icon: 'fa-solid fa-globe-africa', text: this.t('corporateLanding.benefits.markets') },
+        { icon: 'fa-solid fa-headset', text: this.t('corporateLanding.benefits.support') }
+      ]
+    },
+    kpis() {
+      return [
+        { number: '2 000+', label: this.t('corporateLanding.eventFooter.kpis.talents') },
+        { number: '2', label: this.t('corporateLanding.eventFooter.kpis.days') },
+        { number: '30+', label: this.t('corporateLanding.eventFooter.kpis.countries') },
+        { number: '100%', label: this.t('corporateLanding.eventFooter.kpis.preselected') }
+      ]
+    },
   computed: {
     carouselSlides() {
       if (!this.event?.entreprises?.length) return []
@@ -334,13 +348,13 @@ export default {
       const { nom, email, telephone, entreprise, secteur_souhaite_id, taille } = this.formData
 
       if (!nom || !email || !telephone || !entreprise || !secteur_souhaite_id || !taille) {
-        this.error = 'Veuillez remplir tous les champs obligatoires.'
+        this.error = this.t('corporateLanding.form.errors.required')
         return
       }
 
       const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       if (!emailRe.test(email)) {
-        this.error = 'Adresse e-mail invalide.'
+        this.error = this.t('corporateLanding.form.errors.invalidEmail')
         return
       }
 
@@ -365,7 +379,7 @@ export default {
         })
       } catch (err) {
         console.error('Erreur inscription:', err)
-        this.error = err.response?.data?.message || 'Une erreur est survenue. Veuillez réessayer.'
+        this.error = err.response?.data?.message || this.t('corporateLanding.form.errors.generic')
       } finally {
         this.isSubmitting = false
       }
