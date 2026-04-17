@@ -74,22 +74,24 @@
               </div>
 
               <!-- Informations de recrutement -->
-              <div v-if="offres.length || allSkills.length || allExperiences.length || allJobModes.length || firstProfilRecherche" class="ed-block">
+              <div v-if="offres.length || allSkills.length || allExperiences.length" class="ed-block">
                 <h2 class="ed-block-title"><i class="fa-solid fa-user-tie"></i> {{ t('entreprises.detail.recruitmentInfo') }}</h2>
 
-                <!-- Postes à pourvoir -->
+                <!-- Postes à pourvoir - Top 10 -->
                 <div v-if="offres.length" class="ed-recruit-row">
                   <div class="ed-recruit-label-col"><i class="fa-solid fa-briefcase"></i> {{ t('entreprises.detail.openPositions') }}</div>
                   <div class="ed-recruit-value-col">
-                    <span v-for="o in offres" :key="o.id" class="tag tag--blue">{{ o.titre }}</span>
+                    <span v-for="o in offres.slice(0, 10)" :key="o.id" class="tag tag--blue">{{ o.titre }}</span>
+                    <span v-if="offres.length > 10" class="tag tag--more">+{{ offres.length - 10 }}</span>
                   </div>
                 </div>
 
-                <!-- Compétences requises -->
+                <!-- Compétences requises - Top 10 -->
                 <div v-if="allSkills.length" class="ed-recruit-row">
                   <div class="ed-recruit-label-col"><i class="fa-solid fa-code"></i> {{ t('entreprises.detail.requiredSkills') }}</div>
                   <div class="ed-recruit-value-col">
-                    <span v-for="s in allSkills" :key="s" class="tag tag--gray">{{ s }}</span>
+                    <span v-for="s in allSkills.slice(0, 10)" :key="s" class="tag tag--gray">{{ s }}</span>
+                    <span v-if="allSkills.length > 10" class="tag tag--more">+{{ allSkills.length - 10 }}</span>
                   </div>
                 </div>
 
@@ -100,20 +102,6 @@
                     <span v-for="e in allExperiences" :key="e" class="tag tag--orange">{{ e }}</span>
                   </div>
                 </div>
-
-                <!-- Heures de travail -->
-                <div v-if="allJobModes.length" class="ed-recruit-row">
-                  <div class="ed-recruit-label-col"><i class="fa-solid fa-clock"></i> {{ t('entreprises.detail.workModes') }}</div>
-                  <div class="ed-recruit-value-col">
-                    <span v-for="m in allJobModes" :key="m" class="tag tag--blue">{{ m }}</span>
-                  </div>
-                </div>
-
-                <!-- Profil recherché -->
-                <div v-if="firstProfilRecherche" class="ed-recruit-row ed-recruit-row--full">
-                  <div class="ed-recruit-label-col"><i class="fa-solid fa-user-check"></i> {{ t('entreprises.detail.profileSought') }}</div>
-                  <div class="ed-recruit-value-col ed-rich" v-html="firstProfilRecherche"></div>
-                </div>
               </div>
 
               <!-- Offres d'emploi -->
@@ -122,11 +110,11 @@
                   <i class="fa-solid fa-briefcase"></i> {{ t('entreprises.detail.jobOffers') }}
                   <span class="ed-count">{{ offres.length }}</span>
                 </h2>
-                <div v-if="offres.length" class="ed-offres-list">
-                  <router-link v-for="o in offres" :key="o.id" :to="`/annonces/${o.id}`" class="ed-offre-card">
+                <div class="ed-offres-list">
+                  <router-link v-for="o in displayedOffres" :key="o.id" :to="`/annonces/${o.id}`" class="ed-offre-card">
                     <div class="ed-offre-body">
                       <div class="ed-offre-tags">
-                        <span v-for="c in o.job_contracts" :key="c.id" class="tag tag--blue">{{ c.name }}</span>
+                        <span v-for="c in o.job_contracts?.slice(0, 2)" :key="c.id" class="tag tag--blue">{{ c.name }}</span>
                       </div>
                       <h3 class="ed-offre-title">{{ o.titre }}</h3>
                       <div class="ed-offre-meta">
@@ -137,7 +125,12 @@
                     <div class="ed-offre-arrow"><i class="fa-solid fa-chevron-right"></i></div>
                   </router-link>
                 </div>
-                <p v-else class="ed-empty">{{ t('entreprises.detail.noOffers') }}</p>
+                <button v-if="hasMoreOffres && !showAllOffres" @click="showAllOffres = true" class="btn-show-more">
+                  <i class="fa-solid fa-chevron-down"></i> {{ t('entreprises.detail.showMore') }} ({{ offres.length - OFFRES_LIMIT }})
+                </button>
+                <button v-if="showAllOffres" @click="showAllOffres = false" class="btn-show-more">
+                  <i class="fa-solid fa-chevron-up"></i> {{ t('entreprises.detail.showLess') }}
+                </button>
               </div>
 
               <!-- Événements à venir -->
@@ -166,7 +159,7 @@
                   <span class="ed-count">{{ articles.length }}</span>
                 </h2>
                 <div class="ed-articles-grid">
-                  <router-link v-for="a in articles" :key="a.id" :to="`/blog/${a.id}`" class="ed-article-card">
+                  <router-link v-for="a in displayedArticles" :key="a.id" :to="`/blog/${a.id}`" class="ed-article-card">
                     <div class="ed-article-img">
                       <img v-if="a.image_url" :src="a.image_url" :alt="a.title" />
                       <div v-else class="ed-article-placeholder"><i class="fa-solid fa-newspaper"></i></div>
@@ -178,6 +171,12 @@
                     </div>
                   </router-link>
                 </div>
+                <button v-if="hasMoreArticles && !showAllArticles" @click="showAllArticles = true" class="btn-show-more">
+                  <i class="fa-solid fa-chevron-down"></i> {{ t('entreprises.detail.showMore') }} ({{ articles.length - ARTICLES_LIMIT }})
+                </button>
+                <button v-if="showAllArticles" @click="showAllArticles = false" class="btn-show-more">
+                  <i class="fa-solid fa-chevron-up"></i> {{ t('entreprises.detail.showLess') }}
+                </button>
               </div>
 
             </div>
@@ -257,6 +256,25 @@ const entreprise = computed(() => data.value?.entreprise)
 const offres     = computed(() => data.value?.offres || [])
 const articles   = computed(() => data.value?.articles || [])
 const evenements = computed(() => data.value?.evenements || [])
+
+// Limites d'affichage
+const showAllOffres = ref(false)
+const showAllArticles = ref(false)
+const OFFRES_LIMIT = 6
+const ARTICLES_LIMIT = 6
+
+const displayedOffres = computed(() => {
+  if (showAllOffres.value) return offres.value
+  return offres.value.slice(0, OFFRES_LIMIT)
+})
+
+const displayedArticles = computed(() => {
+  if (showAllArticles.value) return articles.value
+  return articles.value.slice(0, ARTICLES_LIMIT)
+})
+
+const hasMoreOffres = computed(() => offres.value.length > OFFRES_LIMIT)
+const hasMoreArticles = computed(() => articles.value.length > ARTICLES_LIMIT)
 
 const allSkills = computed(() => {
   const set = new Set()
@@ -489,9 +507,23 @@ onMounted(load)
 .ed-recruit-empty { font-size: 13px; color: var(--body-text); }
 .tag--gray   { background: #f1f5f9; color: var(--navy); }
 .tag--orange { background: #fff3e0; color: #e65100; }
+.tag--more   { background: #e2e8f0; color: var(--body-text); font-style: italic; }
 .ed-rich { font-size: 13px; color: var(--navy); line-height: 1.7; }
 .ed-rich :deep(p) { margin: 0 0 8px; }
 .ed-rich :deep(ul) { padding-left: 18px; margin: 4px 0; }
+
+/* Bouton Voir plus */
+.btn-show-more {
+  width: 100%; margin-top: 16px; padding: 12px;
+  background: #f8fafc; border: 1.5px solid var(--border, #e2e8f0);
+  border-radius: 8px; font-size: 13px; font-weight: 600;
+  color: var(--blue); cursor: pointer;
+  transition: all .2s; display: flex; align-items: center;
+  justify-content: center; gap: 8px;
+}
+.btn-show-more:hover {
+  background: #f1f5f9; border-color: var(--blue);
+}
 
 /* Événements */
 .ed-events-list { display: flex; flex-direction: column; gap: 12px; }
