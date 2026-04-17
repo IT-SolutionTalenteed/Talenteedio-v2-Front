@@ -1,0 +1,51 @@
+{
+  "hero": {
+    "eventLabel": "Africa Talent Summit — November 5 & 6, 2026",
+    "title": "Access the talents that your growth demands"
+  },
+  "confirmation": {
+    "title": "Thank you for your registration!",
+    "subtitle": "Your partnership request has been successfully recorded.",
+    "subtitleContinue": "Complete your registration by creating your password —",
+    "subtitleContact": "we will contact you as soon as possible",
+    "subtitleEnd": "to present the Summit opportunities.",
+    "note": "A confirmation email will be sent to you as soon as your account is active. Our team will contact you",
+    "noteStrong": "as soon as possible",
+    "noteEnd": "for an initial no-obligation discussion.",
+    "contactNote": "You can also reach us directly at",
+    "contactPhone": "+352 20 60 162",
+    "contactOr": "or by email at",
+    "contactEmail": "contact@africatalentsummit.com"
+  },
+  "password": {
+    "sectionTitle": "Choose your password",
+    "label": "Password",
+    "placeholder": "Minimum 8 characters",
+    "confirmLabel": "Confirm password",
+    "confirmPlaceholder": "Retype your password",
+    "toggleLabel": "Show/hide",
+    "strength": {
+      "veryWeak": "Very weak",
+      "weak": "Weak",
+      "medium": "Medium",
+      "strong": "Strong",
+      "veryStrong": "Very strong"
+    },
+    "errors": {
+      "tooShort": "Password must contain at least 8 characters.",
+      "noMatch": "Passwords do not match."
+    }
+  },
+  "form": {
+    "submit": "Complete my registration",
+    "submitSuccess": "Registration completed",
+    "successMessage": "Account created! Our team will contact you very soon.",
+    "note": "By creating an account, you accept our",
+    "terms": "terms and conditions",
+    "and": "and our",
+    "privacy": "privacy policy"
+  },
+  "footer": {
+    "copyright": "Solution Talenteed SARL R.C.S. Luxembourg B 255 801. All rights reserved."
+  }
+}

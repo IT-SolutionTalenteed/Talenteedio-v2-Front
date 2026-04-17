@@ -8,10 +8,10 @@
         <div class="confirm-hero-inner">
           <span class="confirm-event-label">
             <i class="fa-solid fa-building"></i>&nbsp;
-            Africa Talent Summit — 5 &amp; 6 Novembre 2026
+            {{ t('corporateConfirm.hero.eventLabel') }}
           </span>
           <p class="confirm-hero-title">
-            Accédez aux talents que votre croissance exige
+            {{ t('corporateConfirm.hero.title') }}
           </p>
         </div>
       </div>
@@ -26,10 +26,10 @@
             <i class="fa-solid fa-handshake"></i>
           </div>
 
-          <h1 class="confirm-title">Merci pour votre inscription !</h1>
+          <h1 class="confirm-title">{{ t('corporateConfirm.confirmation.title') }}</h1>
           <p class="confirm-subtitle">
-            Votre demande de partenariat a bien été enregistrée.<br>
-            Finalisez votre inscription en créant votre mot de passe — <strong>nous vous recontacterons dans les meilleurs délais</strong> pour vous présenter les opportunités du Summit.
+            {{ t('corporateConfirm.confirmation.subtitle') }}<br>
+            {{ t('corporateConfirm.confirmation.subtitleContinue') }} <strong>{{ t('corporateConfirm.confirmation.subtitleContact') }}</strong> {{ t('corporateConfirm.confirmation.subtitleEnd') }}
           </p>
 
           <hr class="confirm-divider">
@@ -37,32 +37,32 @@
           <div class="confirm-note">
             <i class="fa-solid fa-circle-check"></i>
             <span>
-              Un e-mail de confirmation vous sera envoyé dès que votre compte sera actif. Notre équipe vous contactera <strong>dans les meilleurs délais</strong> pour un premier échange sans engagement.
+              {{ t('corporateConfirm.confirmation.note') }} <strong>{{ t('corporateConfirm.confirmation.noteStrong') }}</strong> {{ t('corporateConfirm.confirmation.noteEnd') }}
             </span>
           </div>
 
           <div class="confirm-recall-note">
             <i class="fa-solid fa-phone-volume"></i>
             <span>
-              Vous pouvez également nous joindre directement au <strong><a href="tel:+3522060162" style="color:var(--blue)">+352 20 60 162</a></strong> ou par e-mail à <strong><a href="mailto:contact@africatalentsummit.com" style="color:var(--blue)">contact@africatalentsummit.com</a></strong>.
+              {{ t('corporateConfirm.confirmation.contactNote') }} <strong><a :href="`tel:${t('corporateConfirm.confirmation.contactPhone')}`" style="color:var(--blue)">{{ t('corporateConfirm.confirmation.contactPhone') }}</a></strong> {{ t('corporateConfirm.confirmation.contactOr') }} <strong><a :href="`mailto:${t('corporateConfirm.confirmation.contactEmail')}`" style="color:var(--blue)">{{ t('corporateConfirm.confirmation.contactEmail') }}</a></strong>.
             </span>
           </div>
 
           <div class="confirm-section-label">
             <i class="fa-solid fa-lock"></i>
-            Choisissez votre mot de passe
+            {{ t('corporateConfirm.password.sectionTitle') }}
           </div>
 
           <form @submit.prevent="handleSubmit" novalidate>
 
             <div class="form-group">
-              <label class="form-label">Mot de passe <span class="required">*</span></label>
+              <label class="form-label">{{ t('corporateConfirm.password.label') }} <span class="required">*</span></label>
               <div style="position:relative">
                 <input 
                   v-model="password" 
                   :type="showPassword ? 'text' : 'password'" 
                   class="form-input"
-                  placeholder="Minimum 8 caractères" 
+                  :placeholder="t('corporateConfirm.password.placeholder')" 
                   required 
                   minlength="8"
                   style="padding-right:44px"
@@ -71,27 +71,27 @@
                   type="button" 
                   @click="showPassword = !showPassword"
                   style="position:absolute;right:12px;top:50%;transform:translateY(-50%);border:none;background:none;cursor:pointer;color:var(--body-text);font-size:15px"
-                  aria-label="Afficher/masquer">
+                  :aria-label="t('corporateConfirm.password.toggleLabel')">
                   <i :class="showPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
                 </button>
               </div>
             </div>
 
             <div class="form-group">
-              <label class="form-label">Confirmer le mot de passe <span class="required">*</span></label>
+              <label class="form-label">{{ t('corporateConfirm.password.confirmLabel') }} <span class="required">*</span></label>
               <div style="position:relative">
                 <input 
                   v-model="passwordConfirmation" 
                   :type="showPasswordConfirm ? 'text' : 'password'"
                   class="form-input" 
-                  placeholder="Retapez votre mot de passe" 
+                  :placeholder="t('corporateConfirm.password.confirmPlaceholder')" 
                   required
                   style="padding-right:44px">
                 <button 
                   type="button" 
                   @click="showPasswordConfirm = !showPasswordConfirm"
                   style="position:absolute;right:12px;top:50%;transform:translateY(-50%);border:none;background:none;cursor:pointer;color:var(--body-text);font-size:15px"
-                  aria-label="Afficher/masquer">
+                  :aria-label="t('corporateConfirm.password.toggleLabel')">
                   <i :class="showPasswordConfirm ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
                 </button>
               </div>
@@ -121,25 +121,25 @@
             </div>
             <div v-if="success" class="form-success visible">
               <i class="fa-solid fa-check-circle"></i>
-              Compte créé ! Notre équipe vous contactera très prochainement.
+              {{ t('corporateConfirm.form.successMessage') }}
             </div>
 
             <button type="submit" class="btn btn--orange btn--lg btn--block" :disabled="isSubmitting">
               <span v-if="isSubmitting" class="spinner"></span>
               <template v-else-if="success">
                 <i class="fa-solid fa-check"></i>
-                Inscription finalisée
+                {{ t('corporateConfirm.form.submitSuccess') }}
               </template>
               <template v-else>
                 <i class="fa-solid fa-user-check"></i>
-                Finaliser mon inscription
+                {{ t('corporateConfirm.form.submit') }}
               </template>
             </button>
 
             <p class="form-note">
-              En créant un compte, vous acceptez nos
-              <a href="/legal/terms-and-conditions">conditions d'utilisation</a> et notre
-              <a href="/legal/privacy-policy">politique de confidentialité</a>.
+              {{ t('corporateConfirm.form.note') }}
+              <a href="/legal/terms-and-conditions">{{ t('corporateConfirm.form.terms') }}</a> {{ t('corporateConfirm.form.and') }}
+              <a href="/legal/privacy-policy">{{ t('corporateConfirm.form.privacy') }}</a>.
             </p>
           </form>
 
@@ -152,7 +152,7 @@
       <div class="container">
         <p style="color:rgba(255,255,255,.5);font-size:12px;text-align:center;padding:16px 0">
           © {{ currentYear }}
-          Solution Talenteed SARL R.C.S. Luxembourg B 255 801. Tous droits réservés.
+          {{ t('corporateConfirm.footer.copyright') }}
         </p>
       </div>
     </div>
@@ -162,6 +162,7 @@
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n'
 import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
 
@@ -170,6 +171,10 @@ export default {
   components: {
     PublicNav,
     Footer
+  },
+  setup() {
+    const { t } = useI18n()
+    return { t }
   },
   data() {
     return {
@@ -189,11 +194,11 @@ export default {
     },
     strengthLevel() {
       const levels = [
-        { width: '20%', color: '#ef4444', text: 'Très faible' },
-        { width: '40%', color: '#f97316', text: 'Faible' },
-        { width: '60%', color: '#eab308', text: 'Moyen' },
-        { width: '80%', color: '#22c55e', text: 'Fort' },
-        { width: '100%', color: '#16a34a', text: 'Très fort' }
+        { width: '20%', color: '#ef4444', text: this.t('corporateConfirm.password.strength.veryWeak') },
+        { width: '40%', color: '#f97316', text: this.t('corporateConfirm.password.strength.weak') },
+        { width: '60%', color: '#eab308', text: this.t('corporateConfirm.password.strength.medium') },
+        { width: '80%', color: '#22c55e', text: this.t('corporateConfirm.password.strength.strong') },
+        { width: '100%', color: '#16a34a', text: this.t('corporateConfirm.password.strength.veryStrong') }
       ]
       return levels[Math.min(this.strengthScore - 1, 4)] || levels[0]
     }
@@ -221,12 +226,12 @@ export default {
       this.success = false
 
       if (this.password.length < 8) {
-        this.error = 'Le mot de passe doit contenir au moins 8 caractères.'
+        this.error = this.t('corporateConfirm.password.errors.tooShort')
         return
       }
 
       if (this.password !== this.passwordConfirmation) {
-        this.error = 'Les mots de passe ne correspondent pas.'
+        this.error = this.t('corporateConfirm.password.errors.noMatch')
         return
       }
 

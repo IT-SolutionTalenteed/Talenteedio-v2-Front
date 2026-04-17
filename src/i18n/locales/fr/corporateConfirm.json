@@ -1,0 +1,51 @@
+{
+  "hero": {
+    "eventLabel": "Africa Talent Summit — 5 & 6 Novembre 2026",
+    "title": "Accédez aux talents que votre croissance exige"
+  },
+  "confirmation": {
+    "title": "Merci pour votre inscription !",
+    "subtitle": "Votre demande de partenariat a bien été enregistrée.",
+    "subtitleContinue": "Finalisez votre inscription en créant votre mot de passe —",
+    "subtitleContact": "nous vous recontacterons dans les meilleurs délais",
+    "subtitleEnd": "pour vous présenter les opportunités du Summit.",
+    "note": "Un e-mail de confirmation vous sera envoyé dès que votre compte sera actif. Notre équipe vous contactera",
+    "noteStrong": "dans les meilleurs délais",
+    "noteEnd": "pour un premier échange sans engagement.",
+    "contactNote": "Vous pouvez également nous joindre directement au",
+    "contactPhone": "+352 20 60 162",
+    "contactOr": "ou par e-mail à",
+    "contactEmail": "contact@africatalentsummit.com"
+  },
+  "password": {
+    "sectionTitle": "Choisissez votre mot de passe",
+    "label": "Mot de passe",
+    "placeholder": "Minimum 8 caractères",
+    "confirmLabel": "Confirmer le mot de passe",
+    "confirmPlaceholder": "Retapez votre mot de passe",
+    "toggleLabel": "Afficher/masquer",
+    "strength": {
+      "veryWeak": "Très faible",
+      "weak": "Faible",
+      "medium": "Moyen",
+      "strong": "Fort",
+      "veryStrong": "Très fort"
+    },
+    "errors": {
+      "tooShort": "Le mot de passe doit contenir au moins 8 caractères.",
+      "noMatch": "Les mots de passe ne correspondent pas."
+    }
+  },
+  "form": {
+    "submit": "Finaliser mon inscription",
+    "submitSuccess": "Inscription finalisée",
+    "successMessage": "Compte créé ! Notre équipe vous contactera très prochainement.",
+    "note": "En créant un compte, vous acceptez nos",
+    "terms": "conditions d'utilisation",
+    "and": "et notre",
+    "privacy": "politique de confidentialité"
+  },
+  "footer": {
+    "copyright": "Solution Talenteed SARL R.C.S. Luxembourg B 255 801. Tous droits réservés."
+  }
+}
