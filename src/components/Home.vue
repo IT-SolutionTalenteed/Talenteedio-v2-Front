@@ -5,11 +5,6 @@
 
     <!-- ══ HERO SECTION — Style moderne inspiré de zai.html ══ -->
     <section class="hero-modern">
-      <!-- Floating shapes -->
-      <div class="floating-shape floating-shape-1"></div>
-      <div class="floating-shape floating-shape-2"></div>
-      <div class="floating-shape floating-shape-3"></div>
-
       <div class="container">
         <div class="hero-grid">
           <div class="hero-content">
@@ -915,42 +910,6 @@ body {
   padding-top: 120px;
 }
 
-/* Floating shapes */
-.floating-shape {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  animation: float 8s ease-in-out infinite;
-  pointer-events: none;
-}
-
-.floating-shape-1 {
-  width: 384px;
-  height: 384px;
-  background: rgba(240, 124, 0, 0.2);
-  top: 80px;
-  left: -192px;
-  animation-delay: 0s;
-}
-
-.floating-shape-2 {
-  width: 256px;
-  height: 256px;
-  background: rgba(25, 43, 194, 0.15);
-  bottom: 160px;
-  right: 80px;
-  animation-delay: 2s;
-}
-
-.floating-shape-3 {
-  width: 320px;
-  height: 320px;
-  background: rgba(240, 124, 0, 0.1);
-  top: 50%;
-  left: 33%;
-  animation-delay: 4s;
-}
-
 .hero-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1630,10 +1589,6 @@ section {
 @media (max-width: 640px) {
   .hero-modern {
     padding-top: 100px;
-  }
-  
-  .floating-shape {
-    display: none !important;
   }
   
   .hero-actions {
