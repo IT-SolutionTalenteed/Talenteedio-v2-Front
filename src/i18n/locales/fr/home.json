@@ -2,13 +2,40 @@
   "hero": {
     "defaultTitle": "Africa Talent Summit",
     "defaultLocation": "Luxembourg",
-    "defaultDescription": "La première plateforme européenne qui mobilise le Talent africain pour accélérer la performance des entreprises en Afrique.",
+    "defaultDescription": "Le plus grand rassemblement des talents africains et des leaders qui façonnent l'avenir du continent.",
     "subscriptionsOpen": "LES SOUSCRIPTIONS SONT OUVERTES – RÉSERVEZ VOTRE PLACE",
     "subscribe": "Souscrire",
+    "viewProgram": "Voir le programme",
     "days": "Jours",
     "hours": "Heures",
     "minutes": "Minutes",
     "seconds": "Secondes"
+  },
+  "about": {
+    "label": "À propos",
+    "title": "Révolutionner le paysage des talents africains",
+    "description1": "L'Africa Talent Summit est la plateforme de référence pour la découverte, le développement et la connexion des talents africains avec les opportunités mondiales.",
+    "description2": "Durant trois jours, rejoignez des milliers de professionnels, entrepreneurs, investisseurs et décideurs pour façonner ensemble l'avenir du travail en Afrique.",
+    "networking": {
+      "title": "Networking",
+      "description": "Connectez-vous avec des leaders de l'industrie africaine"
+    },
+    "innovation": {
+      "title": "Innovation",
+      "description": "Découvrez les dernières tendances et innovations"
+    }
+  },
+  "stats": {
+    "participants": "Participants attendus",
+    "speakers": "Intervenants",
+    "countries": "Pays représentés",
+    "sessions": "Sessions & Ateliers"
+  },
+  "cta": {
+    "title": "Prêt à rejoindre le mouvement?",
+    "description": "Ne manquez pas cette opportunité unique de connecter avec les meilleurs talents et leaders d'Afrique.",
+    "earlyBird": "Inscription early bird",
+    "becomePartner": "Devenir partenaire"
   },
   "quicklinks": {
     "findJob": {
@@ -66,12 +93,6 @@
   },
   "eventSection": {
     "participate": "Participez"
-  },
-  "cta": {
-    "watermark": "Participez",
-    "label": "Rejoignez-nous",
-    "title": "Entreprises, talents, institutions, partenaires",
-    "action": "Participez"
   },
   "tagline": "Le média alternatif pour les RH"
 }

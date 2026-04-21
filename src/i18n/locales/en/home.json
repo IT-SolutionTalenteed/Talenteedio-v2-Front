@@ -2,13 +2,40 @@
   "hero": {
     "defaultTitle": "Africa Talent Summit",
     "defaultLocation": "Luxembourg",
-    "defaultDescription": "The first European platform mobilizing African Talent to accelerate business performance in Africa.",
+    "defaultDescription": "The largest gathering of African talents and leaders shaping the future of the continent.",
     "subscriptionsOpen": "SUBSCRIPTIONS ARE OPEN – RESERVE YOUR SPOT",
     "subscribe": "Subscribe",
+    "viewProgram": "View program",
     "days": "Days",
     "hours": "Hours",
     "minutes": "Minutes",
     "seconds": "Seconds"
+  },
+  "about": {
+    "label": "About",
+    "title": "Revolutionizing the African talent landscape",
+    "description1": "The Africa Talent Summit is the reference platform for discovering, developing and connecting African talents with global opportunities.",
+    "description2": "For three days, join thousands of professionals, entrepreneurs, investors and decision-makers to shape the future of work in Africa together.",
+    "networking": {
+      "title": "Networking",
+      "description": "Connect with African industry leaders"
+    },
+    "innovation": {
+      "title": "Innovation",
+      "description": "Discover the latest trends and innovations"
+    }
+  },
+  "stats": {
+    "participants": "Expected participants",
+    "speakers": "Speakers",
+    "countries": "Countries represented",
+    "sessions": "Sessions & Workshops"
+  },
+  "cta": {
+    "title": "Ready to join the movement?",
+    "description": "Don't miss this unique opportunity to connect with the best talents and leaders in Africa.",
+    "earlyBird": "Early bird registration",
+    "becomePartner": "Become a partner"
   },
   "quicklinks": {
     "findJob": {
@@ -39,21 +66,21 @@
     "viewAll": "View all companies"
   },
   "triple": {
-    "watermark": "Systemic Impact",
-    "title": "Triple Strategic Anchoring",
-    "description": "To ensure systemic and lasting impact, the summit is based on three inseparable pillars, designed to transform intention into action:",
+    "watermark": "Our Blog",
+    "title": "Blog Articles",
+    "description": "Career advice, HR news and African labor market analysis, written by our experts to help you advance:",
     "readMore": "Read more",
     "thinkTank": {
-      "title": "Think Tank",
-      "description": "An international Scientific Committee composed of researchers, HR experts and decision-makers produces a reference White Paper each year."
+      "title": "Career Advice",
+      "description": "Optimize your CV, prepare for interviews and discover best practices to land your dream job."
     },
     "recruitmentHub": {
-      "title": "Premium Recruitment Hub",
-      "description": "A direct matching platform between companies seeking critical skills and diaspora talents."
+      "title": "HR News",
+      "description": "Stay informed about the latest trends in human resources, market developments and emerging opportunities in Africa."
     },
     "diplomacy": {
-      "title": "Economic Diplomacy Lever",
-      "description": "A privileged framework for signing bilateral agreements and strengthening Europe-Africa institutional partnerships."
+      "title": "Market Trends",
+      "description": "In-depth analysis of recruiting sectors, most sought-after skills and Europe-Africa economic dynamics."
     }
   },
   "jobOffers": {
@@ -66,12 +93,6 @@
   },
   "eventSection": {
     "participate": "Participate"
-  },
-  "cta": {
-    "watermark": "Participate",
-    "label": "Join us",
-    "title": "Companies, talents, institutions, partners",
-    "action": "Participate"
   },
   "tagline": "The alternative media for HR"
 }

@@ -1,6 +1,25 @@
 <template>
   <div class="home-page">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Language Switcher -->
+    <div class="language-switcher">
+      <button 
+        @click="switchLanguage('fr')" 
+        :class="{ active: locale === 'fr' }"
+        class="lang-btn"
+      >
+        FR
+      </button>
+      <button 
+        @click="switchLanguage('en')" 
+        :class="{ active: locale === 'en' }"
+        class="lang-btn"
+      >
+        EN
+      </button>
+    </div>
+
     <PublicNav />
 
     <!-- ══ HERO SECTION — Style moderne inspiré de zai.html ══ -->
@@ -17,14 +36,14 @@
             <h1 class="hero-title animate-on-scroll stagger-2">
               <span v-if="event">{{ event.titre }}</span>
               <span v-else>
-                Africa Talent Summit
-                <span class="gradient-text">Luxembourg</span>
+                {{ t('home.hero.defaultTitle') }}
+                <span class="gradient-text">{{ t('home.hero.defaultLocation') }}</span>
               </span>
             </h1>
 
             <p class="hero-description animate-on-scroll stagger-3">
               <span v-if="event">{{ event.ville }}{{ event.pays ? ', ' + event.pays : '' }}</span>
-              <span v-else>Le plus grand rassemblement des talents africains et des leaders qui façonnent l'avenir du continent.</span>
+              <span v-else>{{ t('home.hero.defaultDescription') }}</span>
             </p>
 
             <div class="hero-actions animate-on-scroll stagger-4">
@@ -32,7 +51,7 @@
                 {{ t('home.hero.subscribe') }}
               </router-link>
               <router-link to="/blog" class="btn-secondary">
-                Voir le programme
+                {{ t('home.hero.viewProgram') }}
               </router-link>
             </div>
 
@@ -63,12 +82,12 @@
               <div class="hero-stats-overlay">
                 <div class="stat-item">
                   <div class="stat-number">5000+</div>
-                  <div class="stat-label">Participants</div>
+                  <div class="stat-label">{{ t('home.stats.participants') }}</div>
                 </div>
                 <div class="stat-divider"></div>
                 <div class="stat-item">
                   <div class="stat-number">50+</div>
-                  <div class="stat-label">Pays</div>
+                  <div class="stat-label">{{ t('home.stats.countries') }}</div>
                 </div>
               </div>
             </div>
@@ -92,8 +111,8 @@
           <router-link to="/annonces" class="ql-card animate-on-scroll">
             <div class="ql-icon"><i class="fa-solid fa-briefcase"></i></div>
             <div class="ql-body">
-              <h3>Trouver un emploi</h3>
-              <p>Votre porte d'entrée vers des possibilités infinies et des opportunités de carrière passionnantes</p>
+              <h3>{{ t('home.quicklinks.findJob.title') }}</h3>
+              <p>{{ t('home.quicklinks.findJob.description') }}</p>
               <span class="ql-link">{{ t('home.quicklinks.findJob.action') }} <i class="fa-solid fa-arrow-right"></i></span>
             </div>
           </router-link>
@@ -133,9 +152,9 @@
     <section v-if="event && event.entreprises && event.entreprises.length" class="section-partners">
       <div class="container">
         <div class="partners-header animate-on-scroll">
-          <span class="section-label">Ils recrutent</span>
-          <h2 class="section-title">Entreprises Participantes</h2>
-          <p class="section-description">Les entreprises qui recrutent lors de cet événement</p>
+          <span class="section-label">{{ t('home.partners.label') }}</span>
+          <h2 class="section-title">{{ t('home.partners.title') }}</h2>
+          <p class="section-description">{{ t('home.partners.description') }}</p>
         </div>
       </div>
       <!-- Carrousel infini pleine largeur — style logo-track -->
@@ -178,17 +197,15 @@
       <div class="container">
         <div class="about-grid">
           <div class="about-content animate-on-scroll">
-            <span class="section-label">À propos</span>
+            <span class="section-label">{{ t('home.about.label') }}</span>
             <h2 class="section-title">
-              Révolutionner le paysage des talents africains
+              {{ t('home.about.title') }}
             </h2>
             <p class="section-description">
-              L'Africa Talent Summit est la plateforme de référence pour la découverte, le développement et 
-              la connexion des talents africains avec les opportunités mondiales.
+              {{ t('home.about.description1') }}
             </p>
             <p class="section-description">
-              Durant trois jours, rejoignez des milliers de professionnels, entrepreneurs, investisseurs et 
-              décideurs pour façonner ensemble l'avenir du travail en Afrique.
+              {{ t('home.about.description2') }}
             </p>
 
             <div class="feature-cards">
@@ -198,8 +215,8 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m-9 9a9 9 0 019-9"></path>
                   </svg>
                 </div>
-                <h3>Networking</h3>
-                <p>Connectez-vous avec des leaders de l'industrie africaine</p>
+                <h3>{{ t('home.about.networking.title') }}</h3>
+                <p>{{ t('home.about.networking.description') }}</p>
               </div>
               <div class="feature-card">
                 <div class="feature-icon feature-icon--blue">
@@ -207,8 +224,8 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                   </svg>
                 </div>
-                <h3>Innovation</h3>
-                <p>Découvrez les dernières tendances et innovations</p>
+                <h3>{{ t('home.about.innovation.title') }}</h3>
+                <p>{{ t('home.about.innovation.description') }}</p>
               </div>
             </div>
           </div>
@@ -247,19 +264,19 @@
         <div class="stats-grid">
           <div class="stat-card animate-on-scroll">
             <div class="stat-number-large" data-count="5000">0</div>
-            <div class="stat-description">Participants attendus</div>
+            <div class="stat-description">{{ t('home.stats.participants') }}</div>
           </div>
           <div class="stat-card animate-on-scroll stagger-1">
             <div class="stat-number-large" data-count="120">0</div>
-            <div class="stat-description">Intervenants</div>
+            <div class="stat-description">{{ t('home.stats.speakers') }}</div>
           </div>
           <div class="stat-card animate-on-scroll stagger-2">
             <div class="stat-number-large" data-count="50">0</div>
-            <div class="stat-description">Pays représentés</div>
+            <div class="stat-description">{{ t('home.stats.countries') }}</div>
           </div>
           <div class="stat-card animate-on-scroll stagger-3">
             <div class="stat-number-large" data-count="30">0</div>
-            <div class="stat-description">Sessions & Ateliers</div>
+            <div class="stat-description">{{ t('home.stats.sessions') }}</div>
           </div>
         </div>
       </div>
@@ -271,17 +288,17 @@
         <div class="cta-card animate-on-scroll">
           <div class="cta-content">
             <h2 class="cta-title">
-              Prêt à rejoindre le mouvement?
+              {{ t('home.cta.title') }}
             </h2>
             <p class="cta-description">
-              Ne manquez pas cette opportunité unique de connecter avec les meilleurs talents et leaders d'Afrique.
+              {{ t('home.cta.description') }}
             </p>
             <div class="cta-actions">
               <router-link to="/register" class="btn-primary">
-                Inscription early bird
+                {{ t('home.cta.earlyBird') }}
               </router-link>
               <router-link to="/entreprises" class="btn-secondary">
-                Devenir partenaire
+                {{ t('home.cta.becomePartner') }}
               </router-link>
             </div>
           </div>
@@ -293,7 +310,7 @@
     <section class="section-triple">
       <div class="container">
         <div class="triple-header animate-on-scroll">
-          <span class="section-label">Articles</span>
+          <span class="section-label">{{ t('home.triple.watermark') }}</span>
           <h2 class="section-title">{{ t('home.triple.title') }}</h2>
           <p class="section-description">{{ t('home.triple.description') }}</p>
         </div>
@@ -358,7 +375,7 @@
     <section class="section-jobs">
       <div class="container">
         <div class="jobs-header animate-on-scroll">
-          <span class="section-label">Opportunités</span>
+          <span class="section-label">{{ t('home.jobOffers.label') }}</span>
           <h2 class="section-title">{{ t('home.jobOffers.title') }}</h2>
           <p class="section-description">{{ t('home.jobOffers.description') }}</p>
         </div>
@@ -458,7 +475,7 @@
         <div class="event-info-arc"></div>
         <div class="event-info-arc2"></div>
         <span class="event-date">{{ eventDateRange }}</span>
-        <h2>Africa Talent Summit Luxembourg</h2>
+        <h2>{{ event.titre || 'Africa Talent Summit Luxembourg' }}</h2>
         <div class="event-location" v-if="event.ville">
           <i class="fa-solid fa-location-dot"></i>
           <span>{{ event.ville }}{{ event.pays ? ', ' + event.pays : '' }}</span>
@@ -558,6 +575,12 @@ const carouselSlides = computed(() => {
 
 // ── Chargement des données ─────────────────────────────────
 onMounted(async () => {
+  // Initialize language from localStorage (using same key as i18n config)
+  const savedLanguage = localStorage.getItem('locale')
+  if (savedLanguage && (savedLanguage === 'fr' || savedLanguage === 'en')) {
+    locale.value = savedLanguage
+  }
+
   try {
     const [evRes, artRes, offRes] = await Promise.all([
       axios.get(`${apiBase}/public/featured-event`),
@@ -721,9 +744,55 @@ function animateCounter(el, target) {
   
   requestAnimationFrame(update)
 }
+
+// Language switching function
+function switchLanguage(lang) {
+  locale.value = lang
+  localStorage.setItem('locale', lang)
+}
 </script>
 
 <style>
+/* ── Language Switcher ─────────────────────────────── */
+.language-switcher {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 50px;
+  padding: 4px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(240, 124, 0, 0.2);
+}
+
+.lang-btn {
+  background: transparent;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: var(--muted);
+}
+
+.lang-btn.active {
+  background: var(--orange);
+  color: white;
+  transform: scale(1.05);
+}
+
+.lang-btn:hover:not(.active) {
+  background: rgba(240, 124, 0, 0.1);
+  color: var(--orange);
+}
+
 /* ── Variables ─────────────────────────────────── */
 :root {
   --navy:      #040a5d;
@@ -1063,6 +1132,7 @@ body {
   display: flex;
   align-items: center;
   gap: 24px;
+  min-width: 200px;
 }
 
 @media (max-width: 768px) {
@@ -1073,29 +1143,39 @@ body {
     margin-top: 20px;
     padding: 16px;
     gap: 16px;
+    justify-content: center;
   }
 }
 
 .stat-item {
   text-align: center;
+  flex-shrink: 0;
 }
 
 .stat-number {
-  font-size: 24px;
+  font-size: 30px;
   font-weight: 700;
   color: var(--orange);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.stat-number--blue {
+  color: var(--blue);
 }
 
 .stat-label {
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 4px;
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 .stat-divider {
   width: 1px;
   height: 48px;
-  background: var(--border);
+  background: #e5e7eb;
+  flex-shrink: 0;
 }
 
 /* Scroll indicator */
