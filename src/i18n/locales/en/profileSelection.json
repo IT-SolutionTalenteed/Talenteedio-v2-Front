@@ -1,0 +1,46 @@
+{
+  "hero": {
+    "eventBadge": "Africa Talent Summit — November 5 & 6, 2026",
+    "title": "Choose your profile",
+    "subtitle": "Join the first pan-African summit dedicated to talents and companies building tomorrow's Africa"
+  },
+  "talent": {
+    "title": "I am a Talent",
+    "description": "Access exceptional career opportunities with ambitious pan-African companies",
+    "features": {
+      "access": "Access to pan-African opportunities",
+      "matching": "AI matching with companies",
+      "interviews": "Live interviews in Luxembourg",
+      "free": "100% free registration"
+    },
+    "button": "Register as Talent",
+    "badge": "2,000+ expected talents"
+  },
+  "company": {
+    "title": "I am a Company",
+    "description": "Recruit the best talents from Africa and the diaspora to accelerate your growth",
+    "features": {
+      "talents": "2,000+ pre-selected talents",
+      "matching": "AI matching by profile and position",
+      "interviews": "Interviews scheduled over 2 days",
+      "support": "Dedicated support"
+    },
+    "button": "Register as Company",
+    "badge": "150+ participating companies"
+  },
+  "whyParticipate": {
+    "title": "Why participate in the Summit?",
+    "panAfrican": {
+      "title": "Pan-African reach",
+      "description": "Connect with stakeholders from 30+ African countries"
+    },
+    "smartMatching": {
+      "title": "Smart matching",
+      "description": "Our AI optimizes meetings according to your needs"
+    },
+    "opportunities": {
+      "title": "Concrete opportunities",
+      "description": "Qualified interviews, not just simple meetings"
+    }
+  }
+}

@@ -1,5 +1,6 @@
 <template>
-  <div class="annonces-page">
+  <div class="page-wrapper">
+    <div class="annonces-page">
     <PublicNav />
 
     <!-- ══ HERO ══ -->
@@ -235,6 +236,9 @@
       </div>
     </section>
 
+    </div>
+
+    <!-- ══ FOOTER ══ -->
     <Footer />
   </div>
 </template>

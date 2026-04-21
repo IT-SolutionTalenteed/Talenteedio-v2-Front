@@ -1,5 +1,6 @@
 <template>
-  <div class="legal-page">
+  <div class="page-wrapper">
+    <div class="legal-page">
     <PublicNav />
 
     <div v-if="loading" class="loading">
@@ -20,6 +21,9 @@
       </div>
     </div>
 
+    </div>
+
+    <!-- ══ FOOTER ══ -->
     <Footer />
   </div>
 </template>

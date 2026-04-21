@@ -208,6 +208,7 @@
   <LanguageList           v-if="activeTab === 'languages'" />
   <ActivitySectorList     v-if="activeTab === 'activity-sectors'" />
   <LegalPageList          v-if="activeTab === 'legal-pages'" />
+  <AdminList              v-if="activeTab === 'admins'" />
 </template>
 
 <script setup>
@@ -236,6 +237,7 @@ import ImportCandidats from './admin/ImportCandidats.vue'
 import SyncCrm from './admin/SyncCrm.vue'
 import CandidatureList from './admin/CandidatureList.vue'
 import ParticipationList from './admin/ParticipationList.vue'
+import AdminList from './admin/AdminList.vue'
 
 const router = useRouter()
 const route = useRoute()

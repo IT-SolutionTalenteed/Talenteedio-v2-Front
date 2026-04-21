@@ -1,0 +1,87 @@
+{
+  "hero": {
+    "eventBadge": "Africa Talent Summit — 5 & 6 Novembre 2026",
+    "title": "Accédez aux talents que",
+    "titleEmphasis": "votre croissance exige",
+    "description": "Rencontrez, les 5 et 6 novembre 2026, 2 000 profils hautement qualifiés, présélectionnés pour répondre aux besoins réels des entreprises opérant en Afrique."
+  },
+  "form": {
+    "title": "Rejoindre le Summit",
+    "subtitle": "Accédez aux meilleurs talents d'Afrique et de la diaspora",
+    "contactSection": "Contact principal",
+    "companySection": "Informations entreprise",
+    "fields": {
+      "lastName": "Nom",
+      "firstName": "Prénom",
+      "email": "Email professionnel",
+      "phone": "Téléphone",
+      "company": "Nom de l'entreprise",
+      "sector": "Secteur d'activité",
+      "size": "Taille de l'entreprise",
+      "city": "Ville",
+      "country": "Pays"
+    },
+    "placeholders": {
+      "lastName": "Ex : Dupont",
+      "firstName": "Ex : Jean",
+      "email": "contact@entreprise.com",
+      "phone": "Ex : +352 691 000 000",
+      "company": "Ex : TechCorp Africa",
+      "sector": "Sélectionner...",
+      "size": "Sélectionner...",
+      "city": "Ex : Abidjan",
+      "country": "Sélectionner..."
+    },
+    "submit": "Devenir partenaire",
+    "note": "En soumettant ce formulaire, vous acceptez nos",
+    "terms": "conditions d'utilisation",
+    "and": "et notre",
+    "privacy": "politique de confidentialité",
+    "errors": {
+      "required": "Veuillez remplir tous les champs obligatoires.",
+      "invalidEmail": "Adresse e-mail invalide.",
+      "generic": "Une erreur est survenue. Veuillez réessayer."
+    }
+  },
+  "sizes": {
+    "1-10": "1–10 employés",
+    "11-50": "11–50 employés",
+    "51-200": "51–200 employés",
+    "201-500": "201–500 employés",
+    "500+": "500+ employés"
+  },
+  "regions": {
+    "europe": "Europe",
+    "westAfrica": "Afrique de l'Ouest",
+    "centralAfrica": "Afrique Centrale",
+    "northAfrica": "Afrique du Nord",
+    "eastSouthAfrica": "Afrique de l'Est & Australe",
+    "other": "Autre"
+  },
+  "cta": {
+    "title": "Réserver un appel",
+    "description": "Notre équipe est disponible pour vous présenter les opportunités du Summit et construire votre stratégie de recrutement.",
+    "button": "Réserver un créneau"
+  },
+  "benefits": {
+    "talents": "2 000+ talents présélectionnés",
+    "matching": "Matching IA par profil et poste",
+    "interviews": "Entretiens planifiés sur 2 jours",
+    "markets": "Accès aux marchés panafricains",
+    "support": "Accompagnement dédié"
+  },
+  "eventFooter": {
+    "badge": "Africa Talent Summit Luxembourg",
+    "title": "Le rendez-vous des",
+    "titleEmphasis": "talents et des entreprises",
+    "titleEnd": "qui bâtissent l'Afrique de demain",
+    "description": "Les 5 et 6 novembre 2026, Luxembourg accueille la première édition de l'Africa Talent Summit — deux jours d'échanges, d'entretiens et de connexions entre les entreprises les plus ambitieuses d'Afrique et les talents de la diaspora.",
+    "kpis": {
+      "talents": "Talents",
+      "days": "Jours",
+      "countries": "Pays représentés",
+      "preselected": "Présélectionné"
+    },
+    "button": "Devenir partenaire"
+  }
+}

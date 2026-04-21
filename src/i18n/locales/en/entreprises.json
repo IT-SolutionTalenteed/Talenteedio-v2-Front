@@ -56,6 +56,8 @@
     "information": "Information",
     "interestedInCompany": "Interested in this company?",
     "createAccount": "Create an account",
-    "login": "Login"
+    "login": "Login",
+    "showMore": "Show more",
+    "showLess": "Show less"
   }
 }

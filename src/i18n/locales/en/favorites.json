@@ -1,0 +1,12 @@
+{
+  "mySpace": "My space",
+  "title": "My favorites",
+  "subtitle": "Find all the offers you have saved",
+  "emptyTitle": "No favorites yet",
+  "emptyDesc": "Browse job offers and add them to your favorites to easily find them here.",
+  "browseOffers": "Browse offers",
+  "saved": "saved favorite",
+  "savedPlural": "saved favorites",
+  "viewOffer": "View offer",
+  "remove": "Remove from favorites"
+}

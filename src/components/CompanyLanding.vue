@@ -1,5 +1,6 @@
 <template>
-  <div class="company-landing">
+  <div class="page-wrapper">
+    <div class="company-landing">
     <PublicNav />
 
     <!-- ══ HERO ══ -->
@@ -184,6 +185,9 @@
       </div>
     </section>
 
+    </div>
+
+    <!-- ══ FOOTER ══ -->
     <Footer />
   </div>
 </template>

@@ -2,6 +2,11 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../components/Home.vue'
 import Login from '../components/Login.vue'
 import Register from '../components/Register.vue'
+import ProfileSelection from '../components/ProfileSelection.vue'
+import TalentRegister from '../components/TalentRegister.vue'
+import TalentConfirm from '../components/TalentConfirm.vue'
+import CorporateLanding from '../components/CorporateLanding.vue'
+import CorporateConfirm from '../components/CorporateConfirm.vue'
 import AdminDashboard from '../components/AdminDashboard.vue'
 import TalentDashboard from '../components/TalentDashboard.vue'
 import EntrepriseDashboard from '../components/EntrepriseDashboard.vue'
@@ -119,10 +124,35 @@ const routes = [
     name: 'Login',
     component: Login
   },
+  // {
+  //   path: '/register',
+  //   name: 'Register',
+  //   component: Register
+  // },
   {
-    path: '/register',
-    name: 'Register',
-    component: Register
+    path: '/profile-selection',
+    name: 'ProfileSelection',
+    component: ProfileSelection
+  },
+  {
+    path: '/talent-register',
+    name: 'TalentRegister',
+    component: TalentRegister
+  },
+  {
+    path: '/talent-confirm',
+    name: 'TalentConfirm',
+    component: TalentConfirm
+  },
+  {
+    path: '/corporate-register',
+    name: 'CorporateRegister',
+    component: CorporateLanding
+  },
+  {
+    path: '/corporate-confirm',
+    name: 'CorporateConfirm',
+    component: CorporateConfirm
   },
   {
     path: '/auth/google/callback',
@@ -186,6 +216,7 @@ const routes = [
       { path: 'legal-pages', name: 'AdminLegalPages', component: AdminDashboard, meta: adminMeta },
       { path: 'legal-pages/create', name: 'AdminLegalPageCreate', component: LegalPageForm, meta: adminMeta },
       { path: 'legal-pages/:id/edit', name: 'AdminLegalPageEdit', component: LegalPageForm, meta: adminMeta },
+      { path: 'admins', name: 'AdminAdmins', component: AdminDashboard, meta: adminMeta },
       { path: 'profile', name: 'AdminProfile', component: EditProfile, meta: adminMeta },
     ]
   },

@@ -1,5 +1,6 @@
 <template>
-  <div class="ev-detail-page">
+  <div class="page-wrapper">
+    <div class="ev-detail-page">
     <PublicNav />
 
     <!-- Loading -->
@@ -46,7 +47,7 @@
                 </button>
               </template>
               <template v-else>
-                <router-link to="/register" class="btn btn--orange btn--lg">
+                <router-link to="/profile-selection" class="btn btn--orange btn--lg">
                   <i class="fa-solid fa-user-plus" style="margin-right:6px;"></i>{{ t('evenements.detail.subscribeToParticipate') }}
                 </router-link>
                 <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--outline-white btn--lg">
@@ -307,7 +308,7 @@
                     <p>{{ t('evenements.detail.loginMatchingDesc') }}</p>
                     <div class="evd-cta-login-btns">
                       <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--blue">{{ t('evenements.detail.loginBtn') }}</router-link>
-                      <router-link to="/register" class="btn btn--orange">{{ t('evenements.detail.createTalentAccount') }}</router-link>
+                      <router-link to="/profile-selection" class="btn btn--orange">{{ t('evenements.detail.createTalentAccount') }}</router-link>
                     </div>
                   </div>
                 </div>
@@ -443,7 +444,7 @@
                 </template>
                 <template v-else>
                   <p>{{ t('evenements.detail.joinCommunity') }}</p>
-                  <router-link to="/register" class="btn btn--orange" style="display:block;text-align:center;">
+                  <router-link to="/profile-selection" class="btn btn--orange" style="display:block;text-align:center;">
                     {{ t('evenements.detail.subscribeFree') }}
                   </router-link>
                 </template>
@@ -536,6 +537,10 @@
       </div>
 
     </template>
+
+    </div>
+
+    <!-- ══ FOOTER ══ -->
     <Footer />
   </div>
 </template>

@@ -1,5 +1,6 @@
 <template>
-  <div class="offre-detail-page">
+  <div class="page-wrapper">
+    <div class="offre-detail-page">
     <PublicNav />
 
     <!-- Loading -->
@@ -72,7 +73,7 @@
                 <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--blue btn--lg">
                   <i class="fa-solid fa-lock" style="margin-right:6px;"></i>{{ t('annonces.detail.loginToApply') }}
                 </router-link>
-                <router-link to="/register" class="btn btn--orange btn--lg" style="margin-top:8px;">
+                <router-link to="/profile-selection" class="btn btn--orange btn--lg" style="margin-top:8px;">
                   {{ t('annonces.detail.createAccount') }}
                 </router-link>
               </template>
@@ -254,6 +255,10 @@
         </form>
       </div>
     </div>
+
+    </div>
+
+    <!-- ══ FOOTER ══ -->
     <Footer />
   </div>
 </template>

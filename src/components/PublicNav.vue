@@ -190,7 +190,7 @@
 
           <!-- Non-connecté -->
           <template v-if="!isLoggedIn">
-            <router-link to="/register" class="btn-nav btn-nav--outline">{{ t('nav.subscription') }}</router-link>
+            <router-link to="/profile-selection" class="btn-nav btn-nav--outline">{{ t('nav.subscription') }}</router-link>
             <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn-nav btn-nav--filled">{{ t('nav.login') }}</router-link>
           </template>
 
@@ -321,7 +321,7 @@
               <button class="mob-lang-btn" :class="{ 'mob-lang-btn--active': locale === 'en' }" @click="setLocale('en')">🇬🇧 EN</button>
             </div>
             <div class="mob-auth" v-if="!isLoggedIn">
-              <router-link to="/register" class="mob-btn mob-btn--outline" @click="menuOpen = false">{{ t('nav.subscription') }}</router-link>
+              <router-link to="/profile-selection" class="mob-btn mob-btn--outline" @click="menuOpen = false">{{ t('nav.subscription') }}</router-link>
               <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="mob-btn mob-btn--filled" @click="menuOpen = false">{{ t('nav.login') }}</router-link>
             </div>
             <div class="mob-auth" v-else>
