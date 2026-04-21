@@ -216,6 +216,7 @@ const routes = [
       { path: 'legal-pages', name: 'AdminLegalPages', component: AdminDashboard, meta: adminMeta },
       { path: 'legal-pages/create', name: 'AdminLegalPageCreate', component: LegalPageForm, meta: adminMeta },
       { path: 'legal-pages/:id/edit', name: 'AdminLegalPageEdit', component: LegalPageForm, meta: adminMeta },
+      { path: 'admins', name: 'AdminAdmins', component: AdminDashboard, meta: adminMeta },
       { path: 'profile', name: 'AdminProfile', component: EditProfile, meta: adminMeta },
     ]
   },
