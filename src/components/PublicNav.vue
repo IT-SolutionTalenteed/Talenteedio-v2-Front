@@ -98,6 +98,14 @@
                   <p class="mega-aside-desc">{{ t('nav.megaEvents.heroDesc') }}</p>
                 </div>
                 <div class="mega-links">
+                  <router-link to="/evenements" class="mega-link" @click="activeMega = null; menuOpen = false">
+                    <span class="mega-link-icon"><i class="fa-solid fa-calendar-check"></i></span>
+                    <span class="mega-link-body">
+                      <strong>{{ t('nav.allEvents') }}</strong>
+                      <small>{{ t('nav.allEventsDesc') }}</small>
+                    </span>
+                    <i class="fa-solid fa-arrow-right mega-link-arrow"></i>
+                  </router-link>
                   <template v-if="categories.length">
                     <router-link
                       v-for="cat in categories"
@@ -285,6 +293,13 @@
                   <i class="fa-solid fa-chevron-right mob-link-chev mob-acc-chev"></i>
                 </button>
                 <div class="mob-acc-body">
+                  <router-link to="/evenements" class="mob-sub-link" @click="menuOpen = false">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span>
+                      <strong>{{ t('nav.allEvents') }}</strong>
+                      <small>{{ t('nav.allEventsDesc') }}</small>
+                    </span>
+                  </router-link>
                   <template v-if="categories.length">
                     <router-link
                       v-for="cat in categories"
