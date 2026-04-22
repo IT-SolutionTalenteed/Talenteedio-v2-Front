@@ -24,7 +24,7 @@
     "placeholders": {
       "lastName": "Ex : Dupont",
       "firstName": "Ex : Jean",
-      "email": "contact@entreprise.com",
+      "email": "contact.entreprise.com",
       "phone": "Ex : +352 691 000 000",
       "company": "Ex : TechCorp Africa",
       "sector": "Sélectionner...",

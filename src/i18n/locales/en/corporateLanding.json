@@ -24,7 +24,7 @@
     "placeholders": {
       "lastName": "E.g.: Smith",
       "firstName": "E.g.: John",
-      "email": "contact@company.com",
+      "email": "contact.company.com",
       "phone": "E.g.: +352 691 000 000",
       "company": "E.g.: TechCorp Africa",
       "sector": "Select...",

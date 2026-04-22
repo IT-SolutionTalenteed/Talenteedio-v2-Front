@@ -29,7 +29,7 @@
     "fullName": "Full name",
     "fullNamePlaceholder": "E.g: John Smith",
     "email": "Professional email",
-    "emailPlaceholder": "contact@company.com",
+    "emailPlaceholder": "contact.company.com",
     "phone": "Phone",
     "phonePlaceholder": "+44 7 12 34 56 78",
     "password": "Password",

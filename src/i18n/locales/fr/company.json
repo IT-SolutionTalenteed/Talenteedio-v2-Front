@@ -29,7 +29,7 @@
     "fullName": "Nom complet",
     "fullNamePlaceholder": "Ex: Jean Dupont",
     "email": "Email professionnel",
-    "emailPlaceholder": "contact@entreprise.com",
+    "emailPlaceholder": "contact.entreprise.com",
     "phone": "Téléphone",
     "phonePlaceholder": "+33 6 12 34 56 78",
     "password": "Mot de passe",

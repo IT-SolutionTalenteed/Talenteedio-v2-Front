@@ -41,7 +41,7 @@
       "firstName": "Prénom",
       "firstNamePlaceholder": "Ex : Aminata",
       "email": "Email",
-      "emailPlaceholder": "votre@email.com",
+      "emailPlaceholder": "exemple.email.com",
       "sector": "Secteur d'activité",
       "experience": "Années d'expérience",
       "city": "Ville",

@@ -41,7 +41,7 @@
       "firstName": "First name",
       "firstNamePlaceholder": "E.g.: John",
       "email": "Email",
-      "emailPlaceholder": "your@email.com",
+      "emailPlaceholder": "example.email.com",
       "sector": "Industry sector",
       "experience": "Years of experience",
       "city": "City",
