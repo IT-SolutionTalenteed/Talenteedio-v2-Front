@@ -191,6 +191,12 @@
             <!-- Titre offre -->
             <h3 class="offre-title">{{ offre.titre }}</h3>
 
+            <!-- Salaire -->
+            <div v-if="offre.fourchette_salariale" class="offre-salary">
+              <i class="fa-solid fa-euro-sign"></i>
+              {{ offre.fourchette_salariale }}
+            </div>
+
             <!-- Tags -->
             <div class="offre-tags">
               <span v-if="offre.localisation" class="tag tag--location">
@@ -1021,6 +1027,22 @@ onUnmounted(() => {
   margin: 0;
   line-height: 1.2;
   letter-spacing: -.3px;
+}
+
+/* Salaire */
+.offre-salary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--orange);
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: .2px;
+}
+
+.offre-salary i {
+  font-size: 13px;
 }
 
 /* Tags */
