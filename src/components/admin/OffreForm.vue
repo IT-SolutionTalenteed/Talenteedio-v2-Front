@@ -133,7 +133,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import WysiwygEditor from '../WysiwygEditor.vue'
 import ComboboxMultiple from '../shared/ComboboxMultiple.vue'
@@ -167,6 +167,35 @@ const emptyForm = () => ({
 const form = ref(emptyForm())
 const imagePreview = ref(null)
 
+// Formater un salaire en k€
+const formatSalaire = (value) => {
+  if (!value) return ''
+  const num = parseFloat(value)
+  const k = num / 1000
+  // Si c'est un nombre entier de milliers, afficher sans décimale
+  if (k % 1 === 0) {
+    return `${k}k€`
+  }
+  // Sinon, afficher avec une décimale
+  return `${k.toFixed(1).replace('.', ',')}k€`
+}
+
+// Calculer automatiquement fourchette_salariale
+watch([() => form.value.salaire_min, () => form.value.salaire_max], () => {
+  const min = form.value.salaire_min
+  const max = form.value.salaire_max
+  
+  if (min && max) {
+    form.value.fourchette_salariale = `${formatSalaire(min)} - ${formatSalaire(max)}`
+  } else if (min) {
+    form.value.fourchette_salariale = `À partir de ${formatSalaire(min)}`
+  } else if (max) {
+    form.value.fourchette_salariale = `Jusqu'à ${formatSalaire(max)}`
+  } else {
+    form.value.fourchette_salariale = ''
+  }
+})
+
 const handleImageChange = (e) => {
   const file = e.target.files[0]
   if (!file) return
@@ -198,13 +227,29 @@ const loadOffre = async () => {
     const offres = res.data.data || res.data
     const offre = offres.find(o => o.id == route.params.id)
     if (offre) {
+      // Parser la fourchette_salariale si salaire_min et salaire_max sont vides
+      let salaireMin = offre.salaire_min || ''
+      let salaireMax = offre.salaire_max || ''
+      
+      if (!salaireMin && !salaireMax && offre.fourchette_salariale) {
+        // Essayer de parser "35k€ - 45k€" ou "35000€ - 45000€"
+        const match = offre.fourchette_salariale.match(/(\d+)k?\s*€?\s*-\s*(\d+)k?\s*€?/i)
+        if (match) {
+          const val1 = parseInt(match[1])
+          const val2 = parseInt(match[2])
+          // Si les valeurs sont < 1000, c'est probablement en milliers (35k = 35000)
+          salaireMin = val1 < 1000 ? val1 * 1000 : val1
+          salaireMax = val2 < 1000 ? val2 * 1000 : val2
+        }
+      }
+      
       form.value = {
         titre: offre.titre,
         client: offre.client || '',
         localisation: offre.localisation || '',
         salaire: offre.salaire || '',
-        salaire_min: offre.salaire_min || '',
-        salaire_max: offre.salaire_max || '',
+        salaire_min: salaireMin,
+        salaire_max: salaireMax,
         fourchette_salariale: offre.fourchette_salariale || '',
         date_mise_en_ligne: offre.date_mise_en_ligne ? offre.date_mise_en_ligne.substring(0, 10) : '',
         date_limite: offre.date_limite ? offre.date_limite.substring(0, 10) : '',
