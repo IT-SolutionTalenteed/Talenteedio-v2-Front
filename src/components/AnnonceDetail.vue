@@ -264,7 +264,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
@@ -371,6 +371,13 @@ const formatDate = (str) => {
   const lang = locale.value === 'en' ? 'en-US' : 'fr-FR'
   return new Date(str).toLocaleDateString(lang, { day: 'numeric', month: 'long', year: 'numeric' })
 }
+
+// Watcher pour recharger quand l'ID change
+watch(() => route.params.id, () => {
+  if (route.params.id) {
+    load()
+  }
+})
 
 onMounted(() => {
   load()
