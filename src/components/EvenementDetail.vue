@@ -546,7 +546,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
@@ -871,6 +871,21 @@ const scoreClass = (score) => {
   if (score >= 50) return 'score--mid'
   return 'score--low'
 }
+
+// Watcher pour recharger quand l'ID change
+watch(() => route.params.id, () => {
+  if (route.params.id) {
+    load().then(() => {
+      if (isTalent.value) {
+        loadActivitySectors()
+        loadMesEntretiens()
+      }
+      if (isEntreprise.value) {
+        loadMaDemande()
+      }
+    })
+  }
+})
 
 onMounted(async () => {
   await load()
