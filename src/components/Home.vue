@@ -393,6 +393,12 @@
             <!-- Titre -->
             <h3 class="job-title">{{ offre.titre }}</h3>
 
+            <!-- Salaire -->
+            <div v-if="offre.fourchette_salariale" class="job-salary">
+              <i class="fa-solid fa-euro-sign"></i>
+              {{ offre.fourchette_salariale }}
+            </div>
+
             <!-- Tags -->
             <div class="job-tags">
               <span v-if="offre.localisation" class="tag tag--location">
@@ -568,11 +574,11 @@ onMounted(async () => {
     const [evRes, artRes, offRes] = await Promise.all([
       axios.get(`${apiBase}/public/featured-event`),
       axios.get(`${apiBase}/public/articles`),
-      axios.get(`${apiBase}/public/offres-home`),
+      axios.get(`${apiBase}/public/offres`, { params: { per_page: 6 } }),
     ])
     event.value    = evRes.data
     articles.value = artRes.data
-    offres.value   = offRes.data
+    offres.value   = offRes.data.data || offRes.data
   } catch (e) {
     console.error('Erreur chargement page accueil', e)
   }
@@ -2733,6 +2739,21 @@ section {
   margin: 0; 
   line-height: 1.3; 
   letter-spacing: -0.3px;
+}
+
+.job-salary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--orange);
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: .2px;
+}
+
+.job-salary i {
+  font-size: 13px;
 }
 
 .job-tags { 
