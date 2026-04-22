@@ -17,6 +17,7 @@ import AnnonceDetail from '../components/AnnonceDetail.vue'
 import Entreprises from '../components/Entreprises.vue'
 import EntrepriseDetail from '../components/EntrepriseDetail.vue'
 import CategorieEvenementPublic from '../components/CategorieEvenementPublic.vue'
+import TousLesEvenements from '../components/TousLesEvenements.vue'
 import Blog from '../components/Blog.vue'
 import ArticleDetail from '../components/ArticleDetail.vue'
 import EvenementDetail from '../components/EvenementDetail.vue'
@@ -87,6 +88,11 @@ const routes = [
     path: '/entreprises/:id',
     name: 'EntrepriseDetail',
     component: EntrepriseDetail
+  },
+  {
+    path: '/evenements',
+    name: 'TousLesEvenements',
+    component: TousLesEvenements
   },
   {
     path: '/evenements/categorie/:id',
