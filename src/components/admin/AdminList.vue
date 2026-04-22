@@ -58,27 +58,6 @@
           {{ item.is_suspended ? 'Suspendu' : item.is_banned ? 'Banni' : 'Actif' }}
         </v-chip>
       </template>
-
-      <template #item.actions="{ item }">
-        <div class="d-flex gap-1">
-          <v-btn
-            :icon="item.is_suspended ? 'mdi-check-circle' : 'mdi-pause-circle'"
-            size="small"
-            :color="item.is_suspended ? 'success' : 'warning'"
-            variant="tonal"
-            @click="toggleSuspend(item)"
-            :title="item.is_suspended ? 'Réactiver' : 'Suspendre'"
-          />
-          <v-btn
-            :icon="item.is_banned ? 'mdi-lock-open' : 'mdi-lock'"
-            size="small"
-            :color="item.is_banned ? 'info' : 'error'"
-            variant="tonal"
-            @click="toggleBan(item)"
-            :title="item.is_banned ? 'Débannir' : 'Bannir'"
-          />
-        </div>
-      </template>
     </v-data-table-server>
 
     <ConfirmDialog ref="confirmRef" />
@@ -114,7 +93,6 @@ const headers = [
   { title: 'Rôle', key: 'role', sortable: false },
   { title: 'Date de création', key: 'created_at', sortable: false },
   { title: 'État', key: 'etat', sortable: false },
-  { title: '', key: 'actions', sortable: false, align: 'end' },
 ]
 
 const formatDate = (dateStr) => {
@@ -167,25 +145,5 @@ const onClear = () => {
   searchInput.value = ''
   page.value = 1
   loadPage()
-}
-
-const toggleSuspend = async (admin) => {
-  try {
-    const res = await api.post(`/admin/admins/${admin.id}/toggle-suspend`)
-    admin.is_suspended = res.data.is_suspended
-    showSnack(admin.is_suspended ? 'Admin suspendu' : 'Admin réactivé')
-  } catch {
-    showSnack('Erreur lors de la suspension', 'error')
-  }
-}
-
-const toggleBan = async (admin) => {
-  try {
-    const res = await api.post(`/admin/admins/${admin.id}/toggle-ban`)
-    admin.is_banned = res.data.is_banned
-    showSnack(admin.is_banned ? 'Admin banni' : 'Admin débanni')
-  } catch {
-    showSnack('Erreur lors du bannissement', 'error')
-  }
 }
 </script>
