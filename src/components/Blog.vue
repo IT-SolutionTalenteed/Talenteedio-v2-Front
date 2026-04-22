@@ -572,7 +572,12 @@ onMounted(async () => {
    SIDEBAR
 ════════════════════════════════ */
 .blog-sidebar {
-  display: flex; flex-direction: column; gap: 24px;
+  display: flex; 
+  flex-direction: column; 
+  gap: 24px;
+  position: sticky;
+  top: 80px;
+  align-self: flex-start;
 }
 
 .sidebar-widget {
