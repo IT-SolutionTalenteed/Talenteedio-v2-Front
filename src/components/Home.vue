@@ -32,9 +32,6 @@
               <router-link to="/register" class="btn-primary">
                 {{ t('home.hero.subscribe') }}
               </router-link>
-              <router-link to="/blog" class="btn-secondary">
-                {{ t('home.hero.viewProgram') }}
-              </router-link>
             </div>
 
             <!-- Countdown -->
