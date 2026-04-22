@@ -1222,7 +1222,14 @@ onMounted(async () => {
 .evd-block-title.evd-cta-login-block { color: #fff !important; }
 
 /* ── Sidebar ── */
-.evd-sidebar { display: flex; flex-direction: column; gap: 20px; }
+.evd-sidebar { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 20px;
+  position: sticky;
+  top: 90px;
+  align-self: flex-start;
+}
 .evd-side-card {
   background: #fff; border-radius: 14px;
   padding: 24px; box-shadow: 0 2px 10px rgba(0,0,0,.06);
