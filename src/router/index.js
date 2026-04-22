@@ -266,7 +266,15 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    // Si l'utilisateur utilise le bouton retour/avant du navigateur
+    if (savedPosition) {
+      return savedPosition
+    }
+    // Sinon, toujours être en haut de la page instantanément
+    return { top: 0 }
+  }
 })
 
 // Navigation guard pour vérifier l'authentification
