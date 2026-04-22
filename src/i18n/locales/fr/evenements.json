@@ -1,5 +1,16 @@
 {
   "label": "Événements",
+  "all": {
+    "title": "Tous les événements",
+    "description": "Découvrez tous nos événements RH, forums de recrutement et rencontres professionnelles",
+    "categoriesTitle": "Catégories d'événements",
+    "eventsTitle": "Événements à venir",
+    "orphanEventsTitle": "Autres événements",
+    "galleryTitle": "Galerie",
+    "testimonialsTitle": "Témoignages",
+    "noCategories": "Aucune catégorie disponible pour le moment",
+    "noEvents": "Aucun événement disponible pour le moment"
+  },
   "details": {
     "label": "Détails",
     "about": "À propos de cet événement"
