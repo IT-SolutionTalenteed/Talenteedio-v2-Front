@@ -73,7 +73,7 @@ const en = {
 
 const i18n = createI18n({
   legacy: false,
-  locale: localStorage.getItem('locale') || 'fr',
+  locale: typeof window !== 'undefined' ? (localStorage.getItem('locale') || 'fr') : 'fr',
   fallbackLocale: 'fr',
   messages: {
     fr,
@@ -81,10 +81,7 @@ const i18n = createI18n({
   },
   missingWarn: false,
   fallbackWarn: false,
-  warnHtmlMessage: false,
-  modifiers: {
-    raw: (str) => str
-  }
+  warnHtmlMessage: false
 })
 
 export default i18n
