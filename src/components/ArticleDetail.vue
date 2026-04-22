@@ -33,6 +33,9 @@
               <span v-if="article.entreprise">
                 <i class="fa-solid fa-building"></i> {{ article.entreprise.nom }}
               </span>
+              <span v-else-if="article.admin">
+                <i class="fa-solid fa-user-shield"></i> {{ article.admin.name || 'Admin' }}
+              </span>
             </div>
           </div>
         </div>
@@ -58,7 +61,7 @@
             <!-- Sidebar -->
             <aside class="artd-sidebar">
 
-              <!-- Auteur -->
+              <!-- Auteur Entreprise -->
               <div v-if="article.entreprise" class="artd-side-card">
                 <h3 class="artd-side-title">{{ t('blog.detail.publishedBy') }}</h3>
                 <div class="artd-author">
@@ -71,6 +74,20 @@
                     <router-link :to="`/entreprises/${article.entreprise.id}`" class="artd-author-link">
                       {{ t('blog.detail.viewProfile') }} <i class="fa-solid fa-arrow-right" style="font-size:10px;"></i>
                     </router-link>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Auteur Admin -->
+              <div v-else-if="article.admin" class="artd-side-card">
+                <h3 class="artd-side-title">{{ t('blog.detail.publishedBy') }}</h3>
+                <div class="artd-author">
+                  <div class="artd-author-logo artd-author-logo--admin">
+                    <i class="fa-solid fa-user-shield"></i>
+                  </div>
+                  <div>
+                    <p class="artd-author-name">{{ article.admin.name || 'Admin' }}</p>
+                    <p class="artd-author-role">{{ t('blog.detail.administrator') }}</p>
                   </div>
                 </div>
               </div>
@@ -236,7 +253,14 @@ onMounted(load)
 .artd-back:hover { gap: 12px; }
 
 /* Sidebar */
-.artd-sidebar { display: flex; flex-direction: column; gap: 20px; }
+.artd-sidebar { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 20px;
+  position: sticky;
+  top: 90px;
+  align-self: flex-start;
+}
 .artd-side-card {
   background: #fff; border-radius: 14px;
   padding: 24px; box-shadow: 0 2px 10px rgba(0,0,0,.06);
@@ -250,7 +274,13 @@ onMounted(load)
 }
 .artd-author-logo img  { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
 .artd-author-logo span { font-size: 20px; font-weight: 800; color: var(--blue); }
+.artd-author-logo--admin {
+  background: linear-gradient(135deg, #00235a, #1a3a8a);
+  color: #fff;
+  font-size: 20px;
+}
 .artd-author-name { font-size: 14px; font-weight: 700; color: var(--navy); margin: 0 0 4px; }
+.artd-author-role { font-size: 12px; color: #6b7280; margin: 0; }
 .artd-author-link {
   font-size: 12px; color: var(--blue); text-decoration: none;
   display: inline-flex; align-items: center; gap: 5px;
