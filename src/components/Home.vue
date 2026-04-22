@@ -960,12 +960,13 @@ body {
 /* ── Hero Section ─────────────────────────────────── */
 .hero-modern {
   background: linear-gradient(160deg, var(--navy) 0%, #040a5d 45%, var(--blue) 75%, var(--navy) 100%);
-  min-height: 100vh;
+  height: calc(100vh - 80px);
+  min-height: 600px;
   position: relative;
   display: flex;
   align-items: center;
   overflow: hidden;
-  padding-top: 120px;
+  padding-top: 0;
 }
 
 .hero-grid {
@@ -1657,7 +1658,10 @@ section {
 
 @media (max-width: 640px) {
   .hero-modern {
-    padding-top: 100px;
+    height: auto;
+    min-height: calc(100vh - 80px);
+    padding-top: 40px;
+    padding-bottom: 40px;
   }
   
   .hero-actions {
