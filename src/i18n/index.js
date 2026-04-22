@@ -79,9 +79,10 @@ const i18n = createI18n({
     fr,
     en
   },
-  missingWarn: false,
-  fallbackWarn: false,
-  warnHtmlMessage: false
+  silentTranslationWarn: true,
+  silentFallbackWarn: true,
+  warnHtmlMessage: false,
+  escapeParameter: false
 })
 
 export default i18n
