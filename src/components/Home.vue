@@ -29,7 +29,7 @@
             </p>
 
             <div class="hero-actions animate-on-scroll stagger-4">
-              <router-link to="/register" class="btn-primary">
+              <router-link to="/profile-selection" class="btn-primary">
                 {{ t('home.hero.subscribe') }}
               </router-link>
             </div>
@@ -274,7 +274,7 @@
               {{ t('home.cta.description') }}
             </p>
             <div class="cta-actions">
-              <router-link to="/register" class="btn-primary">
+              <router-link to="/profile-selection" class="btn-primary">
                 {{ t('home.cta.earlyBird') }}
               </router-link>
               <router-link to="/entreprises" class="btn-secondary">
