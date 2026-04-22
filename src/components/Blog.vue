@@ -45,6 +45,11 @@
               </span>
               <span><i class="fa-regular fa-calendar" style="color:var(--orange)"></i> {{ formatDate(featuredArticle.created_at) }}</span>
             </div>
+            <div v-if="featuredArticle.entreprise || featuredArticle.admin" class="featured-author">
+              <i class="fa-solid fa-user-circle"></i>
+              <span v-if="featuredArticle.entreprise">{{ featuredArticle.entreprise.nom }}</span>
+              <span v-else-if="featuredArticle.admin">{{ featuredArticle.admin.name || 'Admin' }}</span>
+            </div>
             <h2 class="featured-title">{{ featuredArticle.title }}</h2>
             <p class="featured-excerpt">{{ truncate(stripHtml(featuredArticle.content), 180) }}</p>
             <span class="featured-link">
@@ -117,6 +122,11 @@
                     <span class="blog-date">
                       <i class="fa-regular fa-clock"></i> {{ formatDate(a.created_at) }}
                     </span>
+                  </div>
+                  <div v-if="a.entreprise || a.admin" class="blog-author">
+                    <i class="fa-solid fa-user-circle"></i>
+                    <span v-if="a.entreprise">{{ a.entreprise.nom }}</span>
+                    <span v-else-if="a.admin">{{ a.admin.name || 'Admin' }}</span>
                   </div>
                   <h3 class="blog-card-title">{{ a.title }}</h3>
                   <p class="blog-card-excerpt">{{ truncate(stripHtml(a.content), 120) }}</p>
@@ -524,6 +534,22 @@ onMounted(async () => {
 }
 .featured-meta i { margin-right: 4px; }
 
+.featured-author {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--blue);
+  padding: 6px 12px;
+  background: rgba(58,155,255,0.08);
+  border-radius: 50px;
+  width: fit-content;
+}
+.featured-author i {
+  font-size: 14px;
+}
+
 .featured-title {
   font-family: 'Barlow Condensed', sans-serif;
   font-size: clamp(20px, 2.2vw, 28px);
@@ -576,7 +602,7 @@ onMounted(async () => {
   flex-direction: column; 
   gap: 24px;
   position: sticky;
-  top: 80px;
+  top: 90px;
   align-self: flex-start;
 }
 
@@ -741,6 +767,22 @@ onMounted(async () => {
   display: flex; align-items: center; gap: 5px;
 }
 .blog-date i { font-size: 11px; }
+
+.blog-author {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--blue);
+  padding: 4px 10px;
+  background: rgba(58,155,255,0.08);
+  border-radius: 50px;
+  width: fit-content;
+}
+.blog-author i {
+  font-size: 13px;
+}
 
 /* Titre */
 .blog-card-title {
