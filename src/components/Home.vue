@@ -85,7 +85,51 @@
       </div>
     </section>
 
-    <!-- 2. AFFICHAGE DES 4 CARDS ══ -->
+    <!-- 2. SECTION ILS RECRUTENT — Entreprises Participantes ══ -->
+    <section v-if="event && event.entreprises && event.entreprises.length" class="section-partners">
+      <div class="container">
+        <div class="partners-header animate-on-scroll">
+          <span class="section-label">{{ t('home.partners.label') }}</span>
+          <h2 class="section-title">{{ t('home.partners.title') }}</h2>
+          <p class="section-description">{{ t('home.partners.description') }}</p>
+        </div>
+      </div>
+      <!-- Carrousel infini pleine largeur — style logo-track -->
+      <div class="logo-carousel-wrap">
+        <div class="logo-track">
+          <!-- Set A -->
+          <router-link
+            v-for="(entreprise, i) in carouselSlides"
+            :key="`a${i}`"
+            to="/entreprises"
+            class="logo-item"
+          >
+            <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom" class="logo-img">
+            <span v-else class="logo-initial">{{ entreprise.nom.charAt(0).toUpperCase() }}</span>
+            <span class="logo-name">{{ entreprise.nom }}</span>
+          </router-link>
+          <!-- Set B — duplication pour boucle infinie (translateX -50%) -->
+          <router-link
+            v-for="(entreprise, i) in carouselSlides"
+            :key="`b${i}`"
+            to="/entreprises"
+            class="logo-item"
+            aria-hidden="true"
+          >
+            <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom" class="logo-img">
+            <span v-else class="logo-initial">{{ entreprise.nom.charAt(0).toUpperCase() }}</span>
+            <span class="logo-name">{{ entreprise.nom }}</span>
+          </router-link>
+        </div>
+      </div>
+      <div class="partners-cta animate-on-scroll">
+        <router-link to="/entreprises" class="btn-primary">
+          {{ t('home.partners.viewAll') }}
+        </router-link>
+      </div>
+    </section>
+
+    <!-- 3. AFFICHAGE DES 4 CARDS ══ -->
     <section class="section-quicklinks">
       <div class="container">
         <div class="quicklinks-grid">
@@ -130,49 +174,6 @@
       </div>
     </section>
 
-    <!-- 3. SECTION ILS RECRUTENT — Entreprises Participantes ══ -->
-    <section v-if="event && event.entreprises && event.entreprises.length" class="section-partners">
-      <div class="container">
-        <div class="partners-header animate-on-scroll">
-          <span class="section-label">{{ t('home.partners.label') }}</span>
-          <h2 class="section-title">{{ t('home.partners.title') }}</h2>
-          <p class="section-description">{{ t('home.partners.description') }}</p>
-        </div>
-      </div>
-      <!-- Carrousel infini pleine largeur — style logo-track -->
-      <div class="logo-carousel-wrap">
-        <div class="logo-track">
-          <!-- Set A -->
-          <router-link
-            v-for="(entreprise, i) in carouselSlides"
-            :key="`a${i}`"
-            to="/entreprises"
-            class="logo-item"
-          >
-            <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom" class="logo-img">
-            <span v-else class="logo-initial">{{ entreprise.nom.charAt(0).toUpperCase() }}</span>
-            <span class="logo-name">{{ entreprise.nom }}</span>
-          </router-link>
-          <!-- Set B — duplication pour boucle infinie (translateX -50%) -->
-          <router-link
-            v-for="(entreprise, i) in carouselSlides"
-            :key="`b${i}`"
-            to="/entreprises"
-            class="logo-item"
-            aria-hidden="true"
-          >
-            <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom" class="logo-img">
-            <span v-else class="logo-initial">{{ entreprise.nom.charAt(0).toUpperCase() }}</span>
-            <span class="logo-name">{{ entreprise.nom }}</span>
-          </router-link>
-        </div>
-      </div>
-      <div class="partners-cta animate-on-scroll">
-        <router-link to="/entreprises" class="btn-primary">
-          {{ t('home.partners.viewAll') }}
-        </router-link>
-      </div>
-    </section>
 
     <!-- 4. SECTION À PROPOS ══ -->
     <section class="section-about">
