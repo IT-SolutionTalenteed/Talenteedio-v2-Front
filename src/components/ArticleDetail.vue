@@ -131,7 +131,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
@@ -163,7 +163,16 @@ const formatDate = (iso) => {
   return new Date(iso).toLocaleDateString(lang, { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
-onMounted(load)
+// Watcher pour recharger quand l'ID change
+watch(() => route.params.id, () => {
+  if (route.params.id) {
+    load()
+  }
+})
+
+onMounted(() => {
+  load()
+})
 </script>
 
 <style scoped>
