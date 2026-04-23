@@ -13,7 +13,11 @@
     <!-- Catégories d'événements -->
     <section class="section-categories">
       <div class="container">
-        <h2 class="section-title">{{ t('evenements.all.categoriesTitle') }}</h2>
+        <div class="section-header animate-on-scroll">
+          <span class="section-label">{{ t('evenements.all.categoriesLabel') }}</span>
+          <h2 class="section-title">{{ t('evenements.all.categoriesTitle') }}</h2>
+          <p class="section-description">{{ t('evenements.all.categoriesDescription') }}</p>
+        </div>
         <div v-if="loading.categories" class="loading-state">{{ t('common.loading') }}</div>
         <div v-else-if="categories.length === 0" class="empty-state">
           {{ t('evenements.all.noCategories') }}
@@ -39,7 +43,11 @@
     <!-- Événements -->
     <section class="section-events">
       <div class="container">
-        <h2 class="section-title">{{ t('evenements.all.eventsTitle') }}</h2>
+        <div class="section-header animate-on-scroll">
+          <span class="section-label">{{ t('evenements.all.eventsLabel') }}</span>
+          <h2 class="section-title">{{ t('evenements.all.eventsTitle') }}</h2>
+          <p class="section-description">{{ t('evenements.all.eventsDescription') }}</p>
+        </div>
         <div v-if="loading.events" class="loading-state">{{ t('common.loading') }}</div>
         <div v-else-if="allEvents.length === 0" class="empty-state">
           {{ t('evenements.all.noEvents') }}
@@ -76,7 +84,10 @@
     <!-- Événements orphelins (sans catégorie) -->
     <section v-if="orphanEvents.length > 0" class="section-orphans">
       <div class="container">
-        <h2 class="section-title">{{ t('evenements.all.orphanEventsTitle') }}</h2>
+        <div class="section-header animate-on-scroll">
+          <span class="section-label">{{ t('evenements.all.orphanEventsLabel') }}</span>
+          <h2 class="section-title">{{ t('evenements.all.orphanEventsTitle') }}</h2>
+        </div>
         <div class="events-grid">
           <router-link
             v-for="event in orphanEvents"
@@ -108,7 +119,10 @@
     <!-- Galerie -->
     <section v-if="gallery.length > 0" class="section-gallery">
       <div class="container">
-        <h2 class="section-title">{{ t('evenements.all.galleryTitle') }}</h2>
+        <div class="section-header animate-on-scroll">
+          <span class="section-label">{{ t('evenements.all.galleryLabel') }}</span>
+          <h2 class="section-title">{{ t('evenements.all.galleryTitle') }}</h2>
+        </div>
         <div class="gallery-grid">
           <div v-for="(item, idx) in gallery" :key="idx" class="gallery-item">
             <img :src="item.url" :alt="item.alt || 'Gallery image'" />
@@ -120,7 +134,11 @@
     <!-- Témoignages -->
     <section v-if="testimonials.length > 0" class="section-testimonials">
       <div class="container">
-        <h2 class="section-title">{{ t('evenements.all.testimonialsTitle') }}</h2>
+        <div class="section-header animate-on-scroll">
+          <span class="section-label">{{ t('evenements.all.testimonialsLabel') }}</span>
+          <h2 class="section-title">{{ t('evenements.all.testimonialsTitle') }}</h2>
+          <p class="section-description">{{ t('evenements.all.testimonialsDescription') }}</p>
+        </div>
         <div class="testimonials-grid">
           <div v-for="(testimonial, idx) in testimonials" :key="idx" class="testimonial-card">
             <div class="testimonial-quote">
@@ -146,9 +164,13 @@ import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
+import { useScrollAnimations } from '../composables/useScrollAnimations.js'
 
 const { t } = useI18n()
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+
+// Initialiser les animations au scroll
+useScrollAnimations()
 
 const categories = ref([])
 const allEvents = ref([])
