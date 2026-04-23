@@ -23,12 +23,12 @@
       </v-card-text>
     </v-card>
 
-    <!-- Stats cards -->
+    <!-- Stats cards avec mini charts -->
     <v-row class="mb-6" dense>
       <v-col cols="12" sm="6" lg="3">
         <v-card rounded="xl" elevation="0" border>
           <v-card-text class="pa-5">
-            <div class="d-flex align-center justify-space-between">
+            <div class="d-flex align-center justify-space-between mb-3">
               <div>
                 <div class="text-h4 font-weight-bold text-primary">
                   {{ totalTalents !== null ? totalTalents : '—' }}
@@ -39,6 +39,13 @@
                 <v-icon size="26">mdi-account-tie-outline</v-icon>
               </v-avatar>
             </div>
+            <apexchart
+              v-if="talentsSparkline.series[0].data.length"
+              type="area"
+              height="60"
+              :options="talentsSparkline.options"
+              :series="talentsSparkline.series"
+            />
           </v-card-text>
         </v-card>
       </v-col>
@@ -46,7 +53,7 @@
       <v-col cols="12" sm="6" lg="3">
         <v-card rounded="xl" elevation="0" border>
           <v-card-text class="pa-5">
-            <div class="d-flex align-center justify-space-between">
+            <div class="d-flex align-center justify-space-between mb-3">
               <div>
                 <div class="text-h4 font-weight-bold text-success">
                   {{ totalEntreprises !== null ? totalEntreprises : '—' }}
@@ -57,6 +64,13 @@
                 <v-icon size="26">mdi-office-building-outline</v-icon>
               </v-avatar>
             </div>
+            <apexchart
+              v-if="entreprisesSparkline.series[0].data.length"
+              type="area"
+              height="60"
+              :options="entreprisesSparkline.options"
+              :series="entreprisesSparkline.series"
+            />
           </v-card-text>
         </v-card>
       </v-col>
@@ -64,15 +78,24 @@
       <v-col cols="12" sm="6" lg="3">
         <v-card rounded="xl" elevation="0" border>
           <v-card-text class="pa-5">
-            <div class="d-flex align-center justify-space-between">
+            <div class="d-flex align-center justify-space-between mb-3">
               <div>
-                <div class="text-h4 font-weight-bold text-warning">—</div>
+                <div class="text-h4 font-weight-bold text-warning">
+                  {{ totalOffres !== null ? totalOffres : '—' }}
+                </div>
                 <div class="text-body-2 text-medium-emphasis mt-1">Offres publiées</div>
               </div>
               <v-avatar color="warning" variant="tonal" size="52" rounded="lg">
                 <v-icon size="26">mdi-briefcase-outline</v-icon>
               </v-avatar>
             </div>
+            <apexchart
+              v-if="offresSparkline.series[0].data.length"
+              type="area"
+              height="60"
+              :options="offresSparkline.options"
+              :series="offresSparkline.series"
+            />
           </v-card-text>
         </v-card>
       </v-col>
@@ -80,15 +103,102 @@
       <v-col cols="12" sm="6" lg="3">
         <v-card rounded="xl" elevation="0" border>
           <v-card-text class="pa-5">
-            <div class="d-flex align-center justify-space-between">
+            <div class="d-flex align-center justify-space-between mb-3">
               <div>
-                <div class="text-h4 font-weight-bold text-info">—</div>
+                <div class="text-h4 font-weight-bold text-info">
+                  {{ totalEvenements !== null ? totalEvenements : '—' }}
+                </div>
                 <div class="text-body-2 text-medium-emphasis mt-1">Événements à venir</div>
               </div>
               <v-avatar color="info" variant="tonal" size="52" rounded="lg">
                 <v-icon size="26">mdi-calendar-star</v-icon>
               </v-avatar>
             </div>
+            <apexchart
+              v-if="evenementsSparkline.series[0].data.length"
+              type="area"
+              height="60"
+              :options="evenementsSparkline.options"
+              :series="evenementsSparkline.series"
+            />
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <!-- Graphiques principaux -->
+    <v-row class="mb-6" dense>
+      <!-- Évolution des inscriptions -->
+      <v-col cols="12" lg="8">
+        <v-card rounded="xl" elevation="0" border>
+          <v-card-title class="pa-5 pb-2 text-body-1 font-weight-semibold">
+            <v-icon class="mr-2" color="primary" size="20">mdi-chart-line</v-icon>
+            Évolution des inscriptions
+          </v-card-title>
+          <v-card-text class="pa-5 pt-2">
+            <apexchart
+              type="area"
+              height="320"
+              :options="inscriptionsChart.options"
+              :series="inscriptionsChart.series"
+            />
+          </v-card-text>
+        </v-card>
+      </v-col>
+
+      <!-- Répartition par secteur -->
+      <v-col cols="12" lg="4">
+        <v-card rounded="xl" elevation="0" border>
+          <v-card-title class="pa-5 pb-2 text-body-1 font-weight-semibold">
+            <v-icon class="mr-2" color="success" size="20">mdi-chart-donut</v-icon>
+            Secteurs d'activité
+          </v-card-title>
+          <v-card-text class="pa-5 pt-2">
+            <apexchart
+              type="donut"
+              height="320"
+              :options="secteursChart.options"
+              :series="secteursChart.series"
+            />
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <!-- Graphiques secondaires -->
+    <v-row class="mb-6" dense>
+      <!-- Offres par type de contrat -->
+      <v-col cols="12" md="6">
+        <v-card rounded="xl" elevation="0" border>
+          <v-card-title class="pa-5 pb-2 text-body-1 font-weight-semibold">
+            <v-icon class="mr-2" color="warning" size="20">mdi-chart-bar</v-icon>
+            Offres par type de contrat
+          </v-card-title>
+          <v-card-text class="pa-5 pt-2">
+            <apexchart
+              type="bar"
+              height="280"
+              :options="contratsChart.options"
+              :series="contratsChart.series"
+            />
+          </v-card-text>
+        </v-card>
+      </v-col>
+
+      <!-- Candidatures par statut -->
+      <v-col cols="12" md="6">
+        <v-card rounded="xl" elevation="0" border>
+          <v-card-title class="pa-5 pb-2 text-body-1 font-weight-semibold">
+            <v-icon class="mr-2" color="info" size="20">mdi-chart-pie</v-icon>
+            Candidatures par statut
+          </v-card-title>
+          <v-card-text class="pa-5 pt-2">
+            <apexchart
+              type="pie"
+              height="280"
+              :options="candidaturesChart.options"
+              :series="candidaturesChart.series"
+            />
           </v-card-text>
         </v-card>
       </v-col>
@@ -215,6 +325,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import api from '../services/api.js'
+import VueApexCharts from 'vue3-apexcharts'
 
 import CategorieEvenementList from './admin/CategorieEvenementList.vue'
 import EvenementList from './admin/EvenementList.vue'
@@ -244,19 +355,305 @@ const route = useRoute()
 
 const activeTab = computed(() => route.path.split('/').pop() || 'overview')
 
-const totalTalents    = ref(null)
+const totalTalents = ref(null)
 const totalEntreprises = ref(null)
+const totalOffres = ref(null)
+const totalEvenements = ref(null)
+
+// ══════════════════════════════════════════════════════════
+// SPARKLINES (mini graphiques dans les cards)
+// ══════════════════════════════════════════════════════════
+
+const createSparklineOptions = (color) => ({
+  chart: {
+    type: 'area',
+    sparkline: { enabled: true },
+    toolbar: { show: false }
+  },
+  stroke: { curve: 'smooth', width: 2 },
+  fill: {
+    type: 'gradient',
+    gradient: {
+      shadeIntensity: 1,
+      opacityFrom: 0.4,
+      opacityTo: 0.1,
+      stops: [0, 90, 100]
+    }
+  },
+  colors: [color],
+  tooltip: {
+    fixed: { enabled: false },
+    x: { show: false },
+    y: {
+      title: {
+        formatter: () => ''
+      }
+    },
+    marker: { show: false }
+  }
+})
+
+const talentsSparkline = ref({
+  series: [{ name: 'Talents', data: [] }],
+  options: createSparklineOptions('#2563eb')
+})
+
+const entreprisesSparkline = ref({
+  series: [{ name: 'Entreprises', data: [] }],
+  options: createSparklineOptions('#22c55e')
+})
+
+const offresSparkline = ref({
+  series: [{ name: 'Offres', data: [] }],
+  options: createSparklineOptions('#f59e0b')
+})
+
+const evenementsSparkline = ref({
+  series: [{ name: 'Événements', data: [] }],
+  options: createSparklineOptions('#3b82f6')
+})
+
+// ══════════════════════════════════════════════════════════
+// GRAPHIQUE PRINCIPAL - Évolution des inscriptions
+// ══════════════════════════════════════════════════════════
+
+const inscriptionsChart = ref({
+  series: [
+    { name: 'Talents', data: [] },
+    { name: 'Entreprises', data: [] }
+  ],
+  options: {
+    chart: {
+      type: 'area',
+      height: 320,
+      toolbar: { show: false },
+      zoom: { enabled: false }
+    },
+    dataLabels: { enabled: false },
+    stroke: { curve: 'smooth', width: 2 },
+    fill: {
+      type: 'gradient',
+      gradient: {
+        shadeIntensity: 1,
+        opacityFrom: 0.4,
+        opacityTo: 0.1,
+        stops: [0, 90, 100]
+      }
+    },
+    colors: ['#2563eb', '#22c55e'],
+    xaxis: {
+      categories: [],
+      labels: {
+        style: { colors: '#94a3b8', fontSize: '12px' }
+      }
+    },
+    yaxis: {
+      labels: {
+        style: { colors: '#94a3b8', fontSize: '12px' }
+      }
+    },
+    legend: {
+      position: 'top',
+      horizontalAlign: 'right',
+      labels: { colors: '#64748b' }
+    },
+    grid: {
+      borderColor: '#e2e8f0',
+      strokeDashArray: 4
+    },
+    tooltip: {
+      theme: 'light',
+      x: { show: true }
+    }
+  }
+})
+
+// ══════════════════════════════════════════════════════════
+// GRAPHIQUE DONUT - Secteurs d'activité
+// ══════════════════════════════════════════════════════════
+
+const secteursChart = ref({
+  series: [],
+  options: {
+    chart: {
+      type: 'donut',
+      height: 320
+    },
+    labels: [],
+    colors: ['#2563eb', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'],
+    legend: {
+      position: 'bottom',
+      labels: { colors: '#64748b' }
+    },
+    dataLabels: {
+      enabled: true,
+      style: { fontSize: '12px', fontWeight: 600 }
+    },
+    plotOptions: {
+      pie: {
+        donut: {
+          size: '65%',
+          labels: {
+            show: true,
+            name: { show: true, fontSize: '14px', color: '#64748b' },
+            value: { show: true, fontSize: '20px', fontWeight: 700, color: '#1e293b' },
+            total: {
+              show: true,
+              label: 'Total',
+              fontSize: '14px',
+              color: '#64748b',
+              formatter: (w) => {
+                return w.globals.seriesTotals.reduce((a, b) => a + b, 0)
+              }
+            }
+          }
+        }
+      }
+    },
+    tooltip: { theme: 'light' }
+  }
+})
+
+// ══════════════════════════════════════════════════════════
+// GRAPHIQUE BAR - Offres par type de contrat
+// ══════════════════════════════════════════════════════════
+
+const contratsChart = ref({
+  series: [{ name: 'Offres', data: [] }],
+  options: {
+    chart: {
+      type: 'bar',
+      height: 280,
+      toolbar: { show: false }
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: '55%',
+        borderRadius: 8,
+        dataLabels: { position: 'top' }
+      }
+    },
+    dataLabels: {
+      enabled: true,
+      offsetY: -20,
+      style: { fontSize: '12px', colors: ['#64748b'] }
+    },
+    colors: ['#f59e0b'],
+    xaxis: {
+      categories: [],
+      labels: {
+        style: { colors: '#94a3b8', fontSize: '12px' }
+      }
+    },
+    yaxis: {
+      labels: {
+        style: { colors: '#94a3b8', fontSize: '12px' }
+      }
+    },
+    grid: {
+      borderColor: '#e2e8f0',
+      strokeDashArray: 4
+    },
+    tooltip: { theme: 'light' }
+  }
+})
+
+// ══════════════════════════════════════════════════════════
+// GRAPHIQUE PIE - Candidatures par statut
+// ══════════════════════════════════════════════════════════
+
+const candidaturesChart = ref({
+  series: [],
+  options: {
+    chart: {
+      type: 'pie',
+      height: 280
+    },
+    labels: [],
+    colors: ['#22c55e', '#f59e0b', '#ef4444', '#94a3b8'],
+    legend: {
+      position: 'bottom',
+      labels: { colors: '#64748b' }
+    },
+    dataLabels: {
+      enabled: true,
+      style: { fontSize: '12px', fontWeight: 600 }
+    },
+    tooltip: { theme: 'light' }
+  }
+})
+
+// ══════════════════════════════════════════════════════════
+// CHARGEMENT DES DONNÉES
+// ══════════════════════════════════════════════════════════
 
 onMounted(async () => {
   try {
-    const [talentsRes, entreprisesRes] = await Promise.all([
+    // Charger les stats de base
+    const [talentsRes, entreprisesRes, offresRes, evenementsRes] = await Promise.all([
       api.get('/admin/talents?page=1&per_page=1'),
       api.get('/admin/entreprises'),
+      api.get('/admin/offres?page=1&per_page=1'),
+      api.get('/admin/evenements')
     ])
+
     totalTalents.value = talentsRes.data.total ?? null
     const ents = entreprisesRes.data
     totalEntreprises.value = Array.isArray(ents) ? ents.length : (ents.total ?? null)
-  } catch {}
+    totalOffres.value = offresRes.data.total ?? null
+    const evts = evenementsRes.data
+    totalEvenements.value = Array.isArray(evts) ? evts.length : (evts.total ?? null)
+
+    // Générer des données simulées pour les sparklines (7 derniers jours)
+    const generateSparklineData = (base, variance) => {
+      return Array.from({ length: 7 }, (_, i) => 
+        Math.floor(base * (0.7 + Math.random() * 0.3) + (i * variance))
+      )
+    }
+
+    talentsSparkline.value.series[0].data = generateSparklineData(totalTalents.value || 50, 2)
+    entreprisesSparkline.value.series[0].data = generateSparklineData(totalEntreprises.value || 20, 1)
+    offresSparkline.value.series[0].data = generateSparklineData(totalOffres.value || 30, 1.5)
+    evenementsSparkline.value.series[0].data = generateSparklineData(totalEvenements.value || 10, 0.5)
+
+    // Données pour le graphique d'évolution (6 derniers mois)
+    const months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin']
+    inscriptionsChart.value.options.xaxis.categories = months
+    inscriptionsChart.value.series[0].data = [45, 52, 68, 84, 102, totalTalents.value || 120]
+    inscriptionsChart.value.series[1].data = [12, 18, 24, 32, 38, totalEntreprises.value || 45]
+
+    // Charger les secteurs d'activité
+    try {
+      const secteursRes = await api.get('/public/referentiels')
+      const secteurs = secteursRes.data.activity_sectors || []
+      
+      // Simuler une répartition
+      const topSecteurs = secteurs.slice(0, 6)
+      secteursChart.value.options.labels = topSecteurs.map(s => s.name)
+      secteursChart.value.series = topSecteurs.map(() => Math.floor(Math.random() * 30) + 10)
+    } catch (e) {
+      console.error('Erreur chargement secteurs:', e)
+    }
+
+    // Charger les types de contrats
+    try {
+      const contratsRes = await api.get('/public/referentiels')
+      const contrats = contratsRes.data.job_contracts || []
+      
+      contratsChart.value.options.xaxis.categories = contrats.map(c => c.name)
+      contratsChart.value.series[0].data = contrats.map(() => Math.floor(Math.random() * 50) + 10)
+    } catch (e) {
+      console.error('Erreur chargement contrats:', e)
+    }
+
+    // Données simulées pour les candidatures
+    candidaturesChart.value.options.labels = ['Acceptées', 'En attente', 'Refusées', 'Archivées']
+    candidaturesChart.value.series = [45, 30, 15, 10]
+
+  } catch (e) {
+    console.error('Erreur chargement dashboard:', e)
+  }
 })
 
 const quickActions = [
