@@ -26,7 +26,13 @@
     <!-- Stats cards avec mini charts -->
     <v-row class="mb-6" dense>
       <v-col cols="12" sm="6" lg="3">
-        <v-card rounded="xl" elevation="0" border>
+        <v-card 
+          rounded="xl" 
+          elevation="0" 
+          border 
+          class="stat-card-clickable"
+          @click="router.push({ name: 'AdminTalents' })"
+        >
           <v-card-text class="pa-5">
             <div class="d-flex align-center justify-space-between mb-3">
               <div>
@@ -51,7 +57,13 @@
       </v-col>
 
       <v-col cols="12" sm="6" lg="3">
-        <v-card rounded="xl" elevation="0" border>
+        <v-card 
+          rounded="xl" 
+          elevation="0" 
+          border
+          class="stat-card-clickable"
+          @click="router.push({ name: 'AdminEntreprises' })"
+        >
           <v-card-text class="pa-5">
             <div class="d-flex align-center justify-space-between mb-3">
               <div>
@@ -76,7 +88,13 @@
       </v-col>
 
       <v-col cols="12" sm="6" lg="3">
-        <v-card rounded="xl" elevation="0" border>
+        <v-card 
+          rounded="xl" 
+          elevation="0" 
+          border
+          class="stat-card-clickable"
+          @click="router.push({ name: 'AdminOffres' })"
+        >
           <v-card-text class="pa-5">
             <div class="d-flex align-center justify-space-between mb-3">
               <div>
@@ -101,7 +119,13 @@
       </v-col>
 
       <v-col cols="12" sm="6" lg="3">
-        <v-card rounded="xl" elevation="0" border>
+        <v-card 
+          rounded="xl" 
+          elevation="0" 
+          border
+          class="stat-card-clickable"
+          @click="router.push({ name: 'AdminEvenements' })"
+        >
           <v-card-text class="pa-5">
             <div class="d-flex align-center justify-space-between mb-3">
               <div>
@@ -170,9 +194,14 @@
       <!-- Offres par type de contrat -->
       <v-col cols="12" md="6">
         <v-card rounded="xl" elevation="0" border>
-          <v-card-title class="pa-5 pb-2 text-body-1 font-weight-semibold">
-            <v-icon class="mr-2" color="warning" size="20">mdi-chart-bar</v-icon>
-            Offres par type de contrat
+          <v-card-title class="pa-5 pb-2 text-body-1 font-weight-semibold d-flex align-center justify-space-between">
+            <div>
+              <v-icon class="mr-2" color="warning" size="20">mdi-chart-bar</v-icon>
+              Offres par type de contrat
+            </div>
+            <v-chip size="small" color="warning" variant="tonal">
+              {{ totalOffres || 0 }} offres
+            </v-chip>
           </v-card-title>
           <v-card-text class="pa-5 pt-2">
             <apexchart
@@ -427,10 +456,21 @@ const inscriptionsChart = ref({
       type: 'area',
       height: 320,
       toolbar: { show: false },
-      zoom: { enabled: false }
+      zoom: { enabled: false },
+      events: {
+        markerClick: (event, chartContext, { seriesIndex, dataPointIndex }) => {
+          const serieName = chartContext.w.config.series[seriesIndex].name
+          console.log('Point cliqué:', serieName)
+          if (seriesIndex === 0) {
+            router.push({ name: 'AdminTalents' })
+          } else {
+            router.push({ name: 'AdminEntreprises' })
+          }
+        }
+      }
     },
     dataLabels: { enabled: false },
-    stroke: { curve: 'smooth', width: 2 },
+    stroke: { curve: 'smooth', width: 3 },
     fill: {
       type: 'gradient',
       gradient: {
@@ -449,13 +489,23 @@ const inscriptionsChart = ref({
     },
     yaxis: {
       labels: {
-        style: { colors: '#94a3b8', fontSize: '12px' }
+        style: { colors: '#94a3b8', fontSize: '12px' },
+        formatter: (val) => Math.round(val)
+      },
+      title: {
+        text: 'Nombre d\'inscriptions',
+        style: { color: '#64748b', fontSize: '12px', fontWeight: 600 }
       }
     },
     legend: {
       position: 'top',
       horizontalAlign: 'right',
-      labels: { colors: '#64748b' }
+      labels: { colors: '#64748b' },
+      markers: {
+        width: 12,
+        height: 12,
+        radius: 12
+      }
     },
     grid: {
       borderColor: '#e2e8f0',
@@ -463,7 +513,16 @@ const inscriptionsChart = ref({
     },
     tooltip: {
       theme: 'light',
-      x: { show: true }
+      x: { show: true },
+      y: {
+        formatter: (val) => val + ' inscriptions'
+      }
+    },
+    markers: {
+      size: 5,
+      hover: {
+        size: 7
+      }
     }
   }
 })
@@ -477,7 +536,13 @@ const secteursChart = ref({
   options: {
     chart: {
       type: 'donut',
-      height: 320
+      height: 320,
+      events: {
+        dataPointSelection: (event, chartContext, config) => {
+          const sectorName = config.w.config.labels[config.dataPointIndex]
+          console.log('Secteur cliqué:', sectorName)
+        }
+      }
     },
     labels: [],
     colors: ['#2563eb', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'],
@@ -487,7 +552,11 @@ const secteursChart = ref({
     },
     dataLabels: {
       enabled: true,
-      style: { fontSize: '12px', fontWeight: 600 }
+      style: { fontSize: '12px', fontWeight: 600 },
+      formatter: function (val, opts) {
+        const label = opts.w.config.labels[opts.dataPointIndex]
+        return label + ': ' + Math.round(val) + '%'
+      }
     },
     plotOptions: {
       pie: {
@@ -495,22 +564,39 @@ const secteursChart = ref({
           size: '65%',
           labels: {
             show: true,
-            name: { show: true, fontSize: '14px', color: '#64748b' },
-            value: { show: true, fontSize: '20px', fontWeight: 700, color: '#1e293b' },
+            name: { 
+              show: true, 
+              fontSize: '14px', 
+              color: '#64748b',
+              formatter: (val) => val
+            },
+            value: { 
+              show: true, 
+              fontSize: '20px', 
+              fontWeight: 700, 
+              color: '#1e293b',
+              formatter: (val) => val + ' entreprises'
+            },
             total: {
               show: true,
               label: 'Total',
               fontSize: '14px',
               color: '#64748b',
               formatter: (w) => {
-                return w.globals.seriesTotals.reduce((a, b) => a + b, 0)
+                const total = w.globals.seriesTotals.reduce((a, b) => a + b, 0)
+                return total + ' entreprises'
               }
             }
           }
         }
       }
     },
-    tooltip: { theme: 'light' }
+    tooltip: { 
+      theme: 'light',
+      y: {
+        formatter: (val) => val + ' entreprises'
+      }
+    }
   }
 })
 
@@ -519,43 +605,69 @@ const secteursChart = ref({
 // ══════════════════════════════════════════════════════════
 
 const contratsChart = ref({
-  series: [{ name: 'Offres', data: [] }],
+  series: [{ name: 'Nombre d\'offres', data: [] }],
   options: {
     chart: {
       type: 'bar',
       height: 280,
-      toolbar: { show: false }
+      toolbar: { show: false },
+      events: {
+        dataPointSelection: (event, chartContext, config) => {
+          const contratName = config.w.config.xaxis.categories[config.dataPointIndex]
+          console.log('Contrat cliqué:', contratName)
+          router.push({ name: 'AdminOffres' })
+        }
+      }
     },
     plotOptions: {
       bar: {
         horizontal: false,
         columnWidth: '55%',
         borderRadius: 8,
-        dataLabels: { position: 'top' }
+        dataLabels: { position: 'top' },
+        distributed: true
       }
     },
     dataLabels: {
       enabled: true,
       offsetY: -20,
-      style: { fontSize: '12px', colors: ['#64748b'] }
+      style: { 
+        fontSize: '12px', 
+        colors: ['#64748b'],
+        fontWeight: 600
+      },
+      formatter: (val) => val + ' offres'
     },
-    colors: ['#f59e0b'],
+    colors: ['#2563eb', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'],
     xaxis: {
       categories: [],
       labels: {
-        style: { colors: '#94a3b8', fontSize: '12px' }
+        style: { colors: '#94a3b8', fontSize: '12px' },
+        rotate: -45,
+        rotateAlways: false
       }
     },
     yaxis: {
       labels: {
-        style: { colors: '#94a3b8', fontSize: '12px' }
+        style: { colors: '#94a3b8', fontSize: '12px' },
+        formatter: (val) => Math.round(val)
+      },
+      title: {
+        text: 'Nombre d\'offres',
+        style: { color: '#64748b', fontSize: '12px', fontWeight: 600 }
       }
     },
     grid: {
       borderColor: '#e2e8f0',
       strokeDashArray: 4
     },
-    tooltip: { theme: 'light' }
+    tooltip: { 
+      theme: 'light',
+      y: {
+        formatter: (val) => val + ' offres publiées'
+      }
+    },
+    legend: { show: false }
   }
 })
 
@@ -568,7 +680,14 @@ const candidaturesChart = ref({
   options: {
     chart: {
       type: 'pie',
-      height: 280
+      height: 280,
+      events: {
+        dataPointSelection: (event, chartContext, config) => {
+          const statut = config.w.config.labels[config.dataPointIndex]
+          console.log('Statut cliqué:', statut)
+          router.push({ name: 'AdminCandidatures' })
+        }
+      }
     },
     labels: [],
     colors: ['#22c55e', '#f59e0b', '#ef4444', '#94a3b8'],
@@ -578,9 +697,18 @@ const candidaturesChart = ref({
     },
     dataLabels: {
       enabled: true,
-      style: { fontSize: '12px', fontWeight: 600 }
+      style: { fontSize: '12px', fontWeight: 600 },
+      formatter: function (val, opts) {
+        const label = opts.w.config.labels[opts.dataPointIndex]
+        return label + '\n' + Math.round(val) + '%'
+      }
     },
-    tooltip: { theme: 'light' }
+    tooltip: { 
+      theme: 'light',
+      y: {
+        formatter: (val) => val + ' candidatures'
+      }
+    }
   }
 })
 
@@ -590,7 +718,7 @@ const candidaturesChart = ref({
 
 onMounted(async () => {
   try {
-    // Charger les stats de base
+    // Charger les stats de base pour les cards
     const [talentsRes, entreprisesRes, offresRes, evenementsRes] = await Promise.all([
       api.get('/admin/talents?page=1&per_page=1'),
       api.get('/admin/entreprises'),
@@ -605,54 +733,46 @@ onMounted(async () => {
     const evts = evenementsRes.data
     totalEvenements.value = Array.isArray(evts) ? evts.length : (evts.total ?? null)
 
-    // Générer des données simulées pour les sparklines (7 derniers jours)
-    const generateSparklineData = (base, variance) => {
-      return Array.from({ length: 7 }, (_, i) => 
-        Math.floor(base * (0.7 + Math.random() * 0.3) + (i * variance))
-      )
+    // Charger toutes les stats depuis l'endpoint
+    const statsRes = await api.get('/admin/dashboard-stats')
+    const stats = statsRes.data
+
+    // SPARKLINES (7 derniers jours)
+    talentsSparkline.value.series[0].data = stats.sparklines.talents
+    entreprisesSparkline.value.series[0].data = stats.sparklines.entreprises
+    offresSparkline.value.series[0].data = stats.sparklines.offres
+    evenementsSparkline.value.series[0].data = stats.sparklines.evenements
+
+    // ÉVOLUTION DES INSCRIPTIONS (6 mois)
+    inscriptionsChart.value.options.xaxis.categories = stats.evolution.months
+    inscriptionsChart.value.series[0].data = stats.evolution.talents
+    inscriptionsChart.value.series[1].data = stats.evolution.entreprises
+
+    // SECTEURS D'ACTIVITÉ
+    if (stats.secteurs && stats.secteurs.length > 0) {
+      secteursChart.value.options.labels = stats.secteurs.map(s => s.name)
+      secteursChart.value.series = stats.secteurs.map(s => s.count)
     }
 
-    talentsSparkline.value.series[0].data = generateSparklineData(totalTalents.value || 50, 2)
-    entreprisesSparkline.value.series[0].data = generateSparklineData(totalEntreprises.value || 20, 1)
-    offresSparkline.value.series[0].data = generateSparklineData(totalOffres.value || 30, 1.5)
-    evenementsSparkline.value.series[0].data = generateSparklineData(totalEvenements.value || 10, 0.5)
-
-    // Données pour le graphique d'évolution (6 derniers mois)
-    const months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin']
-    inscriptionsChart.value.options.xaxis.categories = months
-    inscriptionsChart.value.series[0].data = [45, 52, 68, 84, 102, totalTalents.value || 120]
-    inscriptionsChart.value.series[1].data = [12, 18, 24, 32, 38, totalEntreprises.value || 45]
-
-    // Charger les secteurs d'activité
-    try {
-      const secteursRes = await api.get('/public/referentiels')
-      const secteurs = secteursRes.data.activity_sectors || []
-      
-      // Simuler une répartition
-      const topSecteurs = secteurs.slice(0, 6)
-      secteursChart.value.options.labels = topSecteurs.map(s => s.name)
-      secteursChart.value.series = topSecteurs.map(() => Math.floor(Math.random() * 30) + 10)
-    } catch (e) {
-      console.error('Erreur chargement secteurs:', e)
+    // OFFRES PAR TYPE DE CONTRAT
+    if (stats.offres_par_contrat && stats.offres_par_contrat.length > 0) {
+      contratsChart.value.options.xaxis.categories = stats.offres_par_contrat.map(c => c.name)
+      contratsChart.value.series[0].data = stats.offres_par_contrat.map(c => c.count)
     }
 
-    // Charger les types de contrats
-    try {
-      const contratsRes = await api.get('/public/referentiels')
-      const contrats = contratsRes.data.job_contracts || []
-      
-      contratsChart.value.options.xaxis.categories = contrats.map(c => c.name)
-      contratsChart.value.series[0].data = contrats.map(() => Math.floor(Math.random() * 50) + 10)
-    } catch (e) {
-      console.error('Erreur chargement contrats:', e)
-    }
-
-    // Données simulées pour les candidatures
+    // CANDIDATURES PAR STATUT
     candidaturesChart.value.options.labels = ['Acceptées', 'En attente', 'Refusées', 'Archivées']
-    candidaturesChart.value.series = [45, 30, 15, 10]
+    candidaturesChart.value.series = [
+      stats.candidatures_statut.acceptees,
+      stats.candidatures_statut.en_attente,
+      stats.candidatures_statut.refusees,
+      stats.candidatures_statut.archivees
+    ]
+
+    console.log('✅ Dashboard chargé avec succès')
 
   } catch (e) {
-    console.error('Erreur chargement dashboard:', e)
+    console.error('❌ Erreur chargement dashboard:', e)
   }
 })
 
@@ -729,3 +849,19 @@ const referentiels = [
   { title: 'Catég. événements', icon: 'mdi-tag-multiple-outline', color: 'cyan', route: { name: 'AdminCategorieEvenements' } },
 ]
 </script>
+
+<style scoped>
+.stat-card-clickable {
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stat-card-clickable:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15) !important;
+}
+
+.stat-card-clickable:active {
+  transform: translateY(-2px);
+}
+</style>
