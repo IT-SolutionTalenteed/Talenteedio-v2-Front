@@ -1,0 +1,131 @@
+/* ════════════════════════════════════════════════════════════════
+   STYLES UNIFORMISÉS POUR LES EN-TÊTES DE SECTIONS
+   Basé sur le design de Home.vue (triple-header & partners-header)
+════════════════════════════════════════════════════════════════ */
+
+/* ── En-tête de section standard ── */
+.section-header,
+.triple-header,
+.partners-header,
+.jobs-header {
+  text-align: center;
+  margin-bottom: 60px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Label de section (petit badge au-dessus du titre) ── */
+.section-label {
+  color: var(--orange, #f07c00);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  display: block;
+}
+
+/* ── Titre de section principal ── */
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 700;
+  margin-bottom: 32px;
+  color: var(--navy, #040a5d);
+  line-height: 1.2;
+}
+
+/* ── Description de section ── */
+.section-description {
+  color: var(--muted, #6b7280);
+  font-size: 18px;
+  line-height: 1.7;
+  margin-bottom: 24px;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── Animation au scroll ── */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-on-scroll.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Délais d'animation échelonnés ── */
+.stagger-1 { transition-delay: 0.1s; }
+.stagger-2 { transition-delay: 0.2s; }
+.stagger-3 { transition-delay: 0.3s; }
+.stagger-4 { transition-delay: 0.4s; }
+.stagger-5 { transition-delay: 0.5s; }
+.stagger-6 { transition-delay: 0.6s; }
+
+/* ── Variantes spécifiques ── */
+
+/* Pour les pages avec fond clair */
+.section-header--light .section-title {
+  color: var(--navy-head, #1c244b);
+}
+
+/* Pour les pages avec fond sombre */
+.section-header--dark .section-label {
+  color: var(--orange, #f29f1f);
+}
+
+.section-header--dark .section-title {
+  color: #fff;
+}
+
+.section-header--dark .section-description {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .section-header,
+  .triple-header,
+  .partners-header,
+  .jobs-header {
+    margin-bottom: 40px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 6vw, 2.5rem);
+    margin-bottom: 20px;
+  }
+
+  .section-description {
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-title {
+    font-size: clamp(1.75rem, 7vw, 2rem);
+  }
+
+  .section-description {
+    font-size: 15px;
+  }
+}
+
+/* ── Accessibilité ── */
+@media (prefers-reduced-motion: reduce) {
+  .animate-on-scroll {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
