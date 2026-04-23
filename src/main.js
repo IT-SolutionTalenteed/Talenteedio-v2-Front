@@ -18,6 +18,7 @@ import i18n from './i18n'
 // Import custom styles (après Vuetify pour priorité CSS)
 import './assets/scss/main.scss'
 import './assets/admin-custom.css'
+import './assets/section-headers.css'
 
 const vuetify = createVuetify({
   components,
