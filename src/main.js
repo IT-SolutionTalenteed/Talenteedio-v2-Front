@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import CKEditor from '@ckeditor/ckeditor5-vue'
+import VueApexCharts from 'vue3-apexcharts'
 
 // Vuetify
 import 'vuetify/styles'
@@ -55,5 +56,6 @@ app.use(router)
 app.use(i18n)
 app.use(CKEditor)
 app.use(vuetify)
+app.component('apexchart', VueApexCharts)
 
 app.mount('#app')
