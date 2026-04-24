@@ -16,11 +16,7 @@ api.interceptors.request.use(
     const token = localStorage.getItem('token')
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
-      console.log('Token ajouté:', token.substring(0, 20) + '...')
-    } else {
-      console.log('Aucun token trouvé dans localStorage')
     }
-    console.log('Requête:', config.method?.toUpperCase(), config.url)
     return config
   },
   (error) => {
@@ -32,19 +28,16 @@ api.interceptors.request.use(
 // Intercepteur pour gérer les erreurs de réponse
 api.interceptors.response.use(
   (response) => {
-    console.log('Réponse reçue:', response.status, response.config.url)
     return response
   },
   (error) => {
     console.error('Erreur API:', {
       status: error.response?.status,
       url: error.config?.url,
-      message: error.response?.data?.message,
-      data: error.response?.data
+      message: error.response?.data?.message
     })
     
     if (error.response?.status === 401) {
-      console.log('Token expiré ou invalide, redirection vers login')
       localStorage.removeItem('token')
       localStorage.removeItem('userRole')
       const current = window.location.pathname + window.location.search
