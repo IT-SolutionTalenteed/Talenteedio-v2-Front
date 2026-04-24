@@ -1088,7 +1088,7 @@ body {
   position: relative;
   aspect-ratio: 4/5;
   border-radius: 16px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .hero-image-bg {
@@ -1097,6 +1097,8 @@ body {
   background-size: cover;
   background-position: center;
   background-image: url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80');
+  border-radius: 16px;
+  z-index: 1;
 }
 
 .hero-image-bg::after {
@@ -1104,6 +1106,7 @@ body {
   position: absolute;
   inset: 0;
   background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+  z-index: 2;
 }
 
 .hero-stats-overlay {
@@ -1120,6 +1123,7 @@ body {
   align-items: center;
   gap: 24px;
   min-width: 200px;
+  z-index: 10;
 }
 
 @media (max-width: 768px) {
