@@ -179,11 +179,15 @@
           </v-card-title>
           <v-card-text class="pa-5 pt-2">
             <apexchart
+              v-if="secteursChart.series.length > 0 && secteursChart.options.labels.length > 0 && secteursChart.options.labels[0] !== 'Chargement...'"
               type="donut"
               height="320"
               :options="secteursChart.options"
               :series="secteursChart.series"
             />
+            <div v-else class="d-flex align-center justify-center" style="height: 320px">
+              <v-progress-circular indeterminate color="success" />
+            </div>
           </v-card-text>
         </v-card>
       </v-col>
@@ -223,11 +227,15 @@
           </v-card-title>
           <v-card-text class="pa-5 pt-2">
             <apexchart
+              v-if="candidaturesChart.series.length > 0 && candidaturesChart.options.labels.length > 0 && candidaturesChart.options.labels[0] !== 'Chargement...'"
               type="pie"
               height="280"
               :options="candidaturesChart.options"
               :series="candidaturesChart.series"
             />
+            <div v-else class="d-flex align-center justify-center" style="height: 280px">
+              <v-progress-circular indeterminate color="info" />
+            </div>
           </v-card-text>
         </v-card>
       </v-col>
@@ -532,7 +540,7 @@ const inscriptionsChart = ref({
 // ══════════════════════════════════════════════════════════
 
 const secteursChart = ref({
-  series: [],
+  series: [1], // Valeur par défaut pour éviter undefined
   options: {
     chart: {
       type: 'donut',
@@ -544,7 +552,7 @@ const secteursChart = ref({
         }
       }
     },
-    labels: [],
+    labels: ['Chargement...'], // Label par défaut
     colors: ['#2563eb', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'],
     legend: {
       position: 'bottom',
@@ -554,7 +562,8 @@ const secteursChart = ref({
       enabled: true,
       style: { fontSize: '12px', fontWeight: 600 },
       formatter: function (val, opts) {
-        const label = opts.w.config.labels[opts.dataPointIndex]
+        const label = opts.w.config.labels?.[opts.dataPointIndex]
+        if (!label) return ''
         return label + ': ' + Math.round(val) + '%'
       }
     },
@@ -568,14 +577,14 @@ const secteursChart = ref({
               show: true, 
               fontSize: '14px', 
               color: '#64748b',
-              formatter: (val) => val
+              formatter: (val) => val || ''
             },
             value: { 
               show: true, 
               fontSize: '20px', 
               fontWeight: 700, 
               color: '#1e293b',
-              formatter: (val) => val + ' entreprises'
+              formatter: (val) => val ? val + ' entreprises' : '0'
             },
             total: {
               show: true,
@@ -596,6 +605,11 @@ const secteursChart = ref({
       y: {
         formatter: (val) => val + ' entreprises'
       }
+    },
+    noData: {
+      text: 'Chargement des données...',
+      align: 'center',
+      verticalAlign: 'middle'
     }
   }
 })
@@ -676,7 +690,7 @@ const contratsChart = ref({
 // ══════════════════════════════════════════════════════════
 
 const candidaturesChart = ref({
-  series: [],
+  series: [1], // Valeur par défaut pour éviter undefined
   options: {
     chart: {
       type: 'pie',
@@ -689,7 +703,7 @@ const candidaturesChart = ref({
         }
       }
     },
-    labels: [],
+    labels: ['Chargement...'], // Label par défaut
     colors: ['#22c55e', '#f59e0b', '#ef4444', '#94a3b8'],
     legend: {
       position: 'bottom',
@@ -699,7 +713,8 @@ const candidaturesChart = ref({
       enabled: true,
       style: { fontSize: '12px', fontWeight: 600 },
       formatter: function (val, opts) {
-        const label = opts.w.config.labels[opts.dataPointIndex]
+        const label = opts.w.config.labels?.[opts.dataPointIndex]
+        if (!label) return ''
         return label + '\n' + Math.round(val) + '%'
       }
     },
@@ -708,6 +723,11 @@ const candidaturesChart = ref({
       y: {
         formatter: (val) => val + ' candidatures'
       }
+    },
+    noData: {
+      text: 'Chargement des données...',
+      align: 'center',
+      verticalAlign: 'middle'
     }
   }
 })
@@ -750,12 +770,16 @@ onMounted(async () => {
 
     // SECTEURS D'ACTIVITÉ
     if (stats.secteurs && stats.secteurs.length > 0) {
-      secteursChart.value.options = {
-        ...secteursChart.value.options,
-        labels: stats.secteurs.map(s => s.name)
+      const labels = stats.secteurs.map(s => s.name)
+      const series = stats.secteurs.map(s => s.count)
+      
+      secteursChart.value = {
+        series: series,
+        options: {
+          ...secteursChart.value.options,
+          labels: labels
+        }
       }
-      secteursChart.value.series = stats.secteurs.map(s => s.count)
-      console.log('✅ Secteurs chargés:', stats.secteurs.length, 'secteurs')
     }
 
     // OFFRES PAR TYPE DE CONTRAT
@@ -768,26 +792,27 @@ onMounted(async () => {
         }
       }
       contratsChart.value.series[0].data = stats.offres_par_contrat.map(c => c.count)
-      console.log('✅ Contrats chargés:', stats.offres_par_contrat.length, 'types')
     }
 
     // CANDIDATURES PAR STATUT
-    candidaturesChart.value.options = {
-      ...candidaturesChart.value.options,
-      labels: ['Acceptées', 'En attente', 'Refusées', 'Archivées']
-    }
-    candidaturesChart.value.series = [
+    const candidaturesLabels = ['Acceptées', 'En attente', 'Refusées', 'Archivées']
+    const candidaturesSeries = [
       stats.candidatures_statut.acceptees || 0,
       stats.candidatures_statut.en_attente || 0,
       stats.candidatures_statut.refusees || 0,
       stats.candidatures_statut.archivees || 0
     ]
-    console.log('✅ Candidatures chargées:', candidaturesChart.value.series)
-
-    console.log('✅ Dashboard chargé avec succès')
+    
+    candidaturesChart.value = {
+      series: candidaturesSeries,
+      options: {
+        ...candidaturesChart.value.options,
+        labels: candidaturesLabels
+      }
+    }
 
   } catch (e) {
-    console.error('❌ Erreur chargement dashboard:', e)
+    console.error('Erreur chargement dashboard:', e)
   }
 })
 
