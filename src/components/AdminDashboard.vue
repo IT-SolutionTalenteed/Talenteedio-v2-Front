@@ -750,24 +750,39 @@ onMounted(async () => {
 
     // SECTEURS D'ACTIVITÉ
     if (stats.secteurs && stats.secteurs.length > 0) {
-      secteursChart.value.options.labels = stats.secteurs.map(s => s.name)
+      secteursChart.value.options = {
+        ...secteursChart.value.options,
+        labels: stats.secteurs.map(s => s.name)
+      }
       secteursChart.value.series = stats.secteurs.map(s => s.count)
+      console.log('✅ Secteurs chargés:', stats.secteurs.length, 'secteurs')
     }
 
     // OFFRES PAR TYPE DE CONTRAT
     if (stats.offres_par_contrat && stats.offres_par_contrat.length > 0) {
-      contratsChart.value.options.xaxis.categories = stats.offres_par_contrat.map(c => c.name)
+      contratsChart.value.options = {
+        ...contratsChart.value.options,
+        xaxis: {
+          ...contratsChart.value.options.xaxis,
+          categories: stats.offres_par_contrat.map(c => c.name)
+        }
+      }
       contratsChart.value.series[0].data = stats.offres_par_contrat.map(c => c.count)
+      console.log('✅ Contrats chargés:', stats.offres_par_contrat.length, 'types')
     }
 
     // CANDIDATURES PAR STATUT
-    candidaturesChart.value.options.labels = ['Acceptées', 'En attente', 'Refusées', 'Archivées']
+    candidaturesChart.value.options = {
+      ...candidaturesChart.value.options,
+      labels: ['Acceptées', 'En attente', 'Refusées', 'Archivées']
+    }
     candidaturesChart.value.series = [
-      stats.candidatures_statut.acceptees,
-      stats.candidatures_statut.en_attente,
-      stats.candidatures_statut.refusees,
-      stats.candidatures_statut.archivees
+      stats.candidatures_statut.acceptees || 0,
+      stats.candidatures_statut.en_attente || 0,
+      stats.candidatures_statut.refusees || 0,
+      stats.candidatures_statut.archivees || 0
     ]
+    console.log('✅ Candidatures chargées:', candidaturesChart.value.series)
 
     console.log('✅ Dashboard chargé avec succès')
 
