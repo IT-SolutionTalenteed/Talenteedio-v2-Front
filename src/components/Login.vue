@@ -96,6 +96,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { authService } from '../services/api.js'
+import { googleAuthService } from '../services/googleAuth.js'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -110,9 +111,8 @@ const recaptchaContainer = ref(null)
 const widgetId         = ref(null)
 
 const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY
-const apiBase = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8000'
 
-const loginWithGoogle = () => { window.location.href = `${apiBase}/api/auth/google/redirect` }
+const loginWithGoogle = () => { googleAuthService.loginWithGoogle() }
 
 const renderRecaptcha = () => {
   if (!recaptchaContainer.value || !window.grecaptcha) return
