@@ -109,10 +109,10 @@
                   <path d="M3.964 10.706A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.706V4.962H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.038l3.007-2.332z" fill="#FBBC05"/>
                   <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.962L3.964 6.294C4.672 4.169 6.656 3.58 9 3.58z" fill="#EA4335"/>
                 </svg>
-                S'inscrire avec Google
+                {{ t('talentRegister.form.googleButton') }}
               </button>
 
-              <div class="auth-divider"><span>ou remplir le formulaire</span></div>
+              <div class="auth-divider"><span>{{ t('talentRegister.form.divider') }}</span></div>
 
               <!-- Stepper -->
               <div class="stepper-nav">
