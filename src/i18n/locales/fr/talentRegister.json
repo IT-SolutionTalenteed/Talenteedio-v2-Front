@@ -24,6 +24,8 @@
   "form": {
     "title": "Rejoindre le Summit",
     "subtitle": "Complétez votre profil pour accéder aux opportunités",
+    "googleButton": "S'inscrire avec Google",
+    "divider": "ou remplir le formulaire",
     "stepper": {
       "step1": {
         "title": "Contact",

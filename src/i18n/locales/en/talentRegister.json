@@ -24,6 +24,8 @@
   "form": {
     "title": "Join the Summit",
     "subtitle": "Complete your profile to access opportunities",
+    "googleButton": "Sign up with Google",
+    "divider": "or fill out the form",
     "stepper": {
       "step1": {
         "title": "Contact",
