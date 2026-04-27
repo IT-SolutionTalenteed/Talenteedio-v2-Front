@@ -53,7 +53,11 @@ onMounted(() => {
   localStorage.setItem('token', token)
   localStorage.setItem('userRole', role)
   if (route.query.user_id) localStorage.setItem('userId', route.query.user_id)
-  if (route.query.user_name) localStorage.setItem('userName', decodeURIComponent(route.query.user_name))
+  if (route.query.user_name) {
+    // Décoder le nom et remplacer les + par des espaces
+    const decodedName = decodeURIComponent(route.query.user_name.replace(/\+/g, ' '))
+    localStorage.setItem('userName', decodedName)
+  }
 
   loading.value = false
 
