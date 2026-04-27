@@ -248,9 +248,10 @@ const routes = [
     path: '/entreprise',
     component: VerticalLayout,
     meta: entrepriseMeta,
-    redirect: '/entreprise/offres',
+    redirect: '/entreprise/overview',
     children: [
-      { path: 'offres',        name: 'EntrepriseDashboard',   component: EntrepriseDashboard, meta: entrepriseMeta },
+      { path: 'overview',      name: 'EntrepriseDashboard',   component: EntrepriseDashboard, meta: entrepriseMeta },
+      { path: 'offres',        name: 'EntrepriseOffres',      component: EntrepriseDashboard, meta: entrepriseMeta },
       { path: 'candidatures',  name: 'EntrepriseCandidatures',component: EntrepriseDashboard, meta: entrepriseMeta },
       { path: 'evenements',    name: 'EntrepriseEvenements',  component: EntrepriseDashboard, meta: entrepriseMeta },
       { path: 'articles',      name: 'EntrepriseArticles',    component: EntrepriseDashboard, meta: entrepriseMeta },
