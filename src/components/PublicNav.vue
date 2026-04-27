@@ -458,7 +458,7 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Open+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
 
 /* ════════════════════════════════
    TOPBAR
@@ -548,7 +548,7 @@ onUnmounted(() => {
 }
 
 .cd-num {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 18px;
   font-weight: 800;
   color: #fff;
@@ -566,7 +566,7 @@ onUnmounted(() => {
 }
 
 .cd-colon {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 16px;
   font-weight: 800;
   color: rgba(255,255,255,.3);
@@ -738,7 +738,7 @@ onUnmounted(() => {
 }
 
 .mega-aside-label {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 30px;
   font-weight: 900;
   color: #fff;
