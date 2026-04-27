@@ -418,7 +418,7 @@ onUnmounted(() => {
 
 <style scoped>
 /* ── Import fonts ── */
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
 
 /* ── Variables ── */
 :root {
@@ -506,7 +506,7 @@ onUnmounted(() => {
 }
 
 .hero-title {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 56px;
   font-weight: 800;
   line-height: 1.2;
@@ -544,7 +544,7 @@ onUnmounted(() => {
 }
 
 .hero-stat-num {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 36px;
   font-weight: 800;
   color: #fff;
@@ -751,7 +751,7 @@ onUnmounted(() => {
   color: #fff;
   font-size: 13px;
   font-weight: 700;
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   letter-spacing: .5px;
   text-transform: uppercase;
   cursor: pointer;
@@ -972,7 +972,7 @@ onUnmounted(() => {
 }
 
 .offre-logo-initial {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 22px;
   font-weight: 800;
   color: var(--blue);
@@ -1020,7 +1020,7 @@ onUnmounted(() => {
 
 /* Titre */
 .offre-title {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 20px;
   font-weight: 700;
   color: var(--navy-head);
@@ -1037,7 +1037,7 @@ onUnmounted(() => {
   font-size: 15px;
   font-weight: 700;
   color: var(--orange);
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   letter-spacing: .2px;
 }
 
@@ -1102,7 +1102,7 @@ onUnmounted(() => {
   border-radius: 50px;
   font-weight: 700;
   font-size: 13px;
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   letter-spacing: .3px;
   text-transform: uppercase;
   border: none;
@@ -1200,7 +1200,7 @@ onUnmounted(() => {
   background: #fff;
   font-size: 14px;
   font-weight: 600;
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   color: var(--navy);
   cursor: pointer;
   transition: all .15s;
