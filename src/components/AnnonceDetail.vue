@@ -471,7 +471,7 @@ onMounted(() => {
 .tag--gray { background: rgba(255,255,255,.15); color: rgba(255,255,255,.85); }
 
 .od-hero-title { 
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 38px; 
   font-weight: 900; 
   color: #fff; 
