@@ -401,7 +401,7 @@ onMounted(load)
 }
 
 .ed-hero-title { 
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 38px; 
   font-weight: 900; 
   color: #fff; 
