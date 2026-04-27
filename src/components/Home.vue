@@ -1,6 +1,6 @@
 <template>
   <div class="home-page">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <PublicNav />
 
@@ -818,7 +818,7 @@ html {
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   background: var(--light-bg);
   color: var(--fg);
 }
@@ -828,7 +828,7 @@ body {
 }
 
 .font-display {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Sarun Pro', sans-serif;
 }
 
 /* ── Animations ─────────────────────────────────── */
@@ -1002,7 +1002,7 @@ body {
 }
 
 .hero-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: clamp(3rem, 8vw, 5rem);
   font-weight: 700;
   line-height: 1.1;
@@ -1245,7 +1245,7 @@ section {
 }
 
 .section-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: clamp(2.5rem, 5vw, 3.5rem);
   font-weight: 700;
   margin-bottom: 32px;
@@ -1442,7 +1442,7 @@ section {
 }
 
 .cta-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: clamp(2.5rem, 5vw, 3.5rem);
   font-weight: 700;
   color: var(--navy);
@@ -1919,7 +1919,7 @@ section {
   position: relative;
 }
 .partners-title {
-  font-family: 'Archivo', 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 54px;
   font-weight: 900;
   line-height: 1.15;
@@ -2111,7 +2111,7 @@ section {
 }
 .home-offre-logo img { width: 100%; height: 100%; object-fit: contain; padding: 6px; }
 .home-offre-logo-initial {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 22px; font-weight: 800; color: var(--blue);
 }
 .home-offre-company-info {
@@ -2128,7 +2128,7 @@ section {
 
 /* Titre */
 .home-offre-title {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 20px; font-weight: 700;
   color: var(--navy-head);
   margin: 0; line-height: 1.2; letter-spacing: -.3px;
@@ -2221,7 +2221,7 @@ section {
 }
 
 .event-info h2 {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 48px;
   font-weight: 800;
   margin: 0 0 20px;
@@ -2293,7 +2293,7 @@ section {
 }
 
 .ecc-num {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 28px;
   font-weight: 800;
   color: #fff;
@@ -2696,7 +2696,7 @@ section {
 }
 
 .job-logo-initial {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 24px; 
   font-weight: 800; 
   color: var(--blue);
@@ -2730,7 +2730,7 @@ section {
 }
 
 .job-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 22px; 
   font-weight: 700;
   color: var(--navy);
@@ -2746,7 +2746,7 @@ section {
   font-size: 15px;
   font-weight: 700;
   color: var(--orange);
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   letter-spacing: .2px;
 }
 
@@ -2886,7 +2886,7 @@ section {
 }
 
 .event-info h2 {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: clamp(2.5rem, 5vw, 3.5rem);
   font-weight: 800;
   margin: 0 0 24px;
@@ -2971,7 +2971,7 @@ section {
 }
 
 .ecc-num {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 800;
   color: #fff;
