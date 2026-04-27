@@ -322,7 +322,7 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
 
 :root {
   --orange: #f29f1f;
@@ -387,7 +387,7 @@ onMounted(async () => {
 }
 
 .hero-title {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 56px;
   font-weight: 800;
   line-height: 1.2;
@@ -410,7 +410,7 @@ onMounted(async () => {
 .hero-stats { display: flex; align-items: center; gap: 24px; }
 .hero-stat  { display: flex; flex-direction: column; gap: 2px; }
 .hero-stat-num {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 36px; font-weight: 800;
   color: #fff; line-height: 1;
   text-shadow: 0 2px 10px rgba(0,0,0,.2);
@@ -551,7 +551,7 @@ onMounted(async () => {
 }
 
 .featured-title {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: clamp(20px, 2.2vw, 28px);
   font-weight: 800;
   color: var(--navy);
