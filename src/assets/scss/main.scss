@@ -1,5 +1,8 @@
 // Styles personnalisés de l'application
 
+// Import de la configuration typographique
+@import './typography.scss';
+
 // Désactiver le fond gris de Vuetify sur les pages publiques uniquement
 .offre-detail-page,
 .entreprise-detail-page,

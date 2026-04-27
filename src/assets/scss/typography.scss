@@ -1,0 +1,63 @@
+/* =====================================================
+   TYPOGRAPHIE - AFRICA TALENT SUMMIT LUXEMBOURG
+   ===================================================== */
+
+/* Import des polices Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+
+/* Note: Sarun Pro doit être ajoutée via un fichier de police local ou un service de polices premium */
+/* Pour l'instant, nous utilisons une fallback appropriée */
+
+/* Variables de polices */
+:root {
+  /* Typographie principale - Sarun Pro */
+  --font-primary: 'Sarun Pro', sans-serif;
+  
+  /* Typographie secondaire - Open Sans */
+  --font-secondary: 'Open Sans', sans-serif;
+  
+  /* Alias pour compatibilité */
+  --font-head: var(--font-primary);
+  --font-body: var(--font-secondary);
+}
+
+/* Application globale des polices */
+body {
+  font-family: var(--font-secondary);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* Titres - Sarun Pro */
+h1, h2, h3, h4, h5, h6,
+.hero-title,
+.section-title,
+.page-title,
+.card-title {
+  font-family: var(--font-primary);
+}
+
+/* Textes courants - Open Sans */
+p, span, a, li,
+.text-body,
+.description,
+.content {
+  font-family: var(--font-secondary);
+}
+
+/* Boutons - Open Sans */
+.btn,
+button,
+input[type="button"],
+input[type="submit"] {
+  font-family: var(--font-secondary);
+}
+
+/* Formulaires - Open Sans */
+input,
+textarea,
+select,
+.form-control,
+.form-select {
+  font-family: var(--font-secondary);
+}
