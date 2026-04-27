@@ -136,7 +136,6 @@ import { useRouter, useRoute } from 'vue-router'
 import WysiwygEditor from '../WysiwygEditor.vue'
 import ComboboxMultiple from '../shared/ComboboxMultiple.vue'
 import offreService from '../../services/entreprise/offreService.js'
-import { useDashboardStore } from '@/stores/dashboard.store'
 
 const router = useRouter()
 const route = useRoute()
@@ -214,8 +213,7 @@ const save = async () => {
 }
 
 const goBack = () => {
-  useDashboardStore().setActiveTab('offres')
-  router.push('/entreprise')
+  router.push({ name: 'EntrepriseOffres' })
 }
 
 onMounted(async () => {

@@ -49,11 +49,9 @@ import { useRoute, useRouter } from 'vue-router'
 import WysiwygEditor from '../WysiwygEditor.vue'
 import ComboboxMultiple from '../shared/ComboboxMultiple.vue'
 import articleService from '../../services/entreprise/articleService.js'
-import { useDashboardStore } from '@/stores/dashboard.store'
 
 const route = useRoute()
 const router = useRouter()
-const dashboardStore = useDashboardStore()
 const isEdit = computed(() => !!route.params.id)
 
 const form = ref({ title: '', content: '', is_published: false, category_ids: [] })
@@ -70,8 +68,7 @@ const showSnack = (msg, color = 'success') => {
 }
 
 const goBack = () => {
-  dashboardStore.setActiveTab('articles')
-  router.push('/entreprise')
+  router.push({ name: 'EntrepriseArticles' })
 }
 
 onMounted(async () => {
