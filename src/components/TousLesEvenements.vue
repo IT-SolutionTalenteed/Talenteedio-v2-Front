@@ -255,7 +255,7 @@ onMounted(async () => {
 }
 
 .hero-title {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 48px;
   font-weight: 900;
   color: #fff;
@@ -291,7 +291,7 @@ onMounted(async () => {
 }
 
 .section-title {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 36px;
   font-weight: 800;
   color: #00235a;
