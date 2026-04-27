@@ -270,7 +270,7 @@ const handleLogin = async () => {
 }
 
 .auth-left-title {
-  font-family: 'Barlow Condensed', 'Open Sans', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 38px;
   font-weight: 700;
   color: #fff;
@@ -351,7 +351,7 @@ const handleLogin = async () => {
 }
 
 .auth-card-header h1 {
-  font-family: 'Barlow Condensed', 'Open Sans', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 32px;
   font-weight: 700;
   color: #041a57;
