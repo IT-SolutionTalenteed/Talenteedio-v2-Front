@@ -1,4 +1,5 @@
 <template>
+  <DashboardOverview v-if="activeTab === 'overview'" />
   <OffreList        v-if="activeTab === 'offres'" />
   <CandidatureList  v-if="activeTab === 'candidatures'" />
   <EvenementList    v-if="activeTab === 'evenements'" />
@@ -11,6 +12,7 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
+import DashboardOverview from './entreprise/DashboardOverview.vue'
 import OffreList from './entreprise/OffreList.vue'
 import CandidatureList from './entreprise/CandidatureList.vue'
 import EvenementList from './entreprise/EvenementList.vue'
@@ -19,5 +21,5 @@ import EntretienList from './entreprise/EntretienList.vue'
 import EditProfile from './EditProfile.vue'
 
 const route = useRoute()
-const activeTab = computed(() => route.path.split('/').pop() || 'offres')
+const activeTab = computed(() => route.path.split('/').pop() || 'overview')
 </script>
