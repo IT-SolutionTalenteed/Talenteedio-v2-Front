@@ -18,7 +18,7 @@
   --light-bg:    #f5f7fc;
   --border:      #e0e4ef;
 
-  --font-head: 'Barlow Condensed', 'Arial Narrow', 'Open Sans', sans-serif;
+  --font-head: 'Sarun Pro', sans-serif;
   --font-body: 'Open Sans', sans-serif;
   --radius-pill: 100px;
   --radius:      8px;
@@ -44,7 +44,7 @@ ul { list-style: none; }
 p { margin-bottom: 1em; }
 
 /* ---------- Google Fonts ---------- */
-@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
 
 /* ---------- Utilities ---------- */
 .container { max-width: 1200px; margin: 0 auto; padding: 0 30px; }
@@ -244,7 +244,7 @@ p { margin-bottom: 1em; }
   display: block;
 }
 .hero-title {
-  font-family: 'Archivo', 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 74px;
   font-weight: 900;
   color: #fff;
@@ -287,7 +287,7 @@ p { margin-bottom: 1em; }
   justify-content: center;
 }
 .cd-num {
-  font-family: 'Archivo', var(--font-head);
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 36px;
   font-weight: 700;
   color: #fff;
@@ -352,7 +352,7 @@ p { margin-bottom: 1em; }
   justify-content: center;
 }
 .cc-num {
-  font-family: 'Archivo', var(--font-head);
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 30px;
   font-weight: 700;
   color: #fff;
@@ -418,7 +418,7 @@ p { margin-bottom: 1em; }
   justify-content: center;
 }
 .ecc-num {
-  font-family: 'Archivo', var(--font-head);
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 28px;
   font-weight: 700;
   color: #fff;
@@ -817,7 +817,7 @@ p { margin-bottom: 1em; }
 }
 .section-bridging .container { position: relative; z-index: 2; width: 100%; }
 .bridging-title {
-  font-family: 'Open Sans Hebrew Condensed', 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 75px;
   font-weight: 700;
   color: #fff;
@@ -858,7 +858,7 @@ p { margin-bottom: 1em; }
 .lux-venue-photo:last-child  { height: 200px; }
 .lux-dark-text { text-align: center; position: relative; z-index: 2; }
 .lux-dark-text h2 {
-  font-family: 'Archivo', var(--font-head);
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 75px;
   font-weight: 700;
   color: var(--orange);
@@ -995,7 +995,7 @@ p { margin-bottom: 1em; }
   position: relative; z-index: 2;
 }
 .event-info h2 {
-  font-family: 'Archivo', var(--font-head);
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 80px;
   font-weight: 900;
   color: #fff;
@@ -1031,7 +1031,7 @@ p { margin-bottom: 1em; }
   text-align: center;
 }
 .ecd-num {
-  font-family: 'Archivo', var(--font-head);
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 36px;
   font-weight: 700;
   color: #fff;

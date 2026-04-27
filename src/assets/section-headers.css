@@ -27,7 +27,7 @@
 
 /* ── Titre de section principal ── */
 .section-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: clamp(2.5rem, 5vw, 3.5rem);
   font-weight: 700;
   margin-bottom: 32px;
