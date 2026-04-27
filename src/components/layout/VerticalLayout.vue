@@ -352,7 +352,7 @@ const sideNav = computed(() => {
   if (role === 'entreprise') {
     return [
       { label: 'Tableau de bord', route: { name: 'EntrepriseDashboard' }, icon: 'mdi-view-dashboard-outline' },
-      { label: 'Mes offres',      route: { name: 'EntrepriseDashboard' }, icon: 'mdi-briefcase-outline' },
+      { label: 'Mes offres',      route: { name: 'EntrepriseOffres' }, icon: 'mdi-briefcase-outline' },
       { label: 'Candidatures',    route: { name: 'EntrepriseCandidatures' }, icon: 'mdi-account-multiple-outline' },
       { label: 'Événements',      route: { name: 'EntrepriseEvenements' }, icon: 'mdi-calendar-star' },
       { label: 'Articles',        route: { name: 'EntrepriseArticles' }, icon: 'mdi-newspaper-variant-outline' },
