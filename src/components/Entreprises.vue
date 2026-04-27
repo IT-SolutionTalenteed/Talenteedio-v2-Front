@@ -255,7 +255,7 @@ onMounted(load)
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
 
 :root {
   --orange: #f29f1f;
@@ -330,7 +330,7 @@ onMounted(load)
 .hero-badge-dot { display: none; }
 
 .hero-title {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 56px;
   font-weight: 800;
   line-height: 1.2;
@@ -357,7 +357,7 @@ onMounted(load)
 .hero-stats { display: flex; align-items: center; gap: 24px; }
 .hero-stat  { display: flex; flex-direction: column; gap: 2px; }
 .hero-stat-num {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 36px;
   font-weight: 800;
   color: #fff;
@@ -517,7 +517,7 @@ onMounted(load)
 }
 
 .results-num {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 26px;
   font-weight: 800;
   color: var(--navy);
@@ -665,7 +665,7 @@ onMounted(load)
 }
 .ent-logo img { width: 100%; height: 100%; object-fit: contain; padding: 8px; }
 .ent-initials {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 28px;
   font-weight: 800;
   color: var(--blue);
@@ -736,7 +736,7 @@ onMounted(load)
 }
 
 .ent-badge-num {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Sarun Pro', sans-serif;
   font-size: 20px;
   font-weight: 800;
   color: var(--navy);
