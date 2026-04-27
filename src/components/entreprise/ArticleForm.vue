@@ -1,5 +1,5 @@
 <template>
-  <VerticalLayout>
+  <div>
     <div class="d-flex align-center mb-5">
       <div class="d-flex align-center ga-2">
         <v-btn icon="mdi-arrow-left" variant="text" density="comfortable" @click="goBack" />
@@ -40,13 +40,12 @@
       </v-card-actions>
     </v-card>
     <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">{{ snackMsg }}</v-snackbar>
-  </VerticalLayout>
+  </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import VerticalLayout from '../layout/VerticalLayout.vue'
 import WysiwygEditor from '../WysiwygEditor.vue'
 import ComboboxMultiple from '../shared/ComboboxMultiple.vue'
 import articleService from '../../services/entreprise/articleService.js'
