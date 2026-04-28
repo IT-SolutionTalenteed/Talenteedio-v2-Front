@@ -228,6 +228,7 @@ const PAGE_TITLES = {
   languages: 'Langues',
   'activity-sectors': "Secteurs d'activité",
   'legal-pages': 'Pages légales',
+  'plans': 'Plans',
   admins: 'Administrateurs',
   'import-candidats': 'Import candidats',
   'sync-crm': 'Sync CRM',
@@ -340,6 +341,11 @@ const sideNav = computed(() => {
         label: 'Pages légales',
         route: { name: 'AdminLegalPages' },
         icon: 'mdi-file-certificate-outline',
+      },
+      {
+        label: 'Plans',
+        route: { name: 'AdminPlans' },
+        icon: 'mdi-crown-outline',
       },
       {
         label: 'Administrateurs',
