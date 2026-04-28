@@ -48,6 +48,34 @@
               clearable
             />
           </v-col>
+          <v-col cols="12" md="6">
+            <v-select
+              v-model="form.plan_id"
+              :items="plans"
+              item-title="name"
+              item-value="id"
+              label="Plan"
+              variant="outlined"
+              density="compact"
+              clearable
+            >
+              <template #item="{ props, item }">
+                <v-list-item v-bind="props">
+                  <template #prepend>
+                    <v-icon color="primary">mdi-crown-outline</v-icon>
+                  </template>
+                  <template #append>
+                    <v-chip size="small" color="success" variant="tonal">
+                      {{ formatPrice(item.raw.price) }}
+                    </v-chip>
+                  </template>
+                </v-list-item>
+              </template>
+              <template #selection="{ item }">
+                <span>{{ item.title }} - {{ formatPrice(item.raw.price) }}</span>
+              </template>
+            </v-select>
+          </v-col>
           <v-col cols="12">
             <v-textarea
               v-model="form.description"
@@ -121,11 +149,12 @@ const isEdit = computed(() => !!route.params.id)
 
 const form = ref({
   nom: '', email: '', description: '', site_web: '',
-  telephone: '', adresse: '', ville: '', pays: '', activity_sector_id: ''
+  telephone: '', adresse: '', ville: '', pays: '', activity_sector_id: '', plan_id: ''
 })
 const logoFile = ref(null)
 const existingLogoUrl = ref(null)
 const activitySectors = ref([])
+const plans = ref([])
 const saving = ref(false)
 
 const snackbar = ref(false)
@@ -146,9 +175,17 @@ const loadReferentiels = async () => {
   try {
     const res = await entrepriseService.getReferentiels()
     activitySectors.value = res.data.activity_sectors || []
+    plans.value = res.data.plans || []
   } catch (err) {
     console.error(err)
   }
+}
+
+const formatPrice = (price) => {
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'EUR'
+  }).format(price)
 }
 
 const loadEntreprise = async () => {
@@ -164,7 +201,8 @@ const loadEntreprise = async () => {
       adresse: item.adresse || '',
       ville: item.ville || '',
       pays: item.pays || '',
-      activity_sector_id: item.activity_sector_id || ''
+      activity_sector_id: item.activity_sector_id || '',
+      plan_id: item.plan_id || ''
     }
     existingLogoUrl.value = item.logo_url || null
   } catch (err) {
@@ -179,6 +217,7 @@ const buildFormData = () => {
   const textFields = ['description', 'site_web', 'telephone', 'adresse', 'ville', 'pays']
   textFields.forEach(f => { if (form.value[f]) fd.append(f, form.value[f]) })
   if (form.value.activity_sector_id) fd.append('activity_sector_id', form.value.activity_sector_id)
+  if (form.value.plan_id) fd.append('plan_id', form.value.plan_id)
   if (logoFile.value) fd.append('logo', logoFile.value)
   return fd
 }

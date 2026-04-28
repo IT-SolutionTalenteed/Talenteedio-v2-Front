@@ -40,6 +40,12 @@
         </v-chip>
         <span v-else class="text-medium-emphasis">-</span>
       </template>
+      <template #item.plan="{ item }">
+        <v-chip v-if="item.plan" size="small" color="primary" variant="tonal" prepend-icon="mdi-crown-outline">
+          {{ item.plan.name }}
+        </v-chip>
+        <span v-else class="text-medium-emphasis">Aucun</span>
+      </template>
       <template #item.actions="{ item }">
         <v-btn icon="mdi-pencil" size="small" color="primary" variant="text" @click="router.push({ name: 'AdminEntrepriseEdit', params: { id: item.id } })" />
         <v-btn icon="mdi-trash-can" size="small" color="error" variant="text" @click="deleteItem(item.id)" />
@@ -75,6 +81,7 @@ const headers = [
   { title: 'Email', key: 'email', sortable: false },
   { title: 'Ville', key: 'ville' },
   { title: 'Secteur', key: 'activity_sector', sortable: false },
+  { title: 'Plan', key: 'plan', sortable: false, width: '150px' },
   { title: '', key: 'actions', sortable: false, width: '100px', align: 'end' },
 ]
 
