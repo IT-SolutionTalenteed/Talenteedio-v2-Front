@@ -42,6 +42,7 @@ import OffreAdminForm from '../components/admin/OffreForm.vue'
 import EvenementForm from '../components/admin/EvenementForm.vue'
 import CategorieEvenementForm from '../components/admin/CategorieEvenementForm.vue'
 import TalentForm from '../components/admin/TalentForm.vue'
+import PlanForm from '../components/admin/PlanForm.vue'
 
 // Entreprise form pages
 import EntrepriseOffreForm from '../components/entreprise/OffreForm.vue'
@@ -222,6 +223,9 @@ const routes = [
       { path: 'legal-pages', name: 'AdminLegalPages', component: AdminDashboard, meta: adminMeta },
       { path: 'legal-pages/create', name: 'AdminLegalPageCreate', component: LegalPageForm, meta: adminMeta },
       { path: 'legal-pages/:id/edit', name: 'AdminLegalPageEdit', component: LegalPageForm, meta: adminMeta },
+      { path: 'plans', name: 'AdminPlans', component: AdminDashboard, meta: adminMeta },
+      { path: 'plans/create', name: 'AdminPlanCreate', component: PlanForm, meta: adminMeta },
+      { path: 'plans/:id/edit', name: 'AdminPlanEdit', component: PlanForm, meta: adminMeta },
       { path: 'admins', name: 'AdminAdmins', component: AdminDashboard, meta: adminMeta },
       { path: 'profile', name: 'AdminProfile', component: EditProfile, meta: adminMeta },
     ]
