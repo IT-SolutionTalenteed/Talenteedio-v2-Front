@@ -354,6 +354,7 @@
   <ExperienceList         v-if="activeTab === 'experiences'" />
   <LanguageList           v-if="activeTab === 'languages'" />
   <ActivitySectorList     v-if="activeTab === 'activity-sectors'" />
+  <PlanList               v-if="activeTab === 'plans'" />
   <LegalPageList          v-if="activeTab === 'legal-pages'" />
   <AdminList              v-if="activeTab === 'admins'" />
 </template>
@@ -377,6 +378,7 @@ import ExperienceList from './admin/ExperienceList.vue'
 import LanguageList from './admin/LanguageList.vue'
 import ActivitySectorList from './admin/ActivitySectorList.vue'
 import LegalPageList from './admin/LegalPageList.vue'
+import PlanList from './admin/PlanList.vue'
 import EntrepriseList from './admin/EntrepriseList.vue'
 import TalentList from './admin/TalentList.vue'
 import EntretienList from './admin/EntretienList.vue'
