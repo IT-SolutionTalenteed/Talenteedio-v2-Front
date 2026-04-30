@@ -108,7 +108,7 @@
               <!-- CTA -->
               <div class="artd-side-card artd-side-cta">
                 <p>{{ t('blog.detail.ctaText') }}</p>
-                <router-link to="/profile-selection" class="btn btn--blue" style="display:block;text-align:center;">
+                <router-link to="/talent-register" class="btn btn--blue" style="display:block;text-align:center;">
                   {{ t('blog.detail.ctaAction') }}
                 </router-link>
               </div>
