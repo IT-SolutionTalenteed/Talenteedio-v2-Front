@@ -452,12 +452,12 @@ export default {
 
 /* ══ LOGO CAROUSEL ══ */
 .logo-carousel-wrap {
-  background: linear-gradient(180deg, #040a5d 0%, #0d1a8a 100%);
+  background: #fff;
   overflow: hidden;
   padding: 20px 0;
   position: relative;
-  border-top: 1px solid rgba(255,255,255,.06);
-  border-bottom: 1px solid rgba(255,255,255,.06);
+  border-top: 1px solid #e8edf5;
+  border-bottom: 1px solid #e8edf5;
 }
 
 .logo-carousel-wrap::before,
@@ -470,8 +470,8 @@ export default {
   pointer-events: none;
 }
 
-.logo-carousel-wrap::before { left: 0;  background: linear-gradient(to right, #040a5d, transparent); }
-.logo-carousel-wrap::after  { right: 0; background: linear-gradient(to left,  #0d1a8a, transparent); }
+.logo-carousel-wrap::before { left: 0;  background: linear-gradient(to right, #fff, transparent); }
+.logo-carousel-wrap::after  { right: 0; background: linear-gradient(to left,  #fff, transparent); }
 
 .logo-track {
   display: flex;
@@ -494,23 +494,24 @@ export default {
 
 .logo-item {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0 44px;
-  border-right: 1px solid rgba(255,255,255,.1);
-  height: 40px;
+  gap: 10px;
+  padding: 0 100px;
+  border-right: 1px solid #e8edf5;
+  height: 100px;
   flex-shrink: 0;
-  cursor: default;
   text-decoration: none;
-  gap: 12px;
 }
 
 .logo-img {
-  height: 32px;
+  max-height: 44px;
+  max-width: 120px;
   width: auto;
-  filter: brightness(0) invert(1);
-  opacity: 0.6;
-  transition: opacity .25s ease;
+  object-fit: contain;
+  opacity: 0.8;
+  transition: opacity .2s;
 }
 
 .logo-item:hover .logo-img {
@@ -518,29 +519,32 @@ export default {
 }
 
 .logo-initial {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: rgba(255,255,255,.15);
-  color: #fff;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #f0f4ff;
+  border: 1px solid #dce4f8;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--blue, #192bc2);
   flex-shrink: 0;
 }
 
 .logo-name {
-  color: rgba(255,255,255,.7);
-  font-size: 13px;
+  color: #64748b;
+  font-size: 12px;
   font-weight: 600;
+  letter-spacing: 0.3px;
   white-space: nowrap;
-  transition: color .25s ease;
+  text-align: center;
+  transition: color .2s;
 }
 
 .logo-item:hover .logo-name {
-  color: rgba(255,255,255,.95);
+  color: var(--navy, #040a5d);
 }
 
 /* ══ MAIN SECTION ══ */
@@ -612,6 +616,28 @@ export default {
 @media (max-width: 960px) {
   .content-layout { grid-template-columns: 1fr !important; }
   .cta-section-sidebar { position: static !important; }
+}
+
+@media (max-width: 768px) {
+  .logo-item {
+    padding: 0 60px;
+    height: 90px;
+  }
+  
+  .logo-img {
+    max-height: 36px;
+    max-width: 100px;
+  }
+  
+  .logo-initial {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+  
+  .logo-name {
+    font-size: 11px;
+  }
 }
 
 @media (max-width: 600px) {
