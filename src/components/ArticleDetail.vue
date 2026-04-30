@@ -131,15 +131,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
 import ShareCard from './ShareCard.vue'
+import { useMeta } from '../composables/useMeta'
 
 const { t, locale } = useI18n()
+const { setMeta, resetMeta } = useMeta()
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const route   = useRoute()
 const article = ref(null)
@@ -150,6 +152,21 @@ const load = async () => {
   try {
     const res = await axios.get(`${apiBase}/public/articles/${route.params.id}`)
     article.value = res.data
+    
+    // Mettre à jour les meta tags pour le partage
+    if (article.value) {
+      const description = article.value.content 
+        ? article.value.content.replace(/<[^>]*>/g, '').substring(0, 160) + '...'
+        : 'Découvrez cet article sur Talenteedio'
+      
+      setMeta({
+        title: article.value.title,
+        description: description,
+        image: article.value.image_url || 'https://talenteed.io/favicon.png',
+        url: window.location.href,
+        type: 'article'
+      })
+    }
   } catch {
     article.value = null
   } finally {
@@ -172,6 +189,10 @@ watch(() => route.params.id, () => {
 
 onMounted(() => {
   load()
+})
+
+onUnmounted(() => {
+  resetMeta()
 })
 </script>
 
