@@ -444,7 +444,7 @@
                 </template>
                 <template v-else>
                   <p>{{ t('evenements.detail.joinCommunity') }}</p>
-                  <router-link to="/profile-selection" class="btn btn--orange" style="display:block;text-align:center;">
+                  <router-link to="/talent-register" class="btn btn--orange" style="display:block;text-align:center;">
                     {{ t('evenements.detail.subscribeFree') }}
                   </router-link>
                 </template>
