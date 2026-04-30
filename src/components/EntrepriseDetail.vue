@@ -239,14 +239,16 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
+import { useMeta } from '../composables/useMeta'
 
 const { t, locale } = useI18n()
+const { setMeta, resetMeta } = useMeta()
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const route   = useRoute()
 const data    = ref(null)
@@ -300,6 +302,22 @@ const load = async () => {
   try {
     const res = await axios.get(`${apiBase}/public/entreprises/${route.params.id}`)
     data.value = res.data
+    
+    // Mettre à jour les meta tags pour le partage
+    if (data.value?.entreprise) {
+      const ent = data.value.entreprise
+      const description = ent.description 
+        ? ent.description.substring(0, 160) + '...'
+        : `Découvrez le profil de ${ent.nom} sur Talenteedio`
+      
+      setMeta({
+        title: ent.nom,
+        description: description,
+        image: ent.logo_url || 'https://talenteed.io/favicon.png',
+        url: window.location.href,
+        type: 'profile'
+      })
+    }
   } catch {
     data.value = null
   } finally {
@@ -314,6 +332,10 @@ const formatDate = (str) => {
 }
 
 onMounted(load)
+
+onUnmounted(() => {
+  resetMeta()
+})
 </script>
 
 <style scoped>
