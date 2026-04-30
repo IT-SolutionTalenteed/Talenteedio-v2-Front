@@ -546,7 +546,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
@@ -555,8 +555,10 @@ import Footer from './Footer.vue'
 import ShareCard from './ShareCard.vue'
 import api from '../services/api.js'
 import { useCountries } from '../composables/useCountries.js'
+import { useMeta } from '../composables/useMeta'
 
 const { t, locale } = useI18n()
+const { setMeta, resetMeta } = useMeta()
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const route   = useRoute()
 
@@ -704,6 +706,22 @@ const load = async () => {
   try {
     const res = await axios.get(`${apiBase}/public/evenements/${route.params.id}`)
     evenement.value = res.data
+    
+    // Mettre à jour les meta tags pour le partage
+    if (evenement.value) {
+      const evt = evenement.value
+      const description = evt.description 
+        ? evt.description.replace(/<[^>]*>/g, '').substring(0, 160) + '...'
+        : `Événement : ${evt.titre} - ${evt.date_debut ? new Date(evt.date_debut).toLocaleDateString('fr-FR') : ''}`
+      
+      setMeta({
+        title: evt.titre,
+        description: description,
+        image: evt.image_url || 'https://talenteed.io/favicon.png',
+        url: window.location.href,
+        type: 'article'
+      })
+    }
   } catch {
     evenement.value = null
   } finally {
@@ -896,6 +914,10 @@ onMounted(async () => {
   if (isEntreprise.value) {
     loadMaDemande()
   }
+})
+
+onUnmounted(() => {
+  resetMeta()
 })
 </script>
 
