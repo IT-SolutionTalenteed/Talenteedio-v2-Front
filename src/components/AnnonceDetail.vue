@@ -264,7 +264,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
@@ -272,8 +272,10 @@ import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
 import ShareCard from './ShareCard.vue'
 import { useFavoris } from '../composables/useFavoris.js'
+import { useMeta } from '../composables/useMeta'
 
 const { t, locale } = useI18n()
+const { setMeta, resetMeta } = useMeta()
 const apiBase    = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const route      = useRoute()
 const offre      = ref(null)
@@ -300,6 +302,21 @@ const load = async () => {
   try {
     const res = await axios.get(`${apiBase}/public/offres/${route.params.id}`)
     offre.value = res.data
+    
+    // Mettre à jour les meta tags pour le partage
+    if (offre.value) {
+      const description = offre.value.description 
+        ? offre.value.description.replace(/<[^>]*>/g, '').substring(0, 160) + '...'
+        : `Offre d'emploi : ${offre.value.titre} chez ${offre.value.entreprise?.nom || 'une entreprise'}`
+      
+      setMeta({
+        title: offre.value.titre,
+        description: description,
+        image: offre.value.entreprise?.logo_url || 'https://talenteed.io/favicon.png',
+        url: window.location.href,
+        type: 'article'
+      })
+    }
   } catch {
     offre.value = null
   } finally {
@@ -382,6 +399,10 @@ watch(() => route.params.id, () => {
 onMounted(() => {
   load()
   loadFavoris()
+})
+
+onUnmounted(() => {
+  resetMeta()
 })
 </script>
 
