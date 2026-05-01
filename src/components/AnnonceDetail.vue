@@ -52,17 +52,22 @@
             <!-- CTA -->
             <div class="od-hero-cta">
               <template v-if="isLoggedIn && userRole === 'talent'">
-                <div class="od-cta-row">
-                  <button class="btn btn--blue btn--lg" @click="showModal = true">
-                    <i class="fa-solid fa-paper-plane" style="margin-right:6px;"></i>{{ t('annonces.detail.apply') }}
-                  </button>
-                  <button
-                    class="btn-favori-hero"
-                    :class="{ 'btn-favori-hero--active': isFavori }"
-                    :title="isFavori ? t('annonces.detail.removeFromFavorites') : t('annonces.detail.addToFavorites')"
-                    @click="toggleFavori"
-                  >
-                    <i :class="isFavori ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
+                <div class="od-cta-col">
+                  <div class="od-cta-row">
+                    <button class="btn btn--blue btn--lg" @click="showModal = true">
+                      <i class="fa-solid fa-paper-plane" style="margin-right:6px;"></i>{{ t('annonces.detail.apply') }}
+                    </button>
+                    <button
+                      class="btn-favori-hero"
+                      :class="{ 'btn-favori-hero--active': isFavori }"
+                      :title="isFavori ? t('annonces.detail.removeFromFavorites') : t('annonces.detail.addToFavorites')"
+                      @click="toggleFavori"
+                    >
+                      <i :class="isFavori ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
+                    </button>
+                  </div>
+                  <button class="btn btn--orange btn--lg" @click="matchCV" style="width:100%;">
+                    <i class="fa-solid fa-wand-magic-sparkles" style="margin-right:6px;"></i>Match CV
                   </button>
                 </div>
               </template>
@@ -202,6 +207,9 @@
                 <p>{{ t('annonces.detail.interestedInJob') }}</p>
                 <template v-if="isLoggedIn && userRole === 'talent'">
                   <button class="btn btn--blue" style="width:100%;" @click="showModal = true">{{ t('annonces.detail.applyNow') }}</button>
+                  <button class="btn btn--orange btn--sm" style="width:100%;margin-top:8px;" @click="matchCV">
+                    <i class="fa-solid fa-wand-magic-sparkles" style="margin-right:6px;"></i>Match CV
+                  </button>
                 </template>
                 <template v-else>
                   <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--blue" style="display:block;text-align:center;">
@@ -256,6 +264,123 @@
       </div>
     </div>
 
+    <!-- Modal de matching CV -->
+    <div v-if="showMatchModal" class="modal-overlay" @click.self="closeMatchModal">
+      <div class="modal-content modal-match">
+        <div class="modal-header">
+          <h2><i class="fa-solid fa-wand-magic-sparkles"></i> Match CV avec l'offre</h2>
+          <button class="modal-close" @click="closeMatchModal">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          
+          <!-- Chargement de la vérification -->
+          <div v-if="loadingExistingMatch" class="match-loading">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <p>Vérification des résultats existants...</p>
+          </div>
+
+          <!-- Résultat existant trouvé -->
+          <div v-else-if="hasExistingMatch && !matchResult" class="match-existing">
+            <div class="match-existing-header">
+              <i class="fa-solid fa-clock-rotate-left"></i>
+              <h3>Résultat déjà disponible</h3>
+            </div>
+            <p>Vous avez déjà effectué un matching pour cette offre le {{ formatDate(existingMatchData.created_at) }}.</p>
+            <div class="match-existing-actions">
+              <button class="btn btn--blue" @click="matchResult = existingMatchData">
+                <i class="fa-solid fa-eye"></i> Voir le résultat
+              </button>
+              <button class="btn btn--outline" @click="forceNewMatch">
+                <i class="fa-solid fa-rotate"></i> Refaire avec un nouveau CV
+              </button>
+            </div>
+          </div>
+
+          <!-- Upload CV (nouveau matching ou pas de résultat existant) -->
+          <div v-else-if="!matchResult" class="match-upload">
+            <div v-if="hasExistingMatch" class="match-info">
+              <i class="fa-solid fa-info-circle"></i>
+              <p>Vous allez créer un nouveau matching qui remplacera l'ancien.</p>
+            </div>
+            <div class="form-group">
+              <label for="match-cv">Téléchargez votre CV <span class="required">*</span></label>
+              <input
+                type="file"
+                id="match-cv"
+                accept=".pdf,.doc,.docx"
+                @change="handleMatchFileChange"
+                :disabled="matchSubmitting"
+              />
+              <p v-if="matchCvFile" class="file-name">
+                <i class="fa-solid fa-file"></i> {{ matchCvFile.name }}
+              </p>
+            </div>
+            <p v-if="matchError" class="match-error">{{ matchError }}</p>
+            <div class="modal-actions">
+              <button type="button" class="btn btn--outline" @click="closeMatchModal">Annuler</button>
+              <button 
+                type="button" 
+                class="btn btn--orange" 
+                @click="submitMatch"
+                :disabled="!matchCvFile || matchSubmitting"
+              >
+                <i v-if="matchSubmitting" class="fa-solid fa-spinner fa-spin"></i>
+                <i v-else class="fa-solid fa-wand-magic-sparkles"></i>
+                {{ matchSubmitting ? 'Analyse en cours...' : 'Analyser le match' }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Résultats du matching -->
+          <div v-else class="match-results">
+            <div class="match-score-main">
+              <div class="match-score-circle" :style="{ borderColor: getScoreColor(matchResult.score) }">
+                <span class="match-score-value" :style="{ color: getScoreColor(matchResult.score) }">
+                  {{ matchResult.score }}%
+                </span>
+                <span class="match-score-label">Compatibilité</span>
+              </div>
+            </div>
+
+            <div class="match-reason">
+              <h3><i class="fa-solid fa-lightbulb"></i> Analyse globale</h3>
+              <p>{{ matchResult.raison }}</p>
+            </div>
+
+            <div v-if="matchResult.details" class="match-details">
+              <h3><i class="fa-solid fa-chart-bar"></i> Détails par catégorie</h3>
+              <div class="match-detail-grid">
+                <div v-for="(detail, key) in matchResult.details" :key="key" class="match-detail-item">
+                  <div class="match-detail-header">
+                    <span class="match-detail-title">{{ getCategoryLabel(key) }}</span>
+                    <span class="match-detail-score" :style="{ color: getScoreColor(detail.score) }">
+                      {{ detail.score }}%
+                    </span>
+                  </div>
+                  <div class="match-detail-bar">
+                    <div 
+                      class="match-detail-bar-fill" 
+                      :style="{ width: detail.score + '%', backgroundColor: getScoreColor(detail.score) }"
+                    ></div>
+                  </div>
+                  <p class="match-detail-text">{{ detail.explication }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-actions">
+              <button type="button" class="btn btn--outline" @click="closeMatchModal">Fermer</button>
+              <button type="button" class="btn btn--blue" @click="showModal = true; closeMatchModal();">
+                <i class="fa-solid fa-paper-plane"></i> Postuler maintenant
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     </div>
 
     <!-- ══ FOOTER ══ -->
@@ -292,6 +417,16 @@ const postuleOk  = ref(false)
 const showModal = ref(false)
 const cvFile = ref(null)
 const submitting = ref(false)
+
+// Modal de matching
+const showMatchModal = ref(false)
+const matchCvFile = ref(null)
+const matchSubmitting = ref(false)
+const matchResult = ref(null)
+const matchError = ref('')
+const hasExistingMatch = ref(false)
+const existingMatchData = ref(null)
+const loadingExistingMatch = ref(false)
 
 const { favoris, loadFavoris, toggleFavori: _toggleFavori, isFavoriId } = useFavoris()
 
@@ -381,6 +516,126 @@ const postuler = async () => {
 
 const toggleFavori = () => {
   if (offre.value) _toggleFavori(offre.value)
+}
+
+const matchCV = async () => {
+  matchResult.value = null
+  matchError.value = ''
+  hasExistingMatch.value = false
+  existingMatchData.value = null
+  
+  // Vérifier si un matching existe déjà
+  loadingExistingMatch.value = true
+  try {
+    const res = await axios.get(
+      `${apiBase}/talent/offres/${offre.value.id}/match`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+    
+    if (res.data.exists) {
+      hasExistingMatch.value = true
+      existingMatchData.value = res.data.matching
+      matchResult.value = res.data.matching
+    }
+  } catch (e) {
+    console.error('Error checking existing match:', e)
+  } finally {
+    loadingExistingMatch.value = false
+  }
+  
+  showMatchModal.value = true
+}
+
+const forceNewMatch = () => {
+  hasExistingMatch.value = false
+  matchResult.value = null
+  existingMatchData.value = null
+}
+
+const handleMatchFileChange = (e) => {
+  const file = e.target.files[0]
+  if (file) {
+    const maxSize = 5 * 1024 * 1024 // 5MB
+    if (file.size > maxSize) {
+      alert(t('annonces.detail.fileTooLarge'))
+      e.target.value = ''
+      matchCvFile.value = null
+      return
+    }
+    matchCvFile.value = file
+  }
+}
+
+const closeMatchModal = () => {
+  showMatchModal.value = false
+  matchCvFile.value = null
+  matchResult.value = null
+  matchError.value = ''
+  hasExistingMatch.value = false
+  existingMatchData.value = null
+}
+
+const submitMatch = async () => {
+  if (!matchCvFile.value) {
+    alert('Veuillez sélectionner un CV')
+    return
+  }
+
+  matchSubmitting.value = true
+  matchError.value = ''
+
+  try {
+    const formData = new FormData()
+    formData.append('cv', matchCvFile.value)
+
+    const res = await axios.post(
+      `${apiBase}/talent/offres/${offre.value.id}/match`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+    )
+
+    matchResult.value = res.data.matching
+    
+    // Log debug info si disponible
+    if (res.data.debug) {
+      console.log('CV parsing debug:', res.data.debug)
+    }
+  } catch (e) {
+    console.error('Match error:', e)
+    matchError.value = e.response?.data?.message || 'Une erreur est survenue lors de l\'analyse.'
+    
+    // Si c'est une erreur de parsing, afficher un message plus détaillé
+    if (e.response?.status === 422) {
+      matchError.value = 'Impossible d\'extraire le contenu du CV. Essayez avec un autre format (PDF ou DOCX) ou vérifiez que votre CV n\'est pas protégé.'
+    }
+  } finally {
+    matchSubmitting.value = false
+  }
+}
+
+const getScoreColor = (score) => {
+  if (score >= 80) return '#22c55e'
+  if (score >= 60) return '#f59e0b'
+  return '#ef4444'
+}
+
+const getCategoryLabel = (key) => {
+  const labels = {
+    competences: 'Compétences',
+    secteur: 'Secteur d\'activité',
+    localisation: 'Localisation',
+    formation: 'Formation & Expérience'
+  }
+  return labels[key] || key
 }
 
 const formatDate = (str) => {
@@ -521,6 +776,7 @@ onUnmounted(() => {
 .od-cta-note { font-size: 13px; color: rgba(255,255,255,.75); text-align: center; margin: 0 auto; }
 
 .od-cta-row { display: flex; align-items: center; gap: 12px; }
+.od-cta-col { display: flex; flex-direction: column; gap: 12px; width: 100%; }
 
 .btn-favori-hero {
   background: rgba(255,255,255,.18);
@@ -707,5 +963,195 @@ onUnmounted(() => {
 .modal-actions .btn { min-width: 120px; }
 .btn:disabled {
   opacity: 0.6; cursor: not-allowed;
+}
+
+/* Modal de matching */
+.modal-match {
+  max-width: 700px;
+}
+.match-loading {
+  text-align: center;
+  padding: 40px 20px;
+}
+.match-loading i {
+  font-size: 32px;
+  color: var(--blue);
+  margin-bottom: 16px;
+}
+.match-loading p {
+  font-size: 14px;
+  color: var(--body-text);
+}
+.match-existing {
+  text-align: center;
+  padding: 20px;
+}
+.match-existing-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.match-existing-header i {
+  font-size: 32px;
+  color: var(--blue);
+}
+.match-existing-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0;
+}
+.match-existing p {
+  font-size: 14px;
+  color: var(--body-text);
+  margin-bottom: 24px;
+}
+.match-existing-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+.match-info {
+  background: #e0f2fe;
+  border: 1px solid #0ea5e9;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.match-info i {
+  color: #0ea5e9;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.match-info p {
+  font-size: 13px;
+  color: #0c4a6e;
+  margin: 0;
+}
+.match-upload {
+  text-align: center;
+}
+.match-error {
+  color: #ef4444;
+  font-size: 13px;
+  margin-top: 12px;
+  padding: 10px;
+  background: #fee2e2;
+  border-radius: 8px;
+}
+.match-results {
+  padding: 10px 0;
+}
+.match-score-main {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+.match-score-circle {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 8px solid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  box-shadow: 0 4px 20px rgba(0,0,0,.1);
+}
+.match-score-value {
+  font-size: 42px;
+  font-weight: 900;
+  line-height: 1;
+}
+.match-score-label {
+  font-size: 13px;
+  color: var(--body-text);
+  margin-top: 8px;
+  font-weight: 600;
+}
+.match-reason {
+  background: var(--light-bg, #f5f7fa);
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+.match-reason h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.match-reason h3 i {
+  color: var(--orange);
+}
+.match-reason p {
+  font-size: 14px;
+  color: var(--navy);
+  line-height: 1.6;
+  margin: 0;
+}
+.match-details h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.match-details h3 i {
+  color: var(--blue);
+}
+.match-detail-grid {
+  display: grid;
+  gap: 20px;
+}
+.match-detail-item {
+  background: #fff;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 10px;
+  padding: 16px;
+}
+.match-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.match-detail-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--navy);
+}
+.match-detail-score {
+  font-size: 16px;
+  font-weight: 800;
+}
+.match-detail-bar {
+  height: 8px;
+  background: var(--light-bg, #f5f7fa);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.match-detail-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+.match-detail-text {
+  font-size: 13px;
+  color: var(--body-text);
+  line-height: 1.5;
+  margin: 0;
 }
 </style>
