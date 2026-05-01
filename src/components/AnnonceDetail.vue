@@ -52,7 +52,13 @@
             <!-- CTA -->
             <div class="od-hero-cta">
               <template v-if="isLoggedIn && userRole === 'talent'">
-                <template v-if="dejaPostule">
+                <template v-if="dejaPostule === null">
+                  <!-- Chargement de la vérification -->
+                  <div style="padding: 20px;">
+                    <i class="fa-solid fa-spinner fa-spin" style="font-size: 24px; color: rgba(255,255,255,.6);"></i>
+                  </div>
+                </template>
+                <template v-else-if="dejaPostule">
                   <div class="deja-postule-badge">
                     <i class="fa-solid fa-check-circle"></i>
                     <span>{{ t('annonces.detail.alreadyApplied') }}</span>
@@ -217,7 +223,13 @@
               <div class="od-side-card od-side-cta">
                 <p>{{ t('annonces.detail.interestedInJob') }}</p>
                 <template v-if="isLoggedIn && userRole === 'talent'">
-                  <template v-if="dejaPostule">
+                  <template v-if="dejaPostule === null">
+                    <!-- Chargement de la vérification -->
+                    <div style="padding: 20px;">
+                      <i class="fa-solid fa-spinner fa-spin" style="font-size: 24px; color: rgba(255,255,255,.6);"></i>
+                    </div>
+                  </template>
+                  <template v-else-if="dejaPostule">
                     <div class="deja-postule-badge" style="margin-bottom:12px;">
                       <i class="fa-solid fa-check-circle"></i>
                       <span>{{ t('annonces.detail.alreadyApplied') }}</span>
@@ -435,7 +447,7 @@ const isTalent   = isLoggedIn.value && userRole.value === 'talent'
 
 const postuleMsg = ref('')
 const postuleOk  = ref(false)
-const dejaPostule = ref(false)
+const dejaPostule = ref(null) // null = chargement, true = déjà postulé, false = pas encore postulé
 
 const showModal = ref(false)
 const cvFile = ref(null)
@@ -463,7 +475,10 @@ const load = async () => {
     
     // Vérifier si l'utilisateur a déjà postulé
     if (isLoggedIn.value && userRole.value === 'talent') {
-      checkDejaPostule()
+      await checkDejaPostule()
+    } else {
+      // Si pas connecté ou pas talent, on peut afficher les boutons
+      dejaPostule.value = false
     }
     
     // Mettre à jour les meta tags pour le partage
