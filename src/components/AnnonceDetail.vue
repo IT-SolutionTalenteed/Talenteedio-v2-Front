@@ -52,24 +52,35 @@
             <!-- CTA -->
             <div class="od-hero-cta">
               <template v-if="isLoggedIn && userRole === 'talent'">
-                <div class="od-cta-col">
-                  <div class="od-cta-row">
-                    <button class="btn btn--blue btn--lg" @click="showModal = true">
-                      <i class="fa-solid fa-paper-plane" style="margin-right:6px;"></i>{{ t('annonces.detail.apply') }}
-                    </button>
-                    <button
-                      class="btn-favori-hero"
-                      :class="{ 'btn-favori-hero--active': isFavori }"
-                      :title="isFavori ? t('annonces.detail.removeFromFavorites') : t('annonces.detail.addToFavorites')"
-                      @click="toggleFavori"
-                    >
-                      <i :class="isFavori ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
+                <template v-if="dejaPostule">
+                  <div class="deja-postule-badge">
+                    <i class="fa-solid fa-check-circle"></i>
+                    <span>{{ t('annonces.detail.alreadyApplied') }}</span>
+                  </div>
+                  <router-link to="/talent/candidatures" class="btn btn--white btn--sm" style="margin-top:12px;">
+                    <i class="fa-solid fa-folder-open" style="margin-right:6px;"></i>{{ t('annonces.detail.viewMyApplications') }}
+                  </router-link>
+                </template>
+                <template v-else>
+                  <div class="od-cta-col">
+                    <div class="od-cta-row">
+                      <button class="btn btn--blue btn--lg" @click="showModal = true">
+                        <i class="fa-solid fa-paper-plane" style="margin-right:6px;"></i>{{ t('annonces.detail.apply') }}
+                      </button>
+                      <button
+                        class="btn-favori-hero"
+                        :class="{ 'btn-favori-hero--active': isFavori }"
+                        :title="isFavori ? t('annonces.detail.removeFromFavorites') : t('annonces.detail.addToFavorites')"
+                        @click="toggleFavori"
+                      >
+                        <i :class="isFavori ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
+                      </button>
+                    </div>
+                    <button class="btn btn--orange btn--lg" @click="matchCV" style="width:100%;">
+                      <i class="fa-solid fa-wand-magic-sparkles" style="margin-right:6px;"></i>Match CV
                     </button>
                   </div>
-                  <button class="btn btn--orange btn--lg" @click="matchCV" style="width:100%;">
-                    <i class="fa-solid fa-wand-magic-sparkles" style="margin-right:6px;"></i>Match CV
-                  </button>
-                </div>
+                </template>
               </template>
               <template v-else-if="isLoggedIn">
                 <p class="od-cta-note">{{ t('annonces.detail.talentOnly') }}</p>
@@ -206,10 +217,21 @@
               <div class="od-side-card od-side-cta">
                 <p>{{ t('annonces.detail.interestedInJob') }}</p>
                 <template v-if="isLoggedIn && userRole === 'talent'">
-                  <button class="btn btn--blue" style="width:100%;" @click="showModal = true">{{ t('annonces.detail.applyNow') }}</button>
-                  <button class="btn btn--orange btn--sm" style="width:100%;margin-top:8px;" @click="matchCV">
-                    <i class="fa-solid fa-wand-magic-sparkles" style="margin-right:6px;"></i>Match CV
-                  </button>
+                  <template v-if="dejaPostule">
+                    <div class="deja-postule-badge" style="margin-bottom:12px;">
+                      <i class="fa-solid fa-check-circle"></i>
+                      <span>{{ t('annonces.detail.alreadyApplied') }}</span>
+                    </div>
+                    <router-link to="/talent/candidatures" class="btn btn--white btn--sm" style="display:block;text-align:center;">
+                      <i class="fa-solid fa-folder-open" style="margin-right:6px;"></i>{{ t('annonces.detail.viewMyApplications') }}
+                    </router-link>
+                  </template>
+                  <template v-else>
+                    <button class="btn btn--blue" style="width:100%;" @click="showModal = true">{{ t('annonces.detail.applyNow') }}</button>
+                    <button class="btn btn--orange btn--sm" style="width:100%;margin-top:8px;" @click="matchCV">
+                      <i class="fa-solid fa-wand-magic-sparkles" style="margin-right:6px;"></i>Match CV
+                    </button>
+                  </template>
                 </template>
                 <template v-else>
                   <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--blue" style="display:block;text-align:center;">
@@ -413,6 +435,7 @@ const isTalent   = isLoggedIn.value && userRole.value === 'talent'
 
 const postuleMsg = ref('')
 const postuleOk  = ref(false)
+const dejaPostule = ref(false)
 
 const showModal = ref(false)
 const cvFile = ref(null)
@@ -438,6 +461,11 @@ const load = async () => {
     const res = await axios.get(`${apiBase}/public/offres/${route.params.id}`)
     offre.value = res.data
     
+    // Vérifier si l'utilisateur a déjà postulé
+    if (isLoggedIn.value && userRole.value === 'talent') {
+      checkDejaPostule()
+    }
+    
     // Mettre à jour les meta tags pour le partage
     if (offre.value) {
       const description = offre.value.description 
@@ -456,6 +484,22 @@ const load = async () => {
     offre.value = null
   } finally {
     loading.value = false
+  }
+}
+
+const checkDejaPostule = async () => {
+  try {
+    const res = await axios.get(`${apiBase}/talent/mes-candidatures`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    
+    // Vérifier si une candidature existe pour cette offre
+    const candidature = res.data.find(c => c.offre_id === parseInt(route.params.id))
+    dejaPostule.value = !!candidature
+  } catch (e) {
+    console.error('Erreur lors de la vérification des candidatures:', e)
   }
 }
 
@@ -505,6 +549,7 @@ const postuler = async () => {
 
     postuleMsg.value = t('annonces.detail.applicationSent')
     postuleOk.value = true
+    dejaPostule.value = true // Marquer comme déjà postulé
     closeModal()
   } catch (e) {
     postuleMsg.value = e.response?.data?.message || 'Une erreur est survenue.'
@@ -816,6 +861,24 @@ onUnmounted(() => {
 .od-apply-msg--ok  { background: rgba(34,197,94,.25); color: #d1fae5; border: 1px solid rgba(34,197,94,.4); }
 .od-apply-msg--err { background: rgba(239,68,68,.25); color: #fee2e2; border: 1px solid rgba(239,68,68,.4); }
 
+/* Badge Déjà postulé */
+.deja-postule-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(34,197,94,.25);
+  color: #d1fae5;
+  border: 2px solid rgba(34,197,94,.4);
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 700;
+  backdrop-filter: blur(10px);
+}
+.deja-postule-badge i {
+  font-size: 18px;
+}
+
 /* ── Corps ── */
 .od-body { padding: 48px 0 80px; }
 .od-layout {
@@ -896,6 +959,27 @@ onUnmounted(() => {
   text-decoration: none; cursor: pointer; transition: border-color .15s, color .15s;
 }
 .btn--outline:hover { border-color: var(--blue); color: var(--blue); }
+
+/* Bouton white */
+.btn--white {
+  border: 2px solid rgba(255,255,255,.3);
+  background: rgba(255,255,255,.95); 
+  color: var(--navy);
+  padding: 8px 16px; 
+  border-radius: 8px; 
+  font-size: 13px; 
+  font-weight: 600;
+  text-decoration: none; 
+  cursor: pointer; 
+  transition: all .2s;
+  backdrop-filter: blur(10px);
+}
+.btn--white:hover { 
+  background: #fff; 
+  border-color: rgba(255,255,255,.5);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+}
 
 /* Modal */
 .modal-overlay {
