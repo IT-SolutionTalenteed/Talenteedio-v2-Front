@@ -51,6 +51,8 @@
     "talentOnly": "Only talents can apply.",
     "loginToApply": "Login to apply",
     "createAccount": "Create an account",
+    "alreadyApplied": "Already applied",
+    "viewMyApplications": "View my applications",
     "mission": "Mission",
     "jobDescription": "Job description",
     "profileSought": "Profile sought",
