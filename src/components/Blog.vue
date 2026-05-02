@@ -227,6 +227,7 @@ import Footer from './Footer.vue'
 const { t, locale } = useI18n()
 const apiBase        = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const articles       = ref([])
+const allArticles    = ref([])
 const categories     = ref([])
 const loading        = ref(false)
 const currentPage    = ref(1)
@@ -250,6 +251,25 @@ const scrollTabs = (px) => {
   tabsRef.value?.scrollBy({ left: px, behavior: 'smooth' })
 }
 
+const loadAllArticlesForCategories = async () => {
+  try {
+    const res = await axios.get(`${apiBase}/public/articles`, { params: { per_page: 1000 } })
+    allArticles.value = res.data.data || []
+    extractCategories()
+  } catch (e) {
+    console.error('Erreur lors du chargement des articles pour catégories:', e)
+  }
+}
+
+const extractCategories = () => {
+  const map = new Map()
+  allArticles.value.forEach(a => {
+    a.media_categories?.forEach(c => map.set(c.id, c))
+  })
+  categories.value = [...map.values()].sort((a, b) => a.name.localeCompare(b.name))
+  nextTick(updateArrows)
+}
+
 const load = async () => {
   loading.value = true
   try {
@@ -266,19 +286,10 @@ const load = async () => {
   }
 }
 
-const extractCategories = () => {
-  const map = new Map()
-  articles.value.forEach(a => {
-    a.media_categories?.forEach(c => map.set(c.id, c))
-  })
-  categories.value = [...map.values()]
-  nextTick(updateArrows)
-}
-
 const selectCategory = (id) => {
   activeCategory.value = id
   currentPage.value = 1
-  load().then(extractCategories)
+  load()
 }
 
 const goToPage = (p) => {
@@ -291,7 +302,11 @@ const goToPage = (p) => {
 const featuredArticle = computed(() => articles.value[0] || null)
 const restArticles    = computed(() => articles.value.slice(1))
 
-const catCount = (catId) => articles.value.filter(a => a.media_categories?.some(c => c.id === catId)).length
+const catCount = (catId) => {
+  return allArticles.value.filter(a => 
+    a.media_categories?.some(c => c.id === catId)
+  ).length
+}
 
 const paginationPages = computed(() => {
   const total = totalPages.value
@@ -316,8 +331,10 @@ const stripHtml  = (html) => !html ? '' : html.replace(/<[^>]*>/g, ' ').replace(
 const truncate   = (str, len) => !str ? '' : str.length > len ? str.slice(0, len) + '…' : str
 
 onMounted(async () => {
-  await load()
-  extractCategories()
+  await Promise.all([
+    loadAllArticlesForCategories(),
+    load()
+  ])
 })
 </script>
 
