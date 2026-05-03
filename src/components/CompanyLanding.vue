@@ -219,18 +219,25 @@
                   <i class="fa-solid fa-triangle-exclamation"></i> {{ error }}
                 </div>
 
+                <!-- Case CGU -->
+                <label class="cgu-checkbox">
+                  <input type="checkbox" v-model="acceptedTerms" />
+                  <span class="cgu-checkmark"></span>
+                  <span class="cgu-label">
+                    J'accepte les
+                    <router-link to="/terms-and-conditions" target="_blank">Conditions générales</router-link>
+                    et la
+                    <router-link to="/privacy-policy" target="_blank">Politique de confidentialité</router-link>
+                    de Talenteed.
+                  </span>
+                </label>
+
                 <!-- Submit -->
-                <button type="submit" class="btn btn--blue btn--lg btn--block" :disabled="loading || !form.plan_id" style="margin-top:24px;">
+                <button type="submit" class="btn btn--blue btn--lg btn--block" :disabled="loading || !form.plan_id || !acceptedTerms" style="margin-top:20px;">
                   <span v-if="loading" class="spinner"></span>
                   <i v-else class="fa-solid fa-rocket"></i>
                   {{ loading ? t('company.form.loading') : t('company.form.submit') }}
                 </button>
-
-                <p class="form-note">
-                  {{ t('company.form.note') }}
-                  <router-link to="/terms-and-conditions">{{ t('company.form.terms') }}</router-link> {{ t('company.form.and') }}
-                  <router-link to="/privacy-policy">{{ t('company.form.privacy') }}</router-link>.
-                </p>
               </form>
             </div>
           </div>
@@ -316,9 +323,10 @@ const form = ref({
   poste: '',
 })
 
-const loading    = ref(false)
-const error      = ref('')
-const registered = ref(false)
+const loading       = ref(false)
+const error         = ref('')
+const registered    = ref(false)
+const acceptedTerms = ref(false)
 const sectors    = ref([])
 const plans      = ref([])
 
@@ -566,6 +574,33 @@ onMounted(loadReferentiels)
 }
 .benefit-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; font-size: 14px; color: var(--navy); font-weight: 500; }
 .benefit-item i { color: var(--blue); font-size: 18px; flex-shrink: 0; }
+
+/* ══ CGU CHECKBOX ══ */
+.cgu-checkbox {
+  display: flex; align-items: flex-start; gap: 12px;
+  cursor: pointer; margin-top: 20px; user-select: none;
+}
+.cgu-checkbox input[type="checkbox"] { display: none; }
+.cgu-checkmark {
+  flex-shrink: 0; width: 20px; height: 20px; margin-top: 1px;
+  border: 2px solid var(--border, #e2e8f0); border-radius: 5px;
+  background: #fff; transition: border-color .2s, background .2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.cgu-checkbox input:checked ~ .cgu-checkmark {
+  background: var(--blue, #3a9bff); border-color: var(--blue, #3a9bff);
+}
+.cgu-checkbox input:checked ~ .cgu-checkmark::after {
+  content: ''; display: block;
+  width: 5px; height: 9px;
+  border: 2px solid #fff; border-top: none; border-left: none;
+  transform: rotate(45deg) translate(-1px, -1px);
+}
+.cgu-label {
+  font-size: 13px; color: #475569; line-height: 1.6;
+}
+.cgu-label a { color: var(--blue, #3a9bff); text-decoration: underline; }
+.cgu-checkbox:hover .cgu-checkmark { border-color: var(--blue, #3a9bff); }
 
 /* ══ BOUTONS ══ */
 .btn--block { width: 100%; display: block; text-align: center; }
