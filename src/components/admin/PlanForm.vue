@@ -16,7 +16,7 @@
             <v-text-field
               v-model="form.name"
               label="Nom du plan *"
-              placeholder="Ex: Gold, Silver, Premium"
+              placeholder="Ex: Starter, Business, Premium"
               :rules="[v => !!v || 'Le nom est requis']"
               variant="outlined"
               density="comfortable"
@@ -54,7 +54,7 @@
           </v-col>
 
           <!-- Statut -->
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" class="d-flex align-center">
             <v-switch
               v-model="form.is_active"
               label="Plan actif"
@@ -78,20 +78,21 @@
           <!-- Limites -->
           <v-col cols="12">
             <v-divider class="mb-4" />
-            <div class="text-subtitle-2 mb-3">Limites du plan</div>
+            <div class="text-subtitle-2 font-weight-semibold mb-1">Restrictions du plan</div>
+            <div class="text-caption text-medium-emphasis mb-4">Laisser vide = illimité</div>
           </v-col>
 
           <v-col cols="12" md="6">
             <v-text-field
               v-model.number="form.max_offres"
-              label="Nombre max d'offres"
+              label="Max d'offres publiables"
               type="number"
               min="0"
-              placeholder="Laisser vide pour illimité"
+              placeholder="Illimité"
               variant="outlined"
               density="comfortable"
-              prepend-inner-icon="mdi-briefcase"
-              hint="Laisser vide pour illimité"
+              prepend-inner-icon="mdi-briefcase-outline"
+              hint="Nb total d'offres que l'entreprise peut publier"
               persistent-hint
             />
           </v-col>
@@ -99,78 +100,71 @@
           <v-col cols="12" md="6">
             <v-text-field
               v-model.number="form.max_articles"
-              label="Nombre max d'articles"
+              label="Max d'articles publiables"
               type="number"
               min="0"
-              placeholder="Laisser vide pour illimité"
+              placeholder="Illimité"
               variant="outlined"
               density="comfortable"
-              prepend-inner-icon="mdi-file-document"
-              hint="Laisser vide pour illimité"
+              prepend-inner-icon="mdi-file-document-outline"
+              hint="Nb total d'articles que l'entreprise peut publier"
               persistent-hint
             />
           </v-col>
 
-          <!-- Fonctionnalités -->
-          <v-col cols="12">
-            <v-divider class="mb-4" />
-            <div class="text-subtitle-2 mb-3">Fonctionnalités incluses</div>
+          <v-col cols="12" md="6">
+            <v-text-field
+              v-model.number="form.max_evenements"
+              label="Max d'événements participés"
+              type="number"
+              min="0"
+              placeholder="Illimité"
+              variant="outlined"
+              density="comfortable"
+              prepend-inner-icon="mdi-calendar-check-outline"
+              hint="Nb d'événements auxquels l'entreprise peut participer"
+              persistent-hint
+            />
           </v-col>
 
-          <v-col cols="12" md="4">
-            <v-switch
-              v-model="form.featured_events"
-              label="Événements premium"
-              color="primary"
-              hide-details
-            >
-              <template #prepend>
-                <v-icon color="primary">mdi-calendar-star</v-icon>
-              </template>
-            </v-switch>
+          <v-col cols="12" md="6">
+            <v-text-field
+              v-model.number="form.max_entretiens_par_evenement"
+              label="Max d'entretiens par événement"
+              type="number"
+              min="0"
+              placeholder="Illimité"
+              variant="outlined"
+              density="comfortable"
+              prepend-inner-icon="mdi-account-multiple-outline"
+              hint="Nb de créneaux d'entretien sur le stand de l'entreprise par événement"
+              persistent-hint
+            />
           </v-col>
 
-          <v-col cols="12" md="4">
-            <v-switch
-              v-model="form.priority_support"
-              label="Support prioritaire"
-              color="warning"
-              hide-details
-            >
-              <template #prepend>
-                <v-icon color="warning">mdi-headset</v-icon>
-              </template>
-            </v-switch>
-          </v-col>
-
-          <v-col cols="12" md="4">
-            <v-switch
-              v-model="form.analytics"
-              label="Analytics avancés"
-              color="info"
-              hide-details
-            >
-              <template #prepend>
-                <v-icon color="info">mdi-chart-line</v-icon>
-              </template>
-            </v-switch>
+          <v-col cols="12" md="6">
+            <v-text-field
+              v-model.number="form.max_candidatures_par_offre"
+              label="Max de candidatures par offre"
+              type="number"
+              min="0"
+              placeholder="Illimité"
+              variant="outlined"
+              density="comfortable"
+              prepend-inner-icon="mdi-inbox-arrow-down-outline"
+              hint="Nb de candidatures que chaque offre peut recevoir"
+              persistent-hint
+            />
           </v-col>
         </v-row>
 
         <v-divider class="my-6" />
 
         <div class="d-flex ga-3">
-          <v-btn
-            type="submit"
-            color="primary"
-            :loading="loading"
-            prepend-icon="mdi-content-save"
-          >
+          <v-btn type="submit" color="primary" :loading="loading" prepend-icon="mdi-content-save">
             {{ isEdit ? 'Mettre à jour' : 'Créer' }}
           </v-btn>
-          <v-btn variant="outlined" @click="router.back()">
-            Annuler
-          </v-btn>
+          <v-btn variant="outlined" @click="router.back()">Annuler</v-btn>
         </div>
       </v-form>
     </v-card-text>
@@ -201,9 +195,9 @@ const form = ref({
   price: 0,
   max_offres: null,
   max_articles: null,
-  featured_events: false,
-  priority_support: false,
-  analytics: false,
+  max_evenements: null,
+  max_entretiens_par_evenement: null,
+  max_candidatures_par_offre: null,
   is_active: true,
   duration_days: 30,
 })
@@ -228,18 +222,23 @@ const load = async () => {
   }
 }
 
+const nullIfEmpty = (val) => (val === '' || val === 0 || val === undefined) ? null : val
+
 const submit = async () => {
   const { valid } = await formRef.value.validate()
   if (!valid) return
 
   loading.value = true
   try {
-    const payload = { ...form.value }
-    
-    // Convertir les valeurs vides en null pour les champs optionnels
-    if (!payload.max_offres) payload.max_offres = null
-    if (!payload.max_articles) payload.max_articles = null
-    if (!payload.description) payload.description = null
+    const payload = {
+      ...form.value,
+      description:                  form.value.description || null,
+      max_offres:                   nullIfEmpty(form.value.max_offres),
+      max_articles:                 nullIfEmpty(form.value.max_articles),
+      max_evenements:               nullIfEmpty(form.value.max_evenements),
+      max_entretiens_par_evenement: nullIfEmpty(form.value.max_entretiens_par_evenement),
+      max_candidatures_par_offre:   nullIfEmpty(form.value.max_candidatures_par_offre),
+    }
 
     if (isEdit.value) {
       await planService.update(route.params.id, payload)
@@ -248,7 +247,7 @@ const submit = async () => {
       await planService.create(payload)
       showSnack('Plan créé avec succès')
     }
-    
+
     setTimeout(() => router.push({ name: 'AdminPlans' }), 1000)
   } catch (err) {
     showSnack(err.response?.data?.message || 'Erreur lors de la sauvegarde', 'error')
