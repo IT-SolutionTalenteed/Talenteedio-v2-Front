@@ -50,6 +50,36 @@
           </v-col>
           <v-col cols="12" md="6">
             <v-select
+              v-model="form.status"
+              :items="statusOptions"
+              item-title="label"
+              item-value="value"
+              label="Statut du compte"
+              variant="outlined"
+              density="compact"
+            >
+              <template #selection="{ item }">
+                <v-chip
+                  size="small"
+                  :color="item.raw.value === 'active' ? 'success' : 'warning'"
+                  variant="tonal"
+                >
+                  {{ item.raw.label }}
+                </v-chip>
+              </template>
+              <template #item="{ props, item }">
+                <v-list-item v-bind="props">
+                  <template #prepend>
+                    <v-icon :color="item.raw.value === 'active' ? 'success' : 'warning'">
+                      {{ item.raw.value === 'active' ? 'mdi-check-circle' : 'mdi-clock-outline' }}
+                    </v-icon>
+                  </template>
+                </v-list-item>
+              </template>
+            </v-select>
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-select
               v-model="form.plan_id"
               :items="plans"
               item-title="name"
@@ -147,8 +177,13 @@ const router = useRouter()
 
 const isEdit = computed(() => !!route.params.id)
 
+const statusOptions = [
+  { value: 'active',  label: 'Actif' },
+  { value: 'pending', label: 'En attente' },
+]
+
 const form = ref({
-  nom: '', email: '', description: '', site_web: '',
+  nom: '', email: '', status: 'active', description: '', site_web: '',
   telephone: '', adresse: '', ville: '', pays: '', activity_sector_id: '', plan_id: ''
 })
 const logoFile = ref(null)
@@ -195,6 +230,7 @@ const loadEntreprise = async () => {
     form.value = {
       nom: item.nom || '',
       email: item.user?.email || '',
+      status: item.status || 'active',
       description: item.description || '',
       site_web: item.site_web || '',
       telephone: item.telephone || '',
@@ -214,6 +250,7 @@ const buildFormData = () => {
   const fd = new FormData()
   fd.append('nom', form.value.nom)
   fd.append('email', form.value.email)
+  fd.append('status', form.value.status)
   const textFields = ['description', 'site_web', 'telephone', 'adresse', 'ville', 'pays']
   textFields.forEach(f => { if (form.value[f]) fd.append(f, form.value[f]) })
   if (form.value.activity_sector_id) fd.append('activity_sector_id', form.value.activity_sector_id)
