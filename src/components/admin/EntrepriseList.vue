@@ -46,6 +46,16 @@
         </v-chip>
         <span v-else class="text-medium-emphasis">Aucun</span>
       </template>
+      <template #item.status="{ item }">
+        <v-chip
+          size="small"
+          :color="item.status === 'active' ? 'success' : 'warning'"
+          variant="tonal"
+          :prepend-icon="item.status === 'active' ? 'mdi-check-circle' : 'mdi-clock-outline'"
+        >
+          {{ item.status === 'active' ? 'Actif' : 'En attente' }}
+        </v-chip>
+      </template>
       <template #item.actions="{ item }">
         <v-btn icon="mdi-pencil" size="small" color="primary" variant="text" @click="router.push({ name: 'AdminEntrepriseEdit', params: { id: item.id } })" />
         <v-btn icon="mdi-trash-can" size="small" color="error" variant="text" @click="deleteItem(item.id)" />
@@ -82,6 +92,7 @@ const headers = [
   { title: 'Ville', key: 'ville' },
   { title: 'Secteur', key: 'activity_sector', sortable: false },
   { title: 'Plan', key: 'plan', sortable: false, width: '150px' },
+  { title: 'Statut', key: 'status', sortable: false, width: '130px' },
   { title: '', key: 'actions', sortable: false, width: '100px', align: 'end' },
 ]
 
