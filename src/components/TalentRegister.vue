@@ -328,6 +328,16 @@
                   {{ t('talentRegister.form.step2.success') }}
                 </div>
 
+                <!-- Consent Checkbox -->
+                <div class="consent-checkbox-wrapper">
+                  <label class="consent-checkbox">
+                    <input type="checkbox" v-model="form.consentAccepted" class="consent-input">
+                    <span class="consent-text">
+                      Je reconnais avoir lu <a :href="`${backendBase}/assets/talent_consent.pdf`" target="_blank" rel="noopener noreferrer" class="consent-link">le consentement</a> et accepte de le signer électroniquement avec mon nom.
+                    </span>
+                  </label>
+                </div>
+
                 <div style="display:flex;gap:12px;flex-wrap:wrap">
                   <button type="button" class="btn"
                     style="border:2px solid var(--border);color:var(--navy);background:#fff"
@@ -335,7 +345,7 @@
                     <i class="fa-solid fa-arrow-left"></i> {{ t('talentRegister.form.step2.backButton') }}
                   </button>
                   <button type="button" class="btn btn--orange btn--lg" style="flex:1;justify-content:center"
-                    :disabled="loading" @click="handleSubmit">
+                    :disabled="loading || !form.consentAccepted" @click="handleSubmit">
                     <span v-if="loading" class="spinner"></span>
                     <template v-else>
                       <i class="fa-solid fa-check"></i>
@@ -410,6 +420,7 @@ import { googleAuthService } from '../services/googleAuth.js'
 const router = useRouter()
 const { t } = useI18n()
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const backendBase = apiBase.replace('/api', '')
 
 const registerWithGoogle = () => {
   googleAuthService.registerWithGoogle()
@@ -440,7 +451,8 @@ const form = ref({
   poste: '',
   competences: '',
   pays_relocation: '',
-  ville_relocation: ''
+  ville_relocation: '',
+  consentAccepted: false
 })
 
 // ── Carrousel infini ───────────────────────────────────────
@@ -1276,6 +1288,47 @@ onUnmounted(() => {
   color: #22c55e;
   font-size: 14px;
   flex-shrink: 0;
+}
+
+/* Consent Checkbox */
+.consent-checkbox-wrapper {
+  margin: 20px 0;
+  padding: 16px;
+  background: #f9fafb;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.consent-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.consent-input {
+  margin-top: 3px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.consent-text {
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.6;
+}
+
+.consent-link {
+  color: var(--blue);
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.consent-link:hover {
+  color: var(--orange);
 }
 
 /* Mobile CTA Bar */
