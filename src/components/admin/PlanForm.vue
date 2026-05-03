@@ -39,20 +39,6 @@
             />
           </v-col>
 
-          <!-- Durée -->
-          <v-col cols="12" md="6">
-            <v-text-field
-              v-model.number="form.duration_days"
-              label="Durée (jours) *"
-              type="number"
-              min="1"
-              :rules="[v => v > 0 || 'La durée doit être positive']"
-              variant="outlined"
-              density="comfortable"
-              prepend-inner-icon="mdi-calendar-clock"
-            />
-          </v-col>
-
           <!-- Statut -->
           <v-col cols="12" md="6" class="d-flex align-center">
             <v-switch
@@ -199,7 +185,6 @@ const form = ref({
   max_entretiens_par_evenement: null,
   max_candidatures_par_offre: null,
   is_active: true,
-  duration_days: 30,
 })
 
 const showSnack = (msg, color = 'success') => {
