@@ -198,6 +198,9 @@
 
           <!-- Non-connecté -->
           <template v-if="!isLoggedIn">
+            <router-link to="/corporate-register" class="btn-nav btn-nav--sponsor">
+              <i class="fa-solid fa-handshake"></i> Sponsoriser
+            </router-link>
             <router-link to="/profile-selection" class="btn-nav btn-nav--outline">{{ t('nav.subscription') }}</router-link>
             <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn-nav btn-nav--filled">{{ t('nav.login') }}</router-link>
           </template>
@@ -336,6 +339,9 @@
               <button class="mob-lang-btn" :class="{ 'mob-lang-btn--active': locale === 'en' }" @click="setLocale('en')">🇬🇧 EN</button>
             </div>
             <div class="mob-auth" v-if="!isLoggedIn">
+              <router-link to="/corporate-register" class="mob-btn mob-btn--sponsor" @click="menuOpen = false">
+                <i class="fa-solid fa-handshake"></i> Sponsoriser
+              </router-link>
               <router-link to="/profile-selection" class="mob-btn mob-btn--outline" @click="menuOpen = false">{{ t('nav.subscription') }}</router-link>
               <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="mob-btn mob-btn--filled" @click="menuOpen = false">{{ t('nav.login') }}</router-link>
             </div>
@@ -940,6 +946,13 @@ onUnmounted(() => {
   border-color: #00235a;
 }
 .btn-nav--filled:hover { background: #001a45; transform: translateY(-1px); }
+.btn-nav--sponsor {
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  color: #fff;
+  border-color: transparent;
+  font-weight: 600;
+}
+.btn-nav--sponsor:hover { background: linear-gradient(135deg, #ea580c, #c2410c); transform: translateY(-1px); }
 
 /* User */
 .user-wrap { position: relative; }
@@ -1165,6 +1178,10 @@ onUnmounted(() => {
     background: #00235a; color: #fff; border-color: #00235a;
   }
   .mob-btn--filled:hover { background: #001a45; }
+  .mob-btn--sponsor {
+    background: linear-gradient(135deg, #f97316, #ea580c); color: #fff; border-color: transparent; font-weight: 600;
+  }
+  .mob-btn--sponsor:hover { background: linear-gradient(135deg, #ea580c, #c2410c); }
   .mob-btn--danger {
     background: #fff5f5; color: #ef4444; border-color: #fee2e2;
   }
