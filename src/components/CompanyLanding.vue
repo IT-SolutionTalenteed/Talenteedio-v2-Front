@@ -169,46 +169,53 @@
                 </div>
 
                 <div v-if="plans.length" class="plans-grid">
-                  <div
+                  <label
                     v-for="plan in plans"
                     :key="plan.id"
                     class="plan-card"
                     :class="{ 'plan-card--selected': form.plan_id === plan.id }"
-                    @click="form.plan_id = plan.id"
                   >
-                    <div class="plan-card__header">
-                      <div>
-                        <span class="plan-card__name">{{ plan.name }}</span>
+                    <input type="radio" name="plan" :value="plan.id" v-model="form.plan_id" class="plan-radio" />
+                    <div class="plan-card__top">
+                      <div class="plan-card__name">{{ plan.name }}</div>
+                      <div class="plan-card__price">
+                        <span class="plan-card__amount">{{ formatPlanPrice(plan.price) }}</span>
+                        <span class="plan-card__period">/mois</span>
                       </div>
-                      <span class="plan-card__price">{{ formatPlanPrice(plan.price) }}<small>/mois</small></span>
                     </div>
                     <ul class="plan-card__features">
-                      <li><i class="fa-solid fa-briefcase"></i>
+                      <li>
+                        <i class="fa-solid fa-briefcase"></i>
                         <span v-if="plan.max_offres !== null">{{ plan.max_offres }} offre(s) max</span>
                         <span v-else>Offres illimitées</span>
                       </li>
-                      <li><i class="fa-solid fa-file-lines"></i>
+                      <li>
+                        <i class="fa-solid fa-file-lines"></i>
                         <span v-if="plan.max_articles !== null">{{ plan.max_articles }} article(s) max</span>
                         <span v-else>Articles illimités</span>
                       </li>
-                      <li><i class="fa-solid fa-calendar-check"></i>
+                      <li>
+                        <i class="fa-solid fa-calendar-check"></i>
                         <span v-if="plan.max_evenements !== null">{{ plan.max_evenements }} événement(s) max</span>
                         <span v-else>Événements illimités</span>
                       </li>
-                      <li><i class="fa-solid fa-handshake"></i>
+                      <li>
+                        <i class="fa-solid fa-handshake"></i>
                         <span v-if="plan.max_entretiens_par_evenement !== null">{{ plan.max_entretiens_par_evenement }} entretiens/événement</span>
                         <span v-else>Entretiens illimités</span>
                       </li>
-                      <li><i class="fa-solid fa-inbox"></i>
+                      <li>
+                        <i class="fa-solid fa-inbox"></i>
                         <span v-if="plan.max_candidatures_par_offre !== null">{{ plan.max_candidatures_par_offre }} candidatures/offre</span>
                         <span v-else>Candidatures illimitées</span>
                       </li>
                     </ul>
-                    <div class="plan-card__check">
+                    <div class="plan-card__indicator">
                       <i v-if="form.plan_id === plan.id" class="fa-solid fa-circle-check"></i>
                       <i v-else class="fa-regular fa-circle"></i>
+                      <span>{{ form.plan_id === plan.id ? 'Sélectionné' : 'Choisir' }}</span>
                     </div>
-                  </div>
+                  </label>
                 </div>
                 <div v-else class="form-group">
                   <p class="text-muted">Chargement des plans…</p>
@@ -219,15 +226,17 @@
                   <i class="fa-solid fa-triangle-exclamation"></i> {{ error }}
                 </div>
 
-                <!-- Case CGU -->
+                <!-- Case CGU fusionnée -->
                 <label class="cgu-checkbox">
                   <input type="checkbox" v-model="acceptedTerms" />
                   <span class="cgu-checkmark"></span>
                   <span class="cgu-label">
-                    J'accepte les
-                    <router-link to="/terms-and-conditions" target="_blank">Conditions générales</router-link>
+                    Je reconnais avoir lu
+                    <a href="/static/assets/talent_consent.pdf" target="_blank" rel="noopener noreferrer" class="cgu-link">le document de consentement</a>
+                    et j'accepte de le signer électroniquement avec mon nom. J'accepte également les
+                    <router-link to="/terms-and-conditions" target="_blank" class="cgu-link">Conditions générales</router-link>
                     et la
-                    <router-link to="/privacy-policy" target="_blank">Politique de confidentialité</router-link>
+                    <router-link to="/privacy-policy" target="_blank" class="cgu-link">Politique de confidentialité</router-link>
                     de Talenteed.
                   </span>
                 </label>
@@ -282,7 +291,6 @@
               <div class="benefit-item"><i class="fa-solid fa-check-circle"></i><span>{{ t('company.benefits.free') }}</span></div>
               <div class="benefit-item"><i class="fa-solid fa-check-circle"></i><span>{{ t('company.benefits.access') }}</span></div>
               <div class="benefit-item"><i class="fa-solid fa-check-circle"></i><span>{{ t('company.benefits.support') }}</span></div>
-              <div class="benefit-item"><i class="fa-solid fa-check-circle"></i><span>{{ t('company.benefits.noCard') }}</span></div>
             </div>
           </div>
 
@@ -520,13 +528,15 @@ onMounted(loadReferentiels)
 .plans-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 8px; }
 @media(max-width:640px) { .plans-grid { grid-template-columns: 1fr; } }
 
+.plan-radio { display: none; }
+
 .plan-card {
+  display: block;
   border: 2px solid var(--border,#e2e8f0);
   border-radius: 12px;
   padding: 18px;
   cursor: pointer;
   transition: border-color .2s, box-shadow .2s, transform .15s;
-  position: relative;
   background: #fff;
 }
 .plan-card:hover { border-color: var(--blue); box-shadow: 0 4px 16px rgba(0,35,90,.1); transform: translateY(-2px); }
@@ -535,21 +545,27 @@ onMounted(loadReferentiels)
   background: linear-gradient(135deg, #f0f4ff, #e8f0ff);
   box-shadow: 0 4px 20px rgba(0,35,90,.15);
 }
-.plan-card__header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
-.plan-card__name { font-size: 15px; font-weight: 800; color: var(--navy); display: block; }
-.plan-card__price { font-size: 18px; font-weight: 800; color: var(--blue); text-align: right; line-height: 1.2; flex-shrink: 0; }
-.plan-card__price small { font-size: 11px; font-weight: 500; color: #64748b; display: block; }
-.plan-card__features { list-style: none; margin: 0; padding: 0; }
+.plan-card__top {
+  display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;
+}
+.plan-card__name { font-size: 15px; font-weight: 800; color: var(--navy); }
+.plan-card__price { text-align: right; flex-shrink: 0; }
+.plan-card__amount { display: block; font-size: 18px; font-weight: 800; color: var(--blue); line-height: 1.2; }
+.plan-card__period { font-size: 11px; font-weight: 500; color: #64748b; }
+.plan-card--selected .plan-card__amount { color: var(--blue); }
+.plan-card__features { list-style: none; margin: 0 0 12px; padding: 0; }
 .plan-card__features li {
   display: flex; align-items: center; gap: 8px; font-size: 13px;
   color: #475569; padding: 4px 0;
 }
 .plan-card__features li i { color: var(--blue); font-size: 12px; flex-shrink: 0; width: 14px; }
-.plan-card__check {
-  position: absolute; top: 12px; right: 12px;
-  font-size: 18px; color: var(--blue);
+.plan-card__indicator {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 12px; font-weight: 600; color: #94a3b8;
+  padding-top: 8px; border-top: 1px solid #f1f5f9;
 }
-.plan-card:not(.plan-card--selected) .plan-card__check { color: #cbd5e1; }
+.plan-card--selected .plan-card__indicator { color: var(--blue); }
+.plan-card__indicator i { font-size: 16px; }
 
 /* ══ CTA RAPPEL ══ */
 .cta-section { position: sticky; top: 100px; }
@@ -600,6 +616,8 @@ onMounted(loadReferentiels)
   font-size: 13px; color: #475569; line-height: 1.6;
 }
 .cgu-label a { color: var(--blue, #3a9bff); text-decoration: underline; }
+.cgu-link { color: var(--blue, #3a9bff); text-decoration: underline; font-weight: 600; }
+.cgu-link:hover { color: var(--orange, #f29f1f); }
 .cgu-checkbox:hover .cgu-checkmark { border-color: var(--blue, #3a9bff); }
 
 /* ══ BOUTONS ══ */
