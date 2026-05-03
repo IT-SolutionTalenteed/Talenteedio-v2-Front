@@ -145,7 +145,17 @@
                   <span>{{ error }}</span>
                 </div>
 
-                <button type="submit" class="btn btn--orange btn--lg btn--block" :disabled="isSubmitting">
+                <!-- Consent Checkbox -->
+                <div class="consent-checkbox-wrapper">
+                  <label class="consent-checkbox">
+                    <input type="checkbox" v-model="formData.consentAccepted" class="consent-input">
+                    <span class="consent-text">
+                      Je reconnais avoir lu <a :href="`${backendBase}/assets/talent_consent.pdf`" target="_blank" rel="noopener noreferrer" class="consent-link">le consentement</a> et accepte de le signer électroniquement avec mon nom.
+                    </span>
+                  </label>
+                </div>
+
+                <button type="submit" class="btn btn--orange btn--lg btn--block" :disabled="isSubmitting || !formData.consentAccepted">
                   <span v-if="isSubmitting" class="spinner"></span>
                   <template v-else>
                     <i class="fa-solid fa-handshake"></i>
@@ -257,7 +267,8 @@ export default {
         secteur_souhaite_id: '',
         taille: '',
         ville: '',
-        pays: ''
+        pays: '',
+        consentAccepted: false
       },
       error: '',
       isSubmitting: false,
@@ -327,6 +338,8 @@ export default {
   },
   async mounted() {
     const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+    this.apiBase = apiBase
+    this.backendBase = apiBase.replace('/api', '')
     
     try {
       const [sectorsRes, evRes] = await Promise.all([
@@ -643,5 +656,46 @@ export default {
 @media (max-width: 600px) {
   .event-kpis { gap: 28px; }
   .event-kpi-number { font-size: 34px; }
+}
+
+/* Consent Checkbox */
+.consent-checkbox-wrapper {
+  margin: 20px 0;
+  padding: 16px;
+  background: #f9fafb;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.consent-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.consent-input {
+  margin-top: 3px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.consent-text {
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.6;
+}
+
+.consent-link {
+  color: var(--blue);
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.consent-link:hover {
+  color: var(--orange);
 }
 </style>
