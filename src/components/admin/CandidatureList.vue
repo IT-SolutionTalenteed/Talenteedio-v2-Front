@@ -41,6 +41,18 @@
       hover
       density="comfortable"
     >
+      <template #item.talent.name="{ item }">
+        <div class="d-flex align-center ga-2">
+          <v-avatar size="32">
+            <v-img v-if="item.talent?.avatar_google" :src="item.talent.avatar_google" />
+            <span v-else class="text-caption font-weight-bold">
+              {{ item.talent?.name?.charAt(0)?.toUpperCase() ?? '?' }}
+            </span>
+          </v-avatar>
+          <span>{{ item.talent?.name ?? '—' }}</span>
+        </div>
+      </template>
+
       <template #item.statut="{ item }">
         <v-select
           v-model="item.statut"
