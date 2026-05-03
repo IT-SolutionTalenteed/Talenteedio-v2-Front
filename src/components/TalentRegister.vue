@@ -333,7 +333,7 @@
                   <label class="consent-checkbox">
                     <input type="checkbox" v-model="form.consentAccepted" class="consent-input">
                     <span class="consent-text">
-                      Je reconnais avoir lu <a :href="`${backendBase}/assets/talent_consent.pdf`" target="_blank" rel="noopener noreferrer" class="consent-link">le consentement</a> et accepte de le signer électroniquement avec mon nom.
+                      Je reconnais avoir lu <a href="/static/assets/talent_consent.pdf" target="_blank" rel="noopener noreferrer" class="consent-link">le consentement</a> et accepte de le signer électroniquement avec mon nom.
                     </span>
                   </label>
                 </div>
@@ -420,7 +420,6 @@ import { googleAuthService } from '../services/googleAuth.js'
 const router = useRouter()
 const { t } = useI18n()
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
-const backendBase = apiBase.replace('/api', '')
 
 const registerWithGoogle = () => {
   googleAuthService.registerWithGoogle()

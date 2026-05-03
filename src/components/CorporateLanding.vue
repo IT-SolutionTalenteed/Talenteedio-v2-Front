@@ -150,7 +150,7 @@
                   <label class="consent-checkbox">
                     <input type="checkbox" v-model="formData.consentAccepted" class="consent-input">
                     <span class="consent-text">
-                      Je reconnais avoir lu <a :href="`${backendBase}/assets/talent_consent.pdf`" target="_blank" rel="noopener noreferrer" class="consent-link">le consentement</a> et accepte de le signer électroniquement avec mon nom.
+                      Je reconnais avoir lu <a href="/static/assets/talent_consent.pdf" target="_blank" rel="noopener noreferrer" class="consent-link">le consentement</a> et accepte de le signer électroniquement avec mon nom.
                     </span>
                   </label>
                 </div>
@@ -338,8 +338,6 @@ export default {
   },
   async mounted() {
     const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
-    this.apiBase = apiBase
-    this.backendBase = apiBase.replace('/api', '')
     
     try {
       const [sectorsRes, evRes] = await Promise.all([
