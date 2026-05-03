@@ -42,6 +42,16 @@
                   <input v-model="form.nom" type="text" class="form-input" :placeholder="t('company.form.companyNamePlaceholder')" required />
                 </div>
 
+                <div class="form-group">
+                  <label class="form-label">Plan d'abonnement <span class="required">*</span></label>
+                  <select v-model="form.plan_id" class="form-input" required>
+                    <option value="">Choisir un plan</option>
+                    <option v-for="plan in plans" :key="plan.id" :value="plan.id">
+                      {{ plan.name }} — {{ formatPlanPrice(plan.price) }}/mois
+                    </option>
+                  </select>
+                </div>
+
                 <div class="form-row">
                   <div class="form-group">
                     <label class="form-label">{{ t('company.form.sector') }} <span class="required">*</span></label>
@@ -212,6 +222,7 @@ const form = ref({
   password_confirmation: '',
   nom: '',
   activity_sector_id: '',
+  plan_id: '',
   taille: '',
   ville: '',
   pays: '',
@@ -223,6 +234,7 @@ const loading = ref(false)
 const error = ref('')
 const success = ref('')
 const sectors = ref([])
+const plans = ref([])
 
 // Formulaire de rappel
 const callbackForm = ref({
@@ -236,13 +248,20 @@ const callbackLoading = ref(false)
 const callbackError = ref('')
 const callbackSuccess = ref('')
 
-// Charger les secteurs d'activité
+const formatPlanPrice = (price) =>
+  new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price)
+
+// Charger les secteurs d'activité et les plans
 const loadSectors = async () => {
   try {
-    const res = await axios.get(`${apiBase}/public/referentiels`)
-    sectors.value = res.data.activity_sectors || []
+    const [refRes, plansRes] = await Promise.all([
+      axios.get(`${apiBase}/public/referentiels`),
+      axios.get(`${apiBase}/plans`),
+    ])
+    sectors.value = refRes.data.activity_sectors || []
+    plans.value = (plansRes.data || []).filter(p => p.is_active)
   } catch (e) {
-    console.error('Erreur chargement secteurs:', e)
+    console.error('Erreur chargement référentiels:', e)
   }
 }
 
@@ -265,15 +284,13 @@ const handleRegister = async () => {
       password: form.value.password,
       password_confirmation: form.value.password_confirmation,
       role: 'entreprise',
-      entreprise: {
-        nom: form.value.nom,
-        activity_sector_id: form.value.activity_sector_id,
-        taille: form.value.taille,
-        ville: form.value.ville,
-        pays: form.value.pays,
-        site_web: form.value.site_web,
-        telephone: form.value.telephone
-      }
+      company_name: form.value.nom,
+      activity_sector_id: form.value.activity_sector_id || undefined,
+      plan_id: form.value.plan_id || undefined,
+      company_city: form.value.ville,
+      company_country: form.value.pays,
+      company_website: form.value.site_web,
+      company_phone: form.value.telephone,
     }
 
     await axios.post(`${apiBase}/register`, payload)
