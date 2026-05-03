@@ -145,12 +145,18 @@
                   <span>{{ error }}</span>
                 </div>
 
-                <!-- Consent Checkbox -->
+                <!-- Consent Checkbox fusionnée -->
                 <div class="consent-checkbox-wrapper">
                   <label class="consent-checkbox">
                     <input type="checkbox" v-model="formData.consentAccepted" class="consent-input">
                     <span class="consent-text">
-                      Je reconnais avoir lu <a href="/static/assets/talent_consent.pdf" target="_blank" rel="noopener noreferrer" class="consent-link">le consentement</a> et accepte de le signer électroniquement avec mon nom.
+                      Je reconnais avoir lu
+                      <a href="/static/assets/talent_consent.pdf" target="_blank" rel="noopener noreferrer" class="consent-link">le document de consentement</a>
+                      et j'accepte de le signer électroniquement avec mon nom. J'accepte également les
+                      <a href="/legal/terms-and-conditions" class="consent-link">Conditions générales</a>
+                      et la
+                      <a href="/legal/privacy-policy" class="consent-link">Politique de confidentialité</a>
+                      de Talenteed.
                     </span>
                   </label>
                 </div>
@@ -163,11 +169,6 @@
                   </template>
                 </button>
 
-                <p class="form-note">
-                  {{ t('corporateLanding.form.note') }}
-                  <a href="/legal/terms-and-conditions">{{ t('corporateLanding.form.terms') }}</a> {{ t('corporateLanding.form.and') }}
-                  <a href="/legal/privacy-policy">{{ t('corporateLanding.form.privacy') }}</a>.
-                </p>
               </form>
             </div>
           </div>
