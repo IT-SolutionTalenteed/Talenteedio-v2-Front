@@ -10,45 +10,34 @@
       </template>
     </v-toolbar>
 
-    <v-data-table
-      :headers="headers"
-      :items="items"
-      :loading="loading"
-      hover
-      density="comfortable"
-    >
+    <v-data-table :headers="headers" :items="items" :loading="loading" hover density="comfortable">
       <template #item.price="{ item }">
-        <v-chip size="small" color="success" variant="tonal">
-          {{ formatPrice(item.price) }}
-        </v-chip>
+        <v-chip size="small" color="success" variant="tonal">{{ formatPrice(item.price) }}</v-chip>
       </template>
 
       <template #item.max_offres="{ item }">
-        <span v-if="item.max_offres">{{ item.max_offres }}</span>
-        <v-chip v-else size="small" color="info" variant="tonal">Illimité</v-chip>
+        <span v-if="item.max_offres !== null">{{ item.max_offres }}</span>
+        <v-chip v-else size="small" color="info" variant="tonal">∞</v-chip>
       </template>
 
       <template #item.max_articles="{ item }">
-        <span v-if="item.max_articles">{{ item.max_articles }}</span>
-        <v-chip v-else size="small" color="info" variant="tonal">Illimité</v-chip>
+        <span v-if="item.max_articles !== null">{{ item.max_articles }}</span>
+        <v-chip v-else size="small" color="info" variant="tonal">∞</v-chip>
       </template>
 
-      <template #item.featured_events="{ item }">
-        <v-icon :color="item.featured_events ? 'success' : 'grey'" size="20">
-          {{ item.featured_events ? 'mdi-check-circle' : 'mdi-close-circle' }}
-        </v-icon>
+      <template #item.max_evenements="{ item }">
+        <span v-if="item.max_evenements !== null">{{ item.max_evenements }}</span>
+        <v-chip v-else size="small" color="info" variant="tonal">∞</v-chip>
       </template>
 
-      <template #item.priority_support="{ item }">
-        <v-icon :color="item.priority_support ? 'success' : 'grey'" size="20">
-          {{ item.priority_support ? 'mdi-check-circle' : 'mdi-close-circle' }}
-        </v-icon>
+      <template #item.max_entretiens_par_evenement="{ item }">
+        <span v-if="item.max_entretiens_par_evenement !== null">{{ item.max_entretiens_par_evenement }}</span>
+        <v-chip v-else size="small" color="info" variant="tonal">∞</v-chip>
       </template>
 
-      <template #item.analytics="{ item }">
-        <v-icon :color="item.analytics ? 'success' : 'grey'" size="20">
-          {{ item.analytics ? 'mdi-check-circle' : 'mdi-close-circle' }}
-        </v-icon>
+      <template #item.max_candidatures_par_offre="{ item }">
+        <span v-if="item.max_candidatures_par_offre !== null">{{ item.max_candidatures_par_offre }}</span>
+        <v-chip v-else size="small" color="info" variant="tonal">∞</v-chip>
       </template>
 
       <template #item.is_active="{ item }">
@@ -58,26 +47,15 @@
       </template>
 
       <template #item.actions="{ item }">
-        <v-btn 
-          icon="mdi-pencil" 
-          size="small" 
-          color="primary" 
-          variant="text" 
-          @click="router.push({ name: 'AdminPlanEdit', params: { id: item.id } })" 
-        />
-        <v-btn 
-          icon="mdi-delete" 
-          size="small" 
-          color="error" 
-          variant="text" 
-          @click="deleteItem(item.id)" 
-        />
+        <v-btn icon="mdi-pencil" size="small" color="primary" variant="text"
+          @click="router.push({ name: 'AdminPlanEdit', params: { id: item.id } })" />
+        <v-btn icon="mdi-delete" size="small" color="error" variant="text"
+          @click="deleteItem(item.id)" />
       </template>
     </v-data-table>
   </v-card>
 
   <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">{{ snackMsg }}</v-snackbar>
-
   <ConfirmDialog ref="confirmRef" />
 </template>
 
@@ -90,16 +68,15 @@ import ConfirmDialog from '../shared/ConfirmDialog.vue'
 const router = useRouter()
 
 const headers = [
-  { title: 'ID', key: 'id', width: '80px' },
   { title: 'Nom', key: 'name' },
-  { title: 'Prix', key: 'price', width: '120px' },
-  { title: 'Max Offres', key: 'max_offres', width: '120px' },
-  { title: 'Max Articles', key: 'max_articles', width: '120px' },
-  { title: 'Événements', key: 'featured_events', width: '120px' },
-  { title: 'Support', key: 'priority_support', width: '100px' },
-  { title: 'Analytics', key: 'analytics', width: '100px' },
-  { title: 'Statut', key: 'is_active', width: '100px' },
-  { title: 'Actions', key: 'actions', sortable: false, align: 'end', width: '120px' },
+  { title: 'Prix/mois', key: 'price', width: '110px' },
+  { title: 'Offres', key: 'max_offres', width: '90px' },
+  { title: 'Articles', key: 'max_articles', width: '90px' },
+  { title: 'Événements', key: 'max_evenements', width: '110px' },
+  { title: 'Entretiens/événement', key: 'max_entretiens_par_evenement', width: '170px' },
+  { title: 'Candidatures/offre', key: 'max_candidatures_par_offre', width: '160px' },
+  { title: 'Statut', key: 'is_active', width: '90px' },
+  { title: '', key: 'actions', sortable: false, align: 'end', width: '100px' },
 ]
 
 const items = ref([])
@@ -109,17 +86,11 @@ const snackMsg = ref('')
 const snackColor = ref('success')
 const confirmRef = ref(null)
 
-const formatPrice = (price) => {
-  return new Intl.NumberFormat('fr-FR', {
-    style: 'currency',
-    currency: 'EUR'
-  }).format(price)
-}
+const formatPrice = (price) =>
+  new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price)
 
 const showSnack = (msg, color = 'success') => {
-  snackMsg.value = msg
-  snackColor.value = color
-  snackbar.value = true
+  snackMsg.value = msg; snackColor.value = color; snackbar.value = true
 }
 
 const load = async () => {
