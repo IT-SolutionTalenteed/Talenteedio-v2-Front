@@ -69,7 +69,14 @@
             <div ref="recaptchaContainer"></div>
           </div>
 
-          <div v-if="error" class="auth-error">
+          <div v-if="isPending" class="auth-pending">
+            <div class="auth-pending-icon"><i class="fa-regular fa-clock"></i></div>
+            <div>
+              <strong>Compte en cours de vérification</strong>
+              <p>Votre espace recruteur est en attente de validation par notre équipe. Vous recevrez un e-mail dès que votre compte sera activé.<br>Talenteed.io vous contactera dans les plus brefs délais.</p>
+            </div>
+          </div>
+          <div v-else-if="error" class="auth-error">
             <i class="fa-solid fa-circle-exclamation"></i> {{ error }}
           </div>
 
@@ -105,6 +112,7 @@ const route  = useRoute()
 const form             = ref({ email: '', password: '' })
 const loading          = ref(false)
 const error            = ref('')
+const isPending        = ref(false)
 const showPassword     = ref(false)
 const recaptchaToken   = ref('')
 const recaptchaContainer = ref(null)
@@ -151,8 +159,9 @@ const handleLogin = async () => {
     error.value = t('auth.login.recaptchaRequired')
     return
   }
-  loading.value = true
-  error.value   = ''
+  loading.value  = true
+  error.value    = ''
+  isPending.value = false
   try {
     const response = await authService.login({
       ...form.value,
@@ -176,9 +185,14 @@ const handleLogin = async () => {
       }
     }
   } catch (err) {
-    error.value = err.response?.data?.message
-      || Object.values(err.response?.data?.errors || {}).flat().join(' | ')
-      || t('auth.login.error')
+    const rawErrors = Object.values(err.response?.data?.errors || {}).flat()
+    const rawMsg    = err.response?.data?.message || rawErrors.join(' | ') || ''
+
+    if (rawMsg === '__PENDING__' || rawErrors.includes('__PENDING__')) {
+      isPending.value = true
+    } else {
+      error.value = rawMsg || t('auth.login.error')
+    }
     if (widgetId.value !== null && window.grecaptcha) {
       window.grecaptcha.reset(widgetId.value)
     }
@@ -498,6 +512,33 @@ const handleLogin = async () => {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.auth-pending {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: #fffbeb;
+  border: 1.5px solid #fde68a;
+  border-left: 4px solid #f59e0b;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #92400e;
+}
+.auth-pending-icon {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #fef3c7; color: #f59e0b;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.auth-pending strong {
+  display: block; font-size: 14px; font-weight: 700;
+  color: #78350f; margin-bottom: 5px;
+}
+.auth-pending p {
+  margin: 0; line-height: 1.6; color: #92400e; font-size: 13px;
 }
 
 /* ── Bouton submit ── */
