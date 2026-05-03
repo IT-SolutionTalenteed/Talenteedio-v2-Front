@@ -146,7 +146,10 @@
                     @click="form.plan_id = plan.id"
                   >
                     <div class="plan-card__header">
-                      <span class="plan-card__name">{{ plan.name }}</span>
+                      <div>
+                        <span class="plan-card__name">{{ plan.name }}</span>
+                        <span class="plan-card__duration"><i class="fa-regular fa-clock"></i> {{ plan.duration_days }} jour{{ plan.duration_days > 1 ? 's' : '' }}</span>
+                      </div>
                       <span class="plan-card__price">{{ formatPlanPrice(plan.price) }}<small>/mois</small></span>
                     </div>
                     <ul class="plan-card__features">
@@ -458,8 +461,10 @@ onMounted(loadReferentiels)
   box-shadow: 0 4px 20px rgba(0,35,90,.15);
 }
 .plan-card__header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
-.plan-card__name { font-size: 15px; font-weight: 800; color: var(--navy); }
-.plan-card__price { font-size: 18px; font-weight: 800; color: var(--blue); text-align: right; line-height: 1.2; }
+.plan-card__name { font-size: 15px; font-weight: 800; color: var(--navy); display: block; }
+.plan-card__duration { font-size: 11px; color: #64748b; margin-top: 3px; display: block; }
+.plan-card__duration i { margin-right: 3px; }
+.plan-card__price { font-size: 18px; font-weight: 800; color: var(--blue); text-align: right; line-height: 1.2; flex-shrink: 0; }
 .plan-card__price small { font-size: 11px; font-weight: 500; color: #64748b; display: block; }
 .plan-card__features { list-style: none; margin: 0; padding: 0; }
 .plan-card__features li {
