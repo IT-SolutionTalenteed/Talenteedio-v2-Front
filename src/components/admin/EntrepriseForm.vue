@@ -190,6 +190,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import entrepriseService from '../../services/entrepriseService.js'
+import { parseApiError } from '../../utils/parseApiError.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -299,8 +300,7 @@ const save = async () => {
     }
     setTimeout(() => goBack(), 1200)
   } catch (err) {
-    const errs = err.response?.data?.errors
-    showSnack(errs ? Object.values(errs).flat().join(' | ') : "Erreur lors de l'enregistrement", 'error')
+    showSnack(parseApiError(err, "Erreur lors de l'enregistrement"), 'error')
   } finally {
     saving.value = false
   }
