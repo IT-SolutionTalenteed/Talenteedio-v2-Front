@@ -198,7 +198,7 @@
 
           <!-- Non-connecté -->
           <template v-if="!isLoggedIn">
-            <router-link to="/company" class="btn-nav btn-nav--sponsor">
+            <router-link to="/corporate-register" class="btn-nav btn-nav--sponsor">
               <i class="fa-solid fa-handshake"></i> Sponsoriser
             </router-link>
             <router-link to="/profile-selection" class="btn-nav btn-nav--outline">{{ t('nav.subscription') }}</router-link>
@@ -339,7 +339,7 @@
               <button class="mob-lang-btn" :class="{ 'mob-lang-btn--active': locale === 'en' }" @click="setLocale('en')">🇬🇧 EN</button>
             </div>
             <div class="mob-auth" v-if="!isLoggedIn">
-              <router-link to="/company" class="mob-btn mob-btn--sponsor" @click="menuOpen = false">
+              <router-link to="/corporate-register" class="mob-btn mob-btn--sponsor" @click="menuOpen = false">
                 <i class="fa-solid fa-handshake"></i> Sponsoriser
               </router-link>
               <router-link to="/profile-selection" class="mob-btn mob-btn--outline" @click="menuOpen = false">{{ t('nav.subscription') }}</router-link>
