@@ -74,12 +74,16 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
-  show: Boolean
+  show: Boolean,
+  defaultProfile: {
+    type: String,
+    default: null // 'talent' ou 'entreprise'
+  }
 })
 
 const emit = defineEmits(['close', 'switch-to-login'])
@@ -87,7 +91,16 @@ const emit = defineEmits(['close', 'switch-to-login'])
 const { t } = useI18n()
 const router = useRouter()
 
-const selectedProfile = ref('')
+const selectedProfile = ref(props.defaultProfile || '')
+
+// Si defaultProfile est 'talent', rediriger directement
+watch(() => props.show, (newVal) => {
+  if (newVal && props.defaultProfile === 'talent') {
+    goToTalentRegister()
+  } else if (newVal && props.defaultProfile) {
+    selectedProfile.value = props.defaultProfile
+  }
+})
 
 const goToTalentRegister = () => {
   emit('close')

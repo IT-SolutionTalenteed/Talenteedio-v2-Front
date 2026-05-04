@@ -47,7 +47,7 @@
                 </button>
               </template>
               <template v-else>
-                <button @click="showRegisterModal = true" class="btn btn--orange btn--lg">
+                <button @click="showRegisterModal = true; registerDefaultProfile = 'talent'" class="btn btn--orange btn--lg">
                   <i class="fa-solid fa-user-plus" style="margin-right:6px;"></i>{{ t('evenements.detail.subscribeToParticipate') }}
                 </button>
                 <button @click="showLoginModal = true" class="btn btn--outline-white btn--lg">
@@ -308,7 +308,7 @@
                     <p>{{ t('evenements.detail.loginMatchingDesc') }}</p>
                     <div class="evd-cta-login-btns">
                       <button @click="showLoginModal = true" class="btn btn--blue">{{ t('evenements.detail.loginBtn') }}</button>
-                      <button @click="showRegisterModal = true" class="btn btn--orange">{{ t('evenements.detail.createTalentAccount') }}</button>
+                      <button @click="showRegisterModal = true; registerDefaultProfile = 'talent'" class="btn btn--orange">{{ t('evenements.detail.createTalentAccount') }}</button>
                     </div>
                   </div>
                 </div>
@@ -444,7 +444,7 @@
                 </template>
                 <template v-else>
                   <p>{{ t('evenements.detail.joinCommunity') }}</p>
-                  <button @click="showRegisterModal = true" class="btn btn--orange" style="display:block;text-align:center;width:100%;">
+                  <button @click="showRegisterModal = true; registerDefaultProfile = 'talent'" class="btn btn--orange" style="display:block;text-align:center;width:100%;">
                     {{ t('evenements.detail.subscribeFree') }}
                   </button>
                 </template>
@@ -551,7 +551,8 @@
     />
     <RegisterModal 
       :show="showRegisterModal" 
-      @close="showRegisterModal = false"
+      :defaultProfile="registerDefaultProfile"
+      @close="showRegisterModal = false; registerDefaultProfile = null"
       @switch-to-login="handleSwitchToLogin"
     />
   </div>
@@ -589,9 +590,11 @@ const isEntreprise = computed(() => isLoggedIn.value && userRole.value === 'entr
 // ── Modals ────────────────────────────────────────────────────
 const showLoginModal = ref(false)
 const showRegisterModal = ref(false)
+const registerDefaultProfile = ref(null)
 
 const handleSwitchToRegister = () => {
   showLoginModal.value = false
+  registerDefaultProfile.value = null
   showRegisterModal.value = true
 }
 
