@@ -165,7 +165,7 @@ const goToTalentRegister = () => {
 }
 
 const goToCorporateRegister = () => {
-  router.push({ name: 'CorporateRegister' })
+  router.push({ name: 'CompanyLanding' })
 }
 </script>
 
