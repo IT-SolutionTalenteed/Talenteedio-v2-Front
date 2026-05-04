@@ -54,7 +54,7 @@
         <div class="sb-group sb-group--select">
           <i class="fa-solid fa-briefcase sb-icon"></i>
           <select class="sb-select" v-model="contractFilter" @change="applyFilters">
-            <option value="">Type d'emploi</option>
+            <option value="">{{ t('annonces.filters.employmentType') }}</option>
             <option v-for="c in referentiels.job_contracts" :key="c.id" :value="c.id">{{ c.name }}</option>
           </select>
         </div>
@@ -62,7 +62,7 @@
         <div class="sb-group sb-group--select">
           <i class="fa-solid fa-clock sb-icon"></i>
           <select class="sb-select" v-model="filters.date_range" @change="applyFilters">
-            <option value="">Tous</option>
+            <option value="">{{ t('annonces.filters.all') }}</option>
             <option v-for="d in dateRanges.filter(d => d.value)" :key="d.value" :value="d.value">{{ d.label }}</option>
           </select>
         </div>
@@ -70,8 +70,8 @@
         <div class="sb-group sb-group--multi" ref="studyDropRef">
           <i class="fa-solid fa-graduation-cap sb-icon"></i>
           <button class="sb-multi-btn" @click.stop="studyDropOpen = !studyDropOpen" type="button">
-            <span v-if="filters.study_level_ids.length === 0">Niveau d'études</span>
-            <span v-else>{{ filters.study_level_ids.length }} niveau(x)</span>
+            <span v-if="filters.study_level_ids.length === 0">{{ t('annonces.filters.studyLevel') }}</span>
+            <span v-else>{{ filters.study_level_ids.length }} {{ t('annonces.studyLevelCount') }}</span>
             <i class="fa-solid fa-chevron-down sb-caret" :class="{ 'sb-caret--open': studyDropOpen }"></i>
           </button>
           <div class="sb-dropdown" v-show="studyDropOpen">
@@ -85,7 +85,7 @@
               {{ s.name }}
             </label>
             <div class="sb-dropdown-footer" v-if="filters.study_level_ids.length">
-              <button @click="filters.study_level_ids = []; applyFilters()">Effacer</button>
+              <button @click="filters.study_level_ids = []; applyFilters()">{{ t('annonces.clear') }}</button>
             </div>
           </div>
         </div>
@@ -162,7 +162,7 @@
             </div>
 
             <!-- Badge Nouveau (moins de 24h) -->
-            <span v-if="isNew(offre.created_at)" class="badge-new">Nouveau</span>
+            <span v-if="isNew(offre.created_at)" class="badge-new">{{ t('annonces.new') }}</span>
 
             <!-- Header carte : logo + entreprise -->
             <div class="offre-head">

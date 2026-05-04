@@ -55,7 +55,7 @@
           <div class="field">
             <div class="field-label-row">
               <label for="password">{{ t('auth.login.password') }}</label>
-              <router-link to="/forgot-password" class="forgot-link">Mot de passe oublié ?</router-link>
+              <router-link to="/forgot-password" class="forgot-link">{{ t('auth.forgotPassword') }}</router-link>
             </div>
             <div class="field-input-wrap">
               <i class="fa-solid fa-lock field-icon"></i>
@@ -73,8 +73,8 @@
           <div v-if="isPending" class="auth-pending">
             <div class="auth-pending-icon"><i class="fa-regular fa-clock"></i></div>
             <div>
-              <strong>Compte en cours de vérification</strong>
-              <p>Votre espace recruteur est en attente de validation par notre équipe. Vous recevrez un e-mail dès que votre compte sera activé.<br>Talenteed.io vous contactera dans les plus brefs délais.</p>
+              <strong>{{ t('auth.pendingAccount.title') }}</strong>
+              <p>{{ t('auth.pendingAccount.message') }}<br>{{ t('auth.pendingAccount.contact') }}</p>
             </div>
           </div>
           <div v-else-if="error" class="auth-error">

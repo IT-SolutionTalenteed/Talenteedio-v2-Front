@@ -11,22 +11,22 @@
         <div class="topbar-countdown">
           <div class="cd-unit-wrap">
             <span class="cd-num">{{ countdown.days }}</span>
-            <span class="cd-lbl">j</span>
+            <span class="cd-lbl">{{ t('nav.countdown.days') }}</span>
           </div>
           <span class="cd-colon">:</span>
           <div class="cd-unit-wrap">
             <span class="cd-num">{{ countdown.hours }}</span>
-            <span class="cd-lbl">h</span>
+            <span class="cd-lbl">{{ t('nav.countdown.hours') }}</span>
           </div>
           <span class="cd-colon">:</span>
           <div class="cd-unit-wrap">
             <span class="cd-num">{{ countdown.minutes }}</span>
-            <span class="cd-lbl">m</span>
+            <span class="cd-lbl">{{ t('nav.countdown.minutes') }}</span>
           </div>
           <span class="cd-colon">:</span>
           <div class="cd-unit-wrap">
             <span class="cd-num">{{ countdown.seconds }}</span>
-            <span class="cd-lbl">s</span>
+            <span class="cd-lbl">{{ t('nav.countdown.seconds') }}</span>
           </div>
         </div>
         <router-link :to="`/evenements/${featuredEvent.id}`" class="topbar-cta">
@@ -199,7 +199,7 @@
           <!-- Non-connecté -->
           <template v-if="!isLoggedIn">
             <router-link to="/corporate-register" class="btn-nav btn-nav--sponsor">
-              <i class="fa-solid fa-handshake"></i> Sponsoriser
+              <i class="fa-solid fa-handshake"></i> {{ t('nav.sponsor') }}
             </router-link>
             <router-link to="/profile-selection" class="btn-nav btn-nav--outline">{{ t('nav.subscription') }}</router-link>
             <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn-nav btn-nav--filled">{{ t('nav.login') }}</router-link>
@@ -340,7 +340,7 @@
             </div>
             <div class="mob-auth" v-if="!isLoggedIn">
               <router-link to="/corporate-register" class="mob-btn mob-btn--sponsor" @click="menuOpen = false">
-                <i class="fa-solid fa-handshake"></i> Sponsoriser
+                <i class="fa-solid fa-handshake"></i> {{ t('nav.sponsor') }}
               </router-link>
               <router-link to="/profile-selection" class="mob-btn mob-btn--outline" @click="menuOpen = false">{{ t('nav.subscription') }}</router-link>
               <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="mob-btn mob-btn--filled" @click="menuOpen = false">{{ t('nav.login') }}</router-link>

@@ -114,13 +114,13 @@
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Adresse</label>
-                  <input v-model="form.adresse" type="text" class="form-input" placeholder="Ex: 12 Rue de la Paix" />
+                  <label class="form-label">{{ t('company.form.address') }}</label>
+                  <input v-model="form.adresse" type="text" class="form-input" :placeholder="t('company.form.addressPlaceholder')" />
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Description de l'entreprise</label>
-                  <textarea v-model="form.description" class="form-textarea" rows="3" placeholder="Présentez votre entreprise en quelques lignes…"></textarea>
+                  <label class="form-label">{{ t('company.form.description') }}</label>
+                  <textarea v-model="form.description" class="form-textarea" rows="3" :placeholder="t('company.form.descriptionPlaceholder')"></textarea>
                 </div>
 
                 <!-- ─ Contact ─ -->

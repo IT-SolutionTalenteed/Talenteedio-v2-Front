@@ -16,7 +16,7 @@
         <div class="hero-stats">
           <div class="hero-stat">
             <span class="hero-stat-num">{{ totalArticles || '—' }}</span>
-            <span class="hero-stat-lbl">articles</span>
+            <span class="hero-stat-lbl">{{ t('blog.articles') }}</span>
           </div>
         </div>
       </div>

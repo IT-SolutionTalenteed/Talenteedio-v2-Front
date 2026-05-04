@@ -34,7 +34,7 @@
             @input="debouncedSearch"
           />
           <button class="hero-search-btn" @click="() => {}">
-            Rechercher
+            {{ t('common.search') }}
           </button>
         </div>
       </div>
@@ -76,11 +76,11 @@
               <span class="results-label">{{ filtered.length !== 1 ? t('entreprises.results.companies') : t('entreprises.results.company') }}</span>
             </div>
             <span class="results-count results-loading" v-else>
-              <i class="fa-solid fa-circle-notch fa-spin"></i> Chargement...
+              <i class="fa-solid fa-circle-notch fa-spin"></i> {{ t('common.loading') }}
             </span>
 
             <div v-if="search.trim() || activeSector !== null" class="active-filters">
-              <span class="filters-label">Filtrés par</span>
+              <span class="filters-label">{{ t('common.filteredBy') }}</span>
               <span v-if="search.trim()" class="filter-tag">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 {{ search }}
@@ -95,7 +95,7 @@
           </div>
 
           <button class="btn-reset" v-if="search.trim() || activeSector !== null" @click="search = ''; activeSector = null">
-            <i class="fa-solid fa-rotate-left"></i> Réinitialiser
+            <i class="fa-solid fa-rotate-left"></i> {{ t('common.reset') }}
           </button>
         </div>
 
@@ -167,7 +167,7 @@
         <div v-else class="ent-empty">
           <div class="empty-icon"><i class="fa-solid fa-building-circle-xmark"></i></div>
           <p class="empty-title">{{ t('entreprises.empty') }}</p>
-          <button class="btn btn--blue" @click="search = ''; activeSector = null">Réinitialiser</button>
+          <button class="btn btn--blue" @click="search = ''; activeSector = null">{{ t('common.reset') }}</button>
         </div>
 
       </div>
