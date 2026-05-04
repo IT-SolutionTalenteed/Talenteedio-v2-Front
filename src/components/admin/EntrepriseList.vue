@@ -4,6 +4,18 @@
       <v-icon icon="mdi-domain" class="mr-2" />
       <v-toolbar-title>Gestion des Entreprises</v-toolbar-title>
       <v-spacer />
+      <v-select
+        v-model="statusFilter"
+        :items="statusFilterOptions"
+        item-title="label"
+        item-value="value"
+        density="compact"
+        variant="outlined"
+        hide-details
+        style="max-width:180px"
+        class="mr-3"
+        @update:modelValue="load"
+      />
       <v-btn color="primary" prepend-icon="mdi-plus" @click="router.push({ name: 'AdminEntrepriseCreate' })">
         Ajouter une entreprise
       </v-btn>
@@ -77,6 +89,13 @@ const router = useRouter()
 const items = ref([])
 const loading = ref(false)
 const confirmRef = ref(null)
+const statusFilter = ref('')
+
+const statusFilterOptions = [
+  { label: 'Tous les statuts', value: '' },
+  { label: 'Actifs', value: 'active' },
+  { label: 'En attente', value: 'pending' },
+]
 
 const snackbar = ref(false)
 const snackMsg = ref('')
@@ -99,7 +118,8 @@ const headers = [
 const load = async () => {
   loading.value = true
   try {
-    const res = await entrepriseService.getAll()
+    const params = statusFilter.value ? { status: statusFilter.value } : {}
+    const res = await entrepriseService.getAll(params)
     items.value = res.data
   } catch {
     showSnack('Erreur lors du chargement', 'error')
