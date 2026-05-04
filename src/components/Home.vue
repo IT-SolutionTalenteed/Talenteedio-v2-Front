@@ -60,7 +60,7 @@
               <div class="hero-image-bg" :style="heroStyle"></div>
               <div class="hero-stats-overlay">
                 <div class="stat-item">
-                  <div class="stat-number">2 000+</div>
+                  <div class="stat-number">5 000+</div>
                   <div class="stat-label">{{ t('home.stats.participants') }}</div>
                 </div>
                 <div class="stat-divider"></div>
@@ -236,7 +236,7 @@
       <div class="container">
         <div class="stats-grid">
           <div class="stat-card animate-on-scroll">
-            <div class="stat-number-large" data-count="2000">0</div>
+            <div class="stat-number-large" data-count="5000">0</div>
             <div class="stat-description">{{ t('home.stats.participants') }}</div>
           </div>
           <div class="stat-card animate-on-scroll stagger-1">
