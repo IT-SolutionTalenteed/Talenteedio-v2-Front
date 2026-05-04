@@ -6,7 +6,17 @@
       </div>
     </div>
     <v-card rounded="xl" border elevation="0">
-      <v-card-text class="pa-6">
+      <v-card-text v-if="loadingData" class="pa-6">
+        <v-row>
+          <v-col v-for="n in 8" :key="n" cols="12" md="6">
+            <v-skeleton-loader type="text" />
+          </v-col>
+          <v-col cols="12">
+            <v-skeleton-loader type="paragraph" />
+          </v-col>
+        </v-row>
+      </v-card-text>
+      <v-card-text v-else class="pa-6">
         <v-row>
           <v-col cols="12" md="6">
             <v-text-field
@@ -214,6 +224,7 @@ const existingLogoUrl = ref(null)
 const activitySectors = ref([])
 const plans = ref([])
 const saving = ref(false)
+const loadingData = ref(false)
 
 const snackbar = ref(false)
 const snackMsg = ref('')
@@ -307,7 +318,12 @@ const save = async () => {
 }
 
 onMounted(async () => {
-  await loadReferentiels()
-  if (isEdit.value) await loadEntreprise()
+  loadingData.value = true
+  try {
+    await loadReferentiels()
+    if (isEdit.value) await loadEntreprise()
+  } finally {
+    loadingData.value = false
+  }
 })
 </script>
