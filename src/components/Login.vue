@@ -55,6 +55,7 @@
           <div class="field">
             <div class="field-label-row">
               <label for="password">{{ t('auth.login.password') }}</label>
+              <router-link to="/forgot-password" class="forgot-link">Mot de passe oublié ?</router-link>
             </div>
             <div class="field-input-wrap">
               <i class="fa-solid fa-lock field-icon"></i>
@@ -438,6 +439,15 @@ const handleLogin = async () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.forgot-link {
+  font-size: 12px;
+  color: #192bc2;
+  text-decoration: none;
+  font-weight: 500;
+}
+.forgot-link:hover {
+  text-decoration: underline;
 }
 
 .field-input-wrap {
