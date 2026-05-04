@@ -37,7 +37,7 @@
     "confirmPassword": "Confirmer le mot de passe",
     "confirmPasswordPlaceholder": "Retapez votre mot de passe",
     "loading": "Création en cours...",
-    "submit": "Créer mon compte gratuitement",
+    "submit": "Soumettre ma demande",
     "note": "En créant un compte, vous acceptez nos",
     "terms": "conditions d'utilisation",
     "and": "et notre",
@@ -59,7 +59,7 @@
     "error": "Erreur lors de l'envoi de la demande"
   },
   "benefits": {
-    "free": "Inscription 100% gratuite",
+    "free": "Accès à tous les talents présélectionnés",
     "access": "Accès immédiat aux talents",
     "support": "Support dédié",
     "noCard": "Aucune carte bancaire requise"

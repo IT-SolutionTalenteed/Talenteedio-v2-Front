@@ -37,7 +37,7 @@
     "confirmPassword": "Confirm password",
     "confirmPasswordPlaceholder": "Retype your password",
     "loading": "Creating...",
-    "submit": "Create my account for free",
+    "submit": "Submit my request",
     "note": "By creating an account, you agree to our",
     "terms": "terms of use",
     "and": "and our",
@@ -59,7 +59,7 @@
     "error": "Error sending the request"
   },
   "benefits": {
-    "free": "100% free registration",
+    "free": "Access to all pre-selected talents",
     "access": "Immediate access to talents",
     "support": "Dedicated support",
     "noCard": "No credit card required"
