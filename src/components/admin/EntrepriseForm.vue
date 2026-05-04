@@ -50,6 +50,25 @@
           </v-col>
           <v-col cols="12" md="6">
             <v-select
+              v-model="form.taille"
+              :items="tailleOptions"
+              label="Taille de l'entreprise"
+              variant="outlined"
+              density="compact"
+              clearable
+            />
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-text-field
+              v-model="form.poste_contact"
+              label="Poste du contact"
+              variant="outlined"
+              density="compact"
+              placeholder="Ex: DRH, Directeur..."
+            />
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-select
               v-model="form.status"
               :items="statusOptions"
               item-title="label"
@@ -182,9 +201,12 @@ const statusOptions = [
   { value: 'pending', label: 'En attente' },
 ]
 
+const tailleOptions = ['1-10', '11-50', '51-200', '201-500', '500+']
+
 const form = ref({
-  nom: '', email: '', status: 'active', description: '', site_web: '',
-  telephone: '', adresse: '', ville: '', pays: '', activity_sector_id: '', plan_id: ''
+  nom: '', email: '', status: 'active', taille: '', poste_contact: '',
+  description: '', site_web: '', telephone: '', adresse: '', ville: '', pays: '',
+  activity_sector_id: '', plan_id: ''
 })
 const logoFile = ref(null)
 const existingLogoUrl = ref(null)
@@ -237,6 +259,8 @@ const loadEntreprise = async () => {
       adresse: item.adresse || '',
       ville: item.ville || '',
       pays: item.pays || '',
+      taille: item.taille || '',
+      poste_contact: item.poste_contact || '',
       activity_sector_id: item.activity_sector_id || '',
       plan_id: item.plan_id || ''
     }
@@ -253,6 +277,8 @@ const buildFormData = () => {
   fd.append('status', form.value.status)
   const textFields = ['description', 'site_web', 'telephone', 'adresse', 'ville', 'pays']
   textFields.forEach(f => { if (form.value[f]) fd.append(f, form.value[f]) })
+  if (form.value.taille) fd.append('taille', form.value.taille)
+  if (form.value.poste_contact) fd.append('poste_contact', form.value.poste_contact)
   if (form.value.activity_sector_id) fd.append('activity_sector_id', form.value.activity_sector_id)
   if (form.value.plan_id) fd.append('plan_id', form.value.plan_id)
   if (logoFile.value) fd.append('logo', logoFile.value)
