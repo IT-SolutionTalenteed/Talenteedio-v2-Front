@@ -24,7 +24,14 @@
     "dashboard": "Dashboard",
     "logout": "Logout",
     "myAccount": "MY ACCOUNT",
-    "learnMore": "Learn more"
+    "learnMore": "Learn more",
+    "sponsor": "Sponsor",
+    "countdown": {
+      "days": "d",
+      "hours": "h",
+      "minutes": "m",
+      "seconds": "s"
+    }
   },
   "favorites": {
     "title": "My favorite offers",
@@ -62,7 +69,9 @@
     "close": "Close",
     "confirm": "Confirm",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "reset": "Reset",
+    "filteredBy": "Filtered by"
   },
   "share": {
     "title": "Share",

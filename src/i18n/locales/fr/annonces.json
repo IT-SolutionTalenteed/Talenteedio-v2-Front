@@ -13,7 +13,13 @@
     "jobType": "Type d'emploi",
     "publicationDate": "Date de publication",
     "studyLevel": "Niveau d'études",
-    "reset": "Réinitialiser"
+    "studyLevelCount": "niveau(x)",
+    "clear": "Effacer",
+    "search": "Rechercher",
+    "contracts": "contrat(s)",
+    "reset": "Réinitialiser",
+    "employmentType": "Type d'emploi",
+    "all": "Tous"
   },
   "dateRanges": {
     "all": "Tous",
@@ -34,7 +40,8 @@
     "companyNotSpecified": "Entreprise non précisée",
     "addToFavorites": "Ajouter aux favoris",
     "removeFromFavorites": "Retirer des favoris",
-    "viewOffer": "Voir l'offre"
+    "viewOffer": "Voir l'offre",
+    "new": "Nouveau"
   },
   "empty": {
     "title": "Aucune offre ne correspond à vos critères.",

@@ -13,7 +13,13 @@
     "jobType": "Job type",
     "publicationDate": "Publication date",
     "studyLevel": "Education level",
-    "reset": "Reset"
+    "studyLevelCount": "level(s)",
+    "clear": "Clear",
+    "search": "Search",
+    "contracts": "contract(s)",
+    "reset": "Reset",
+    "employmentType": "Employment type",
+    "all": "All"
   },
   "dateRanges": {
     "all": "All",
@@ -34,7 +40,8 @@
     "companyNotSpecified": "Company not specified",
     "addToFavorites": "Add to favorites",
     "removeFromFavorites": "Remove from favorites",
-    "viewOffer": "View offer"
+    "viewOffer": "View offer",
+    "new": "New"
   },
   "empty": {
     "title": "No offers match your criteria.",
