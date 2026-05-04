@@ -67,10 +67,15 @@
           <v-card-text class="pa-5">
             <div class="d-flex align-center justify-space-between mb-3">
               <div>
-                <div class="text-h4 font-weight-bold text-success">
-                  {{ totalEntreprises !== null ? totalEntreprises : '—' }}
+                <div class="d-flex align-center ga-2">
+                  <div class="text-h4 font-weight-bold text-success">
+                    {{ totalEntreprises !== null ? totalEntreprises : '—' }}
+                  </div>
+                  <v-chip v-if="pendingEntreprises > 0" size="x-small" color="warning" variant="tonal">
+                    {{ pendingEntreprises }} en attente
+                  </v-chip>
                 </div>
-                <div class="text-body-2 text-medium-emphasis mt-1">Entreprises actives</div>
+                <div class="text-body-2 text-medium-emphasis mt-1">Entreprises</div>
               </div>
               <v-avatar color="success" variant="tonal" size="52" rounded="lg">
                 <v-icon size="26">mdi-office-building-outline</v-icon>
@@ -396,6 +401,7 @@ const activeTab = computed(() => route.path.split('/').pop() || 'overview')
 
 const totalTalents = ref(null)
 const totalEntreprises = ref(null)
+const pendingEntreprises = ref(0)
 const totalOffres = ref(null)
 const totalEvenements = ref(null)
 
@@ -751,6 +757,7 @@ onMounted(async () => {
     totalTalents.value = talentsRes.data.total ?? null
     const ents = entreprisesRes.data
     totalEntreprises.value = Array.isArray(ents) ? ents.length : (ents.total ?? null)
+    pendingEntreprises.value = Array.isArray(ents) ? ents.filter(e => e.status === 'pending').length : 0
     totalOffres.value = offresRes.data.total ?? null
     const evts = evenementsRes.data
     totalEvenements.value = Array.isArray(evts) ? evts.length : (evts.total ?? null)
