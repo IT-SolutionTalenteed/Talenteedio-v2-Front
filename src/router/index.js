@@ -25,6 +25,8 @@ import MesFavoris from '../components/MesFavoris.vue'
 import LegalPage from '../components/LegalPage.vue'
 import EditProfile from '../components/EditProfile.vue'
 import CompanyLanding from '../components/CompanyLanding.vue'
+import ForgotPassword from '../components/ForgotPassword.vue'
+import ResetPassword from '../components/ResetPassword.vue'
 
 // Admin form pages
 import JobContractForm from '../components/admin/JobContractForm.vue'
@@ -130,6 +132,16 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/forgot-password',
+    name: 'ForgotPassword',
+    component: ForgotPassword
+  },
+  {
+    path: '/reset-password',
+    name: 'ResetPassword',
+    component: ResetPassword
   },
   // {
   //   path: '/register',
