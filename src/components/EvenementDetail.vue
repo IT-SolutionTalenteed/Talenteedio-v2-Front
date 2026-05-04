@@ -47,12 +47,12 @@
                 </button>
               </template>
               <template v-else>
-                <router-link to="/profile-selection" class="btn btn--orange btn--lg">
+                <button @click="showRegisterModal = true" class="btn btn--orange btn--lg">
                   <i class="fa-solid fa-user-plus" style="margin-right:6px;"></i>{{ t('evenements.detail.subscribeToParticipate') }}
-                </router-link>
-                <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--outline-white btn--lg">
+                </button>
+                <button @click="showLoginModal = true" class="btn btn--outline-white btn--lg">
                   {{ t('evenements.detail.login') }}
-                </router-link>
+                </button>
               </template>
             </div>
           </div>
@@ -307,8 +307,8 @@
                     <h3>{{ t('evenements.detail.loginMatchingTitle') }}</h3>
                     <p>{{ t('evenements.detail.loginMatchingDesc') }}</p>
                     <div class="evd-cta-login-btns">
-                      <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--blue">{{ t('evenements.detail.loginBtn') }}</router-link>
-                      <router-link to="/profile-selection" class="btn btn--orange">{{ t('evenements.detail.createTalentAccount') }}</router-link>
+                      <button @click="showLoginModal = true" class="btn btn--blue">{{ t('evenements.detail.loginBtn') }}</button>
+                      <button @click="showRegisterModal = true" class="btn btn--orange">{{ t('evenements.detail.createTalentAccount') }}</button>
                     </div>
                   </div>
                 </div>
@@ -444,9 +444,9 @@
                 </template>
                 <template v-else>
                   <p>{{ t('evenements.detail.joinCommunity') }}</p>
-                  <router-link to="/talent-register" class="btn btn--orange" style="display:block;text-align:center;">
+                  <button @click="showRegisterModal = true" class="btn btn--orange" style="display:block;text-align:center;width:100%;">
                     {{ t('evenements.detail.subscribeFree') }}
-                  </router-link>
+                  </button>
                 </template>
               </div>
 
@@ -542,6 +542,18 @@
 
     <!-- ══ FOOTER ══ -->
     <Footer />
+
+    <!-- ══ MODALS ══ -->
+    <LoginModal 
+      :show="showLoginModal" 
+      @close="showLoginModal = false"
+      @switch-to-register="handleSwitchToRegister"
+    />
+    <RegisterModal 
+      :show="showRegisterModal" 
+      @close="showRegisterModal = false"
+      @switch-to-login="handleSwitchToLogin"
+    />
   </div>
 </template>
 
@@ -553,6 +565,8 @@ import axios from 'axios'
 import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
 import ShareCard from './ShareCard.vue'
+import LoginModal from './LoginModal.vue'
+import RegisterModal from './RegisterModal.vue'
 import api from '../services/api.js'
 import { useCountries } from '../composables/useCountries.js'
 import { useMeta } from '../composables/useMeta'
@@ -571,6 +585,20 @@ const isLoggedIn   = ref(!!localStorage.getItem('token'))
 const userRole     = ref(localStorage.getItem('userRole') || '')
 const isTalent     = computed(() => isLoggedIn.value && userRole.value === 'talent')
 const isEntreprise = computed(() => isLoggedIn.value && userRole.value === 'entreprise')
+
+// ── Modals ────────────────────────────────────────────────────
+const showLoginModal = ref(false)
+const showRegisterModal = ref(false)
+
+const handleSwitchToRegister = () => {
+  showLoginModal.value = false
+  showRegisterModal.value = true
+}
+
+const handleSwitchToLogin = () => {
+  showRegisterModal.value = false
+  showLoginModal.value = true
+}
 
 // ── Matching ──────────────────────────────────────────────────
 const matchingForm = ref({
