@@ -72,7 +72,16 @@
     "privacy": "politique de confidentialité",
     "success": "Compte créé avec succès ! Redirection...",
     "passwordMismatch": "Les mots de passe ne correspondent pas",
-    "error": "Erreur lors de la création du compte"
+    "error": "Erreur lors de la création du compte",
+    "consent": {
+      "text": "Je reconnais avoir lu",
+      "document": "le document de consentement",
+      "signElectronically": "et j'accepte de le signer électroniquement avec mon nom. J'accepte également les",
+      "terms": "Conditions générales",
+      "and": "et la",
+      "privacy": "Politique de confidentialité",
+      "platform": "de Talenteed."
+    }
   },
   "callback": {
     "title": "Besoin d'aide pour démarrer ?",

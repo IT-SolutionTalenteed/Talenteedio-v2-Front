@@ -72,7 +72,16 @@
     "privacy": "privacy policy",
     "success": "Account created successfully! Redirecting...",
     "passwordMismatch": "Passwords do not match",
-    "error": "Error creating account"
+    "error": "Error creating account",
+    "consent": {
+      "text": "I acknowledge having read",
+      "document": "the consent document",
+      "signElectronically": "and I agree to sign it electronically with my name. I also accept the",
+      "terms": "Terms and Conditions",
+      "and": "and the",
+      "privacy": "Privacy Policy",
+      "platform": "of Talenteed."
+    }
   },
   "callback": {
     "title": "Need help getting started?",
