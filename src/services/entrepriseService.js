@@ -1,7 +1,7 @@
 import api from './api.js'
 
 export const entrepriseService = {
-  getAll: () => api.get('/admin/entreprises'),
+  getAll: (params = {}) => api.get('/admin/entreprises', { params }),
   getById: (id) => api.get(`/admin/entreprises/${id}`),
   getReferentiels: () => api.get('/admin/entreprises-referentiels'),
   create: (formData) => api.post('/admin/entreprises', formData, {
