@@ -231,13 +231,13 @@
                   <input type="checkbox" v-model="acceptedTerms" />
                   <span class="cgu-checkmark"></span>
                   <span class="cgu-label">
-                    Je reconnais avoir lu
-                    <a href="/static/assets/talent_consent.pdf" target="_blank" rel="noopener noreferrer" class="cgu-link">le document de consentement</a>
-                    et j'accepte de le signer électroniquement avec mon nom. J'accepte également les
-                    <router-link to="/terms-and-conditions" target="_blank" class="cgu-link">Conditions générales</router-link>
-                    et la
-                    <router-link to="/privacy-policy" target="_blank" class="cgu-link">Politique de confidentialité</router-link>
-                    de Talenteed.
+                    {{ t('company.form.consent.text') }}
+                    <a href="/static/assets/talent_consent.pdf" target="_blank" rel="noopener noreferrer" class="cgu-link">{{ t('company.form.consent.document') }}</a>
+                    {{ t('company.form.consent.signElectronically') }}
+                    <router-link to="/terms-and-conditions" target="_blank" class="cgu-link">{{ t('company.form.consent.terms') }}</router-link>
+                    {{ t('company.form.consent.and') }}
+                    <router-link to="/privacy-policy" target="_blank" class="cgu-link">{{ t('company.form.consent.privacy') }}</router-link>
+                    {{ t('company.form.consent.platform') }}
                   </span>
                 </label>
 

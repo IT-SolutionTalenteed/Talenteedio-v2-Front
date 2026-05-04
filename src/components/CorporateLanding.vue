@@ -150,13 +150,13 @@
                   <label class="consent-checkbox">
                     <input type="checkbox" v-model="formData.consentAccepted" class="consent-input">
                     <span class="consent-text">
-                      Je reconnais avoir lu
-                      <a href="/static/assets/talent_consent.pdf" target="_blank" rel="noopener noreferrer" class="consent-link">le document de consentement</a>
-                      et j'accepte de le signer électroniquement avec mon nom. J'accepte également les
-                      <a href="/legal/terms-and-conditions" class="consent-link">Conditions générales</a>
-                      et la
-                      <a href="/legal/privacy-policy" class="consent-link">Politique de confidentialité</a>
-                      de Talenteed.
+                      {{ t('company.form.consent.text') }}
+                      <a href="/static/assets/talent_consent.pdf" target="_blank" rel="noopener noreferrer" class="consent-link">{{ t('company.form.consent.document') }}</a>
+                      {{ t('company.form.consent.signElectronically') }}
+                      <a href="/legal/terms-and-conditions" class="consent-link">{{ t('company.form.consent.terms') }}</a>
+                      {{ t('company.form.consent.and') }}
+                      <a href="/legal/privacy-policy" class="consent-link">{{ t('company.form.consent.privacy') }}</a>
+                      {{ t('company.form.consent.platform') }}
                     </span>
                   </label>
                 </div>
