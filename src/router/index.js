@@ -27,6 +27,7 @@ import EditProfile from '../components/EditProfile.vue'
 import CompanyLanding from '../components/CompanyLanding.vue'
 import ForgotPassword from '../components/ForgotPassword.vue'
 import ResetPassword from '../components/ResetPassword.vue'
+import NotFound from '../components/NotFound.vue'
 
 // Admin form pages
 import JobContractForm from '../components/admin/JobContractForm.vue'
@@ -142,6 +143,11 @@ const routes = [
     path: '/reset-password',
     name: 'ResetPassword',
     component: ResetPassword
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: NotFound
   },
   // {
   //   path: '/register',
