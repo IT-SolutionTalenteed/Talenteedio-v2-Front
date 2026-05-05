@@ -369,7 +369,6 @@ const sideNav = computed(() => {
 
   if (role === 'talent') {
     return [
-      { label: "Offres d'emploi",    route: { name: 'TalentDashboard' }, icon: 'mdi-briefcase-search-outline' },
       { label: 'Mes candidatures',   route: { name: 'TalentCandidatures' }, icon: 'mdi-briefcase-check-outline' },
       { label: 'Mes favoris',        route: { name: 'TalentFavoris' }, icon: 'mdi-heart-outline' },
       { label: 'Événements & Matching', route: { name: 'TalentEvenements' }, icon: 'mdi-calendar-star' },
