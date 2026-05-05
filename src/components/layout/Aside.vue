@@ -209,11 +209,6 @@ const sideNav = computed(() => {
         icon: 'bi bi-speedometer2'
       },
       {
-        label: 'Offres d\'emploi',
-        route: { name: 'TalentDashboard' },
-        icon: 'bi bi-bag'
-      },
-      {
         label: 'Mes candidatures',
         route: { name: 'TalentDashboard' },
         icon: 'bi bi-bag-check'
