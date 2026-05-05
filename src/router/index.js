@@ -253,9 +253,8 @@ const routes = [
     path: '/talent',
     component: VerticalLayout,
     meta: talentMeta,
-    redirect: '/talent/offres',
+    redirect: '/talent/candidatures',
     children: [
-      { path: 'offres',        name: 'TalentDashboard',    component: TalentDashboard, meta: talentMeta },
       { path: 'candidatures',  name: 'TalentCandidatures', component: TalentDashboard, meta: talentMeta },
       { path: 'favoris',       name: 'TalentFavoris',      component: TalentDashboard, meta: talentMeta },
       { path: 'evenements',    name: 'TalentEvenements',   component: TalentDashboard, meta: talentMeta },
