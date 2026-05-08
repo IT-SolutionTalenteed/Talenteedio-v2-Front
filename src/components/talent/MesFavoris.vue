@@ -1,6 +1,6 @@
 <template>
   <v-card rounded="xl" border elevation="0" class="pa-4">
-    <v-card-title class="text-h5 mb-4">Mes offres favorites</v-card-title>
+    <v-card-title class="text-h5 mb-4">{{ t('talentDashboard.favorites.title') }}</v-card-title>
 
     <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">{{ snackMsg }}</v-snackbar>
 
@@ -43,7 +43,7 @@
                 size="small"
                 prepend-icon="mdi-star-off-outline"
                 @click="retirer(offre)"
-              >Retirer des favoris</v-btn>
+              >{{ t('talentDashboard.favorites.removeFromFavorites') }}</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -52,15 +52,18 @@
 
     <div v-else class="text-center py-10 text-medium-emphasis">
       <v-icon size="48" class="mb-3" color="grey-lighten-1">mdi-star-off-outline</v-icon>
-      <div>Aucune offre en favori.</div>
+      <div>{{ t('talentDashboard.favorites.noFavorites') }}</div>
     </div>
   </v-card>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import offreService from '../../services/talent/offreService.js'
 import ConfirmDialog from '../shared/ConfirmDialog.vue'
+
+const { t } = useI18n()
 
 const offres = ref([])
 const loading = ref(false)
@@ -78,19 +81,19 @@ const showSnack = (msg, color = 'success') => {
 const load = async () => {
   loading.value = true
   try { const res = await offreService.getFavoris(); offres.value = res.data }
-  catch { error.value = 'Erreur chargement'; showSnack('Erreur chargement', 'error') }
+  catch { error.value = t('talentDashboard.favorites.errorLoading'); showSnack(t('talentDashboard.favorites.errorLoading'), 'error') }
   finally { loading.value = false }
 }
 
 const retirer = async (offre) => {
-  const ok = await confirmRef.value.open({ message: 'Retirer cette offre des favoris ?' })
+  const ok = await confirmRef.value.open({ message: t('talentDashboard.favorites.confirmRemove') })
   if (!ok) return
   try {
     await offreService.toggleFavori(offre.id)
     offres.value = offres.value.filter(o => o.id !== offre.id)
-    success.value = 'Retiré des favoris'
-    showSnack('Retiré des favoris')
-  } catch { error.value = 'Erreur'; showSnack('Erreur', 'error') }
+    success.value = t('talentDashboard.favorites.removedFromFavorites')
+    showSnack(t('talentDashboard.favorites.removedFromFavorites'))
+  } catch { error.value = t('talentDashboard.favorites.errorRemove'); showSnack(t('talentDashboard.favorites.errorRemove'), 'error') }
 }
 
 onMounted(load)
