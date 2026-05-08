@@ -2,7 +2,7 @@
     <div class="d-flex align-center mb-5">
       <div class="d-flex align-center ga-2">
         <v-btn icon="mdi-arrow-left" variant="text" density="comfortable" @click="goBack" />
-        <span class="text-h6 font-weight-bold">{{ isEdit ? 'Modifier un événement' : 'Nouvel événement' }}</span>
+        <span class="text-h6 font-weight-bold">{{ isEdit ? t('admin.events.editEvent') : t('admin.events.newEvent') }}</span>
       </div>
     </div>
     <v-card rounded="xl" border elevation="0">
@@ -14,26 +14,26 @@
           class="mb-4"
           prepend-icon="mdi-alert-triangle"
         >
-          Aucune catégorie d'événement disponible. Créez-en une d'abord dans "Catégories d'événement".
+          {{ t('admin.events.noCategoryWarning') }}
         </v-alert>
         <v-row>
           <v-col cols="12" md="8">
-            <v-text-field v-model="form.titre" label="Titre *" variant="outlined" density="compact" required />
+            <v-text-field v-model="form.titre" :label="t('admin.events.titleRequired')" variant="outlined" density="compact" required />
           </v-col>
           <v-col cols="12" md="4">
             <v-select
               v-model="form.categorie_evenement_id"
-              label="Catégorie"
+              :label="t('admin.events.category')"
               variant="outlined"
               density="compact"
-              :items="[{titre:'-- Aucune --',id:''},...referentiels.categories]"
+              :items="[{titre: t('admin.events.noCategory'),id:''},...referentiels.categories]"
               item-title="titre"
               item-value="id"
             />
           </v-col>
 
           <v-col cols="12">
-            <div class="text-caption text-medium-emphasis mb-1">Image mise en avant</div>
+            <div class="text-caption text-medium-emphasis mb-1">{{ t('admin.events.featuredImage') }}</div>
             <input type="file" accept="image/*" @change="e => { imageFile = e.target.files[0]; imagePreview = e.target.files[0] ? URL.createObjectURL(e.target.files[0]) : null }" style="display:block;width:100%;" />
             <v-avatar v-if="imagePreview" size="80" rounded="lg" class="mt-2">
               <img :src="imagePreview" style="object-fit:cover;width:100%;height:100%" />
@@ -44,54 +44,54 @@
           </v-col>
 
           <v-col cols="12" md="3">
-            <v-text-field v-model="form.date_debut" label="Date début *" type="date" variant="outlined" density="compact" required />
+            <v-text-field v-model="form.date_debut" :label="t('admin.events.startDate')" type="date" variant="outlined" density="compact" required />
           </v-col>
           <v-col cols="12" md="3">
-            <v-text-field v-model="form.date_fin" label="Date fin *" type="date" variant="outlined" density="compact" required />
+            <v-text-field v-model="form.date_fin" :label="t('admin.events.endDate')" type="date" variant="outlined" density="compact" required />
           </v-col>
           <v-col cols="12" md="3">
-            <v-text-field v-model="form.heure_debut_journee" label="Heure début *" type="time" variant="outlined" density="compact" required />
+            <v-text-field v-model="form.heure_debut_journee" :label="t('admin.events.startTime')" type="time" variant="outlined" density="compact" required />
           </v-col>
           <v-col cols="12" md="3">
-            <v-text-field v-model="form.heure_fin_journee" label="Heure fin *" type="time" variant="outlined" density="compact" required />
+            <v-text-field v-model="form.heure_fin_journee" :label="t('admin.events.endTime')" type="time" variant="outlined" density="compact" required />
           </v-col>
 
           <v-col cols="12" md="4">
-            <v-text-field v-model="form.pays" label="Pays" variant="outlined" density="compact" />
+            <v-text-field v-model="form.pays" :label="t('admin.events.country')" variant="outlined" density="compact" />
           </v-col>
           <v-col cols="12" md="4">
-            <v-text-field v-model="form.ville" label="Ville" variant="outlined" density="compact" />
+            <v-text-field v-model="form.ville" :label="t('admin.events.city')" variant="outlined" density="compact" />
           </v-col>
           <v-col cols="12" md="4">
-            <v-text-field v-model="form.adresse" label="Adresse" variant="outlined" density="compact" />
+            <v-text-field v-model="form.adresse" :label="t('admin.events.address')" variant="outlined" density="compact" />
           </v-col>
 
           <v-col cols="12">
-            <div class="text-caption text-medium-emphasis mb-1">Description</div>
+            <div class="text-caption text-medium-emphasis mb-1">{{ t('admin.events.description') }}</div>
             <WysiwygEditor v-model="form.description" />
           </v-col>
           <v-col cols="12">
-            <div class="text-caption text-medium-emphasis mb-1">Détails supplémentaires</div>
+            <div class="text-caption text-medium-emphasis mb-1">{{ t('admin.events.additionalDetails') }}</div>
             <WysiwygEditor v-model="form.details_supplementaires" />
           </v-col>
 
           <v-col cols="12" md="6">
             <ComboboxMultiple
               v-model="form.entreprise_ids"
-              label="Entreprises participantes"
+              :label="t('admin.events.participatingCompanies')"
               :items="referentiels.entreprises"
               item-title="nom"
             />
           </v-col>
 
           <v-col cols="12" md="6" class="d-flex align-center">
-            <v-checkbox v-model="form.is_featured" label="Mise en avant" density="compact" hide-details />
+            <v-checkbox v-model="form.is_featured" :label="t('admin.events.featuredCheckbox')" density="compact" hide-details />
           </v-col>
         </v-row>
       </v-card-text>
       <v-card-actions class="pa-4 pt-2 justify-end">
         <v-btn color="primary" :loading="saving" @click="save" prepend-icon="mdi-content-save-outline" size="large">
-          Enregistrer
+          {{ t('admin.events.save') }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -101,12 +101,14 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import WysiwygEditor from '../WysiwygEditor.vue'
 import ComboboxMultiple from '../shared/ComboboxMultiple.vue'
 import evenementService from '../../services/evenementService.js'
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 
 const isEdit = computed(() => !!route.params.id)
 const saving = ref(false)
@@ -169,7 +171,7 @@ const loadEvenement = async () => {
       }
     }
   } catch (err) {
-    showSnack('Erreur lors du chargement', 'error')
+    showSnack(t('admin.events.errorLoading'), 'error')
     console.error(err)
   }
 }
@@ -197,15 +199,15 @@ const save = async () => {
     const fd = buildFormData()
     if (isEdit.value) {
       await evenementService.update(route.params.id, fd)
-      showSnack('Événement modifié avec succès')
+      showSnack(t('admin.events.eventUpdated'))
     } else {
       await evenementService.create(fd)
-      showSnack('Événement créé avec succès')
+      showSnack(t('admin.events.eventCreated'))
     }
     setTimeout(() => goBack(), 1000)
   } catch (err) {
     const errs = err.response?.data?.errors
-    const msg = errs ? Object.values(errs).flat().join(' | ') : err.response?.data?.message || "Erreur lors de l'enregistrement"
+    const msg = errs ? Object.values(errs).flat().join(' | ') : err.response?.data?.message || t('admin.events.errorSave')
     showSnack(msg, 'error')
   } finally {
     saving.value = false
