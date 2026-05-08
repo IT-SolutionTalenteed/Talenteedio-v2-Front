@@ -1,6 +1,6 @@
 <template>
   <v-card rounded="xl" border elevation="0" class="pa-4">
-    <v-card-title class="text-h5 mb-4">Mes candidatures</v-card-title>
+    <v-card-title class="text-h5 mb-4">{{ t('talentDashboard.applications.title') }}</v-card-title>
 
     <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">{{ snackMsg }}</v-snackbar>
 
@@ -16,7 +16,7 @@
           size="small"
           :color="item.statut === 'acceptee' ? 'success' : item.statut === 'refusee' ? 'error' : 'warning'"
         >
-          {{ item.statut === 'acceptee' ? 'Acceptée' : item.statut === 'refusee' ? 'Refusée' : 'En attente' }}
+          {{ item.statut === 'acceptee' ? t('talentDashboard.applications.statusAccepted') : item.statut === 'refusee' ? t('talentDashboard.applications.statusRejected') : t('talentDashboard.applications.statusPending') }}
         </v-chip>
       </template>
 
@@ -38,7 +38,7 @@
       </template>
 
       <template #no-data>
-        <div class="text-center py-6 text-medium-emphasis">Vous n'avez pas encore postulé à une offre.</div>
+        <div class="text-center py-6 text-medium-emphasis">{{ t('talentDashboard.applications.noApplications') }}</div>
       </template>
     </v-data-table>
   </v-card>
@@ -46,7 +46,10 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import offreService from '../../services/talent/offreService.js'
+
+const { t } = useI18n()
 
 const items = ref([])
 const loading = ref(false)
@@ -60,11 +63,11 @@ const showSnack = (msg, color = 'success') => {
 }
 
 const headers = [
-  { title: 'Offre', key: 'offre.titre' },
-  { title: 'Entreprise', key: 'offre.entreprise.nom' },
-  { title: 'Statut', key: 'statut' },
-  { title: 'CV', key: 'cv_url', sortable: false },
-  { title: 'Date', key: 'created_at' },
+  { title: t('talentDashboard.applications.offer'), key: 'offre.titre' },
+  { title: t('talentDashboard.applications.company'), key: 'offre.entreprise.nom' },
+  { title: t('talentDashboard.applications.status'), key: 'statut' },
+  { title: t('talentDashboard.applications.cv'), key: 'cv_url', sortable: false },
+  { title: t('talentDashboard.applications.date'), key: 'created_at' },
 ]
 
 onMounted(async () => {
@@ -72,7 +75,7 @@ onMounted(async () => {
   try {
     const res = await offreService.mesCandidatures()
     items.value = res.data
-  } catch { error.value = 'Erreur chargement'; showSnack('Erreur chargement', 'error') }
+  } catch { error.value = t('talentDashboard.applications.errorLoading'); showSnack(t('talentDashboard.applications.errorLoading'), 'error') }
   finally { loading.value = false }
 })
 </script>
