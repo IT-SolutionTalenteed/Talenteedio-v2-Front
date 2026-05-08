@@ -2,7 +2,7 @@
   <v-card rounded="xl" border elevation="0">
     <v-toolbar color="transparent" border="b" density="compact" class="px-2">
       <v-icon icon="mdi-chat-processing-outline" class="mr-2" />
-      <v-toolbar-title>Feedbacks post-entretien</v-toolbar-title>
+      <v-toolbar-title>{{ t('admin.feedbacks.title') }}</v-toolbar-title>
     </v-toolbar>
 
     <v-data-table
@@ -42,8 +42,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import api from '../../services/api.js'
+
+const { t } = useI18n()
 
 const items = ref([])
 const loading = ref(false)
@@ -59,15 +62,15 @@ const showSnack = (msg, color = 'success') => {
   snackbar.value = true
 }
 
-const headers = [
-  { title: 'Talent', key: 'talent', sortable: false },
-  { title: 'Entreprise', key: 'entreprise', sortable: false },
-  { title: 'Événement', key: 'evenement', sortable: false },
-  { title: 'Date entretien', key: 'date_entretien', sortable: false },
-  { title: 'Note', key: 'note', sortable: false, width: '100px' },
-  { title: 'Commentaire', key: 'commentaire', sortable: false },
-  { title: 'Soumis le', key: 'created_at', width: '130px' },
-]
+const headers = computed(() => [
+  { title: t('admin.feedbacks.talent'), key: 'talent', sortable: false },
+  { title: t('admin.feedbacks.company'), key: 'entreprise', sortable: false },
+  { title: t('admin.feedbacks.event'), key: 'evenement', sortable: false },
+  { title: t('admin.feedbacks.interviewDate'), key: 'date_entretien', sortable: false },
+  { title: t('admin.feedbacks.rating'), key: 'note', sortable: false, width: '100px' },
+  { title: t('admin.feedbacks.comment'), key: 'commentaire', sortable: false },
+  { title: t('admin.feedbacks.submittedOn'), key: 'created_at', width: '130px' },
+])
 
 const formatDate = (str) => str ? new Date(str).toLocaleDateString('fr-FR') : '—'
 
@@ -77,7 +80,7 @@ const load = async () => {
     const res = await api.get('/admin/feedbacks')
     items.value = res.data
   } catch {
-    showSnack('Erreur chargement des feedbacks', 'error')
+    showSnack(t('admin.feedbacks.errorLoading'), 'error')
   } finally {
     loading.value = false
   }
