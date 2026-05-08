@@ -9,10 +9,10 @@
         <div class="text-body-2 text-medium-emphasis">{{ message }}</div>
       </v-card-text>
       <v-card-actions class="pa-4 pt-0 d-flex ga-2">
-        <v-btn variant="tonal" class="flex-1-1" @click="cancel">Annuler</v-btn>
+        <v-btn variant="tonal" class="flex-1-1" @click="cancel">{{ t('commonDashboard.confirm.cancel') }}</v-btn>
         <v-btn color="error" variant="flat" class="flex-1-1" @click="confirmAction">
           <v-icon start>mdi-delete-outline</v-icon>
-          Supprimer
+          {{ t('commonDashboard.confirm.delete') }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -21,15 +21,18 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const visible = ref(false)
-const title   = ref('Confirmer la suppression')
-const message = ref('Cette action est irréversible. Voulez-vous continuer ?')
+const title   = ref('')
+const message = ref('')
 let resolvePromise = null
 
 const open = (opts = {}) => {
-  title.value   = opts.title   || 'Confirmer la suppression'
-  message.value = opts.message || 'Cette action est irréversible. Voulez-vous continuer ?'
+  title.value   = opts.title   || t('commonDashboard.confirm.deleteTitle')
+  message.value = opts.message || t('commonDashboard.confirm.deleteMessage')
   visible.value = true
   return new Promise((resolve) => { resolvePromise = resolve })
 }
