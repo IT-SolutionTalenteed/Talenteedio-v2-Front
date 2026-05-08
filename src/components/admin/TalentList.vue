@@ -4,9 +4,9 @@
 
     <v-toolbar color="transparent" border="b" density="compact" class="px-2">
       <v-icon class="mr-2">mdi-account-group</v-icon>
-      <v-toolbar-title>Gestion des Talents &amp; Consultants</v-toolbar-title>
+      <v-toolbar-title>{{ t('admin.talents.title') }}</v-toolbar-title>
       <template #append>
-        <span class="text-caption text-medium-emphasis mr-4">{{ total }} résultat{{ total > 1 ? 's' : '' }}</span>
+        <span class="text-caption text-medium-emphasis mr-4">{{ total }} {{ total > 1 ? t('dashboard.common.resultsPlural') : t('dashboard.common.results') }}</span>
       </template>
     </v-toolbar>
 
@@ -15,7 +15,7 @@
       <v-text-field
         v-model="searchInput"
         prepend-inner-icon="mdi-magnify"
-        placeholder="Rechercher par nom, email, poste, ville…"
+        :placeholder="t('admin.talents.searchPlaceholder')"
         density="compact"
         variant="outlined"
         clearable
@@ -45,7 +45,7 @@
 
       <template #item.role="{ item }">
         <v-chip size="small" :color="item.role === 'consultant_externe' ? 'purple' : 'primary'">
-          {{ item.role === 'consultant_externe' ? 'Consultant' : 'Talent' }}
+          {{ item.role === 'consultant_externe' ? t('admin.talents.consultant') : t('admin.talents.talent') }}
         </v-chip>
       </template>
 
@@ -73,20 +73,20 @@
 
       <template #item.etat="{ item }">
         <v-chip size="small" :color="item.is_suspended ? 'warning' : item.is_banned ? 'error' : 'success'">
-          {{ item.is_suspended ? 'Suspendu' : item.is_banned ? 'Banni' : 'Actif' }}
+          {{ item.is_suspended ? t('admin.talents.suspended') : item.is_banned ? t('admin.talents.banned') : t('admin.talents.active') }}
         </v-chip>
       </template>
 
       <template #item.actions="{ item }">
         <div class="d-flex gap-1">
-          <v-btn icon="mdi-pencil" size="small" color="primary" variant="tonal" @click="router.push({ name: 'AdminTalentEdit', params: { id: item.id } })" title="Modifier profil" />
+          <v-btn icon="mdi-pencil" size="small" color="primary" variant="tonal" @click="router.push({ name: 'AdminTalentEdit', params: { id: item.id } })" :title="t('admin.talents.editProfile')" />
           <v-btn
             :icon="item.is_suspended ? 'mdi-check-circle' : 'mdi-pause-circle'"
             size="small"
             :color="item.is_suspended ? 'success' : 'warning'"
             variant="tonal"
             @click="toggleSuspend(item)"
-            :title="item.is_suspended ? 'Réactiver' : 'Suspendre'"
+            :title="item.is_suspended ? t('admin.talents.reactivate') : t('admin.talents.suspend')"
           />
           <v-btn
             :icon="item.is_banned ? 'mdi-lock-open' : 'mdi-lock'"
@@ -94,9 +94,9 @@
             :color="item.is_banned ? 'info' : 'error'"
             variant="tonal"
             @click="toggleBan(item)"
-            :title="item.is_banned ? 'Débannir' : 'Bannir'"
+            :title="item.is_banned ? t('admin.talents.unban') : t('admin.talents.ban')"
           />
-          <v-btn icon="mdi-delete" size="small" color="error" variant="tonal" @click="deleteItem(item.id)" title="Supprimer" />
+          <v-btn icon="mdi-delete" size="small" color="error" variant="tonal" @click="deleteItem(item.id)" :title="t('commonDashboard.actions.delete')" />
         </div>
       </template>
     </v-data-table-server>
@@ -108,9 +108,11 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import talentService from '../../services/talentService.js'
 import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
+const { t } = useI18n()
 const router = useRouter()
 const talents    = ref([])
 const total      = ref(0)
@@ -130,13 +132,13 @@ const showSnack = (msg, color = 'success') => {
 }
 
 const headers = [
-  { title: 'Nom / Titre', key: 'name', sortable: false },
-  { title: 'Email', key: 'email', sortable: false },
-  { title: 'Rôle', key: 'role', sortable: false },
-  { title: 'Localisation', key: 'localisation', sortable: false },
-  { title: 'Provenance', key: 'source_provenance', sortable: false },
-  { title: 'Statut CRM', key: 'statut_crm', sortable: false },
-  { title: 'État', key: 'etat', sortable: false },
+  { title: t('admin.talents.name'), key: 'name', sortable: false },
+  { title: t('admin.talents.email'), key: 'email', sortable: false },
+  { title: t('admin.talents.role'), key: 'role', sortable: false },
+  { title: t('admin.talents.location'), key: 'localisation', sortable: false },
+  { title: t('admin.talents.source'), key: 'source_provenance', sortable: false },
+  { title: t('admin.talents.crmStatus'), key: 'statut_crm', sortable: false },
+  { title: t('admin.talents.state'), key: 'etat', sortable: false },
   { title: '', key: 'actions', sortable: false, align: 'end' },
 ]
 
@@ -158,7 +160,7 @@ const loadPage = async () => {
     talents.value = res.data.data
     total.value   = res.data.total
   } catch {
-    showSnack('Erreur lors du chargement', 'error')
+    showSnack(t('admin.talents.errorLoading'), 'error')
   } finally {
     loading.value = false
   }
@@ -190,9 +192,9 @@ const toggleSuspend = async (talent) => {
   try {
     const res = await talentService.toggleSuspend(talent.id)
     talent.is_suspended = res.data.is_suspended
-    showSnack(talent.is_suspended ? 'Talent suspendu' : 'Talent réactivé')
+    showSnack(talent.is_suspended ? t('admin.talents.talentSuspended') : t('admin.talents.talentReactivated'))
   } catch {
-    showSnack('Erreur lors de la suspension', 'error')
+    showSnack(t('admin.talents.errorSuspend'), 'error')
   }
 }
 
@@ -200,9 +202,9 @@ const toggleBan = async (talent) => {
   try {
     const res = await talentService.toggleBan(talent.id)
     talent.is_banned = res.data.is_banned
-    showSnack(talent.is_banned ? 'Talent banni' : 'Talent débanni')
+    showSnack(talent.is_banned ? t('admin.talents.talentBanned') : t('admin.talents.talentUnbanned'))
   } catch {
-    showSnack('Erreur lors du bannissement', 'error')
+    showSnack(t('admin.talents.errorBan'), 'error')
   }
 }
 
@@ -211,22 +213,22 @@ const updateStatutCrm = async (talent, statut) => {
     const res = await talentService.updateStatutCrm(talent.id, statut || null)
     talent.statut_crm = res.data.statut_crm
     talent.is_banned  = res.data.is_banned
-    showSnack('Statut CRM mis à jour')
+    showSnack(t('admin.talents.crmStatusUpdated'))
   } catch {
-    showSnack('Erreur lors de la mise à jour du statut', 'error')
+    showSnack(t('admin.talents.errorStatusUpdate'), 'error')
   }
 }
 
 const deleteItem = async (id) => {
-  const ok = await confirmRef.value.open({ message: 'Supprimer définitivement ce talent ?' })
+  const ok = await confirmRef.value.open({ message: t('admin.talents.confirmDelete') })
   if (!ok) return
   loading.value = true
   try {
     await talentService.delete(id)
-    showSnack('Talent supprimé')
+    showSnack(t('admin.talents.talentDeleted'))
     await loadPage()
   } catch (err) {
-    showSnack(err.response?.data?.message || 'Erreur lors de la suppression', 'error')
+    showSnack(err.response?.data?.message || t('admin.talents.errorDelete'), 'error')
   } finally {
     loading.value = false
   }
