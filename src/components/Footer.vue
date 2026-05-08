@@ -8,6 +8,7 @@
           <div class="footer-links">
             <router-link to="/legal/conditions-generales">{{ t('footer.terms') }}</router-link>
             <router-link to="/legal/confidentialite">{{ t('footer.privacy') }}</router-link>
+            <router-link to="/signaler-bug">{{ t('footer.reportBug') }}</router-link>
           </div>
           <div class="footer-copyright">
             <p>© {{ currentYear }} {{ t('footer.copyright') }}</p>
