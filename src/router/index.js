@@ -28,6 +28,7 @@ import CompanyLanding from '../components/CompanyLanding.vue'
 import ForgotPassword from '../components/ForgotPassword.vue'
 import ResetPassword from '../components/ResetPassword.vue'
 import NotFound from '../components/NotFound.vue'
+import SignalerBug from '../components/SignalerBug.vue'
 
 // Admin form pages
 import JobContractForm from '../components/admin/JobContractForm.vue'
@@ -128,6 +129,11 @@ const routes = [
     path: '/legal/:slug',
     name: 'LegalPage',
     component: LegalPage
+  },
+  {
+    path: '/signaler-bug',
+    name: 'SignalerBug',
+    component: SignalerBug
   },
   {
     path: '/login',
