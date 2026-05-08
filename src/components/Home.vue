@@ -289,57 +289,22 @@
         </div>
         <div class="triple-cards">
           <!-- Articles dynamiques (3 premiers) -->
-          <template v-if="articles.length">
-            <div v-for="(article, index) in articles.slice(0, 3)" :key="article.id" class="triple-card animate-on-scroll" :class="`stagger-${index + 1}`">
-              <div class="triple-card-img">
-                <img v-if="article.image_url" :src="article.image_url" :alt="article.title" loading="lazy">
-                <div v-else class="triple-card-placeholder">
-                  <i class="fa-solid fa-newspaper"></i>
-                </div>
-              </div>
-              <div class="triple-card-body">
-                <div class="article-date">{{ formatDate(article.created_at) }}</div>
-                <h3>{{ article.title }}</h3>
-                <p>{{ truncate(stripHtml(article.content), 120) }}</p>
-                <router-link :to="`/blog/${article.id}`" class="article-link">
-                  {{ t('home.triple.readMore') }} <i class="fa-solid fa-chevron-right"></i>
-                </router-link>
+          <div v-for="(article, index) in articles.slice(0, 3)" :key="article.id" class="triple-card animate-on-scroll" :class="`stagger-${index + 1}`">
+            <div class="triple-card-img">
+              <img v-if="article.image_url" :src="article.image_url" :alt="article.title" loading="lazy">
+              <div v-else class="triple-card-placeholder">
+                <i class="fa-solid fa-newspaper"></i>
               </div>
             </div>
-          </template>
-          <!-- Fallback statique si aucun article -->
-          <template v-else>
-            <div class="triple-card animate-on-scroll">
-              <div class="triple-card-img">
-                <img src="https://africatalentsummit.com/wp-content/uploads/2026/02/staff-tech-accounting-discussion-office-development-feedback-budget-communication-business-project-group-collaboration-financial-firm-people-planning-with-team-scaled.jpg"
-                     alt="Think Tank" loading="lazy">
-              </div>
-              <div class="triple-card-body">
-                <h3>{{ t('home.triple.thinkTank.title') }}</h3>
-                <p>{{ t('home.triple.thinkTank.description') }}</p>
-              </div>
+            <div class="triple-card-body">
+              <div class="article-date">{{ formatDate(article.created_at) }}</div>
+              <h3>{{ article.title }}</h3>
+              <p>{{ truncate(stripHtml(article.content), 120) }}</p>
+              <router-link :to="`/blog/${article.id}`" class="article-link">
+                {{ t('home.triple.readMore') }} <i class="fa-solid fa-chevron-right"></i>
+              </router-link>
             </div>
-            <div class="triple-card animate-on-scroll stagger-1">
-              <div class="triple-card-img">
-                <img src="https://africatalentsummit.com/wp-content/uploads/2026/02/all-their-input-is-vital-when-it-comes-to-decision-2026-01-09-10-57-28-utc-scaled.jpg"
-                     alt="Hub de Recrutement Premium" loading="lazy">
-              </div>
-              <div class="triple-card-body">
-                <h3>{{ t('home.triple.recruitmentHub.title') }}</h3>
-                <p>{{ t('home.triple.recruitmentHub.description') }}</p>
-              </div>
-            </div>
-            <div class="triple-card animate-on-scroll stagger-2">
-              <div class="triple-card-img">
-                <img src="https://africatalentsummit.com/wp-content/uploads/2026/02/recording-the-facts-shot-of-a-group-of-people-sit-2026-01-09-11-19-42-utc-scaled.jpg"
-                     alt="Levier de Diplomatie Économique" loading="lazy">
-              </div>
-              <div class="triple-card-body">
-                <h3>{{ t('home.triple.diplomacy.title') }}</h3>
-                <p>{{ t('home.triple.diplomacy.description') }}</p>
-              </div>
-            </div>
-          </template>
+          </div>
         </div>
       </div>
     </section>
@@ -409,10 +374,6 @@
               <span class="btn-primary btn-sm">{{ t('home.jobOffers.apply') }}</span>
             </div>
           </router-link>
-        </div>
-
-        <div v-else class="no-jobs animate-on-scroll">
-          {{ t('home.jobOffers.noOffers') }}
         </div>
         
         <div class="jobs-cta animate-on-scroll">
@@ -1089,7 +1050,7 @@ body {
   inset: 0;
   background-size: cover;
   background-position: center;
-  background-image: url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80');
+  background-color: #f0f0f0;
   border-radius: 16px;
   z-index: 1;
 }
