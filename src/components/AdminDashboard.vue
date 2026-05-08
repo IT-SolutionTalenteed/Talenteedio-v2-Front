@@ -12,10 +12,10 @@
         <div class="d-flex align-center justify-space-between flex-wrap ga-4">
           <div>
             <div class="text-h5 font-weight-bold text-white mb-1">
-              Bienvenue dans l'espace administrateur 👋
+              {{ t('dashboard.admin.welcome') }}
             </div>
             <div class="text-body-2" style="color:rgba(255,255,255,0.75)">
-              Gérez les utilisateurs, les offres, les candidatures et bien plus.
+              {{ t('dashboard.admin.subtitle') }}
             </div>
           </div>
           <v-icon size="72" style="color:rgba(255,255,255,0.15)">mdi-shield-crown</v-icon>
@@ -39,7 +39,7 @@
                 <div class="text-h4 font-weight-bold text-primary">
                   {{ totalTalents !== null ? totalTalents : '—' }}
                 </div>
-                <div class="text-body-2 text-medium-emphasis mt-1">Talents inscrits</div>
+                <div class="text-body-2 text-medium-emphasis mt-1">{{ t('dashboard.admin.stats.talents') }}</div>
               </div>
               <v-avatar color="primary" variant="tonal" size="52" rounded="lg">
                 <v-icon size="26">mdi-account-tie-outline</v-icon>
@@ -72,10 +72,10 @@
                     {{ totalEntreprises !== null ? totalEntreprises : '—' }}
                   </div>
                   <v-chip v-if="pendingEntreprises > 0" size="x-small" color="warning" variant="tonal">
-                    {{ pendingEntreprises }} en attente
+                    {{ pendingEntreprises }} {{ t('dashboard.admin.stats.pending') }}
                   </v-chip>
                 </div>
-                <div class="text-body-2 text-medium-emphasis mt-1">Entreprises</div>
+                <div class="text-body-2 text-medium-emphasis mt-1">{{ t('dashboard.admin.stats.companies') }}</div>
               </div>
               <v-avatar color="success" variant="tonal" size="52" rounded="lg">
                 <v-icon size="26">mdi-office-building-outline</v-icon>
@@ -106,7 +106,7 @@
                 <div class="text-h4 font-weight-bold text-warning">
                   {{ totalOffres !== null ? totalOffres : '—' }}
                 </div>
-                <div class="text-body-2 text-medium-emphasis mt-1">Offres publiées</div>
+                <div class="text-body-2 text-medium-emphasis mt-1">{{ t('dashboard.admin.stats.offers') }}</div>
               </div>
               <v-avatar color="warning" variant="tonal" size="52" rounded="lg">
                 <v-icon size="26">mdi-briefcase-outline</v-icon>
@@ -137,7 +137,7 @@
                 <div class="text-h4 font-weight-bold text-info">
                   {{ totalEvenements !== null ? totalEvenements : '—' }}
                 </div>
-                <div class="text-body-2 text-medium-emphasis mt-1">Événements à venir</div>
+                <div class="text-body-2 text-medium-emphasis mt-1">{{ t('dashboard.admin.stats.events') }}</div>
               </div>
               <v-avatar color="info" variant="tonal" size="52" rounded="lg">
                 <v-icon size="26">mdi-calendar-star</v-icon>
@@ -162,7 +162,7 @@
         <v-card rounded="xl" elevation="0" border>
           <v-card-title class="pa-5 pb-2 text-body-1 font-weight-semibold">
             <v-icon class="mr-2" color="primary" size="20">mdi-chart-line</v-icon>
-            Évolution des inscriptions
+            {{ t('dashboard.admin.charts.evolution') }}
           </v-card-title>
           <v-card-text class="pa-5 pt-2">
             <apexchart
@@ -180,7 +180,7 @@
         <v-card rounded="xl" elevation="0" border>
           <v-card-title class="pa-5 pb-2 text-body-1 font-weight-semibold">
             <v-icon class="mr-2" color="success" size="20">mdi-chart-donut</v-icon>
-            Secteurs d'activité
+            {{ t('dashboard.admin.charts.sectors') }}
           </v-card-title>
           <v-card-text class="pa-5 pt-2">
             <apexchart
@@ -206,10 +206,10 @@
           <v-card-title class="pa-5 pb-2 text-body-1 font-weight-semibold d-flex align-center justify-space-between">
             <div>
               <v-icon class="mr-2" color="warning" size="20">mdi-chart-bar</v-icon>
-              Offres par type de contrat
+              {{ t('dashboard.admin.charts.contracts') }}
             </div>
             <v-chip size="small" color="warning" variant="tonal">
-              {{ totalOffres || 0 }} offres
+              {{ totalOffres || 0 }} {{ t('dashboard.admin.charts.totalOffers') }}
             </v-chip>
           </v-card-title>
           <v-card-text class="pa-5 pt-2">
@@ -228,7 +228,7 @@
         <v-card rounded="xl" elevation="0" border>
           <v-card-title class="pa-5 pb-2 text-body-1 font-weight-semibold">
             <v-icon class="mr-2" color="info" size="20">mdi-chart-pie</v-icon>
-            Candidatures par statut
+            {{ t('dashboard.admin.charts.applications') }}
           </v-card-title>
           <v-card-text class="pa-5 pt-2">
             <apexchart
@@ -252,7 +252,7 @@
         <v-card rounded="xl" elevation="0" border height="100%">
           <v-card-title class="pa-5 pb-2 text-body-1 font-weight-semibold">
             <v-icon class="mr-2" color="primary" size="20">mdi-lightning-bolt</v-icon>
-            Actions rapides
+            {{ t('dashboard.admin.quickActions.title') }}
           </v-card-title>
           <v-list lines="two" class="py-0">
             <v-list-item
@@ -280,7 +280,7 @@
         <v-card rounded="xl" elevation="0" border height="100%">
           <v-card-title class="pa-5 pb-2 text-body-1 font-weight-semibold">
             <v-icon class="mr-2" color="secondary" size="20">mdi-newspaper-variant-outline</v-icon>
-            Gestion du contenu
+            {{ t('dashboard.admin.content.title') }}
           </v-card-title>
           <v-list lines="two" class="py-0">
             <v-list-item
@@ -308,9 +308,9 @@
     <v-card rounded="xl" elevation="0" border>
       <v-card-title class="pa-5 pb-3 text-body-1 font-weight-semibold">
         <v-icon class="mr-2" color="secondary" size="20">mdi-cog-outline</v-icon>
-        Référentiels
+        {{ t('dashboard.admin.referentials.title') }}
         <span class="text-body-2 font-weight-regular text-medium-emphasis ml-2">
-          — Données de référence du système
+          — {{ t('dashboard.admin.referentials.subtitle') }}
         </span>
       </v-card-title>
       <v-card-text class="pa-5 pt-0">
@@ -369,6 +369,9 @@ import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import api from '../services/api.js'
 import VueApexCharts from 'vue3-apexcharts'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 import CategorieEvenementList from './admin/CategorieEvenementList.vue'
 import EvenementList from './admin/EvenementList.vue'
@@ -804,7 +807,12 @@ onMounted(async () => {
     }
 
     // CANDIDATURES PAR STATUT
-    const candidaturesLabels = ['Acceptées', 'En attente', 'Refusées', 'Archivées']
+    const candidaturesLabels = [
+      t('dashboard.admin.charts.applicationsAccepted'),
+      t('dashboard.admin.charts.applicationsPending'),
+      t('dashboard.admin.charts.applicationsRejected'),
+      t('dashboard.admin.charts.applicationsArchived')
+    ]
     const candidaturesSeries = [
       stats.candidatures_statut.acceptees || 0,
       stats.candidatures_statut.en_attente || 0,
@@ -825,78 +833,78 @@ onMounted(async () => {
   }
 })
 
-const quickActions = [
+const quickActions = computed(() => [
   {
-    title: 'Gérer les talents',
-    subtitle: 'Voir et modifier les profils',
+    title: t('admin.quickActions.manageTalents'),
+    subtitle: t('admin.quickActions.manageTalentsDesc'),
     icon: 'mdi-account-tie-outline',
     color: 'primary',
     route: { name: 'AdminTalents' },
   },
   {
-    title: 'Gérer les entreprises',
-    subtitle: 'Administrer les comptes',
+    title: t('admin.quickActions.manageCompanies'),
+    subtitle: t('admin.quickActions.manageCompaniesDesc'),
     icon: 'mdi-office-building-outline',
     color: 'success',
     route: { name: 'AdminEntreprises' },
   },
   {
-    title: "Offres d'emploi",
-    subtitle: 'Gérer les publications',
+    title: t('admin.quickActions.jobOffers'),
+    subtitle: t('admin.quickActions.jobOffersDesc'),
     icon: 'mdi-briefcase-outline',
     color: 'info',
     route: { name: 'AdminOffres' },
   },
   {
-    title: 'Événements',
-    subtitle: 'Planifier et organiser',
+    title: t('admin.quickActions.events'),
+    subtitle: t('admin.quickActions.eventsDesc'),
     icon: 'mdi-calendar-star',
     color: 'warning',
     route: { name: 'AdminEvenements' },
   },
-]
+])
 
-const contentActions = [
+const contentActions = computed(() => [
   {
-    title: 'Articles',
-    subtitle: 'Gérer les publications',
+    title: t('admin.contentActions.articles'),
+    subtitle: t('admin.contentActions.articlesDesc'),
     icon: 'mdi-file-document-outline',
     color: 'purple',
     route: { name: 'AdminArticles' },
   },
   {
-    title: 'Catégories Média',
-    subtitle: 'Organiser les contenus',
+    title: t('admin.contentActions.mediaCategories'),
+    subtitle: t('admin.contentActions.mediaCategoriesDesc'),
     icon: 'mdi-folder-multiple-outline',
     color: 'pink',
     route: { name: 'AdminMediaCategories' },
   },
   {
-    title: 'Pages légales',
-    subtitle: 'CGU, mentions légales',
+    title: t('admin.contentActions.legalPages'),
+    subtitle: t('admin.contentActions.legalPagesDesc'),
     icon: 'mdi-file-certificate-outline',
     color: 'teal',
     route: { name: 'AdminLegalPages' },
   },
   {
-    title: 'Import candidats',
-    subtitle: 'Importer en masse (XLS)',
+    title: t('admin.contentActions.importCandidates'),
+    subtitle: t('admin.contentActions.importCandidatesDesc'),
     icon: 'mdi-upload',
     color: 'cyan',
     route: { name: 'AdminImportCandidats' },
   },
-]
+])
 
-const referentiels = [
-  { title: 'Contrats', icon: 'mdi-file-sign', color: 'primary', route: { name: 'AdminJobContracts' } },
-  { title: 'Modes travail', icon: 'mdi-laptop', color: 'success', route: { name: 'AdminJobModes' } },
-  { title: 'Compétences', icon: 'mdi-star-outline', color: 'info', route: { name: 'AdminSkills' } },
-  { title: 'Niveaux étude', icon: 'mdi-school-outline', color: 'warning', route: { name: 'AdminStudyLevels' } },
-  { title: 'Expériences', icon: 'mdi-clock-outline', color: 'purple', route: { name: 'AdminExperiences' } },
-  { title: 'Langues', icon: 'mdi-translate', color: 'pink', route: { name: 'AdminLanguages' } },
-  { title: 'Secteurs', icon: 'mdi-sitemap-outline', color: 'teal', route: { name: 'AdminActivitySectors' } },
-  { title: 'Catég. événements', icon: 'mdi-tag-multiple-outline', color: 'cyan', route: { name: 'AdminCategorieEvenements' } },
-]
+const referentiels = computed(() => [
+  { title: t('admin.referentials.contracts'), icon: 'mdi-file-sign', color: 'primary', route: { name: 'AdminJobContracts' } },
+  { title: t('admin.referentials.workModes'), icon: 'mdi-laptop', color: 'success', route: { name: 'AdminJobModes' } },
+  { title: t('admin.referentials.skills'), icon: 'mdi-star-outline', color: 'info', route: { name: 'AdminSkills' } },
+  { title: t('admin.referentials.studyLevels'), icon: 'mdi-school-outline', color: 'warning', route: { name: 'AdminStudyLevels' } },
+  { title: t('admin.referentials.experiences'), icon: 'mdi-clock-outline', color: 'purple', route: { name: 'AdminExperiences' } },
+  { title: t('admin.referentials.languages'), icon: 'mdi-translate', color: 'pink', route: { name: 'AdminLanguages' } },
+  { title: t('admin.referentials.sectors'), icon: 'mdi-sitemap-outline', color: 'teal', route: { name: 'AdminActivitySectors' } },
+  { title: t('admin.referentials.eventCategories'), icon: 'mdi-tag-multiple-outline', color: 'cyan', route: { name: 'AdminCategorieEvenements' } },
+])
 </script>
 
 <style scoped>
