@@ -1,0 +1,38 @@
+{
+  "title": "Mon profil",
+  "subtitle": "Informations personnelles et sécurité du compte",
+  "identity": {
+    "title": "Identité",
+    "firstName": "Prénom",
+    "lastName": "Nom de famille",
+    "position": "Titre / Poste",
+    "positionPlaceholder": "ex: Développeur Full Stack",
+    "phone": "Téléphone",
+    "city": "Ville actuelle",
+    "country": "Pays actuel"
+  },
+  "mobility": {
+    "title": "Préférences de mobilité",
+    "subtitle": "(utilisées par le matching IA)",
+    "desiredCountries": "Pays où je souhaite travailler",
+    "desiredCities": "Villes souhaitées",
+    "desiredSector": "Secteur d'activité souhaité",
+    "flexibleHint": "Laisser vide = flexible",
+    "anySectorHint": "Laisser vide = peu importe"
+  },
+  "account": {
+    "title": "Compte",
+    "email": "Adresse e-mail"
+  },
+  "password": {
+    "title": "Changer le mot de passe",
+    "subtitle": "(laisser vide pour ne pas modifier)",
+    "current": "Mot de passe actuel",
+    "new": "Nouveau mot de passe",
+    "confirm": "Confirmer"
+  },
+  "save": "Enregistrer",
+  "profileUpdated": "Profil mis à jour",
+  "errorLoading": "Erreur chargement profil",
+  "errorSaving": "Erreur"
+}
