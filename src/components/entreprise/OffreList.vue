@@ -1,9 +1,9 @@
 <template>
   <v-card rounded="xl" border elevation="0" class="pa-4">
     <div class="d-flex align-center justify-space-between mb-4">
-      <v-card-title class="text-h5 pa-0">Mes Offres d'emploi</v-card-title>
+      <v-card-title class="text-h5 pa-0">{{ t('companyDashboard.offers.title') }}</v-card-title>
       <v-btn color="primary" variant="tonal" prepend-icon="mdi-plus" @click="router.push('/entreprise/offres/create')">
-        Publier une offre
+        {{ t('dashboard.company.quickActions.publishOffer') }}
       </v-btn>
     </div>
 
@@ -23,7 +23,7 @@
       </template>
 
       <template #no-data>
-        <div class="text-center py-6 text-medium-emphasis">Aucune offre publiée.</div>
+        <div class="text-center py-6 text-medium-emphasis">{{ t('companyDashboard.offers.noOffers') }}</div>
       </template>
     </v-data-table>
   </v-card>
@@ -32,9 +32,11 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import offreService from '../../services/entreprise/offreService.js'
 import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
+const { t } = useI18n()
 const router = useRouter()
 const items = ref([])
 const loading = ref(false)
@@ -48,10 +50,10 @@ const showSnack = (msg, color = 'success') => {
 }
 
 const headers = [
-  { title: 'Titre', key: 'titre' },
-  { title: 'Localisation', key: 'localisation' },
-  { title: 'Date limite', key: 'date_limite' },
-  { title: 'Actions', key: 'actions', sortable: false, align: 'end' },
+  { title: t('companyDashboard.offers.title_field'), key: 'titre' },
+  { title: t('companyDashboard.offers.location'), key: 'localisation' },
+  { title: t('companyDashboard.offers.deadline'), key: 'date_limite' },
+  { title: t('companyDashboard.offers.actions'), key: 'actions', sortable: false, align: 'end' },
 ]
 
 const load = async () => {
@@ -60,22 +62,22 @@ const load = async () => {
     const res = await offreService.getAll()
     items.value = res.data
   } catch {
-    showSnack('Erreur chargement', 'error')
+    showSnack(t('companyDashboard.offers.errorLoading'), 'error')
   } finally {
     loading.value = false
   }
 }
 
 const deleteItem = async (id) => {
-  const ok = await confirmRef.value.open({ message: 'Supprimer cette offre ?' })
+  const ok = await confirmRef.value.open({ message: t('companyDashboard.offers.confirmDelete') })
   if (!ok) return
   loading.value = true
   try {
     await offreService.delete(id)
-    showSnack('Offre supprimée')
+    showSnack(t('companyDashboard.offers.offerDeleted'))
     await load()
   } catch {
-    showSnack('Erreur suppression', 'error')
+    showSnack(t('companyDashboard.offers.errorDelete'), 'error')
   } finally {
     loading.value = false
   }
