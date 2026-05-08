@@ -1,0 +1,93 @@
+{
+  "home": "Accueil",
+  "jobs": "Offres d'emploi",
+  "jobsDesc": "Découvrez nos opportunités",
+  "companies": "Entreprises",
+  "companiesDesc": "Nos partenaires recruteurs",
+  "events": "Événements",
+  "allEvents": "Tous les événements",
+  "allEventsDesc": "Participez à nos événements",
+  "articles": "Articles",
+  "announcements": "Annonces",
+  "learnMore": "En savoir plus",
+  "noEvents": "Aucun événement à venir",
+  "sponsor": "Devenir partenaire",
+  "subscription": "S'inscrire",
+  "login": "Se connecter",
+  "dashboard": "Tableau de bord",
+  "logout": "Se déconnecter",
+  "megaJobs": {
+    "heroTitle": "Trouvez votre prochain défi",
+    "heroDesc": "Des opportunités qui correspondent à vos ambitions"
+  },
+  "megaEvents": {
+    "heroTitle": "Événements à venir",
+    "heroDesc": "Rencontrez les entreprises qui recrutent"
+  },
+  "countdown": {
+    "days": "jours",
+    "hours": "heures",
+    "minutes": "minutes",
+    "seconds": "secondes"
+  },
+  "language": {
+    "french": "Français",
+    "english": "English"
+  },
+  "admin": {
+    "overview": "Vue d'ensemble",
+    "profile": "Profil",
+    "jobs": {
+      "title": "Emplois",
+      "offers": "Offres d'emploi",
+      "applications": "Candidatures",
+      "contracts": "Contrats de travail",
+      "workModes": "Modes de travail",
+      "skills": "Compétences",
+      "studyLevels": "Niveaux d'étude",
+      "experiences": "Expériences",
+      "languages": "Langues",
+      "sectors": "Secteurs d'activité"
+    },
+    "events": {
+      "title": "Événements",
+      "categories": "Catégories",
+      "events": "Événements",
+      "participation": "Participation",
+      "interviews": "Entretiens par stand",
+      "feedbacks": "Feedbacks"
+    },
+    "crm": {
+      "title": "CRM HubSpot",
+      "import": "Import XLS",
+      "sync": "Sync CRM HubSpot"
+    },
+    "talents": "Talents",
+    "companies": "Entreprises",
+    "media": {
+      "title": "Médias",
+      "categories": "Catégories Média",
+      "articles": "Articles"
+    },
+    "legalPages": "Pages légales",
+    "plans": "Plans",
+    "admins": "Administrateurs"
+  },
+  "company": {
+    "dashboard": "Tableau de bord",
+    "offers": "Mes offres",
+    "applications": "Candidatures",
+    "events": "Événements",
+    "articles": "Articles",
+    "interviews": "Entretiens",
+    "profile": "Mon profil"
+  },
+  "talent": {
+    "applications": "Mes candidatures",
+    "favorites": "Mes favoris",
+    "events": "Événements & Matching",
+    "interviews": "Mes entretiens",
+    "feedbacks": "Mes feedbacks",
+    "profile": "Mon profil"
+  }
+}
