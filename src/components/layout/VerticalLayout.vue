@@ -89,7 +89,7 @@
       <v-list density="compact" nav bg-color="transparent" class="px-2 py-2">
         <v-list-item
           prepend-icon="mdi-logout"
-          :title="(!rail || mobile) ? 'Déconnexion' : ''"
+          :title="(!rail || mobile) ? t('dashboard.common.logout') : ''"
           rounded="lg"
           style="color:rgba(255,255,255,0.6)"
           @click="handleLogout"
@@ -131,14 +131,14 @@
           <v-divider class="my-1" />
           <v-list-item
             prepend-icon="mdi-home-outline"
-            title="Accueil"
+            :title="t('dashboard.common.home')"
             rounded="lg"
             @click="router.push('/home')"
           />
           <v-divider class="my-1" />
           <v-list-item
             prepend-icon="mdi-logout"
-            title="Déconnexion"
+            :title="t('dashboard.common.logout')"
             base-color="error"
             rounded="lg"
             @click="handleLogout"
@@ -173,7 +173,9 @@ import { storeToRefs } from 'pinia'
 import { useDashboardStore } from '@/stores/dashboard.store'
 import { authService } from '@/services/api'
 import api from '@/services/api'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const router = useRouter()
 const route = useRoute()
 const { mobile } = useDisplay()
@@ -210,40 +212,40 @@ const roleLabel = computed(() => {
 })
 
 const PAGE_TITLES = {
-  overview: "Vue d'ensemble",
-  entreprises: 'Entreprises',
-  talents: 'Talents',
-  entretiens: 'Entretiens',
-  feedbacks: 'Feedbacks',
-  offres: "Offres d'emploi",
-  'categorie-evenements': 'Catégories Événements',
-  evenements: 'Événements',
-  'media-categories': 'Catégories Média',
-  articles: 'Articles',
-  'job-contracts': 'Contrats de travail',
-  'job-modes': 'Modes de travail',
-  skills: 'Compétences',
-  'study-levels': "Niveaux d'étude",
-  experiences: 'Expériences',
-  languages: 'Langues',
-  'activity-sectors': "Secteurs d'activité",
-  'legal-pages': 'Pages légales',
-  'plans': 'Plans',
-  admins: 'Administrateurs',
-  'import-candidats': 'Import candidats',
-  'sync-crm': 'Sync CRM',
-  candidatures: 'Candidatures',
-  profile: 'Mon profil',
-  'evenement-participations': 'Demandes de participation',
-  favoris: 'Mes favoris',
+  overview: t('dashboard.common.overview'),
+  entreprises: t('nav.admin.companies'),
+  talents: t('nav.admin.talents'),
+  entretiens: t('nav.admin.events.interviews'),
+  feedbacks: t('nav.admin.events.feedbacks'),
+  offres: t('nav.admin.jobs.offers'),
+  'categorie-evenements': t('nav.admin.events.categories'),
+  evenements: t('nav.admin.events.events'),
+  'media-categories': t('nav.admin.media.categories'),
+  articles: t('nav.admin.media.articles'),
+  'job-contracts': t('nav.admin.jobs.contracts'),
+  'job-modes': t('nav.admin.jobs.workModes'),
+  skills: t('nav.admin.jobs.skills'),
+  'study-levels': t('nav.admin.jobs.studyLevels'),
+  experiences: t('nav.admin.jobs.experiences'),
+  languages: t('nav.admin.jobs.languages'),
+  'activity-sectors': t('nav.admin.jobs.sectors'),
+  'legal-pages': t('nav.admin.legalPages'),
+  'plans': t('nav.admin.plans'),
+  admins: t('nav.admin.admins'),
+  'import-candidats': t('nav.admin.crm.import'),
+  'sync-crm': t('nav.admin.crm.sync'),
+  candidatures: t('nav.admin.jobs.applications'),
+  profile: t('nav.admin.profile'),
+  'evenement-participations': t('nav.admin.events.participation'),
+  favoris: t('nav.talent.favorites'),
 }
 
 const pageTitle = computed(() => {
   if (userRole.value !== 'admin') {
-    return PAGE_TITLES[activeTab.value] || 'Dashboard'
+    return PAGE_TITLES[activeTab.value] || t('dashboard.common.dashboard')
   }
   const seg = route.path.split('/').pop()
-  return PAGE_TITLES[seg] || 'Dashboard'
+  return PAGE_TITLES[seg] || t('dashboard.common.dashboard')
 })
 
 const handleLogout = async () => {
@@ -276,79 +278,79 @@ const sideNav = computed(() => {
   if (role === 'admin') {
     return [
       {
-        label: "Vue d'ensemble",
+        label: t('nav.admin.overview'),
         route: { name: 'AdminOverview' },
         icon: 'mdi-view-dashboard-outline',
       },
       {
-        label: 'Profil',
+        label: t('nav.admin.profile'),
         icon: 'mdi-account-circle-outline',
         route: { name: 'AdminProfile' },
       },
       {
-        label: 'Emplois',
+        label: t('nav.admin.jobs.title'),
         icon: 'mdi-briefcase-outline',
         children: [
-          { label: "Offres d'emploi", route: { name: 'AdminOffres' }, icon: 'mdi-briefcase-search-outline' },
-          { label: 'Candidatures', route: { name: 'AdminCandidatures' }, icon: 'mdi-file-account-outline' },
-          { label: 'Contrats de travail', route: { name: 'AdminJobContracts' }, icon: 'mdi-file-sign' },
-          { label: 'Modes de travail', route: { name: 'AdminJobModes' }, icon: 'mdi-laptop' },
-          { label: 'Compétences', route: { name: 'AdminSkills' }, icon: 'mdi-star-outline' },
-          { label: "Niveaux d'étude", route: { name: 'AdminStudyLevels' }, icon: 'mdi-school-outline' },
-          { label: 'Expériences', route: { name: 'AdminExperiences' }, icon: 'mdi-clock-outline' },
-          { label: 'Langues', route: { name: 'AdminLanguages' }, icon: 'mdi-translate' },
-          { label: "Secteurs d'activité", route: { name: 'AdminActivitySectors' }, icon: 'mdi-sitemap-outline' },
+          { label: t('nav.admin.jobs.offers'), route: { name: 'AdminOffres' }, icon: 'mdi-briefcase-search-outline' },
+          { label: t('nav.admin.jobs.applications'), route: { name: 'AdminCandidatures' }, icon: 'mdi-file-account-outline' },
+          { label: t('nav.admin.jobs.contracts'), route: { name: 'AdminJobContracts' }, icon: 'mdi-file-sign' },
+          { label: t('nav.admin.jobs.workModes'), route: { name: 'AdminJobModes' }, icon: 'mdi-laptop' },
+          { label: t('nav.admin.jobs.skills'), route: { name: 'AdminSkills' }, icon: 'mdi-star-outline' },
+          { label: t('nav.admin.jobs.studyLevels'), route: { name: 'AdminStudyLevels' }, icon: 'mdi-school-outline' },
+          { label: t('nav.admin.jobs.experiences'), route: { name: 'AdminExperiences' }, icon: 'mdi-clock-outline' },
+          { label: t('nav.admin.jobs.languages'), route: { name: 'AdminLanguages' }, icon: 'mdi-translate' },
+          { label: t('nav.admin.jobs.sectors'), route: { name: 'AdminActivitySectors' }, icon: 'mdi-sitemap-outline' },
         ],
       },
       {
-        label: 'Événements',
+        label: t('nav.admin.events.title'),
         icon: 'mdi-calendar-star',
         children: [
-          { label: 'Catégories', route: { name: 'AdminCategorieEvenements' }, icon: 'mdi-tag-multiple-outline' },
-          { label: 'Événements', route: { name: 'AdminEvenements' }, icon: 'mdi-calendar-month-outline' },
-          { label: 'Participation', route: { name: 'AdminParticipations' }, icon: 'mdi-domain' },
-          { label: 'Entretiens par stand', route: { name: 'AdminEntretiens' }, icon: 'mdi-calendar-account-outline' },
-          { label: 'Feedbacks', route: { name: 'AdminFeedbacks' }, icon: 'mdi-message-text-outline' },
+          { label: t('nav.admin.events.categories'), route: { name: 'AdminCategorieEvenements' }, icon: 'mdi-tag-multiple-outline' },
+          { label: t('nav.admin.events.events'), route: { name: 'AdminEvenements' }, icon: 'mdi-calendar-month-outline' },
+          { label: t('nav.admin.events.participation'), route: { name: 'AdminParticipations' }, icon: 'mdi-domain' },
+          { label: t('nav.admin.events.interviews'), route: { name: 'AdminEntretiens' }, icon: 'mdi-calendar-account-outline' },
+          { label: t('nav.admin.events.feedbacks'), route: { name: 'AdminFeedbacks' }, icon: 'mdi-message-text-outline' },
         ],
       },
       {
-        label: 'CRM HubSpot',
+        label: t('nav.admin.crm.title'),
         icon: 'mdi-hubspot',
         children: [
-          { label: 'Import XLS', route: { name: 'AdminImportCandidats' }, icon: 'mdi-upload' },
-          { label: 'Sync CRM HubSpot', route: { name: 'AdminSyncCrm' }, icon: 'mdi-sync' },
+          { label: t('nav.admin.crm.import'), route: { name: 'AdminImportCandidats' }, icon: 'mdi-upload' },
+          { label: t('nav.admin.crm.sync'), route: { name: 'AdminSyncCrm' }, icon: 'mdi-sync' },
         ],
       },
       {
-        label: 'Talents',
+        label: t('nav.admin.talents'),
         route: { name: 'AdminTalents' },
         icon: 'mdi-account-tie-outline',
       },
       {
-        label: 'Entreprises',
+        label: t('nav.admin.companies'),
         route: { name: 'AdminEntreprises' },
         icon: 'mdi-office-building-outline',
       },
       {
-        label: 'Médias',
+        label: t('nav.admin.media.title'),
         icon: 'mdi-newspaper-variant-outline',
         children: [
-          { label: 'Catégories Média', route: { name: 'AdminMediaCategories' }, icon: 'mdi-folder-multiple-outline' },
-          { label: 'Articles', route: { name: 'AdminArticles' }, icon: 'mdi-file-document-outline' },
+          { label: t('nav.admin.media.categories'), route: { name: 'AdminMediaCategories' }, icon: 'mdi-folder-multiple-outline' },
+          { label: t('nav.admin.media.articles'), route: { name: 'AdminArticles' }, icon: 'mdi-file-document-outline' },
         ],
       },
       {
-        label: 'Pages légales',
+        label: t('nav.admin.legalPages'),
         route: { name: 'AdminLegalPages' },
         icon: 'mdi-file-certificate-outline',
       },
       {
-        label: 'Plans',
+        label: t('nav.admin.plans'),
         route: { name: 'AdminPlans' },
         icon: 'mdi-crown-outline',
       },
       {
-        label: 'Administrateurs',
+        label: t('nav.admin.admins'),
         route: { name: 'AdminAdmins' },
         icon: 'mdi-shield-account-outline',
       },
@@ -357,24 +359,24 @@ const sideNav = computed(() => {
 
   if (role === 'entreprise') {
     return [
-      { label: 'Tableau de bord', route: { name: 'EntrepriseDashboard' }, icon: 'mdi-view-dashboard-outline' },
-      { label: 'Mes offres',      route: { name: 'EntrepriseOffres' }, icon: 'mdi-briefcase-outline' },
-      { label: 'Candidatures',    route: { name: 'EntrepriseCandidatures' }, icon: 'mdi-account-multiple-outline' },
-      { label: 'Événements',      route: { name: 'EntrepriseEvenements' }, icon: 'mdi-calendar-star' },
-      { label: 'Articles',        route: { name: 'EntrepriseArticles' }, icon: 'mdi-newspaper-variant-outline' },
-      { label: 'Entretiens',      route: { name: 'EntrepriseEntretiens' }, icon: 'mdi-calendar-account-outline' },
-      { label: 'Mon profil',      route: { name: 'EntrepriseProfile' }, icon: 'mdi-account-circle-outline' },
+      { label: t('nav.company.dashboard'), route: { name: 'EntrepriseDashboard' }, icon: 'mdi-view-dashboard-outline' },
+      { label: t('nav.company.offers'), route: { name: 'EntrepriseOffres' }, icon: 'mdi-briefcase-outline' },
+      { label: t('nav.company.applications'), route: { name: 'EntrepriseCandidatures' }, icon: 'mdi-account-multiple-outline' },
+      { label: t('nav.company.events'), route: { name: 'EntrepriseEvenements' }, icon: 'mdi-calendar-star' },
+      { label: t('nav.company.articles'), route: { name: 'EntrepriseArticles' }, icon: 'mdi-newspaper-variant-outline' },
+      { label: t('nav.company.interviews'), route: { name: 'EntrepriseEntretiens' }, icon: 'mdi-calendar-account-outline' },
+      { label: t('nav.company.profile'), route: { name: 'EntrepriseProfile' }, icon: 'mdi-account-circle-outline' },
     ]
   }
 
   if (role === 'talent') {
     return [
-      { label: 'Mes candidatures',   route: { name: 'TalentCandidatures' }, icon: 'mdi-briefcase-check-outline' },
-      { label: 'Mes favoris',        route: { name: 'TalentFavoris' }, icon: 'mdi-heart-outline' },
-      { label: 'Événements & Matching', route: { name: 'TalentEvenements' }, icon: 'mdi-calendar-star' },
-      { label: 'Mes entretiens',     route: { name: 'TalentEntretiens' }, icon: 'mdi-calendar-account-outline' },
-      { label: 'Mes feedbacks',      route: { name: 'TalentFeedbacks' }, icon: 'mdi-message-text-outline' },
-      { label: 'Mon profil',         route: { name: 'TalentProfile' }, icon: 'mdi-account-circle-outline' },
+      { label: t('nav.talent.applications'), route: { name: 'TalentCandidatures' }, icon: 'mdi-briefcase-check-outline' },
+      { label: t('nav.talent.favorites'), route: { name: 'TalentFavoris' }, icon: 'mdi-heart-outline' },
+      { label: t('nav.talent.events'), route: { name: 'TalentEvenements' }, icon: 'mdi-calendar-star' },
+      { label: t('nav.talent.interviews'), route: { name: 'TalentEntretiens' }, icon: 'mdi-calendar-account-outline' },
+      { label: t('nav.talent.feedbacks'), route: { name: 'TalentFeedbacks' }, icon: 'mdi-message-text-outline' },
+      { label: t('nav.talent.profile'), route: { name: 'TalentProfile' }, icon: 'mdi-account-circle-outline' },
     ]
   }
 
