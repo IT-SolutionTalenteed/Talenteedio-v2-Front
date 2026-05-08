@@ -1,0 +1,102 @@
+{
+  "admin": {
+    "welcome": "Welcome to the admin dashboard 👋",
+    "subtitle": "Manage users, offers, applications and more.",
+    "stats": {
+      "talents": "Registered talents",
+      "companies": "Companies",
+      "pending": "pending",
+      "offers": "Published offers",
+      "events": "Upcoming events"
+    },
+    "charts": {
+      "evolution": "Registration evolution",
+      "sectors": "Activity sectors",
+      "contracts": "Offers by contract type",
+      "applications": "Applications by status",
+      "applicationsAccepted": "Accepted",
+      "applicationsPending": "Pending",
+      "applicationsRejected": "Rejected",
+      "applicationsArchived": "Archived",
+      "totalOffers": "offers"
+    },
+    "quickActions": {
+      "title": "Quick actions",
+      "manageTalents": "Manage talents",
+      "manageTalentsDesc": "View and edit profiles",
+      "manageCompanies": "Manage companies",
+      "manageCompaniesDesc": "Administer accounts",
+      "jobOffers": "Job offers",
+      "jobOffersDesc": "Manage publications",
+      "events": "Events",
+      "eventsDesc": "Plan and organize"
+    },
+    "content": {
+      "title": "Content management",
+      "articles": "Articles",
+      "articlesDesc": "Manage publications",
+      "mediaCategories": "Media categories",
+      "mediaCategoriesDesc": "Organize content",
+      "legalPages": "Legal pages",
+      "legalPagesDesc": "Terms, legal notices",
+      "importCandidates": "Import candidates",
+      "importCandidatesDesc": "Bulk import (XLS)"
+    },
+    "referentials": {
+      "title": "Reference data",
+      "subtitle": "System reference data",
+      "contracts": "Contracts",
+      "workModes": "Work modes",
+      "skills": "Skills",
+      "studyLevels": "Study levels",
+      "experiences": "Experiences",
+      "languages": "Languages",
+      "sectors": "Sectors",
+      "eventCategories": "Event categories"
+    }
+  },
+  "company": {
+    "welcome": "Welcome to your dashboard 👋",
+    "subtitle": "Manage your offers, applications and track your statistics.",
+    "stats": {
+      "offers": "Published offers",
+      "applications": "Applications received",
+      "interviews": "Scheduled interviews",
+      "articles": "Published articles"
+    },
+    "quickActions": {
+      "title": "Quick actions",
+      "publishOffer": "Publish an offer",
+      "viewApplications": "View applications",
+      "createArticle": "Create an article",
+      "myOffers": "My offers"
+    }
+  },
+  "talent": {
+    "offers": "Job offers",
+    "myApplications": "My applications",
+    "myFavorites": "My favorite offers",
+    "myInterviews": "My interviews",
+    "myFeedbacks": "My feedbacks"
+  },
+  "common": {
+    "overview": "Overview",
+    "profile": "Profile",
+    "jobs": "Jobs",
+    "dashboard": "Dashboard",
+    "logout": "Logout",
+    "home": "Home",
+    "results": "result",
+    "resultsPlural": "results",
+    "noData": "No data available",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "actions": "Actions"
+  }
+}
