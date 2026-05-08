@@ -2,31 +2,31 @@
     <div class="d-flex align-center mb-5">
       <div class="d-flex align-center ga-2">
         <v-btn icon="mdi-arrow-left" variant="text" density="comfortable" @click="goBack" />
-        <span class="text-h6 font-weight-bold">{{ isEdit ? 'Modifier un article' : 'Nouvel article' }}</span>
+        <span class="text-h6 font-weight-bold">{{ isEdit ? t('admin.articles.editArticle') : t('admin.articles.newArticle') }}</span>
       </div>
     </div>
     <v-card rounded="xl" border elevation="0">
       <v-card-text class="pa-6" style="min-height:100vh">
         <v-row>
           <v-col cols="12">
-            <v-text-field v-model="form.title" label="Titre *" variant="outlined" density="compact" required />
+            <v-text-field v-model="form.title" :label="t('admin.articles.titleRequired')" variant="outlined" density="compact" required />
           </v-col>
 
           <v-col cols="12">
-            <div class="text-caption text-medium-emphasis mb-1">Contenu</div>
+            <div class="text-caption text-medium-emphasis mb-1">{{ t('admin.articles.content') }}</div>
             <WysiwygEditor v-model="form.content" />
           </v-col>
 
           <v-col cols="12" md="6">
             <ComboboxMultiple
               v-model="form.media_category_ids"
-              label="Catégories Média"
+              :label="t('admin.articles.mediaCategories')"
               :items="mediaCategories"
             />
           </v-col>
 
           <v-col cols="12" md="6">
-            <div class="text-caption text-medium-emphasis mb-1">Image</div>
+            <div class="text-caption text-medium-emphasis mb-1">{{ t('admin.articles.image') }}</div>
             <input type="file" accept="image/*" @change="onImageChange" style="display:block;width:100%;" />
             <v-avatar v-if="imagePreview" size="80" rounded="lg" class="mt-2">
               <img :src="imagePreview" style="object-fit:cover;width:100%;height:100%" />
@@ -37,13 +37,13 @@
           </v-col>
 
           <v-col cols="12">
-            <v-checkbox v-model="form.is_published" label="Publié" density="compact" hide-details />
+            <v-checkbox v-model="form.is_published" :label="t('admin.articles.published')" density="compact" hide-details />
           </v-col>
         </v-row>
       </v-card-text>
       <v-card-actions class="pa-4 pt-2 justify-end">
         <v-btn color="primary" :loading="saving" @click="save" prepend-icon="mdi-content-save-outline" size="large">
-          Enregistrer
+          {{ t('admin.articles.save') }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -53,6 +53,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import WysiwygEditor from '../WysiwygEditor.vue'
 import ComboboxMultiple from '../shared/ComboboxMultiple.vue'
 import articleService from '../../services/articleService.js'
@@ -60,6 +61,7 @@ import mediaCategoryService from '../../services/mediaCategoryService.js'
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 
 const isEdit = computed(() => !!route.params.id)
 
@@ -120,7 +122,7 @@ const loadArticle = async () => {
       existingImageUrl.value = item.image_url || null
     }
   } catch (err) {
-    showSnack('Erreur lors du chargement', 'error')
+    showSnack(t('admin.articles.errorLoading'), 'error')
   }
 }
 
@@ -144,14 +146,14 @@ const save = async () => {
     const formData = buildFormData()
     if (isEdit.value) {
       await articleService.update(route.params.id, formData)
-      showSnack('Article modifié avec succès')
+      showSnack(t('admin.articles.articleUpdated'))
     } else {
       await articleService.create(formData)
-      showSnack('Article créé avec succès')
+      showSnack(t('admin.articles.articleCreated'))
     }
     setTimeout(() => goBack(), 1200)
   } catch (err) {
-    showSnack(err.response?.data?.message || "Erreur lors de l'enregistrement", 'error')
+    showSnack(err.response?.data?.message || t('admin.articles.errorSave'), 'error')
   } finally {
     saving.value = false
   }
