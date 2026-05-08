@@ -2,16 +2,16 @@
     <div class="d-flex align-center mb-5">
       <div class="d-flex align-center ga-2">
         <v-btn icon="mdi-arrow-left" variant="text" density="comfortable" @click="goBack" />
-        <span class="text-h6 font-weight-bold">{{ isEdit ? "Modifier l'expérience" : 'Nouvelle expérience' }}</span>
+        <span class="text-h6 font-weight-bold">{{ isEdit ? t('admin.referential.experiences.editTitle') : t('admin.referential.experiences.newTitle') }}</span>
       </div>
     </div>
     <v-card rounded="xl" border elevation="0">
       <v-card-text class="pa-6" style="max-width:600px">
-        <v-text-field v-model="form.name" label="Nom *" variant="outlined" density="compact" autofocus />
+        <v-text-field v-model="form.name" :label="t('admin.referential.nameRequired')" variant="outlined" density="compact" autofocus />
       </v-card-text>
       <v-card-actions class="pa-4 pt-2 justify-end">
         <v-btn color="primary" :loading="saving" @click="save" prepend-icon="mdi-content-save-outline" size="large">
-          Enregistrer
+          {{ t('admin.referential.save') }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -21,8 +21,10 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import experienceService from '../../services/experienceService.js'
 
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const isEdit = computed(() => !!route.params.id)
@@ -46,7 +48,7 @@ onMounted(async () => {
       const item = res.data.find(x => x.id == route.params.id)
       if (item) form.value = { name: item.name }
     } catch {
-      showSnack('Erreur lors du chargement', 'error')
+      showSnack(t('admin.referential.errorLoading'), 'error')
     }
   }
 })
@@ -56,14 +58,14 @@ const save = async () => {
   try {
     if (isEdit.value) {
       await experienceService.update(route.params.id, form.value)
-      showSnack('Expérience modifiée avec succès')
+      showSnack(t('admin.referential.experiences.updated'))
     } else {
       await experienceService.create(form.value)
-      showSnack('Expérience créée avec succès')
+      showSnack(t('admin.referential.experiences.created'))
     }
     setTimeout(goBack, 800)
   } catch (err) {
-    showSnack(err.response?.data?.message || "Erreur lors de l'enregistrement", 'error')
+    showSnack(err.response?.data?.message || t('admin.referential.errorSave'), 'error')
   } finally {
     saving.value = false
   }
