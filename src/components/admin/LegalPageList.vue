@@ -2,10 +2,10 @@
   <v-card rounded="xl" border elevation="0">
     <v-toolbar color="transparent" border="b" density="compact" class="px-2">
       <v-icon icon="mdi-file-document-outline" class="mr-2" />
-      <v-toolbar-title>Gestion des CGU / Mentions légales</v-toolbar-title>
+      <v-toolbar-title>{{ t('admin.legalPages.title') }}</v-toolbar-title>
       <v-spacer />
       <v-btn color="primary" prepend-icon="mdi-plus" @click="router.push({ name: 'AdminLegalPageCreate' })">
-        Ajouter une page légale
+        {{ t('admin.legalPages.addPage') }}
       </v-btn>
     </v-toolbar>
 
@@ -32,12 +32,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import legalPageService from '../../services/legalPageService.js'
 import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
 const router = useRouter()
+const { t } = useI18n()
 const items = ref([])
 const loading = ref(false)
 const confirmRef = ref(null)
@@ -49,12 +51,12 @@ const showSnack = (msg, color = 'success') => {
   snackMsg.value = msg; snackColor.value = color; snackbar.value = true
 }
 
-const headers = [
+const headers = computed(() => [
   { title: 'ID', key: 'id', width: '80px' },
-  { title: 'Titre', key: 'title' },
-  { title: 'URL publique', key: 'slug', sortable: false },
+  { title: t('admin.legalPages.titleField'), key: 'title' },
+  { title: t('admin.legalPages.publicUrl'), key: 'slug', sortable: false },
   { title: '', key: 'actions', sortable: false, width: '100px', align: 'end' },
-]
+])
 
 const load = async () => {
   loading.value = true
@@ -62,22 +64,22 @@ const load = async () => {
     const response = await legalPageService.getAll()
     items.value = response.data
   } catch {
-    showSnack('Erreur lors du chargement', 'error')
+    showSnack(t('admin.legalPages.errorLoading'), 'error')
   } finally {
     loading.value = false
   }
 }
 
 const deleteItem = async (id) => {
-  const ok = await confirmRef.value.open({ message: 'Supprimer cette page légale ?' })
+  const ok = await confirmRef.value.open({ message: t('admin.legalPages.confirmDelete') })
   if (!ok) return
   loading.value = true
   try {
     await legalPageService.delete(id)
-    showSnack('Page légale supprimée avec succès')
+    showSnack(t('admin.legalPages.pageDeleted'))
     await load()
   } catch (err) {
-    showSnack(err.response?.data?.message || 'Erreur lors de la suppression', 'error')
+    showSnack(err.response?.data?.message || t('admin.legalPages.errorDelete'), 'error')
   } finally {
     loading.value = false
   }
