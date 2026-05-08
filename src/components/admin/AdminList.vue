@@ -4,9 +4,9 @@
 
     <v-toolbar color="transparent" border="b" density="compact" class="px-2">
       <v-icon class="mr-2">mdi-shield-account-outline</v-icon>
-      <v-toolbar-title>Gestion des Administrateurs</v-toolbar-title>
+      <v-toolbar-title>{{ t('admin.admins.title') }}</v-toolbar-title>
       <template #append>
-        <span class="text-caption text-medium-emphasis mr-4">{{ total }} résultat{{ total > 1 ? 's' : '' }}</span>
+        <span class="text-caption text-medium-emphasis mr-4">{{ total }} {{ total > 1 ? t('commonDashboard.pagination.resultsPlural') : t('commonDashboard.pagination.results') }}</span>
       </template>
     </v-toolbar>
 
@@ -15,7 +15,7 @@
       <v-text-field
         v-model="searchInput"
         prepend-inner-icon="mdi-magnify"
-        placeholder="Rechercher par nom, email…"
+        :placeholder="t('admin.admins.searchPlaceholder')"
         density="compact"
         variant="outlined"
         clearable
@@ -45,7 +45,7 @@
 
       <template #item.role="{ item }">
         <v-chip size="small" color="error">
-          Administrateur
+          {{ t('admin.admins.administrator') }}
         </v-chip>
       </template>
 
@@ -55,7 +55,7 @@
 
       <template #item.etat="{ item }">
         <v-chip size="small" :color="item.is_suspended ? 'warning' : item.is_banned ? 'error' : 'success'">
-          {{ item.is_suspended ? 'Suspendu' : item.is_banned ? 'Banni' : 'Actif' }}
+          {{ item.is_suspended ? t('admin.admins.suspended') : item.is_banned ? t('admin.admins.banned') : t('admin.admins.active') }}
         </v-chip>
       </template>
     </v-data-table-server>
@@ -65,12 +65,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import api from '../../services/api.js'
 import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
 const router = useRouter()
+const { t } = useI18n()
 const admins     = ref([])
 const total      = ref(0)
 const loading    = ref(false)
@@ -88,12 +90,12 @@ const showSnack = (msg, color = 'success') => {
   snackMsg.value = msg; snackColor.value = color; snackbar.value = true
 }
 
-const headers = [
-  { title: 'Nom / Email', key: 'name', sortable: false },
-  { title: 'Rôle', key: 'role', sortable: false },
-  { title: 'Date de création', key: 'created_at', sortable: false },
-  { title: 'État', key: 'etat', sortable: false },
-]
+const headers = computed(() => [
+  { title: t('admin.admins.nameEmail'), key: 'name', sortable: false },
+  { title: t('admin.admins.role'), key: 'role', sortable: false },
+  { title: t('admin.admins.createdAt'), key: 'created_at', sortable: false },
+  { title: t('admin.admins.state'), key: 'etat', sortable: false },
+])
 
 const formatDate = (dateStr) => {
   if (!dateStr) return '—'
@@ -120,7 +122,7 @@ const loadPage = async () => {
     admins.value = res.data.data || []
     total.value  = res.data.total || 0
   } catch (err) {
-    showSnack('Erreur lors du chargement', 'error')
+    showSnack(t('admin.admins.errorLoading'), 'error')
     console.error(err)
   } finally {
     loading.value = false
