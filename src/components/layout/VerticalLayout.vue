@@ -281,12 +281,12 @@ const sideNav = computed(() => {
         icon: 'mdi-view-dashboard-outline',
       },
       {
-        label: 'Profile',
+        label: 'Profil',
         icon: 'mdi-account-circle-outline',
         route: { name: 'AdminProfile' },
       },
       {
-        label: 'Jobs',
+        label: 'Emplois',
         icon: 'mdi-briefcase-outline',
         children: [
           { label: "Offres d'emploi", route: { name: 'AdminOffres' }, icon: 'mdi-briefcase-search-outline' },

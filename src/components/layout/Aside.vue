@@ -171,7 +171,7 @@ const sideNav = computed(() => {
   } else if (role === 'company' || role === 'entreprise') {
     return [
       {
-        label: 'Dashboard',
+        label: 'Tableau de bord',
         route: { name: 'EntrepriseDashboard' },
         icon: 'bi bi-speedometer2'
       },
@@ -204,7 +204,7 @@ const sideNav = computed(() => {
   } else if (role === 'talent') {
     return [
       {
-        label: 'Dashboard',
+        label: 'Tableau de bord',
         route: { name: 'TalentDashboard' },
         icon: 'bi bi-speedometer2'
       },
