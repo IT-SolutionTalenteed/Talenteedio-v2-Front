@@ -1,7 +1,7 @@
 <template>
   <v-card rounded="xl" border elevation="0" class="pa-4" style="max-width:680px;margin:0 auto">
-    <v-card-title class="text-h5 mb-1">Mon profil</v-card-title>
-    <v-card-subtitle class="mb-4">Informations personnelles et sécurité du compte</v-card-subtitle>
+    <v-card-title class="text-h5 mb-1">{{ t('profile.title') }}</v-card-title>
+    <v-card-subtitle class="mb-4">{{ t('profile.subtitle') }}</v-card-subtitle>
 
     <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">{{ snackMsg }}</v-snackbar>
 
@@ -9,13 +9,13 @@
 
       <!-- Identité -->
       <div class="text-body-2 font-weight-medium text-medium-emphasis mb-3 mt-2">
-        <v-icon size="16" class="mr-1">mdi-account-outline</v-icon> Identité
+        <v-icon size="16" class="mr-1">mdi-account-outline</v-icon> {{ t('profile.identity.title') }}
       </div>
       <v-row dense>
         <v-col cols="12" sm="6">
           <v-text-field
             v-model="form.first_name"
-            label="Prénom"
+            :label="t('profile.identity.firstName')"
             variant="outlined"
             density="comfortable"
           />
@@ -23,7 +23,7 @@
         <v-col cols="12" sm="6">
           <v-text-field
             v-model="form.last_name"
-            label="Nom de famille"
+            :label="t('profile.identity.lastName')"
             variant="outlined"
             density="comfortable"
           />
@@ -31,16 +31,16 @@
         <v-col cols="12" sm="6">
           <v-text-field
             v-model="form.titre_poste"
-            label="Titre / Poste"
+            :label="t('profile.identity.position')"
             variant="outlined"
             density="comfortable"
-            placeholder="ex: Développeur Full Stack"
+            :placeholder="t('profile.identity.positionPlaceholder')"
           />
         </v-col>
         <v-col cols="12" sm="6">
           <v-text-field
             v-model="form.telephone"
-            label="Téléphone"
+            :label="t('profile.identity.phone')"
             variant="outlined"
             density="comfortable"
             prepend-inner-icon="mdi-phone-outline"
@@ -49,7 +49,7 @@
         <v-col cols="12" sm="6">
           <v-text-field
             v-model="form.ville"
-            label="Ville actuelle"
+            :label="t('profile.identity.city')"
             variant="outlined"
             density="comfortable"
             prepend-inner-icon="mdi-map-marker-outline"
@@ -58,7 +58,7 @@
         <v-col cols="12" sm="6">
           <v-text-field
             v-model="form.pays"
-            label="Pays actuel"
+            :label="t('profile.identity.country')"
             variant="outlined"
             density="comfortable"
             prepend-inner-icon="mdi-earth"
@@ -70,35 +70,35 @@
       <v-divider class="my-4" />
       <div class="text-body-2 font-weight-medium text-medium-emphasis mb-3">
         <v-icon size="16" class="mr-1">mdi-map-search-outline</v-icon>
-        Préférences de mobilité
-        <span class="text-caption ml-1">(utilisées par le matching IA)</span>
+        {{ t('profile.mobility.title') }}
+        <span class="text-caption ml-1">{{ t('profile.mobility.subtitle') }}</span>
       </div>
       <v-row dense>
         <v-col cols="12" sm="6">
           <v-combobox
             v-model="form.pays_souhaites"
-            label="Pays où je souhaite travailler"
+            :label="t('profile.mobility.desiredCountries')"
             variant="outlined"
             density="comfortable"
             multiple
             chips
             closable-chips
             prepend-inner-icon="mdi-earth"
-            hint="Laisser vide = flexible"
+            :hint="t('profile.mobility.flexibleHint')"
             persistent-hint
           />
         </v-col>
         <v-col cols="12" sm="6">
           <v-combobox
             v-model="form.villes_souhaitees"
-            label="Villes souhaitées"
+            :label="t('profile.mobility.desiredCities')"
             variant="outlined"
             density="comfortable"
             multiple
             chips
             closable-chips
             prepend-inner-icon="mdi-city-variant-outline"
-            hint="Laisser vide = flexible"
+            :hint="t('profile.mobility.flexibleHint')"
             persistent-hint
           />
         </v-col>
@@ -108,12 +108,12 @@
             :items="activitySectors"
             item-title="name"
             item-value="id"
-            label="Secteur d'activité souhaité"
+            :label="t('profile.mobility.desiredSector')"
             variant="outlined"
             density="comfortable"
             prepend-inner-icon="mdi-briefcase-outline"
             clearable
-            hint="Laisser vide = peu importe"
+            :hint="t('profile.mobility.anySectorHint')"
             persistent-hint
           />
         </v-col>
@@ -122,13 +122,13 @@
       <!-- Compte -->
       <v-divider class="my-4" />
       <div class="text-body-2 font-weight-medium text-medium-emphasis mb-3">
-        <v-icon size="16" class="mr-1">mdi-email-outline</v-icon> Compte
+        <v-icon size="16" class="mr-1">mdi-email-outline</v-icon> {{ t('profile.account.title') }}
       </div>
       <v-row dense>
         <v-col cols="12">
           <v-text-field
             v-model="form.email"
-            label="Adresse e-mail"
+            :label="t('profile.account.email')"
             type="email"
             variant="outlined"
             density="comfortable"
@@ -140,14 +140,14 @@
       <!-- Mot de passe -->
       <v-divider class="my-4" />
       <div class="text-body-2 font-weight-medium text-medium-emphasis mb-3">
-        <v-icon size="16" class="mr-1">mdi-lock-outline</v-icon> Changer le mot de passe
-        <span class="text-caption ml-1">(laisser vide pour ne pas modifier)</span>
+        <v-icon size="16" class="mr-1">mdi-lock-outline</v-icon> {{ t('profile.password.title') }}
+        <span class="text-caption ml-1">{{ t('profile.password.subtitle') }}</span>
       </div>
       <v-row dense>
         <v-col cols="12" sm="4">
           <v-text-field
             v-model="form.current_password"
-            label="Mot de passe actuel"
+            :label="t('profile.password.current')"
             :type="showCurrent ? 'text' : 'password'"
             variant="outlined"
             density="comfortable"
@@ -158,7 +158,7 @@
         <v-col cols="12" sm="4">
           <v-text-field
             v-model="form.password"
-            label="Nouveau mot de passe"
+            :label="t('profile.password.new')"
             :type="showNew ? 'text' : 'password'"
             variant="outlined"
             density="comfortable"
@@ -169,7 +169,7 @@
         <v-col cols="12" sm="4">
           <v-text-field
             v-model="form.password_confirmation"
-            label="Confirmer"
+            :label="t('profile.password.confirm')"
             :type="showConfirm ? 'text' : 'password'"
             variant="outlined"
             density="comfortable"
@@ -187,7 +187,7 @@
           :loading="loading"
           prepend-icon="mdi-content-save-outline"
         >
-          Enregistrer
+          {{ t('profile.save') }}
         </v-btn>
       </div>
 
@@ -197,7 +197,10 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import api from '../services/api.js'
+
+const { t } = useI18n()
 
 const loading = ref(false)
 const snackbar = ref(false)
@@ -243,7 +246,7 @@ onMounted(async () => {
 
     activitySectors.value = sectorsRes.data
   } catch {
-    showSnack('Erreur chargement profil', 'error')
+    showSnack(t('profile.errorLoading'), 'error')
   }
 })
 
@@ -274,12 +277,12 @@ const save = async () => {
     form.value.current_password = ''
     form.value.password = ''
     form.value.password_confirmation = ''
-    showSnack('Profil mis à jour')
+    showSnack(t('profile.profileUpdated'))
   } catch (err) {
     const errors = err.response?.data?.errors
     const msg = errors
       ? Object.values(errors)[0]?.[0]
-      : (err.response?.data?.message || 'Erreur')
+      : (err.response?.data?.message || t('profile.errorSaving'))
     showSnack(msg, 'error')
   } finally {
     loading.value = false
