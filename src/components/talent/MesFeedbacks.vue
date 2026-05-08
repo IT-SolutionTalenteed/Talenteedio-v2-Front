@@ -1,6 +1,6 @@
 <template>
   <v-card rounded="xl" border elevation="0" class="pa-4">
-    <v-card-title class="text-h5 mb-4">Mes feedbacks</v-card-title>
+    <v-card-title class="text-h5 mb-4">{{ t('talentDashboard.feedbacks.title') }}</v-card-title>
 
     <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">{{ snackMsg }}</v-snackbar>
     <ConfirmDialog ref="confirmRef" />
@@ -36,19 +36,21 @@
       </template>
 
       <template #no-data>
-        <div class="text-center py-6 text-medium-emphasis">Aucun feedback soumis.</div>
+        <div class="text-center py-6 text-medium-emphasis">{{ t('talentDashboard.feedbacks.noFeedbacks') }}</div>
       </template>
     </v-data-table>
   </v-card>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import feedbackService from '../../services/talent/feedbackService.js'
 import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
 const router = useRouter()
+const { t } = useI18n()
 const items = ref([])
 const loading = ref(false)
 const confirmRef = ref(null)
@@ -60,14 +62,14 @@ const showSnack = (msg, color = 'success') => {
   snackMsg.value = msg; snackColor.value = color; snackbar.value = true
 }
 
-const headers = [
-  { title: 'Entreprise', key: 'entretien.entreprise.nom' },
-  { title: 'Événement', key: 'entretien.evenement.titre' },
-  { title: 'Date entretien', key: 'entretien.date' },
-  { title: 'Note', key: 'note', sortable: false },
-  { title: 'Commentaire', key: 'commentaire', sortable: false },
-  { title: 'Actions', key: 'actions', sortable: false, align: 'end' },
-]
+const headers = computed(() => [
+  { title: t('talentDashboard.feedbacks.company'), key: 'entretien.entreprise.nom' },
+  { title: t('talentDashboard.feedbacks.event'), key: 'entretien.evenement.titre' },
+  { title: t('talentDashboard.feedbacks.interviewDate'), key: 'entretien.date' },
+  { title: t('talentDashboard.feedbacks.rating'), key: 'note', sortable: false },
+  { title: t('talentDashboard.feedbacks.comment'), key: 'commentaire', sortable: false },
+  { title: t('talentDashboard.feedbacks.actions'), key: 'actions', sortable: false, align: 'end' },
+])
 
 const load = async () => {
   loading.value = true
@@ -75,21 +77,21 @@ const load = async () => {
     const res = await feedbackService.mesFeedbacks()
     items.value = res.data
   } catch {
-    showSnack('Erreur lors du chargement des feedbacks', 'error')
+    showSnack(t('talentDashboard.feedbacks.errorLoading'), 'error')
   } finally {
     loading.value = false
   }
 }
 
 const supprimer = async (fb) => {
-  const ok = await confirmRef.value.open({ message: 'Supprimer ce feedback ?' })
+  const ok = await confirmRef.value.open({ message: t('talentDashboard.feedbacks.confirmDelete') })
   if (!ok) return
   try {
     await feedbackService.destroy(fb.id)
     items.value = items.value.filter(f => f.id !== fb.id)
-    showSnack('Feedback supprimé.')
+    showSnack(t('talentDashboard.feedbacks.feedbackDeleted'))
   } catch {
-    showSnack('Erreur lors de la suppression', 'error')
+    showSnack(t('talentDashboard.feedbacks.errorDelete'), 'error')
   }
 }
 
