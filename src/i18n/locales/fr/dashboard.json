@@ -1,0 +1,102 @@
+{
+  "admin": {
+    "welcome": "Bienvenue dans l'espace administrateur 👋",
+    "subtitle": "Gérez les utilisateurs, les offres, les candidatures et bien plus.",
+    "stats": {
+      "talents": "Talents inscrits",
+      "companies": "Entreprises",
+      "pending": "en attente",
+      "offers": "Offres publiées",
+      "events": "Événements à venir"
+    },
+    "charts": {
+      "evolution": "Évolution des inscriptions",
+      "sectors": "Secteurs d'activité",
+      "contracts": "Offres par type de contrat",
+      "applications": "Candidatures par statut",
+      "applicationsAccepted": "Acceptées",
+      "applicationsPending": "En attente",
+      "applicationsRejected": "Refusées",
+      "applicationsArchived": "Archivées",
+      "totalOffers": "offres"
+    },
+    "quickActions": {
+      "title": "Actions rapides",
+      "manageTalents": "Gérer les talents",
+      "manageTalentsDesc": "Voir et modifier les profils",
+      "manageCompanies": "Gérer les entreprises",
+      "manageCompaniesDesc": "Administrer les comptes",
+      "jobOffers": "Offres d'emploi",
+      "jobOffersDesc": "Gérer les publications",
+      "events": "Événements",
+      "eventsDesc": "Planifier et organiser"
+    },
+    "content": {
+      "title": "Gestion du contenu",
+      "articles": "Articles",
+      "articlesDesc": "Gérer les publications",
+      "mediaCategories": "Catégories Média",
+      "mediaCategoriesDesc": "Organiser les contenus",
+      "legalPages": "Pages légales",
+      "legalPagesDesc": "CGU, mentions légales",
+      "importCandidates": "Import candidats",
+      "importCandidatesDesc": "Importer en masse (XLS)"
+    },
+    "referentials": {
+      "title": "Référentiels",
+      "subtitle": "Données de référence du système",
+      "contracts": "Contrats",
+      "workModes": "Modes travail",
+      "skills": "Compétences",
+      "studyLevels": "Niveaux étude",
+      "experiences": "Expériences",
+      "languages": "Langues",
+      "sectors": "Secteurs",
+      "eventCategories": "Catég. événements"
+    }
+  },
+  "company": {
+    "welcome": "Bienvenue sur votre tableau de bord 👋",
+    "subtitle": "Gérez vos offres, candidatures et suivez vos statistiques.",
+    "stats": {
+      "offers": "Offres publiées",
+      "applications": "Candidatures reçues",
+      "interviews": "Entretiens planifiés",
+      "articles": "Articles publiés"
+    },
+    "quickActions": {
+      "title": "Actions rapides",
+      "publishOffer": "Publier une offre",
+      "viewApplications": "Voir les candidatures",
+      "createArticle": "Créer un article",
+      "myOffers": "Mes offres"
+    }
+  },
+  "talent": {
+    "offers": "Offres d'emploi",
+    "myApplications": "Mes candidatures",
+    "myFavorites": "Mes offres favorites",
+    "myInterviews": "Mes entretiens",
+    "myFeedbacks": "Mes feedbacks"
+  },
+  "common": {
+    "overview": "Vue d'ensemble",
+    "profile": "Profil",
+    "jobs": "Emplois",
+    "dashboard": "Tableau de bord",
+    "logout": "Déconnexion",
+    "home": "Accueil",
+    "results": "résultat",
+    "resultsPlural": "résultats",
+    "noData": "Aucune donnée disponible",
+    "loading": "Chargement...",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "actions": "Actions"
+  }
+}
