@@ -32,7 +32,10 @@
         <div class="cat-details-grid fade-in">
           <div v-for="(detail, i) in categorie.liste_details" :key="i" class="cat-detail-item">
             <div class="cat-detail-num">{{ String(i + 1).padStart(2, '0') }}</div>
-            <div class="cat-detail-text">{{ detail }}</div>
+            <div class="cat-detail-content">
+              <h4 class="cat-detail-title">{{ detail.titre }}</h4>
+              <p class="cat-detail-text">{{ detail.description }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -68,7 +71,7 @@
                   <i class="fa-solid fa-clock"></i> {{ ev.heure_debut_journee?.substring(0,5) }} – {{ ev.heure_fin_journee?.substring(0,5) }}
                 </span>
               </div>
-              <p v-if="ev.description" class="cat-event-desc">{{ truncate(ev.description, 120) }}</p>
+              <p v-if="ev.description" class="cat-event-desc" v-html="truncate(stripHtml(ev.description), 120)"></p>
               <!-- Entreprises participantes -->
               <div v-if="ev.entreprises && ev.entreprises.length" class="cat-event-entreprises">
                 <span class="cat-event-entreprises-label">{{ t('evenements.card.recruiters') }}</span>
@@ -242,6 +245,13 @@ const formatDateRange = (debut, fin) => {
 
 const truncate = (str, len) => !str ? '' : str.length > len ? str.slice(0, len) + '…' : str
 
+const stripHtml = (html) => {
+  if (!html) return ''
+  const tmp = document.createElement('div')
+  tmp.innerHTML = html
+  return tmp.textContent || tmp.innerText || ''
+}
+
 onMounted(() => load(route.params.id))
 </script>
 
@@ -325,7 +335,9 @@ onMounted(() => load(route.params.id))
   font-size: 28px; font-weight: 800; color: var(--blue); line-height: 1;
   opacity: .35; flex-shrink: 0; min-width: 36px;
 }
-.cat-detail-text { font-size: 14px; color: var(--navy); line-height: 1.6; }
+.cat-detail-content { flex: 1; }
+.cat-detail-title { font-size: 16px; font-weight: 700; color: var(--navy); margin: 0 0 6px; }
+.cat-detail-text { font-size: 14px; color: var(--body-text); line-height: 1.6; margin: 0; }
 
 /* ── Événements ── */
 .cat-events { padding: 80px 0; background: var(--light-bg, #f5f7fa); }
