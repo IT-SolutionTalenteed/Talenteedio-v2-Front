@@ -4,9 +4,11 @@
 
     <v-toolbar color="transparent" border="b" density="compact" class="px-2">
       <v-icon class="mr-2">mdi-file-document-outline</v-icon>
-      <v-toolbar-title>Gestion des Articles</v-toolbar-title>
+      <v-toolbar-title>{{ t('admin.articles.title') }}</v-toolbar-title>
       <template #append>
-        <v-btn color="primary" prepend-icon="mdi-plus" @click="router.push({ name: 'AdminArticleCreate' })">Ajouter un article</v-btn>
+        <v-btn color="primary" prepend-icon="mdi-plus" @click="router.push({ name: 'AdminArticleCreate' })">
+          {{ t('admin.articles.addArticle') }}
+        </v-btn>
       </template>
     </v-toolbar>
 
@@ -31,7 +33,7 @@
 
       <template #item.is_published="{ item }">
         <v-chip size="small" :color="item.is_published ? 'success' : 'default'">
-          {{ item.is_published ? 'Publié' : 'Brouillon' }}
+          {{ item.is_published ? t('admin.articles.published') : t('admin.articles.draft') }}
         </v-chip>
       </template>
 
@@ -63,12 +65,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import articleService from '../../services/articleService.js'
 import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
 const router = useRouter()
+const { t } = useI18n()
 const articles = ref([])
 const loading = ref(false)
 const confirmRef = ref(null)
@@ -80,16 +84,16 @@ const showSnack = (msg, color = 'success') => {
   snackMsg.value = msg; snackColor.value = color; snackbar.value = true
 }
 
-const headers = [
+const headers = computed(() => [
   { title: 'ID', key: 'id', sortable: true, width: '60px' },
-  { title: 'Image', key: 'image', sortable: false, width: '60px' },
-  { title: 'Titre', key: 'title', sortable: true },
-  { title: 'Statut', key: 'is_published', sortable: false },
-  { title: 'Catégories', key: 'media_categories', sortable: false },
-  { title: 'Auteur', key: 'user', sortable: false },
-  { title: 'Date', key: 'created_at', sortable: true },
+  { title: t('admin.articles.image'), key: 'image', sortable: false, width: '60px' },
+  { title: t('admin.articles.titleField'), key: 'title', sortable: true },
+  { title: t('admin.articles.status'), key: 'is_published', sortable: false },
+  { title: t('admin.articles.categories'), key: 'media_categories', sortable: false },
+  { title: t('admin.articles.author'), key: 'user', sortable: false },
+  { title: t('admin.articles.date'), key: 'created_at', sortable: true },
   { title: '', key: 'actions', sortable: false, align: 'end' },
-]
+])
 
 const loadArticles = async () => {
   loading.value = true
@@ -97,22 +101,22 @@ const loadArticles = async () => {
     const response = await articleService.getAll()
     articles.value = response.data.data || response.data
   } catch {
-    showSnack('Erreur lors du chargement des articles', 'error')
+    showSnack(t('admin.articles.errorLoading'), 'error')
   } finally {
     loading.value = false
   }
 }
 
 const deleteArticle = async (id) => {
-  const ok = await confirmRef.value.open({ message: 'Êtes-vous sûr de vouloir supprimer cet article ?' })
+  const ok = await confirmRef.value.open({ message: t('admin.articles.confirmDelete') })
   if (!ok) return
   loading.value = true
   try {
     await articleService.delete(id)
-    showSnack('Article supprimé avec succès')
+    showSnack(t('admin.articles.articleDeleted'))
     await loadArticles()
   } catch (err) {
-    showSnack(err.response?.data?.message || 'Erreur lors de la suppression', 'error')
+    showSnack(err.response?.data?.message || t('admin.articles.errorDelete'), 'error')
   } finally {
     loading.value = false
   }
