@@ -4,9 +4,11 @@
 
     <v-toolbar color="transparent" border="b" density="compact" class="px-2">
       <v-icon class="mr-2">mdi-calendar-star</v-icon>
-      <v-toolbar-title>Gestion des Événements</v-toolbar-title>
+      <v-toolbar-title>{{ t('admin.events.title') }}</v-toolbar-title>
       <template #append>
-        <v-btn color="primary" prepend-icon="mdi-plus" @click="router.push({ name: 'AdminEvenementCreate' })">Ajouter un événement</v-btn>
+        <v-btn color="primary" prepend-icon="mdi-plus" @click="router.push({ name: 'AdminEvenementCreate' })">
+          {{ t('admin.events.addEvent') }}
+        </v-btn>
       </template>
     </v-toolbar>
 
@@ -67,12 +69,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import evenementService from '../../services/evenementService.js'
 import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
 const router = useRouter()
+const { t } = useI18n()
 const evenements = ref([])
 const loading = ref(false)
 const pagination = ref({ current_page: 1, last_page: 1 })
@@ -85,15 +89,15 @@ const showSnack = (msg, color = 'success') => {
   snackMsg.value = msg; snackColor.value = color; snackbar.value = true
 }
 
-const headers = [
+const headers = computed(() => [
   { title: 'ID', key: 'id', sortable: true, width: '60px' },
-  { title: 'Image', key: 'image', sortable: false, width: '60px' },
-  { title: 'Titre / Ville', key: 'titre', sortable: true },
-  { title: 'Dates', key: 'dates', sortable: false },
-  { title: 'Mis en avant', key: 'is_featured', sortable: false },
-  { title: 'Entreprises', key: 'entreprises', sortable: false },
+  { title: t('admin.events.image'), key: 'image', sortable: false, width: '60px' },
+  { title: t('admin.events.titleCity'), key: 'titre', sortable: true },
+  { title: t('admin.events.dates'), key: 'dates', sortable: false },
+  { title: t('admin.events.featured'), key: 'is_featured', sortable: false },
+  { title: t('admin.events.companies'), key: 'entreprises', sortable: false },
   { title: '', key: 'actions', sortable: false, align: 'end' },
-]
+])
 
 const loadPage = async (page = 1) => {
   loading.value = true
@@ -102,7 +106,7 @@ const loadPage = async (page = 1) => {
     evenements.value = res.data.data
     pagination.value = { current_page: res.data.current_page, last_page: res.data.last_page }
   } catch {
-    showSnack('Erreur lors du chargement', 'error')
+    showSnack(t('admin.events.errorLoading'), 'error')
   } finally {
     loading.value = false
   }
@@ -113,20 +117,20 @@ const toggleFeatured = async (ev) => {
     await evenementService.toggleFeatured(ev.id)
     await loadPage(pagination.value.current_page)
   } catch {
-    showSnack('Erreur lors de la mise à jour', 'error')
+    showSnack(t('admin.events.errorUpdate'), 'error')
   }
 }
 
 const deleteItem = async (id) => {
-  const ok = await confirmRef.value.open({ message: 'Supprimer cet événement ?' })
+  const ok = await confirmRef.value.open({ message: t('admin.events.confirmDelete') })
   if (!ok) return
   loading.value = true
   try {
     await evenementService.delete(id)
-    showSnack('Événement supprimé avec succès')
+    showSnack(t('admin.events.eventDeleted'))
     await loadPage(pagination.value.current_page)
   } catch (err) {
-    showSnack(err.response?.data?.message || 'Erreur lors de la suppression', 'error')
+    showSnack(err.response?.data?.message || t('admin.events.errorDelete'), 'error')
   } finally {
     loading.value = false
   }
