@@ -4,7 +4,7 @@
 
     <v-toolbar color="transparent" border="b" density="compact" class="px-2">
       <v-icon icon="mdi-calendar-check" class="mr-2" />
-      <v-toolbar-title>Entretiens par stand</v-toolbar-title>
+      <v-toolbar-title>{{ t('admin.interviews.title') }}</v-toolbar-title>
       <template v-if="selectedEvenement" #append>
         <v-chip color="primary" size="small" class="mr-2">
           <v-icon start icon="mdi-calendar" />
@@ -17,7 +17,7 @@
           prepend-icon="mdi-arrow-left"
           @click="backToList"
         >
-          Changer d'événement
+          {{ t('admin.interviews.changeEvent') }}
         </v-btn>
       </template>
     </v-toolbar>
@@ -27,7 +27,7 @@
       <!-- ══ VUE 1 : Liste des événements (si pas de featured OU si on a cliqué "Changer") ══ -->
       <div v-if="view === 'list'">
         <p class="text-body-2 text-medium-emphasis mb-4">
-          Aucun événement mis en avant. Sélectionnez un événement pour consulter ses entretiens.
+          {{ t('admin.interviews.noFeaturedEvent') }}
         </p>
         <v-progress-linear v-if="loadingInit" indeterminate color="primary" class="mb-4" />
         <div v-else-if="evenements.length" class="evenements-grid">
@@ -45,7 +45,7 @@
               <div class="d-flex align-center gap-2 mb-1">
                 <v-icon icon="mdi-calendar-star" :color="ev.is_featured ? 'orange' : 'primary'" size="18" />
                 <span class="text-body-2 font-weight-bold text-truncate">{{ ev.titre }}</span>
-                <v-chip v-if="ev.is_featured" size="x-small" color="orange" class="ml-auto flex-shrink-0">Mis en avant</v-chip>
+                <v-chip v-if="ev.is_featured" size="x-small" color="orange" class="ml-auto flex-shrink-0">{{ t('admin.interviews.featured') }}</v-chip>
               </div>
               <div class="text-caption text-medium-emphasis">
                 {{ formatDate(ev.date_debut) }}
@@ -54,7 +54,7 @@
             </v-card-text>
           </v-card>
         </div>
-        <v-alert v-else type="info" variant="tonal" density="compact">Aucun événement trouvé.</v-alert>
+        <v-alert v-else type="info" variant="tonal" density="compact">{{ t('admin.interviews.noEvents') }}</v-alert>
       </div>
 
       <!-- ══ VUE 2 : Entretiens de l'événement sélectionné ══ -->
@@ -72,11 +72,11 @@
             <v-toolbar color="transparent" border="b" density="compact" class="px-3">
               <v-icon icon="mdi-domain" class="mr-2" />
               <v-toolbar-title class="text-body-1 font-weight-bold">
-                Stand : {{ stand.entreprise.nom }}
+                {{ t('admin.interviews.stand') }} : {{ stand.entreprise.nom }}
               </v-toolbar-title>
               <template #append>
                 <v-chip size="small" variant="tonal">
-                  {{ stand.entretiens.length }} entretien{{ stand.entretiens.length > 1 ? 's' : '' }}
+                  {{ stand.entretiens.length }} {{ stand.entretiens.length > 1 ? t('admin.interviews.interviewsPlural') : t('admin.interviews.interviews') }}
                 </v-chip>
               </template>
             </v-toolbar>
@@ -105,7 +105,7 @@
         </template>
 
         <v-alert v-else type="info" variant="tonal" density="compact">
-          Aucun entretien pour cet événement.
+          {{ t('admin.interviews.noInterviews') }}
         </v-alert>
       </div>
 
@@ -114,8 +114,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import api from '../../services/api.js'
+
+const { t } = useI18n()
 
 // ── State ────────────────────────────────────────────
 const view               = ref('entretiens') // 'list' | 'entretiens'
@@ -132,16 +135,24 @@ const snackColor = ref('success')
 const showSnack  = (msg, color = 'success') => { snackMsg.value = msg; snackColor.value = color; snackbar.value = true }
 
 // ── Headers table ────────────────────────────────────
-const standHeaders = [
-  { title: 'Talent',  key: 'talent',  sortable: false },
-  { title: 'Date',    key: 'date',    width: '130px' },
-  { title: 'Heure',   key: 'heure',   sortable: false, width: '150px' },
-  { title: 'Statut',  key: 'statut',  width: '130px' },
-]
+const standHeaders = computed(() => [
+  { title: t('admin.interviews.talent'),  key: 'talent',  sortable: false },
+  { title: t('admin.interviews.date'),    key: 'date',    width: '130px' },
+  { title: t('admin.interviews.time'),   key: 'heure',   sortable: false, width: '150px' },
+  { title: t('admin.interviews.status'),  key: 'statut',  width: '130px' },
+])
 
 // ── Helpers ──────────────────────────────────────────
 const statutColor = (s) => ({ confirme: 'success', refuse: 'error', en_attente: 'secondary', annule: 'warning' }[s] ?? 'default')
-const statutLabel = (s) => ({ en_attente: 'En attente', confirme: 'Confirmé', refuse: 'Refusé', annule: 'Annulé' }[s] ?? s)
+const statutLabel = (s) => {
+  const labels = {
+    en_attente: t('admin.interviews.statusPending'),
+    confirme: t('admin.interviews.statusConfirmed'),
+    refuse: t('admin.interviews.statusRejected'),
+    annule: t('admin.interviews.statusCancelled')
+  }
+  return labels[s] ?? s
+}
 const formatDate  = (d) => d ? new Date(d).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'
 
 // ── Chargement entretiens d'un événement ─────────────
@@ -151,7 +162,7 @@ const loadEntretiens = async (evenementId) => {
   try {
     const res   = await api.get('/admin/entretiens', { params: { evenement_id: evenementId } })
     stands.value = res.data
-  } catch { showSnack('Erreur chargement entretiens', 'error') }
+  } catch { showSnack(t('admin.interviews.errorLoading'), 'error') }
   finally   { loading.value = false }
 }
 
@@ -188,7 +199,7 @@ onMounted(async () => {
       evenements.value = listRes.data
       view.value = 'list'
     }
-  } catch { showSnack('Erreur lors de l\'initialisation', 'error') }
+  } catch { showSnack(t('admin.interviews.errorInit'), 'error') }
   finally   { loadingInit.value = false }
 })
 </script>
