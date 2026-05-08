@@ -1,0 +1,93 @@
+{
+  "home": "Home",
+  "jobs": "Job Offers",
+  "jobsDesc": "Discover our opportunities",
+  "companies": "Companies",
+  "companiesDesc": "Our recruiting partners",
+  "events": "Events",
+  "allEvents": "All events",
+  "allEventsDesc": "Join our events",
+  "articles": "Articles",
+  "announcements": "Announcements",
+  "learnMore": "Learn more",
+  "noEvents": "No upcoming events",
+  "sponsor": "Become a partner",
+  "subscription": "Sign up",
+  "login": "Log in",
+  "dashboard": "Dashboard",
+  "logout": "Log out",
+  "megaJobs": {
+    "heroTitle": "Find your next challenge",
+    "heroDesc": "Opportunities that match your ambitions"
+  },
+  "megaEvents": {
+    "heroTitle": "Upcoming events",
+    "heroDesc": "Meet the companies that are hiring"
+  },
+  "countdown": {
+    "days": "days",
+    "hours": "hours",
+    "minutes": "minutes",
+    "seconds": "seconds"
+  },
+  "language": {
+    "french": "Français",
+    "english": "English"
+  },
+  "admin": {
+    "overview": "Overview",
+    "profile": "Profile",
+    "jobs": {
+      "title": "Jobs",
+      "offers": "Job offers",
+      "applications": "Applications",
+      "contracts": "Work contracts",
+      "workModes": "Work modes",
+      "skills": "Skills",
+      "studyLevels": "Study levels",
+      "experiences": "Experiences",
+      "languages": "Languages",
+      "sectors": "Activity sectors"
+    },
+    "events": {
+      "title": "Events",
+      "categories": "Categories",
+      "events": "Events",
+      "participation": "Participation",
+      "interviews": "Booth interviews",
+      "feedbacks": "Feedbacks"
+    },
+    "crm": {
+      "title": "HubSpot CRM",
+      "import": "XLS Import",
+      "sync": "HubSpot CRM Sync"
+    },
+    "talents": "Talents",
+    "companies": "Companies",
+    "media": {
+      "title": "Media",
+      "categories": "Media categories",
+      "articles": "Articles"
+    },
+    "legalPages": "Legal pages",
+    "plans": "Plans",
+    "admins": "Administrators"
+  },
+  "company": {
+    "dashboard": "Dashboard",
+    "offers": "My offers",
+    "applications": "Applications",
+    "events": "Events",
+    "articles": "Articles",
+    "interviews": "Interviews",
+    "profile": "My profile"
+  },
+  "talent": {
+    "applications": "My applications",
+    "favorites": "My favorites",
+    "events": "Events & Matching",
+    "interviews": "My interviews",
+    "feedbacks": "My feedbacks",
+    "profile": "My profile"
+  }
+}
