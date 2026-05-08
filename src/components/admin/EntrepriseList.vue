@@ -2,7 +2,7 @@
   <v-card rounded="xl" border elevation="0">
     <v-toolbar color="transparent" border="b" density="compact" class="px-2">
       <v-icon icon="mdi-domain" class="mr-2" />
-      <v-toolbar-title>Gestion des Entreprises</v-toolbar-title>
+      <v-toolbar-title>{{ t('admin.companies.title') }}</v-toolbar-title>
       <v-spacer />
       <v-select
         v-model="statusFilter"
@@ -17,7 +17,7 @@
         @update:modelValue="load"
       />
       <v-btn color="primary" prepend-icon="mdi-plus" @click="router.push({ name: 'AdminEntrepriseCreate' })">
-        Ajouter une entreprise
+        {{ t('admin.companies.addCompany') }}
       </v-btn>
     </v-toolbar>
 
@@ -56,7 +56,7 @@
         <v-chip v-if="item.plan" size="small" color="primary" variant="tonal" prepend-icon="mdi-crown-outline">
           {{ item.plan.name }}
         </v-chip>
-        <span v-else class="text-medium-emphasis">Aucun</span>
+        <span v-else class="text-medium-emphasis">{{ t('admin.companies.noPlan') }}</span>
       </template>
       <template #item.status="{ item }">
         <v-chip
@@ -65,7 +65,7 @@
           variant="tonal"
           :prepend-icon="item.status === 'active' ? 'mdi-check-circle' : 'mdi-clock-outline'"
         >
-          {{ item.status === 'active' ? 'Actif' : 'En attente' }}
+          {{ item.status === 'active' ? t('admin.companies.activeStatus') : t('admin.companies.pendingStatus') }}
         </v-chip>
       </template>
       <template #item.actions="{ item }">
@@ -82,9 +82,11 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import entrepriseService from '../../services/entrepriseService.js'
 import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
+const { t } = useI18n()
 const router = useRouter()
 const items = ref([])
 const loading = ref(false)
@@ -92,9 +94,9 @@ const confirmRef = ref(null)
 const statusFilter = ref('')
 
 const statusFilterOptions = [
-  { label: 'Tous les statuts', value: '' },
-  { label: 'Actifs', value: 'active' },
-  { label: 'En attente', value: 'pending' },
+  { label: t('admin.companies.allStatuses'), value: '' },
+  { label: t('admin.companies.activeStatus'), value: 'active' },
+  { label: t('admin.companies.pendingStatus'), value: 'pending' },
 ]
 
 const snackbar = ref(false)
@@ -106,12 +108,12 @@ const showSnack = (msg, color = 'success') => {
 
 const headers = [
   { title: 'ID', key: 'id', width: '80px' },
-  { title: 'Logo / Nom', key: 'logo_nom', sortable: false },
-  { title: 'Email', key: 'email', sortable: false },
-  { title: 'Ville', key: 'ville' },
-  { title: 'Secteur', key: 'activity_sector', sortable: false },
-  { title: 'Plan', key: 'plan', sortable: false, width: '150px' },
-  { title: 'Statut', key: 'status', sortable: false, width: '130px' },
+  { title: t('admin.companies.logo'), key: 'logo_nom', sortable: false },
+  { title: t('admin.talents.email'), key: 'email', sortable: false },
+  { title: t('admin.companies.city'), key: 'ville' },
+  { title: t('admin.companies.sector'), key: 'activity_sector', sortable: false },
+  { title: t('admin.companies.plan'), key: 'plan', sortable: false, width: '150px' },
+  { title: t('admin.companies.status'), key: 'status', sortable: false, width: '130px' },
   { title: '', key: 'actions', sortable: false, width: '100px', align: 'end' },
 ]
 
@@ -122,22 +124,22 @@ const load = async () => {
     const res = await entrepriseService.getAll(params)
     items.value = res.data
   } catch {
-    showSnack('Erreur lors du chargement', 'error')
+    showSnack(t('admin.companies.errorLoading'), 'error')
   } finally {
     loading.value = false
   }
 }
 
 const deleteItem = async (id) => {
-  const ok = await confirmRef.value.open({ message: 'Supprimer cette entreprise et son compte utilisateur ?' })
+  const ok = await confirmRef.value.open({ message: t('admin.companies.confirmDelete') })
   if (!ok) return
   loading.value = true
   try {
     await entrepriseService.delete(id)
-    showSnack('Entreprise supprimée avec succès')
+    showSnack(t('admin.companies.companyDeleted'))
     await load()
   } catch (err) {
-    showSnack(err.response?.data?.message || 'Erreur lors de la suppression', 'error')
+    showSnack(err.response?.data?.message || t('admin.companies.errorDelete'), 'error')
   } finally {
     loading.value = false
   }
