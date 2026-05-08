@@ -4,10 +4,10 @@
 
     <v-toolbar color="transparent" border="b" density="compact" class="px-2">
       <v-icon class="mr-2">mdi-briefcase</v-icon>
-      <v-toolbar-title>Gestion des Offres d'emploi</v-toolbar-title>
+      <v-toolbar-title>{{ t('admin.offers.title') }}</v-toolbar-title>
       <template #append>
-        <span class="text-caption text-medium-emphasis mr-4">{{ total }} résultat{{ total > 1 ? 's' : '' }}</span>
-        <v-btn color="primary" prepend-icon="mdi-plus" @click="router.push({ name: 'AdminOffreCreate' })">Ajouter une offre</v-btn>
+        <span class="text-caption text-medium-emphasis mr-4">{{ total }} {{ total > 1 ? t('dashboard.common.resultsPlural') : t('dashboard.common.results') }}</span>
+        <v-btn color="primary" prepend-icon="mdi-plus" @click="router.push({ name: 'AdminOffreCreate' })">{{ t('admin.offers.addOffer') }}</v-btn>
       </template>
     </v-toolbar>
 
@@ -16,7 +16,7 @@
       <v-text-field
         v-model="searchInput"
         prepend-inner-icon="mdi-magnify"
-        placeholder="Rechercher par titre, client, localisation…"
+        :placeholder="t('admin.offers.searchPlaceholder')"
         density="compact"
         variant="outlined"
         clearable
@@ -45,7 +45,7 @@
         variant="tonal"
         @click="archiveAllOffres"
       >
-        Archiver tout
+        {{ t('admin.offers.archiveAll') }}
       </v-btn>
     </div>
 
@@ -68,7 +68,7 @@
             <div v-if="item.fourchette_salariale" class="text-caption text-medium-emphasis">{{ item.fourchette_salariale }}</div>
           </div>
           <v-chip v-if="item.archived_at" color="warning" size="x-small" prepend-icon="mdi-archive">
-            Archivée
+            {{ t('admin.offers.archived') }}
           </v-chip>
         </div>
       </template>
@@ -93,7 +93,7 @@
             color="success" 
             variant="tonal" 
             @click="unarchiveItem(item.id)"
-            title="Désarchiver"
+            :title="t('admin.offers.unarchive')"
           />
           <v-btn 
             v-else
@@ -102,7 +102,7 @@
             color="warning" 
             variant="tonal" 
             @click="archiveItem(item.id)"
-            title="Archiver"
+            :title="t('admin.offers.archive')"
           />
           <v-btn icon="mdi-pencil" size="small" color="primary" variant="tonal" @click="router.push({ name: 'AdminOffreEdit', params: { id: item.id } })" />
           <v-btn icon="mdi-delete" size="small" color="error" variant="tonal" @click="deleteItem(item.id)" />
@@ -117,9 +117,11 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import offreService from '../../services/offreService.js'
 import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
+const { t } = useI18n()
 const router = useRouter()
 const offres      = ref([])
 const total       = ref(0)
@@ -140,17 +142,17 @@ const showSnack = (msg, color = 'success') => {
 }
 
 const filterOptions = [
-  { text: 'Offres actives', value: false },
-  { text: 'Offres archivées', value: true }
+  { text: t('admin.offers.activeOffers'), value: false },
+  { text: t('admin.offers.archivedOffers'), value: true }
 ]
 
 const headers = [
   { title: 'ID', key: 'id', sortable: false, width: '60px' },
-  { title: 'Titre / Salaire', key: 'titre', sortable: false },
-  { title: 'Client', key: 'client', sortable: false },
-  { title: 'Localisation', key: 'localisation', sortable: false },
-  { title: 'Date limite', key: 'date_limite', sortable: false },
-  { title: 'Contrats', key: 'job_contracts', sortable: false },
+  { title: t('admin.offers.title_field'), key: 'titre', sortable: false },
+  { title: t('admin.offers.client'), key: 'client', sortable: false },
+  { title: t('admin.offers.location'), key: 'localisation', sortable: false },
+  { title: t('admin.offers.deadline'), key: 'date_limite', sortable: false },
+  { title: t('admin.offers.contracts'), key: 'job_contracts', sortable: false },
   { title: '', key: 'actions', sortable: false, align: 'end' },
 ]
 
@@ -161,7 +163,7 @@ const loadPage = async () => {
     offres.value = res.data.data
     total.value  = res.data.total
   } catch {
-    showSnack('Erreur lors du chargement', 'error')
+    showSnack(t('admin.offers.errorLoading'), 'error')
   } finally {
     loading.value = false
   }
@@ -194,16 +196,16 @@ const onFilterChange = () => {
 
 const archiveItem = async (id) => {
   const ok = await confirmRef.value.open({ 
-    message: 'Archiver cette offre ? Elle ne sera plus visible publiquement mais restera accessible dans l\'administration.' 
+    message: t('admin.offers.confirmArchive')
   })
   if (!ok) return
   loading.value = true
   try {
     await offreService.archive(id)
-    showSnack('Offre archivée avec succès')
+    showSnack(t('admin.offers.offerArchived'))
     await loadPage()
   } catch (err) {
-    showSnack(err.response?.data?.message || 'Erreur lors de l\'archivage', 'error')
+    showSnack(err.response?.data?.message || t('admin.offers.errorArchive'), 'error')
   } finally {
     loading.value = false
   }
@@ -211,16 +213,16 @@ const archiveItem = async (id) => {
 
 const unarchiveItem = async (id) => {
   const ok = await confirmRef.value.open({ 
-    message: 'Désarchiver cette offre ? Elle redeviendra visible publiquement.' 
+    message: t('admin.offers.confirmUnarchive')
   })
   if (!ok) return
   loading.value = true
   try {
     await offreService.unarchive(id)
-    showSnack('Offre désarchivée avec succès', 'success')
+    showSnack(t('admin.offers.offerUnarchived'), 'success')
     await loadPage()
   } catch (err) {
-    showSnack(err.response?.data?.message || 'Erreur lors de la désarchivage', 'error')
+    showSnack(err.response?.data?.message || t('admin.offers.errorUnarchive'), 'error')
   } finally {
     loading.value = false
   }
@@ -228,31 +230,31 @@ const unarchiveItem = async (id) => {
 
 const archiveAllOffres = async () => {
   const ok = await confirmRef.value.open({ 
-    message: 'Archiver TOUTES les offres actives ? Elles ne seront plus visibles publiquement mais resteront accessibles dans l\'administration.' 
+    message: t('admin.offers.confirmArchiveAll')
   })
   if (!ok) return
   loading.value = true
   try {
     const res = await offreService.archiveAll()
-    showSnack(res.data.message || 'Toutes les offres ont été archivées', 'success')
+    showSnack(res.data.message || t('admin.offers.allOffersArchived'), 'success')
     await loadPage()
   } catch (err) {
-    showSnack(err.response?.data?.message || 'Erreur lors de l\'archivage', 'error')
+    showSnack(err.response?.data?.message || t('admin.offers.errorArchive'), 'error')
   } finally {
     loading.value = false
   }
 }
 
 const deleteItem = async (id) => {
-  const ok = await confirmRef.value.open({ message: 'Supprimer cette offre ?' })
+  const ok = await confirmRef.value.open({ message: t('admin.offers.confirmDelete') })
   if (!ok) return
   loading.value = true
   try {
     await offreService.delete(id)
-    showSnack('Offre supprimée avec succès')
+    showSnack(t('admin.offers.offerDeleted'))
     await loadPage()
   } catch (err) {
-    showSnack(err.response?.data?.message || 'Erreur lors de la suppression', 'error')
+    showSnack(err.response?.data?.message || t('admin.offers.errorDelete'), 'error')
   } finally {
     loading.value = false
   }
