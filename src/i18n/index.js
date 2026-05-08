@@ -17,6 +17,13 @@ import frCorporateLanding from './locales/fr/corporateLanding.json'
 import frCorporateConfirm from './locales/fr/corporateConfirm.json'
 import frTalentConfirm from './locales/fr/talentConfirm.json'
 import frFavorites from './locales/fr/favorites.json'
+import frDashboard from './locales/fr/dashboard.json'
+import frNav from './locales/fr/nav.json'
+import frAdmin from './locales/fr/admin.json'
+import frCompanyDashboard from './locales/fr/company.json'
+import frTalentDashboard from './locales/fr/talent.json'
+import frProfile from './locales/fr/profile.json'
+import frCommonDashboard from './locales/fr/common.json'
 
 // Import English translations
 import enCommon from './locales/en/common.json'
@@ -35,6 +42,13 @@ import enCorporateLanding from './locales/en/corporateLanding.json'
 import enCorporateConfirm from './locales/en/corporateConfirm.json'
 import enTalentConfirm from './locales/en/talentConfirm.json'
 import enFavorites from './locales/en/favorites.json'
+import enDashboard from './locales/en/dashboard.json'
+import enNav from './locales/en/nav.json'
+import enAdmin from './locales/en/admin.json'
+import enCompanyDashboard from './locales/en/company.json'
+import enTalentDashboard from './locales/en/talent.json'
+import enProfile from './locales/en/profile.json'
+import enCommonDashboard from './locales/en/common.json'
 
 // Merge translations with proper nesting
 const fr = {
@@ -53,7 +67,14 @@ const fr = {
   corporateLanding: frCorporateLanding,
   corporateConfirm: frCorporateConfirm,
   talentConfirm: frTalentConfirm,
-  favorites: frFavorites
+  favorites: frFavorites,
+  dashboard: frDashboard,
+  nav: frNav,
+  admin: frAdmin,
+  companyDashboard: frCompanyDashboard,
+  talentDashboard: frTalentDashboard,
+  profile: frProfile,
+  commonDashboard: frCommonDashboard
 }
 
 const en = {
@@ -72,7 +93,14 @@ const en = {
   corporateLanding: enCorporateLanding,
   corporateConfirm: enCorporateConfirm,
   talentConfirm: enTalentConfirm,
-  favorites: enFavorites
+  favorites: enFavorites,
+  dashboard: enDashboard,
+  nav: enNav,
+  admin: enAdmin,
+  companyDashboard: enCompanyDashboard,
+  talentDashboard: enTalentDashboard,
+  profile: enProfile,
+  commonDashboard: enCommonDashboard
 }
 
 const i18n = createI18n({
