@@ -1,85 +1,73 @@
 {
-  "nav": {
-    "home": "ACCUEIL",
-    "announcements": "ANNONCES",
-    "events": "ÉVÉNEMENTS",
-    "articles": "ARTICLES",
-    "jobs": "Jobs",
-    "jobsDesc": "Toutes les offres d'emploi",
-    "companies": "Entreprises",
-    "companiesDesc": "Les entreprises partenaires",
-    "allEvents": "Tous les événements",
-    "allEventsDesc": "Catégories, événements, galerie et témoignages",
-    "noEvents": "Aucun événement disponible",
-    "megaJobs": {
-      "heroTitle": "Trouvez votre prochain emploi",
-      "heroDesc": "Des centaines d'offres de recruteurs partenaires en Afrique et en Europe"
-    },
-    "megaEvents": {
-      "heroTitle": "Événements RH & Networking",
-      "heroDesc": "Participez aux sommets, forums et rencontres professionnelles de la diaspora"
-    },
-    "subscription": "SOUSCRIPTION",
-    "login": "SE CONNECTER",
-    "dashboard": "Dashboard",
-    "logout": "Déconnexion",
-    "myAccount": "MON COMPTE",
-    "learnMore": "En savoir plus",
-    "sponsor": "Sponsoriser",
-    "countdown": {
-      "days": "j",
-      "hours": "h",
-      "minutes": "m",
-      "seconds": "s"
-    }
+  "confirm": {
+    "deleteTitle": "Confirmer la suppression",
+    "deleteMessage": "Cette action est irréversible. Voulez-vous continuer ?",
+    "cancel": "Annuler",
+    "delete": "Supprimer"
   },
-  "favorites": {
-    "title": "Mes offres favorites",
-    "mySpace": "Mon espace",
-    "subtitle": "Retrouvez toutes les offres que vous avez sauvegardées",
-    "emptyTitle": "Aucun favori pour l'instant",
-    "emptyDesc": "Parcourez les offres et cliquez sur le cœur pour les sauvegarder ici.",
-    "browseOffers": "Voir les offres",
-    "saved": "offre sauvegardée",
-    "savedPlural": "offres sauvegardées",
-    "viewOffer": "Voir l'offre",
-    "remove": "Retirer des favoris",
-    "empty": "Aucun favori pour l'instant",
-    "viewAll": "Voir tous mes favoris"
-  },
-  "language": {
-    "french": "Français",
-    "english": "English"
-  },
-  "common": {
-    "loading": "Chargement...",
-    "error": "Une erreur est survenue",
+  "actions": {
     "save": "Enregistrer",
     "cancel": "Annuler",
     "delete": "Supprimer",
     "edit": "Modifier",
+    "add": "Ajouter",
     "create": "Créer",
+    "update": "Mettre à jour",
     "search": "Rechercher",
     "filter": "Filtrer",
-    "apply": "Postuler",
-    "viewDetails": "Voir les détails",
+    "close": "Fermer",
     "back": "Retour",
     "next": "Suivant",
     "previous": "Précédent",
-    "close": "Fermer",
-    "confirm": "Confirmer",
-    "yes": "Oui",
-    "no": "Non",
+    "submit": "Soumettre",
+    "apply": "Appliquer",
     "reset": "Réinitialiser",
-    "filteredBy": "Filtrés par"
+    "clear": "Effacer"
   },
-  "share": {
-    "title": "Partager",
-    "facebook": "Partager sur Facebook",
-    "twitter": "Partager sur Twitter",
-    "linkedin": "Partager sur LinkedIn",
-    "copyLink": "Copier le lien",
-    "copy": "Copier",
-    "copied": "Copié !"
+  "status": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "noData": "Aucune donnée disponible",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "pending": "En attente",
+    "completed": "Terminé",
+    "archived": "Archivé"
+  },
+  "pagination": {
+    "results": "résultat",
+    "resultsPlural": "résultats",
+    "page": "Page",
+    "of": "sur",
+    "itemsPerPage": "Éléments par page"
+  },
+  "save": "Enregistrer",
+  "publish": "Publier",
+  "client": "Client",
+  "mission": "Mission",
+  "profileSought": "Profil recherché",
+  "description": "Description",
+  "workContracts": "Contrats de travail",
+  "workModes": "Modes de travail",
+  "skills": "Compétences",
+  "requiredExperiences": "Expériences requises",
+  "requiredEducation": "Formations requises",
+  "languages": "Langues",
+  "salaryMin": "Salaire minimum",
+  "salaryMax": "Salaire maximum",
+  "offerPublished": "Offre publiée",
+  "errorSaving": "Erreur lors de l'enregistrement",
+  "language": {
+    "french": "Français",
+    "english": "English"
+  },
+  "home": {
+    "tagline": "Votre plateforme de recrutement"
+  },
+  "favorites": {
+    "title": "Mes favoris",
+    "empty": "Aucune offre en favori",
+    "viewAll": "Voir tous mes favoris"
   }
 }
