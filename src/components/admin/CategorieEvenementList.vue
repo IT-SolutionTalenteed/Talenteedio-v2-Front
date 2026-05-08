@@ -4,9 +4,11 @@
 
     <v-toolbar color="transparent" border="b" density="compact" class="px-2">
       <v-icon class="mr-2">mdi-tag-multiple</v-icon>
-      <v-toolbar-title>Gestion des Catégories d'événement</v-toolbar-title>
+      <v-toolbar-title>{{ t('admin.eventCategories.title') }}</v-toolbar-title>
       <template #append>
-        <v-btn color="primary" prepend-icon="mdi-plus" @click="router.push({ name: 'AdminCategorieEvenementCreate' })">Ajouter une catégorie</v-btn>
+        <v-btn color="primary" prepend-icon="mdi-plus" @click="router.push({ name: 'AdminCategorieEvenementCreate' })">
+          {{ t('admin.eventCategories.addCategory') }}
+        </v-btn>
       </template>
     </v-toolbar>
 
@@ -25,7 +27,7 @@
       </template>
 
       <template #item.galerie="{ item }">
-        <v-chip size="small" color="blue">{{ item.galerie?.length || 0 }} fichier(s)</v-chip>
+        <v-chip size="small" color="blue">{{ item.galerie?.length || 0 }} {{ t('admin.eventCategories.files') }}</v-chip>
       </template>
 
       <template #item.temoignages="{ item }">
@@ -45,12 +47,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import categorieEvenementService from '../../services/categorieEvenementService.js'
 import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
 const router = useRouter()
+const { t } = useI18n()
 const items = ref([])
 const loading = ref(false)
 const confirmRef = ref(null)
@@ -62,14 +66,14 @@ const showSnack = (msg, color = 'success') => {
   snackMsg.value = msg; snackColor.value = color; snackbar.value = true
 }
 
-const headers = [
+const headers = computed(() => [
   { title: 'ID', key: 'id', sortable: true, width: '60px' },
-  { title: 'Image', key: 'image', sortable: false, width: '60px' },
-  { title: 'Titre', key: 'titre', sortable: true },
-  { title: 'Galerie', key: 'galerie', sortable: false },
-  { title: 'Témoignages', key: 'temoignages', sortable: false },
+  { title: t('admin.eventCategories.image'), key: 'image', sortable: false, width: '60px' },
+  { title: t('admin.eventCategories.titleField'), key: 'titre', sortable: true },
+  { title: t('admin.eventCategories.gallery'), key: 'galerie', sortable: false },
+  { title: t('admin.eventCategories.testimonials'), key: 'temoignages', sortable: false },
   { title: '', key: 'actions', sortable: false, align: 'end' },
-]
+])
 
 const load = async () => {
   loading.value = true
@@ -77,22 +81,25 @@ const load = async () => {
     const res = await categorieEvenementService.getAll()
     items.value = res.data
   } catch {
-    showSnack('Erreur lors du chargement', 'error')
+    showSnack(t('admin.eventCategories.errorLoading'), 'error')
   } finally {
     loading.value = false
   }
 }
 
 const deleteItem = async (id) => {
-  const ok = await confirmRef.value?.open({ title: 'Supprimer la catégorie', message: 'Cette action est irréversible. Voulez-vous continuer ?' })
+  const ok = await confirmRef.value?.open({ 
+    title: t('admin.eventCategories.confirmDelete'), 
+    message: t('admin.referential.confirmDelete') 
+  })
   if (!ok) return
   loading.value = true
   try {
     await categorieEvenementService.delete(id)
-    showSnack('Catégorie supprimée avec succès')
+    showSnack(t('admin.eventCategories.categoryDeleted'))
     await load()
   } catch (err) {
-    showSnack(err.response?.data?.message || 'Erreur lors de la suppression', 'error')
+    showSnack(err.response?.data?.message || t('admin.eventCategories.errorDelete'), 'error')
   } finally {
     loading.value = false
   }
