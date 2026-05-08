@@ -1,85 +1,73 @@
 {
-  "nav": {
-    "home": "HOME",
-    "announcements": "JOBS",
-    "events": "EVENTS",
-    "articles": "ARTICLES",
-    "jobs": "Jobs",
-    "jobsDesc": "All job offers",
-    "companies": "Companies",
-    "companiesDesc": "Partner companies",
-    "allEvents": "All Events",
-    "allEventsDesc": "Categories, events, gallery and testimonials",
-    "noEvents": "No events available",
-    "megaJobs": {
-      "heroTitle": "Find your next job",
-      "heroDesc": "Hundreds of offers from partner recruiters across Africa and Europe"
-    },
-    "megaEvents": {
-      "heroTitle": "HR Events & Networking",
-      "heroDesc": "Attend summits, forums and professional meetings of the diaspora"
-    },
-    "subscription": "SUBSCRIBE",
-    "login": "LOGIN",
-    "dashboard": "Dashboard",
-    "logout": "Logout",
-    "myAccount": "MY ACCOUNT",
-    "learnMore": "Learn more",
-    "sponsor": "Sponsor",
-    "countdown": {
-      "days": "d",
-      "hours": "h",
-      "minutes": "m",
-      "seconds": "s"
-    }
+  "confirm": {
+    "deleteTitle": "Confirm deletion",
+    "deleteMessage": "This action is irreversible. Do you want to continue?",
+    "cancel": "Cancel",
+    "delete": "Delete"
   },
-  "favorites": {
-    "title": "My favorite offers",
-    "mySpace": "My space",
-    "subtitle": "Find all the offers you have saved",
-    "emptyTitle": "No favorites yet",
-    "emptyDesc": "Browse offers and click the heart to save them here.",
-    "browseOffers": "View offers",
-    "saved": "saved offer",
-    "savedPlural": "saved offers",
-    "viewOffer": "View offer",
-    "remove": "Remove from favorites",
-    "empty": "No favorites yet",
-    "viewAll": "View all my favorites"
-  },
-  "language": {
-    "french": "Français",
-    "english": "English"
-  },
-  "common": {
-    "loading": "Loading...",
-    "error": "An error occurred",
+  "actions": {
     "save": "Save",
     "cancel": "Cancel",
     "delete": "Delete",
     "edit": "Edit",
+    "add": "Add",
     "create": "Create",
+    "update": "Update",
     "search": "Search",
     "filter": "Filter",
-    "apply": "Apply",
-    "viewDetails": "View details",
+    "close": "Close",
     "back": "Back",
     "next": "Next",
     "previous": "Previous",
-    "close": "Close",
-    "confirm": "Confirm",
-    "yes": "Yes",
-    "no": "No",
+    "submit": "Submit",
+    "apply": "Apply",
     "reset": "Reset",
-    "filteredBy": "Filtered by"
+    "clear": "Clear"
   },
-  "share": {
-    "title": "Share",
-    "facebook": "Share on Facebook",
-    "twitter": "Share on Twitter",
-    "linkedin": "Share on LinkedIn",
-    "copyLink": "Copy link",
-    "copy": "Copy",
-    "copied": "Copied!"
+  "status": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "noData": "No data available",
+    "active": "Active",
+    "inactive": "Inactive",
+    "pending": "Pending",
+    "completed": "Completed",
+    "archived": "Archived"
+  },
+  "pagination": {
+    "results": "result",
+    "resultsPlural": "results",
+    "page": "Page",
+    "of": "of",
+    "itemsPerPage": "Items per page"
+  },
+  "save": "Save",
+  "publish": "Publish",
+  "client": "Client",
+  "mission": "Mission",
+  "profileSought": "Profile sought",
+  "description": "Description",
+  "workContracts": "Work contracts",
+  "workModes": "Work modes",
+  "skills": "Skills",
+  "requiredExperiences": "Required experiences",
+  "requiredEducation": "Required education",
+  "languages": "Languages",
+  "salaryMin": "Minimum salary",
+  "salaryMax": "Maximum salary",
+  "offerPublished": "Offer published",
+  "errorSaving": "Error saving",
+  "language": {
+    "french": "Français",
+    "english": "English"
+  },
+  "home": {
+    "tagline": "Your recruitment platform"
+  },
+  "favorites": {
+    "title": "My favorites",
+    "empty": "No favorite offers",
+    "viewAll": "View all my favorites"
   }
 }
