@@ -6,6 +6,7 @@ import frHome from './locales/fr/home.json'
 import frAnnonces from './locales/fr/annonces.json'
 import frAuth from './locales/fr/auth.json'
 import frFooter from './locales/fr/footer.json'
+import frBugReport from './locales/fr/bugReport.json'
 import frEntreprises from './locales/fr/entreprises.json'
 import frBlog from './locales/fr/blog.json'
 import frEvenements from './locales/fr/evenements.json'
@@ -23,6 +24,7 @@ import enHome from './locales/en/home.json'
 import enAnnonces from './locales/en/annonces.json'
 import enAuth from './locales/en/auth.json'
 import enFooter from './locales/en/footer.json'
+import enBugReport from './locales/en/bugReport.json'
 import enEntreprises from './locales/en/entreprises.json'
 import enBlog from './locales/en/blog.json'
 import enEvenements from './locales/en/evenements.json'
@@ -41,6 +43,7 @@ const fr = {
   annonces: frAnnonces,
   auth: frAuth,
   footer: frFooter,
+  bugReport: frBugReport,
   entreprises: frEntreprises,
   blog: frBlog,
   evenements: frEvenements,
@@ -59,6 +62,7 @@ const en = {
   annonces: enAnnonces,
   auth: enAuth,
   footer: enFooter,
+  bugReport: enBugReport,
   entreprises: enEntreprises,
   blog: enBlog,
   evenements: enEvenements,
