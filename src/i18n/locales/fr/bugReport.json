@@ -1,0 +1,39 @@
+{
+  "label": "Support",
+  "title": "Signaler un bug",
+  "description": "Vous avez rencontré un problème ? Aidez-nous à améliorer la plateforme en nous signalant les bugs que vous rencontrez.",
+  "form": {
+    "name": "Nom complet",
+    "namePlaceholder": "Votre nom",
+    "email": "Email",
+    "emailPlaceholder": "votre.email@exemple.com",
+    "type": "Type de bug",
+    "typeSelect": "Sélectionnez un type",
+    "types": {
+      "display": "Problème d'affichage",
+      "functionality": "Fonctionnalité défectueuse",
+      "performance": "Problème de performance",
+      "security": "Problème de sécurité",
+      "other": "Autre"
+    },
+    "url": "URL de la page",
+    "urlPlaceholder": "https://...",
+    "browser": "Navigateur",
+    "browserPlaceholder": "Ex: Chrome 120, Firefox 121, Safari 17",
+    "description": "Description du problème",
+    "descriptionPlaceholder": "Décrivez le bug que vous avez rencontré de manière détaillée...",
+    "steps": "Étapes pour reproduire",
+    "stepsPlaceholder": "1. Aller sur la page...\n2. Cliquer sur...\n3. Observer que...",
+    "cancel": "Annuler",
+    "submit": "Envoyer le rapport",
+    "success": "Merci ! Votre rapport a été envoyé avec succès. Nous allons examiner le problème rapidement.",
+    "error": "Une erreur s'est produite lors de l'envoi. Veuillez réessayer."
+  },
+  "tips": {
+    "title": "Conseils pour un bon rapport",
+    "tip1": "Soyez aussi précis que possible dans votre description",
+    "tip2": "Incluez les étapes exactes pour reproduire le bug",
+    "tip3": "Mentionnez le navigateur et l'appareil utilisés",
+    "tip4": "Ajoutez des captures d'écran si possible (par email)"
+  }
+}

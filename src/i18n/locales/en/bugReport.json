@@ -1,0 +1,39 @@
+{
+  "label": "Support",
+  "title": "Report a Bug",
+  "description": "Encountered a problem? Help us improve the platform by reporting the bugs you encounter.",
+  "form": {
+    "name": "Full name",
+    "namePlaceholder": "Your name",
+    "email": "Email",
+    "emailPlaceholder": "your.email@example.com",
+    "type": "Bug type",
+    "typeSelect": "Select a type",
+    "types": {
+      "display": "Display issue",
+      "functionality": "Broken functionality",
+      "performance": "Performance issue",
+      "security": "Security issue",
+      "other": "Other"
+    },
+    "url": "Page URL",
+    "urlPlaceholder": "https://...",
+    "browser": "Browser",
+    "browserPlaceholder": "Ex: Chrome 120, Firefox 121, Safari 17",
+    "description": "Problem description",
+    "descriptionPlaceholder": "Describe the bug you encountered in detail...",
+    "steps": "Steps to reproduce",
+    "stepsPlaceholder": "1. Go to page...\n2. Click on...\n3. Observe that...",
+    "cancel": "Cancel",
+    "submit": "Send report",
+    "success": "Thank you! Your report has been sent successfully. We will review the issue quickly.",
+    "error": "An error occurred while sending. Please try again."
+  },
+  "tips": {
+    "title": "Tips for a good report",
+    "tip1": "Be as specific as possible in your description",
+    "tip2": "Include exact steps to reproduce the bug",
+    "tip3": "Mention the browser and device used",
+    "tip4": "Add screenshots if possible (via email)"
+  }
+}
