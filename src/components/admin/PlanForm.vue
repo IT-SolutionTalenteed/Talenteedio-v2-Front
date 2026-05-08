@@ -4,7 +4,7 @@
       <v-btn icon="mdi-arrow-left" variant="text" @click="router.back()" />
       <v-icon class="mr-2" color="primary">mdi-crown-outline</v-icon>
       <v-toolbar-title class="text-body-1 font-weight-semibold">
-        {{ isEdit ? 'Modifier le plan' : 'Créer un plan' }}
+        {{ isEdit ? $t('admin.plans.editPlan') : $t('admin.plans.createPlan') }}
       </v-toolbar-title>
     </v-toolbar>
 
@@ -15,9 +15,9 @@
           <v-col cols="12" md="6">
             <v-text-field
               v-model="form.name"
-              label="Nom du plan *"
-              placeholder="Ex: Starter, Business, Premium"
-              :rules="[v => !!v || 'Le nom est requis']"
+              :label="$t('admin.plans.nameRequired')"
+              :placeholder="$t('admin.plans.namePlaceholder')"
+              :rules="[v => !!v || $t('admin.plans.nameError')]"
               variant="outlined"
               density="comfortable"
               prepend-inner-icon="mdi-crown"
@@ -28,11 +28,11 @@
           <v-col cols="12" md="6">
             <v-text-field
               v-model.number="form.price"
-              label="Prix (€) *"
+              :label="$t('admin.plans.price')"
               type="number"
               step="0.01"
               min="0"
-              :rules="[v => v >= 0 || 'Le prix doit être positif']"
+              :rules="[v => v >= 0 || $t('admin.plans.priceError')]"
               variant="outlined"
               density="comfortable"
               prepend-inner-icon="mdi-currency-eur"
@@ -43,7 +43,7 @@
           <v-col cols="12" md="6" class="d-flex align-center">
             <v-switch
               v-model="form.is_active"
-              label="Plan actif"
+              :label="$t('admin.plans.planActive')"
               color="success"
               hide-details
             />
@@ -53,8 +53,8 @@
           <v-col cols="12">
             <v-textarea
               v-model="form.description"
-              label="Description"
-              placeholder="Décrivez les avantages de ce plan..."
+              :label="$t('admin.plans.description')"
+              :placeholder="$t('admin.plans.descriptionPlaceholder')"
               variant="outlined"
               rows="3"
               prepend-inner-icon="mdi-text"
@@ -64,21 +64,21 @@
           <!-- Limites -->
           <v-col cols="12">
             <v-divider class="mb-4" />
-            <div class="text-subtitle-2 font-weight-semibold mb-1">Restrictions du plan</div>
-            <div class="text-caption text-medium-emphasis mb-4">Laisser vide = illimité</div>
+            <div class="text-subtitle-2 font-weight-semibold mb-1">{{ $t('admin.plans.restrictions') }}</div>
+            <div class="text-caption text-medium-emphasis mb-4">{{ $t('admin.plans.restrictionsHint') }}</div>
           </v-col>
 
           <v-col cols="12" md="6">
             <v-text-field
               v-model.number="form.max_offres"
-              label="Max d'offres publiables"
+              :label="$t('admin.plans.maxOffers')"
               type="number"
               min="0"
-              placeholder="Illimité"
+              :placeholder="$t('admin.plans.unlimited')"
               variant="outlined"
               density="comfortable"
               prepend-inner-icon="mdi-briefcase-outline"
-              hint="Nb total d'offres que l'entreprise peut publier"
+              :hint="$t('admin.plans.maxOffersHint')"
               persistent-hint
             />
           </v-col>
@@ -86,14 +86,14 @@
           <v-col cols="12" md="6">
             <v-text-field
               v-model.number="form.max_articles"
-              label="Max d'articles publiables"
+              :label="$t('admin.plans.maxArticles')"
               type="number"
               min="0"
-              placeholder="Illimité"
+              :placeholder="$t('admin.plans.unlimited')"
               variant="outlined"
               density="comfortable"
               prepend-inner-icon="mdi-file-document-outline"
-              hint="Nb total d'articles que l'entreprise peut publier"
+              :hint="$t('admin.plans.maxArticlesHint')"
               persistent-hint
             />
           </v-col>
@@ -101,14 +101,14 @@
           <v-col cols="12" md="6">
             <v-text-field
               v-model.number="form.max_evenements"
-              label="Max d'événements participés"
+              :label="$t('admin.plans.maxEvents')"
               type="number"
               min="0"
-              placeholder="Illimité"
+              :placeholder="$t('admin.plans.unlimited')"
               variant="outlined"
               density="comfortable"
               prepend-inner-icon="mdi-calendar-check-outline"
-              hint="Nb d'événements auxquels l'entreprise peut participer"
+              :hint="$t('admin.plans.maxEventsHint')"
               persistent-hint
             />
           </v-col>
@@ -116,14 +116,14 @@
           <v-col cols="12" md="6">
             <v-text-field
               v-model.number="form.max_entretiens_par_evenement"
-              label="Max d'entretiens par événement"
+              :label="$t('admin.plans.maxInterviewsPerEvent')"
               type="number"
               min="0"
-              placeholder="Illimité"
+              :placeholder="$t('admin.plans.unlimited')"
               variant="outlined"
               density="comfortable"
               prepend-inner-icon="mdi-account-multiple-outline"
-              hint="Nb de créneaux d'entretien sur le stand de l'entreprise par événement"
+              :hint="$t('admin.plans.maxInterviewsPerEventHint')"
               persistent-hint
             />
           </v-col>
@@ -131,14 +131,14 @@
           <v-col cols="12" md="6">
             <v-text-field
               v-model.number="form.max_candidatures_par_offre"
-              label="Max de candidatures par offre"
+              :label="$t('admin.plans.maxApplicationsPerOffer')"
               type="number"
               min="0"
-              placeholder="Illimité"
+              :placeholder="$t('admin.plans.unlimited')"
               variant="outlined"
               density="comfortable"
               prepend-inner-icon="mdi-inbox-arrow-down-outline"
-              hint="Nb de candidatures que chaque offre peut recevoir"
+              :hint="$t('admin.plans.maxApplicationsPerOfferHint')"
               persistent-hint
             />
           </v-col>
@@ -148,9 +148,9 @@
 
         <div class="d-flex ga-3">
           <v-btn type="submit" color="primary" :loading="loading" prepend-icon="mdi-content-save">
-            {{ isEdit ? 'Mettre à jour' : 'Créer' }}
+            {{ isEdit ? $t('admin.plans.update') : $t('admin.plans.create') }}
           </v-btn>
-          <v-btn variant="outlined" @click="router.back()">Annuler</v-btn>
+          <v-btn variant="outlined" @click="router.back()">{{ $t('admin.plans.cancel') }}</v-btn>
         </div>
       </v-form>
     </v-card-text>
@@ -162,7 +162,10 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import planService from '../../services/planService.js'
+
+const { t: $t } = useI18n()
 
 const router = useRouter()
 const route = useRoute()
@@ -200,7 +203,7 @@ const load = async () => {
     const res = await planService.getById(route.params.id)
     form.value = { ...res.data }
   } catch {
-    showSnack('Erreur lors du chargement', 'error')
+    showSnack($t('admin.plans.errorLoading'), 'error')
     router.back()
   } finally {
     loading.value = false
@@ -227,15 +230,15 @@ const submit = async () => {
 
     if (isEdit.value) {
       await planService.update(route.params.id, payload)
-      showSnack('Plan mis à jour avec succès')
+      showSnack($t('admin.plans.planUpdated'))
     } else {
       await planService.create(payload)
-      showSnack('Plan créé avec succès')
+      showSnack($t('admin.plans.planCreated'))
     }
 
     setTimeout(() => router.push({ name: 'AdminPlans' }), 1000)
   } catch (err) {
-    showSnack(err.response?.data?.message || 'Erreur lors de la sauvegarde', 'error')
+    showSnack(err.response?.data?.message || $t('admin.plans.errorSave'), 'error')
   } finally {
     loading.value = false
   }
