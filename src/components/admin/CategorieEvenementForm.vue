@@ -2,21 +2,21 @@
     <div class="d-flex align-center mb-5">
       <div class="d-flex align-center ga-2">
         <v-btn icon="mdi-arrow-left" variant="text" density="comfortable" @click="goBack" />
-        <span class="text-h6 font-weight-bold">{{ isEdit ? 'Modifier la catégorie' : 'Nouvelle catégorie' }}</span>
+        <span class="text-h6 font-weight-bold">{{ isEdit ? $t('admin.eventCategories.editCategory') : $t('admin.eventCategories.newCategory') }}</span>
       </div>
     </div>
     <v-card rounded="xl" border elevation="0">
       <v-card-text class="pa-6">
         <v-row>
           <v-col cols="12" md="6">
-            <v-text-field v-model="form.titre" label="Titre *" variant="outlined" density="compact" required />
+            <v-text-field v-model="form.titre" :label="$t('admin.eventCategories.titleRequired')" variant="outlined" density="compact" required />
           </v-col>
           <v-col cols="12">
-            <v-textarea v-model="form.description" label="Description" variant="outlined" density="compact" rows="4" />
+            <v-textarea v-model="form.description" :label="$t('admin.eventCategories.description')" variant="outlined" density="compact" rows="4" />
           </v-col>
 
           <v-col cols="12" md="6">
-            <div class="text-caption text-medium-emphasis mb-1">Image</div>
+            <div class="text-caption text-medium-emphasis mb-1">{{ $t('admin.eventCategories.image') }}</div>
             <input type="file" accept="image/*" @change="e => { imageFile = e.target.files[0]; imagePreview = URL.createObjectURL(e.target.files[0]) }" style="display:block;width:100%;" />
             <v-avatar v-if="imagePreview" size="80" rounded="lg" class="mt-2">
               <img :src="imagePreview" style="object-fit:cover;width:100%;height:100%" />
@@ -27,18 +27,18 @@
           </v-col>
 
           <v-col cols="12" md="6">
-            <div class="text-caption text-medium-emphasis mb-1">Vidéo principale</div>
+            <div class="text-caption text-medium-emphasis mb-1">{{ $t('admin.eventCategories.mainVideo') }}</div>
             <input type="file" accept="video/*" @change="e => videoFile = e.target.files[0]" style="display:block;width:100%;" />
             <p v-if="editingItem?.video_url" class="text-caption text-medium-emphasis mt-1">
-              Vidéo actuelle : <a :href="editingItem.video_url" target="_blank">voir</a>
+              {{ $t('admin.eventCategories.currentVideo') }} : <a :href="editingItem.video_url" target="_blank">{{ $t('admin.eventCategories.view') }}</a>
             </p>
           </v-col>
 
           <v-col cols="12">
-            <div class="text-caption text-medium-emphasis mb-1">Galerie (images / vidéos)</div>
+            <div class="text-caption text-medium-emphasis mb-1">{{ $t('admin.eventCategories.galleryDesc') }}</div>
             <input type="file" accept="image/*,video/*" multiple @change="e => galerieFiles = Array.from(e.target.files)" style="display:block;width:100%;" />
             <div v-if="editingItem?.galerie?.length" class="mt-2">
-              <div class="text-caption text-medium-emphasis mb-1">Galerie actuelle :</div>
+              <div class="text-caption text-medium-emphasis mb-1">{{ $t('admin.eventCategories.currentGallery') }} :</div>
               <div class="d-flex flex-wrap gap-2">
                 <div v-for="(path, i) in editingItem.galerie" :key="i" class="position-relative">
                   <v-avatar v-if="isImage(path)" size="80" rounded="lg">
@@ -63,9 +63,9 @@
         <!-- Liste Détails -->
         <v-card variant="tonal" class="mt-4 mb-4">
           <v-card-title class="text-subtitle-2 pa-3 pb-1">
-            Points clés / Détails
+            {{ $t('admin.eventCategories.keyPoints') }}
             <v-btn size="x-small" color="primary" variant="tonal" class="ml-2" @click="form.liste_details.push('')" type="button">
-              <v-icon size="small">mdi-plus</v-icon> Ajouter
+              <v-icon size="small">mdi-plus</v-icon> {{ $t('admin.eventCategories.addPoint') }}
             </v-btn>
           </v-card-title>
           <v-card-text class="pa-3 pt-2">
@@ -73,7 +73,7 @@
               <v-text-field
                 :model-value="detail"
                 @update:model-value="v => form.liste_details[i] = v"
-                :label="`Point ${i + 1}`"
+                :label="`${$t('admin.eventCategories.point')} ${i + 1}`"
                 variant="outlined"
                 density="compact"
                 hide-details
@@ -81,41 +81,41 @@
               />
               <v-btn icon="mdi-delete" size="small" color="error" variant="text" @click="form.liste_details.splice(i, 1)" type="button" />
             </div>
-            <div v-if="form.liste_details.length === 0" class="text-caption text-medium-emphasis">Aucun point clé</div>
+            <div v-if="form.liste_details.length === 0" class="text-caption text-medium-emphasis">{{ $t('admin.eventCategories.noKeyPoints') }}</div>
           </v-card-text>
         </v-card>
 
         <!-- FAQs -->
         <v-card variant="tonal" class="mb-4">
           <v-card-title class="text-subtitle-2 pa-3 pb-1">
-            FAQs
+            {{ $t('admin.eventCategories.faqs') }}
             <v-btn size="x-small" color="primary" variant="tonal" class="ml-2" @click="form.liste_faqs.push({ question: '', reponse: '' })" type="button">
-              <v-icon size="small">mdi-plus</v-icon> Ajouter
+              <v-icon size="small">mdi-plus</v-icon> {{ $t('admin.eventCategories.addFaq') }}
             </v-btn>
           </v-card-title>
           <v-card-text class="pa-3 pt-2">
             <v-card v-for="(faq, i) in form.liste_faqs" :key="i" variant="outlined" class="mb-3 pa-3">
               <div class="d-flex justify-space-between align-center mb-2">
-                <span class="text-caption font-weight-bold">FAQ {{ i + 1 }}</span>
+                <span class="text-caption font-weight-bold">{{ $t('admin.eventCategories.faq') }} {{ i + 1 }}</span>
                 <v-btn icon="mdi-delete" size="small" color="error" variant="text" @click="form.liste_faqs.splice(i, 1)" type="button" />
               </div>
-              <v-text-field v-model="faq.question" label="Question" variant="outlined" density="compact" class="mb-2" />
-              <v-textarea v-model="faq.reponse" label="Réponse" variant="outlined" density="compact" rows="3" />
+              <v-text-field v-model="faq.question" :label="$t('admin.eventCategories.question')" variant="outlined" density="compact" class="mb-2" />
+              <v-textarea v-model="faq.reponse" :label="$t('admin.eventCategories.answer')" variant="outlined" density="compact" rows="3" />
             </v-card>
-            <div v-if="form.liste_faqs.length === 0" class="text-caption text-medium-emphasis">Aucune FAQ</div>
+            <div v-if="form.liste_faqs.length === 0" class="text-caption text-medium-emphasis">{{ $t('admin.eventCategories.noFaqs') }}</div>
           </v-card-text>
         </v-card>
 
         <!-- Témoignages -->
         <v-card variant="tonal" class="mb-4">
           <v-card-title class="text-subtitle-2 pa-3 pb-1">
-            Témoignages
+            {{ $t('admin.eventCategories.testimonials') }}
             <v-btn
               size="x-small" color="primary" variant="tonal" class="ml-2"
               @click="form.liste_temoignages.push({ auteur: '', poste: '', contenu: '', avatarFile: null, avatarPreview: null, existingAvatarUrl: null })"
               type="button"
             >
-              <v-icon size="small">mdi-plus</v-icon> Ajouter
+              <v-icon size="small">mdi-plus</v-icon> {{ $t('admin.eventCategories.addTestimonial') }}
             </v-btn>
           </v-card-title>
           <v-card-text class="pa-3 pt-2">
@@ -125,22 +125,22 @@
                   <v-avatar v-if="tem.avatarPreview || tem.existingAvatarUrl" size="36" rounded="lg">
                     <img :src="tem.avatarPreview || tem.existingAvatarUrl" style="object-fit:cover;width:100%;height:100%" />
                   </v-avatar>
-                  <span class="text-caption font-weight-bold">Témoignage {{ i + 1 }}</span>
+                  <span class="text-caption font-weight-bold">{{ $t('admin.eventCategories.testimonial') }} {{ i + 1 }}</span>
                 </div>
                 <v-btn icon="mdi-delete" size="small" color="error" variant="text" @click="form.liste_temoignages.splice(i, 1)" type="button" />
               </div>
               <v-row>
                 <v-col cols="12" md="6">
-                  <v-text-field v-model="tem.auteur" label="Auteur" variant="outlined" density="compact" />
+                  <v-text-field v-model="tem.auteur" :label="$t('admin.eventCategories.author')" variant="outlined" density="compact" />
                 </v-col>
                 <v-col cols="12" md="6">
-                  <v-text-field v-model="tem.poste" label="Poste" variant="outlined" density="compact" />
+                  <v-text-field v-model="tem.poste" :label="$t('admin.eventCategories.position')" variant="outlined" density="compact" />
                 </v-col>
                 <v-col cols="12">
-                  <v-textarea v-model="tem.contenu" label="Contenu" variant="outlined" density="compact" rows="3" />
+                  <v-textarea v-model="tem.contenu" :label="$t('admin.eventCategories.content')" variant="outlined" density="compact" rows="3" />
                 </v-col>
                 <v-col cols="12">
-                  <div class="text-caption text-medium-emphasis mb-1">Avatar</div>
+                  <div class="text-caption text-medium-emphasis mb-1">{{ $t('admin.eventCategories.avatar') }}</div>
                   <input
                     type="file"
                     accept="image/*"
@@ -150,13 +150,13 @@
                 </v-col>
               </v-row>
             </v-card>
-            <div v-if="form.liste_temoignages.length === 0" class="text-caption text-medium-emphasis">Aucun témoignage</div>
+            <div v-if="form.liste_temoignages.length === 0" class="text-caption text-medium-emphasis">{{ $t('admin.eventCategories.noTestimonials') }}</div>
           </v-card-text>
         </v-card>
       </v-card-text>
       <v-card-actions class="pa-4 pt-2 justify-end">
         <v-btn color="primary" :loading="saving" @click="save" prepend-icon="mdi-content-save-outline" size="large">
-          Enregistrer
+          {{ $t('common.save') }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -167,9 +167,12 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import categorieEvenementService from '../../services/categorieEvenementService.js'
 import temoignageService from '../../services/temoignageService.js'
 import ConfirmDialog from '../shared/ConfirmDialog.vue'
+
+const { t: $t } = useI18n()
 
 const route = useRoute()
 const router = useRouter()
@@ -227,7 +230,7 @@ onMounted(async () => {
         }
       }
     } catch {
-      showSnack('Erreur lors du chargement', 'error')
+      showSnack($t('admin.eventCategories.errorLoading'), 'error')
     }
   }
 })
@@ -261,28 +264,28 @@ const save = async () => {
     const fd = buildFormData()
     if (isEdit.value) {
       await categorieEvenementService.update(route.params.id, fd)
-      showSnack('Catégorie modifiée avec succès')
+      showSnack($t('admin.eventCategories.categoryUpdated'))
     } else {
       await categorieEvenementService.create(fd)
-      showSnack('Catégorie créée avec succès')
+      showSnack($t('admin.eventCategories.categoryCreated'))
     }
     setTimeout(goBack, 800)
   } catch (err) {
     const errs = err.response?.data?.errors
-    showSnack(errs ? Object.values(errs).flat().join(' | ') : "Erreur lors de l'enregistrement", 'error')
+    showSnack(errs ? Object.values(errs).flat().join(' | ') : $t('admin.eventCategories.errorSave'), 'error')
   } finally {
     saving.value = false
   }
 }
 
 const removeGalerieItem = async (path) => {
-  const ok = await confirmRef.value?.open({ title: 'Supprimer ce fichier', message: 'Voulez-vous supprimer ce fichier de la galerie ?' })
+  const ok = await confirmRef.value?.open({ title: $t('admin.eventCategories.confirmDeleteFile'), message: $t('admin.eventCategories.confirmDeleteFileMessage') })
   if (!ok) return
   try {
     const res = await categorieEvenementService.removeGalerieItem(editingItem.value.id, path)
     editingItem.value = { ...res.data, temoignages: editingItem.value.temoignages }
   } catch {
-    showSnack('Erreur lors de la suppression', 'error')
+    showSnack($t('admin.eventCategories.errorDelete'), 'error')
   }
 }
 </script>
