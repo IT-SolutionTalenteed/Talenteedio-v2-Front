@@ -1,0 +1,38 @@
+{
+  "title": "My Profile",
+  "subtitle": "Personal information and account security",
+  "identity": {
+    "title": "Identity",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "position": "Title / Position",
+    "positionPlaceholder": "e.g.: Full Stack Developer",
+    "phone": "Phone",
+    "city": "Current city",
+    "country": "Current country"
+  },
+  "mobility": {
+    "title": "Mobility preferences",
+    "subtitle": "(used by AI matching)",
+    "desiredCountries": "Countries where I want to work",
+    "desiredCities": "Desired cities",
+    "desiredSector": "Desired activity sector",
+    "flexibleHint": "Leave empty = flexible",
+    "anySectorHint": "Leave empty = any"
+  },
+  "account": {
+    "title": "Account",
+    "email": "Email address"
+  },
+  "password": {
+    "title": "Change password",
+    "subtitle": "(leave empty to keep current)",
+    "current": "Current password",
+    "new": "New password",
+    "confirm": "Confirm"
+  },
+  "save": "Save",
+  "profileUpdated": "Profile updated",
+  "errorLoading": "Error loading profile",
+  "errorSaving": "Error"
+}
