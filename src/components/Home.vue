@@ -1050,7 +1050,6 @@ body {
   inset: 0;
   background-size: cover;
   background-position: center;
-  background-color: #f0f0f0;
   border-radius: 16px;
   z-index: 1;
 }
