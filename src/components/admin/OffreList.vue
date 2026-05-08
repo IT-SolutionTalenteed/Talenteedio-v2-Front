@@ -11,8 +11,8 @@
       </template>
     </v-toolbar>
 
-    <!-- Barre de recherche -->
-    <div class="pa-3 pb-0">
+    <!-- Barre de recherche et filtres -->
+    <div class="pa-3 pb-0 d-flex gap-3 align-center flex-wrap">
       <v-text-field
         v-model="searchInput"
         prepend-inner-icon="mdi-magnify"
@@ -25,6 +25,28 @@
         @update:model-value="onSearchChange"
         @click:clear="onClear"
       />
+      
+      <v-select
+        v-model="showArchived"
+        :items="filterOptions"
+        item-title="text"
+        item-value="value"
+        density="compact"
+        variant="outlined"
+        hide-details
+        style="max-width: 200px"
+        @update:model-value="onFilterChange"
+      />
+
+      <v-btn
+        v-if="!showArchived"
+        color="warning"
+        prepend-icon="mdi-archive"
+        variant="tonal"
+        @click="archiveAllOffres"
+      >
+        Archiver tout
+      </v-btn>
     </div>
 
     <v-data-table-server
@@ -40,8 +62,15 @@
       @update:options="onOptions"
     >
       <template #item.titre="{ item }">
-        <div class="font-weight-bold">{{ item.titre }}</div>
-        <div v-if="item.fourchette_salariale" class="text-caption text-medium-emphasis">{{ item.fourchette_salariale }}</div>
+        <div class="d-flex align-center gap-2">
+          <div>
+            <div class="font-weight-bold">{{ item.titre }}</div>
+            <div v-if="item.fourchette_salariale" class="text-caption text-medium-emphasis">{{ item.fourchette_salariale }}</div>
+          </div>
+          <v-chip v-if="item.archived_at" color="warning" size="x-small" prepend-icon="mdi-archive">
+            Archivée
+          </v-chip>
+        </div>
       </template>
 
       <template #item.date_limite="{ item }">
@@ -57,6 +86,24 @@
 
       <template #item.actions="{ item }">
         <div class="d-flex gap-1">
+          <v-btn 
+            v-if="item.archived_at"
+            icon="mdi-archive-arrow-up" 
+            size="small" 
+            color="success" 
+            variant="tonal" 
+            @click="unarchiveItem(item.id)"
+            title="Désarchiver"
+          />
+          <v-btn 
+            v-else
+            icon="mdi-archive-arrow-down" 
+            size="small" 
+            color="warning" 
+            variant="tonal" 
+            @click="archiveItem(item.id)"
+            title="Archiver"
+          />
           <v-btn icon="mdi-pencil" size="small" color="primary" variant="tonal" @click="router.push({ name: 'AdminOffreEdit', params: { id: item.id } })" />
           <v-btn icon="mdi-delete" size="small" color="error" variant="tonal" @click="deleteItem(item.id)" />
         </div>
@@ -80,6 +127,7 @@ const loading     = ref(false)
 const page        = ref(1)
 const perPage     = ref(25)
 const searchInput = ref('')
+const showArchived = ref(false)
 const confirmRef  = ref(null)
 
 let searchTimer = null
@@ -90,6 +138,11 @@ const snackColor = ref('success')
 const showSnack = (msg, color = 'success') => {
   snackMsg.value = msg; snackColor.value = color; snackbar.value = true
 }
+
+const filterOptions = [
+  { text: 'Offres actives', value: false },
+  { text: 'Offres archivées', value: true }
+]
 
 const headers = [
   { title: 'ID', key: 'id', sortable: false, width: '60px' },
@@ -104,7 +157,7 @@ const headers = [
 const loadPage = async () => {
   loading.value = true
   try {
-    const res = await offreService.getAll(page.value, perPage.value, searchInput.value)
+    const res = await offreService.getAll(page.value, perPage.value, searchInput.value, showArchived.value)
     offres.value = res.data.data
     total.value  = res.data.total
   } catch {
@@ -132,6 +185,62 @@ const onClear = () => {
   searchInput.value = ''
   page.value = 1
   loadPage()
+}
+
+const onFilterChange = () => {
+  page.value = 1
+  loadPage()
+}
+
+const archiveItem = async (id) => {
+  const ok = await confirmRef.value.open({ 
+    message: 'Archiver cette offre ? Elle ne sera plus visible publiquement mais restera accessible dans l\'administration.' 
+  })
+  if (!ok) return
+  loading.value = true
+  try {
+    await offreService.archive(id)
+    showSnack('Offre archivée avec succès')
+    await loadPage()
+  } catch (err) {
+    showSnack(err.response?.data?.message || 'Erreur lors de l\'archivage', 'error')
+  } finally {
+    loading.value = false
+  }
+}
+
+const unarchiveItem = async (id) => {
+  const ok = await confirmRef.value.open({ 
+    message: 'Désarchiver cette offre ? Elle redeviendra visible publiquement.' 
+  })
+  if (!ok) return
+  loading.value = true
+  try {
+    await offreService.unarchive(id)
+    showSnack('Offre désarchivée avec succès', 'success')
+    await loadPage()
+  } catch (err) {
+    showSnack(err.response?.data?.message || 'Erreur lors de la désarchivage', 'error')
+  } finally {
+    loading.value = false
+  }
+}
+
+const archiveAllOffres = async () => {
+  const ok = await confirmRef.value.open({ 
+    message: 'Archiver TOUTES les offres actives ? Elles ne seront plus visibles publiquement mais resteront accessibles dans l\'administration.' 
+  })
+  if (!ok) return
+  loading.value = true
+  try {
+    const res = await offreService.archiveAll()
+    showSnack(res.data.message || 'Toutes les offres ont été archivées', 'success')
+    await loadPage()
+  } catch (err) {
+    showSnack(err.response?.data?.message || 'Erreur lors de l\'archivage', 'error')
+  } finally {
+    loading.value = false
+  }
 }
 
 const deleteItem = async (id) => {

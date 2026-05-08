@@ -16,7 +16,7 @@ const toFormData = (data) => {
 }
 
 export const offreService = {
-  getAll: (page = 1, perPage = 25, search = '') => api.get(`/admin/offres?page=${page}&per_page=${perPage}&search=${encodeURIComponent(search)}`),
+  getAll: (page = 1, perPage = 25, search = '', archived = false) => api.get(`/admin/offres?page=${page}&per_page=${perPage}&search=${encodeURIComponent(search)}&archived=${archived}`),
   getById: (id) => api.get(`/admin/offres/${id}`),
   getReferentiels: () => api.get('/admin/offres-referentiels'),
   create: (data) => api.post('/admin/offres', toFormData(data), { headers: { 'Content-Type': 'multipart/form-data' } }),
@@ -25,7 +25,10 @@ export const offreService = {
     fd.append('_method', 'PUT')
     return api.post(`/admin/offres/${id}`, fd, { headers: { 'Content-Type': 'multipart/form-data' } })
   },
-  delete: (id) => api.delete(`/admin/offres/${id}`)
+  delete: (id) => api.delete(`/admin/offres/${id}`),
+  archive: (id) => api.post(`/admin/offres/${id}/archive`),
+  unarchive: (id) => api.post(`/admin/offres/${id}/unarchive`),
+  archiveAll: () => api.post('/admin/offres/archive-all')
 }
 
 export default offreService
