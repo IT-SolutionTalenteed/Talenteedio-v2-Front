@@ -1,9 +1,9 @@
 <template>
   <v-card rounded="xl" border elevation="0" class="pa-4">
     <div class="d-flex align-center justify-space-between mb-4">
-      <v-card-title class="text-h5 pa-0">Mes Articles</v-card-title>
+      <v-card-title class="text-h5 pa-0">{{ t('companyDashboard.articles.title') }}</v-card-title>
       <v-btn color="primary" variant="tonal" prepend-icon="mdi-plus" @click="router.push('/entreprise/articles/create')">
-        Rédiger un article
+        {{ t('companyDashboard.articles.writeArticle') }}
       </v-btn>
     </div>
 
@@ -24,7 +24,7 @@
 
       <template #item.is_published="{ item }">
         <v-chip size="small" :color="item.is_published ? 'success' : 'default'">
-          {{ item.is_published ? 'Publié' : 'Brouillon' }}
+          {{ item.is_published ? t('companyDashboard.articles.published') : t('companyDashboard.articles.draft') }}
         </v-chip>
       </template>
 
@@ -34,19 +34,21 @@
       </template>
 
       <template #no-data>
-        <div class="text-center py-6 text-medium-emphasis">Aucun article.</div>
+        <div class="text-center py-6 text-medium-emphasis">{{ t('companyDashboard.articles.noArticles') }}</div>
       </template>
     </v-data-table>
   </v-card>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import articleService from '../../services/entreprise/articleService.js'
 import ConfirmDialog from '../shared/ConfirmDialog.vue'
 
 const router = useRouter()
+const { t } = useI18n()
 const items = ref([])
 const loading = ref(false)
 const confirmRef = ref(null)
@@ -58,12 +60,12 @@ const showSnack = (msg, color = 'success') => {
   snackMsg.value = msg; snackColor.value = color; snackbar.value = true
 }
 
-const headers = [
-  { title: 'Image', key: 'image_url', sortable: false },
-  { title: 'Titre', key: 'title' },
-  { title: 'Publié', key: 'is_published' },
-  { title: 'Actions', key: 'actions', sortable: false, align: 'end' },
-]
+const headers = computed(() => [
+  { title: t('companyDashboard.articles.image'), key: 'image_url', sortable: false },
+  { title: t('companyDashboard.articles.titleField'), key: 'title' },
+  { title: t('companyDashboard.articles.published'), key: 'is_published' },
+  { title: t('companyDashboard.articles.actions'), key: 'actions', sortable: false, align: 'end' },
+])
 
 const load = async () => {
   loading.value = true
@@ -71,22 +73,22 @@ const load = async () => {
     const res = await articleService.getAll()
     items.value = res.data
   } catch {
-    showSnack('Erreur chargement', 'error')
+    showSnack(t('companyDashboard.articles.errorLoading'), 'error')
   } finally {
     loading.value = false
   }
 }
 
 const deleteItem = async (id) => {
-  const ok = await confirmRef.value.open({ message: 'Supprimer cet article ?' })
+  const ok = await confirmRef.value.open({ message: t('companyDashboard.articles.confirmDelete') })
   if (!ok) return
   loading.value = true
   try {
     await articleService.delete(id)
-    showSnack('Article supprimé')
+    showSnack(t('companyDashboard.articles.articleDeleted'))
     await load()
   } catch {
-    showSnack('Erreur suppression', 'error')
+    showSnack(t('companyDashboard.articles.errorDelete'), 'error')
   } finally {
     loading.value = false
   }
