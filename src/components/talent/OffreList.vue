@@ -1,6 +1,6 @@
 <template>
   <v-card rounded="xl" border elevation="0" class="pa-4">
-    <v-card-title class="text-h5 mb-4">Offres d'emploi</v-card-title>
+    <v-card-title class="text-h5 mb-4">{{ t('talentDashboard.offers.title') }}</v-card-title>
 
     <!-- Snackbar -->
     <v-snackbar v-model="snackbar" :color="snackColor" timeout="3000">{{ snackMsg }}</v-snackbar>
@@ -9,19 +9,19 @@
     <v-dialog v-model="showCandidature" max-width="560" persistent>
       <v-card rounded="xl">
         <v-card-title class="text-h6 pa-4">
-          Postuler — {{ selectedOffre?.titre }}
+          {{ t('talentDashboard.offers.apply') }}{{ selectedOffre?.titre }}
         </v-card-title>
         <v-card-text>
           <v-form @submit.prevent="postuler">
             <div class="mb-4">
-              <label class="text-body-2 font-weight-medium mb-1 d-block">CV (PDF, DOC, DOCX) *</label>
+              <label class="text-body-2 font-weight-medium mb-1 d-block">{{ t('talentDashboard.offers.cvRequired') }}</label>
               <input type="file" accept=".pdf,.doc,.docx" @change="e => cvFile = e.target.files[0]" required />
             </div>
             <v-textarea
               v-model="candidatureMessage"
-              label="Message de motivation"
+              :label="t('talentDashboard.offers.motivationMessage')"
               rows="5"
-              placeholder="Présentez-vous brièvement..."
+              :placeholder="t('talentDashboard.offers.motivationPlaceholder')"
               variant="outlined"
               density="comfortable"
             />
@@ -29,9 +29,9 @@
         </v-card-text>
         <v-card-actions class="pa-4 pt-0">
           <v-spacer />
-          <v-btn variant="text" @click="showCandidature = false">Annuler</v-btn>
+          <v-btn variant="text" @click="showCandidature = false">{{ t('commonDashboard.actions.cancel') }}</v-btn>
           <v-btn color="primary" variant="tonal" :disabled="loading || !cvFile" :loading="loading" @click="postuler">
-            Envoyer ma candidature
+            {{ t('talentDashboard.offers.sendApplication') }}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -71,7 +71,7 @@
       </template>
 
       <template #no-data>
-        <div class="text-center py-6 text-medium-emphasis">Aucune offre disponible.</div>
+        <div class="text-center py-6 text-medium-emphasis">{{ t('talentDashboard.offers.noOffers') }}</div>
       </template>
     </v-data-table>
 
@@ -88,7 +88,10 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import offreService from '../../services/talent/offreService.js'
+
+const { t } = useI18n()
 
 const offres = ref([])
 const favorisIds = ref(new Set())
@@ -109,13 +112,13 @@ const showSnack = (msg, color = 'success') => {
 }
 
 const headers = [
-  { title: 'Titre', key: 'titre' },
-  { title: 'Entreprise', key: 'entreprise.nom' },
-  { title: 'Lieu', key: 'localisation' },
-  { title: 'Salaire', key: 'fourchette_salariale' },
-  { title: 'Date limite', key: 'date_limite' },
-  { title: 'Contrats', key: 'job_contracts', sortable: false },
-  { title: 'Actions', key: 'actions', sortable: false, align: 'end' },
+  { title: t('talentDashboard.offers.title_field'), key: 'titre' },
+  { title: t('talentDashboard.offers.company'), key: 'entreprise.nom' },
+  { title: t('talentDashboard.offers.location'), key: 'localisation' },
+  { title: t('talentDashboard.offers.salary'), key: 'fourchette_salariale' },
+  { title: t('talentDashboard.offers.deadline'), key: 'date_limite' },
+  { title: t('talentDashboard.offers.contracts'), key: 'job_contracts', sortable: false },
+  { title: t('talentDashboard.offers.actions'), key: 'actions', sortable: false, align: 'end' },
 ]
 
 const loadPage = async (page = 1) => {
@@ -124,7 +127,7 @@ const loadPage = async (page = 1) => {
     const res = await offreService.getAll(page)
     offres.value = res.data.data
     pagination.value = { current_page: res.data.current_page, last_page: res.data.last_page }
-  } catch { error.value = 'Erreur chargement des offres'; showSnack('Erreur chargement des offres', 'error') }
+  } catch { error.value = t('talentDashboard.offers.errorLoading'); showSnack(t('talentDashboard.offers.errorLoading'), 'error') }
   finally { loading.value = false }
 }
 
@@ -145,11 +148,11 @@ const postuler = async () => {
     fd.append('cv', cvFile.value)
     if (candidatureMessage.value) fd.append('message', candidatureMessage.value)
     await offreService.postuler(selectedOffre.value.id, fd)
-    success.value = 'Candidature envoyée avec succès !'
+    success.value = t('talentDashboard.offers.applicationSent')
     showCandidature.value = false
-    showSnack('Candidature envoyée avec succès !')
+    showSnack(t('talentDashboard.offers.applicationSent'))
   } catch (err) {
-    error.value = err.response?.data?.message || 'Erreur lors de la candidature'
+    error.value = err.response?.data?.message || t('talentDashboard.offers.errorApplication')
     showSnack(error.value, 'error')
   } finally { loading.value = false }
 }
@@ -171,7 +174,7 @@ const toggleFavori = async (offre) => {
     }
     // Trigger reactivity
     favorisIds.value = new Set(favorisIds.value)
-  } catch { error.value = 'Erreur favoris'; showSnack('Erreur favoris', 'error') }
+  } catch { error.value = t('talentDashboard.offers.errorFavorites'); showSnack(t('talentDashboard.offers.errorFavorites'), 'error') }
 }
 
 onMounted(() => { loadPage(); loadFavoris() })
