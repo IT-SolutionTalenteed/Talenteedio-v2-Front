@@ -29,6 +29,7 @@ import ForgotPassword from '../components/ForgotPassword.vue'
 import ResetPassword from '../components/ResetPassword.vue'
 import NotFound from '../components/NotFound.vue'
 import SignalerBug from '../components/SignalerBug.vue'
+import DeleteAccount from '../components/DeleteAccount.vue'
 
 // Admin form pages
 import JobContractForm from '../components/admin/JobContractForm.vue'
@@ -149,6 +150,11 @@ const routes = [
     path: '/reset-password',
     name: 'ResetPassword',
     component: ResetPassword
+  },
+  {
+    path: '/delete-account',
+    name: 'DeleteAccount',
+    component: DeleteAccount
   },
   {
     path: '/:pathMatch(.*)*',

@@ -192,13 +192,58 @@
       </div>
 
     </v-form>
+
+    <!-- Zone danger -->
+    <v-divider class="my-6" />
+    <div>
+      <div class="text-body-2 font-weight-medium text-error mb-3">
+        <v-icon size="16" color="error" class="mr-1">mdi-alert-circle-outline</v-icon>
+        Zone de danger
+      </div>
+      <p class="text-body-2 text-medium-emphasis mb-4">
+        La suppression de votre compte est définitive. Toutes vos données (candidatures, entretiens, matchings, favoris) seront supprimées.
+      </p>
+      <v-btn color="error" variant="tonal" prepend-icon="mdi-delete-forever-outline" @click="deleteDialog = true">
+        Supprimer mon compte
+      </v-btn>
+    </div>
+
+    <!-- Dialog confirmation suppression -->
+    <v-dialog v-model="deleteDialog" max-width="440">
+      <v-card rounded="xl">
+        <v-card-title class="text-h6 pt-5 px-5">Supprimer mon compte</v-card-title>
+        <v-card-text class="px-5 pb-2">
+          <p class="text-body-2 mb-4">
+            Cette action est <strong>irréversible</strong>. Confirmez en saisissant votre mot de passe.
+          </p>
+          <v-text-field
+            v-model="deletePassword"
+            label="Mot de passe"
+            type="password"
+            variant="outlined"
+            density="comfortable"
+            :error-messages="deleteError"
+            autocomplete="current-password"
+          />
+        </v-card-text>
+        <v-card-actions class="px-5 pb-5">
+          <v-spacer />
+          <v-btn variant="text" @click="deleteDialog = false; deletePassword = ''; deleteError = ''">Annuler</v-btn>
+          <v-btn color="error" variant="tonal" :loading="deleteLoading" @click="confirmDelete">Supprimer définitivement</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
   </v-card>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import api from '../services/api.js'
+
+const router = useRouter()
 
 const { t } = useI18n()
 
@@ -210,6 +255,11 @@ const showCurrent = ref(false)
 const showNew = ref(false)
 const showConfirm = ref(false)
 const activitySectors = ref([])
+
+const deleteDialog   = ref(false)
+const deletePassword = ref('')
+const deleteError    = ref('')
+const deleteLoading  = ref(false)
 
 const form = ref({
   first_name: '', last_name: '', titre_poste: '',
@@ -249,6 +299,23 @@ onMounted(async () => {
     showSnack(t('profile.errorLoading'), 'error')
   }
 })
+
+const confirmDelete = async () => {
+  deleteError.value   = ''
+  deleteLoading.value = true
+  try {
+    await api.delete('/talent/account', { data: { password: deletePassword.value } })
+    localStorage.removeItem('token')
+    localStorage.removeItem('userRole')
+    localStorage.removeItem('userName')
+    localStorage.removeItem('userEmail')
+    router.push('/login')
+  } catch (e) {
+    deleteError.value = e.response?.status === 422 ? 'Mot de passe incorrect.' : 'Une erreur est survenue.'
+  } finally {
+    deleteLoading.value = false
+  }
+}
 
 const save = async () => {
   loading.value = true
