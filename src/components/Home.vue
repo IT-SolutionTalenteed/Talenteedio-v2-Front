@@ -5,7 +5,7 @@
     <PublicNav />
 
     <!-- ══ HERO SECTION — Style moderne inspiré de zai.html ══ -->
-    <section class="hero-modern">
+    <section v-if="event" class="hero-modern">
       <div class="container">
         <div class="hero-grid">
           <div class="hero-content">
@@ -14,18 +14,13 @@
                 {{ eventDateRange }}
               </span>
             </div>
-            
+
             <h1 class="hero-title animate-on-scroll stagger-2">
-              <span v-if="event">{{ event.titre }}</span>
-              <span v-else>
-                {{ t('home.hero.defaultTitle') }}
-                <span class="gradient-text">{{ t('home.hero.defaultLocation') }}</span>
-              </span>
+              {{ event.titre }}
             </h1>
 
             <p class="hero-description animate-on-scroll stagger-3">
-              <span v-if="event">{{ event.ville }}{{ event.pays ? ', ' + event.pays : '' }}</span>
-              <span v-else>{{ t('home.hero.defaultDescription') }}</span>
+              {{ event.ville }}{{ event.pays ? ', ' + event.pays : '' }}
             </p>
 
             <div class="hero-actions animate-on-scroll stagger-4">
@@ -415,7 +410,7 @@
         <div class="event-info-arc"></div>
         <div class="event-info-arc2"></div>
         <span class="event-date">{{ eventDateRange }}</span>
-        <h2>{{ event.titre || 'Africa Talent Summit Luxembourg' }}</h2>
+        <h2>{{ event.titre }}</h2>
         <div class="event-location" v-if="event.ville">
           <i class="fa-solid fa-location-dot"></i>
           <span>{{ event.ville }}{{ event.pays ? ', ' + event.pays : '' }}</span>
@@ -550,18 +545,17 @@ onUnmounted(() => {
 
 // ── Countdown ─────────────────────────────────────────────
 const countdownTarget = computed(() => {
-  if (event.value?.date_debut) {
-    const dateStr = event.value.date_debut.substring(0, 10)
-    const timeStr = event.value.heure_debut_journee
-      ? event.value.heure_debut_journee.substring(0, 5)
-      : '08:00'
-    return new Date(`${dateStr}T${timeStr}:00`)
-  }
-  return new Date('2026-11-05T08:00:00')
+  if (!event.value?.date_debut) return null
+  const dateStr = event.value.date_debut.substring(0, 10)
+  const timeStr = event.value.heure_debut_journee
+    ? event.value.heure_debut_journee.substring(0, 5)
+    : '08:00'
+  return new Date(`${dateStr}T${timeStr}:00`)
 })
 
 function startCountdown() {
   function tick() {
+    if (!countdownTarget.value) return
     const diff = Math.max(0, countdownTarget.value - new Date())
     const d = Math.floor(diff / 86400000)
     const h = Math.floor((diff % 86400000) / 3600000)
@@ -583,7 +577,7 @@ const heroStyle = computed(() => {
 
 // ── Computed ──────────────────────────────────────────────
 const eventDateRange = computed(() => {
-  if (!event.value) return '5 - 6 Novembre 2026'
+  if (!event.value) return ''
   const lang = locale.value === 'en' ? 'en-US' : 'fr-FR'
   const d = (str) => {
     const dt = new Date(str)
@@ -593,7 +587,7 @@ const eventDateRange = computed(() => {
     return `${d(event.value.date_debut)} – ${d(event.value.date_fin)}`
   }
   if (event.value.date_debut) return d(event.value.date_debut)
-  return '5 - 6 Novembre 2026'
+  return ''
 })
 
 // ── Utilitaires ───────────────────────────────────────────
