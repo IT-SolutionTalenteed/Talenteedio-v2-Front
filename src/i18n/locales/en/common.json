@@ -6,6 +6,7 @@
     "delete": "Delete"
   },
   "actions": {
+    "actions": "Actions",
     "save": "Save",
     "cancel": "Cancel",
     "delete": "Delete",
