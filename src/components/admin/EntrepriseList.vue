@@ -61,11 +61,11 @@
       <template #item.status="{ item }">
         <v-chip
           size="small"
-          :color="item.status === 'active' ? 'success' : 'warning'"
+          :color="item.status === 'active' ? 'success' : (item.status === 'suspended' ? 'error' : 'warning')"
           variant="tonal"
-          :prepend-icon="item.status === 'active' ? 'mdi-check-circle' : 'mdi-clock-outline'"
+          :prepend-icon="item.status === 'active' ? 'mdi-check-circle' : (item.status === 'suspended' ? 'mdi-alert-circle-outline' : 'mdi-clock-outline')"
         >
-          {{ item.status === 'active' ? t('admin.companies.activeStatus') : t('admin.companies.pendingStatus') }}
+          {{ item.status === 'active' ? t('admin.companies.activeStatus') : (item.status === 'suspended' ? 'Suspendu' : t('admin.companies.pendingStatus')) }}
         </v-chip>
       </template>
       <template #item.actions="{ item }">
@@ -97,6 +97,7 @@ const statusFilterOptions = [
   { label: t('admin.companies.allStatuses'), value: '' },
   { label: t('admin.companies.activeStatus'), value: 'active' },
   { label: t('admin.companies.pendingStatus'), value: 'pending' },
+  { label: 'Suspendu', value: 'suspended' },
 ]
 
 const snackbar = ref(false)

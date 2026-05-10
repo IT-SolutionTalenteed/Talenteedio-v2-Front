@@ -90,7 +90,7 @@
               <template #selection="{ item }">
                 <v-chip
                   size="small"
-                  :color="item.raw.value === 'active' ? 'success' : 'warning'"
+                  :color="item.raw.value === 'active' ? 'success' : (item.raw.value === 'suspended' ? 'error' : 'warning')"
                   variant="tonal"
                 >
                   {{ item.raw.label }}
@@ -99,8 +99,8 @@
               <template #item="{ props, item }">
                 <v-list-item v-bind="props">
                   <template #prepend>
-                    <v-icon :color="item.raw.value === 'active' ? 'success' : 'warning'">
-                      {{ item.raw.value === 'active' ? 'mdi-check-circle' : 'mdi-clock-outline' }}
+                    <v-icon :color="item.raw.value === 'active' ? 'success' : (item.raw.value === 'suspended' ? 'error' : 'warning')">
+                      {{ item.raw.value === 'active' ? 'mdi-check-circle' : (item.raw.value === 'suspended' ? 'mdi-alert-circle-outline' : 'mdi-clock-outline') }}
                     </v-icon>
                   </template>
                 </v-list-item>
@@ -210,6 +210,7 @@ const isEdit = computed(() => !!route.params.id)
 const statusOptions = [
   { value: 'active',  label: 'Actif' },
   { value: 'pending', label: 'En attente' },
+  { value: 'suspended', label: 'Suspendu' },
 ]
 
 const tailleOptions = ['1-10', '11-50', '51-200', '201-500', '500+']
