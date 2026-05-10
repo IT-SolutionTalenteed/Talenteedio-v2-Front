@@ -567,7 +567,7 @@ onMounted(loadReferentiels)
 .plan-card__indicator i { font-size: 16px; }
 
 /* ══ CTA RAPPEL ══ */
-.cta-section { position: sticky; top: 100px; align-self: end; }
+.cta-section { position: sticky; top: 80px; align-self: start; }
 .cta-card {
   background: #fff; border-radius: 16px; padding: 32px;
   box-shadow: 0 4px 20px rgba(0,0,0,.08); margin-bottom: 24px;
