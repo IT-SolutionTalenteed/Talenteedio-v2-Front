@@ -6,7 +6,7 @@
     "name": "Full name",
     "namePlaceholder": "Your name",
     "email": "Email",
-    "emailPlaceholder": "your.email@example.com",
+    "emailPlaceholder": "your.email{'@'}example.com",
     "type": "Bug type",
     "typeSelect": "Select a type",
     "types": {
