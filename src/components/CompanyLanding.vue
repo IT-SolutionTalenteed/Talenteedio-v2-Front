@@ -486,7 +486,6 @@ onMounted(loadReferentiels)
 /* ══ LAYOUT ══ */
 .main-content { padding: 60px 0 80px; }
 .content-layout { display: grid; grid-template-columns: 1fr 400px; gap: 40px; align-items: start; }
-@media(max-width:1024px) { .content-layout { grid-template-columns: 1fr; } .cta-section { order: -1; } }
 
 /* ══ FORMULAIRE ══ */
 .form-card {
@@ -568,7 +567,7 @@ onMounted(loadReferentiels)
 .plan-card__indicator i { font-size: 16px; }
 
 /* ══ CTA RAPPEL ══ */
-.cta-section { position: sticky; top: 100px; }
+.cta-section { position: sticky; top: 100px; align-self: end; }
 .cta-card {
   background: #fff; border-radius: 16px; padding: 32px;
   box-shadow: 0 4px 20px rgba(0,0,0,.08); margin-bottom: 24px;
@@ -590,6 +589,11 @@ onMounted(loadReferentiels)
 }
 .benefit-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; font-size: 14px; color: var(--navy); font-weight: 500; }
 .benefit-item i { color: var(--blue); font-size: 18px; flex-shrink: 0; }
+
+@media(max-width:1024px) {
+  .content-layout { grid-template-columns: 1fr; }
+  .cta-section { position: static; top: auto; }
+}
 
 /* ══ CGU CHECKBOX ══ */
 .cgu-checkbox {
