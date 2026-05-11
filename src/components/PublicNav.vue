@@ -198,9 +198,11 @@
 
           <!-- Non-connecté -->
           <template v-if="!isLoggedIn">
+            <!--
             <router-link to="/corporate-register" class="btn-nav btn-nav--sponsor">
               <i class="fa-solid fa-handshake"></i> {{ t('nav.sponsor') }}
             </router-link>
+            -->
             <router-link to="/profile-selection" class="btn-nav btn-nav--outline">{{ t('nav.subscription') }}</router-link>
             <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn-nav btn-nav--filled">{{ t('nav.login') }}</router-link>
           </template>
