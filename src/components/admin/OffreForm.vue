@@ -2,40 +2,40 @@
     <div class="d-flex align-center mb-5">
       <div class="d-flex align-center ga-2">
         <v-btn icon="mdi-arrow-left" variant="text" density="comfortable" @click="goBack" />
-        <span class="text-h6 font-weight-bold">{{ isEdit ? 'Modifier une offre' : 'Nouvelle offre' }}</span>
+        <span class="text-h6 font-weight-bold">{{ isEdit ? $t('admin.offers.editOffer') : $t('admin.offers.newOffer') }}</span>
       </div>
     </div>
     <v-card rounded="xl" border elevation="0">
       <v-card-text class="pa-6">
         <v-row>
           <v-col cols="12" md="6">
-            <v-text-field v-model="form.titre" label="Titre *" variant="outlined" density="compact" required />
+            <v-text-field v-model="form.titre" :label="$t('admin.offers.titleRequired')" variant="outlined" density="compact" required />
           </v-col>
           <v-col cols="12" md="6">
-            <v-text-field v-model="form.localisation" label="Localisation" variant="outlined" density="compact" />
+            <v-text-field v-model="form.localisation" :label="$t('admin.offers.location')" variant="outlined" density="compact" />
           </v-col>
 
           <v-col cols="12">
-            <div class="text-caption text-medium-emphasis mb-1">Client</div>
+            <div class="text-caption text-medium-emphasis mb-1">{{ $t('admin.offers.client') }}</div>
             <WysiwygEditor v-model="form.client" />
           </v-col>
 
           <v-col cols="12" md="6">
-            <v-text-field v-model="form.salaire_min" label="Salaire minimum" type="number" placeholder="ex: 35000" variant="outlined" density="compact" />
+            <v-text-field v-model="form.salaire_min" :label="$t('admin.offers.salaryMin')" type="number" placeholder="ex: 35000" variant="outlined" density="compact" />
           </v-col>
           <v-col cols="12" md="6">
-            <v-text-field v-model="form.salaire_max" label="Salaire maximum" type="number" placeholder="ex: 45000" variant="outlined" density="compact" />
+            <v-text-field v-model="form.salaire_max" :label="$t('admin.offers.salaryMax')" type="number" placeholder="ex: 45000" variant="outlined" density="compact" />
           </v-col>
           <v-col cols="12" md="6">
-            <v-text-field v-model="form.date_mise_en_ligne" label="Date de mise en ligne" type="date" variant="outlined" density="compact" />
+            <v-text-field v-model="form.date_mise_en_ligne" :label="$t('admin.offers.publishDate')" type="date" variant="outlined" density="compact" />
           </v-col>
           <v-col cols="12" md="6">
-            <v-text-field v-model="form.date_limite" label="Date limite" type="date" variant="outlined" density="compact" />
+            <v-text-field v-model="form.date_limite" :label="$t('admin.offers.deadline')" type="date" variant="outlined" density="compact" />
           </v-col>
 
           <!-- Image de fond -->
           <v-col cols="12">
-            <div class="text-caption text-medium-emphasis mb-2">Image de fond de la carte</div>
+            <div class="text-caption text-medium-emphasis mb-2">{{ $t('admin.offers.cardBackgroundImage') }}</div>
             <div class="d-flex align-center ga-4 flex-wrap">
               <v-img
                 v-if="imagePreview"
@@ -48,36 +48,36 @@
               />
               <div>
                 <v-btn variant="tonal" prepend-icon="mdi-upload" @click="$refs.imageInput.click()">
-                  {{ imagePreview ? 'Changer l\'image' : 'Ajouter une image' }}
+                  {{ imagePreview ? $t('admin.offers.changeImage') : $t('admin.offers.addImage') }}
                 </v-btn>
                 <v-btn v-if="imagePreview" variant="text" color="error" icon="mdi-delete" class="ml-2" @click="removeImage" />
                 <input ref="imageInput" type="file" accept="image/*" style="display:none" @change="handleImageChange" />
-                <div class="text-caption text-medium-emphasis mt-1">JPG, PNG, WebP — max 2 Mo</div>
+                <div class="text-caption text-medium-emphasis mt-1">{{ $t('admin.offers.imageFormatHint') }}</div>
               </div>
             </div>
           </v-col>
 
           <v-col cols="12">
-            <div class="text-caption text-medium-emphasis mb-1">Mission</div>
+            <div class="text-caption text-medium-emphasis mb-1">{{ $t('admin.offers.mission') }}</div>
             <WysiwygEditor v-model="form.mission" />
           </v-col>
           <v-col cols="12">
-            <div class="text-caption text-medium-emphasis mb-1">Profil recherché</div>
+            <div class="text-caption text-medium-emphasis mb-1">{{ $t('admin.offers.profileSought') }}</div>
             <WysiwygEditor v-model="form.profil_recherche" />
           </v-col>
           <v-col cols="12">
-            <div class="text-caption text-medium-emphasis mb-1">À propos</div>
+            <div class="text-caption text-medium-emphasis mb-1">{{ $t('admin.offers.about') }}</div>
             <WysiwygEditor v-model="form.a_propos" />
           </v-col>
           <v-col cols="12">
-            <div class="text-caption text-medium-emphasis mb-1">Description</div>
+            <div class="text-caption text-medium-emphasis mb-1">{{ $t('admin.offers.description') }}</div>
             <WysiwygEditor v-model="form.description" />
           </v-col>
 
           <v-col cols="12" md="6">
             <ComboboxMultiple
               v-model="form.job_contract_ids"
-              label="Contrats de travail"
+              :label="$t('admin.offers.workContracts')"
               :items="referentiels.job_contracts"
             />
           </v-col>
@@ -85,7 +85,7 @@
           <v-col cols="12" md="6">
             <ComboboxMultiple
               v-model="form.job_mode_ids"
-              label="Modes de travail"
+              :label="$t('admin.offers.workModes')"
               :items="referentiels.job_modes"
             />
           </v-col>
@@ -93,7 +93,7 @@
           <v-col cols="12" md="6">
             <ComboboxMultiple
               v-model="form.skill_ids"
-              label="Compétences requises"
+              :label="$t('admin.offers.requiredSkills')"
               :items="referentiels.skills"
             />
           </v-col>
@@ -101,7 +101,7 @@
           <v-col cols="12" md="6">
             <ComboboxMultiple
               v-model="form.experience_ids"
-              label="Expériences requises"
+              :label="$t('admin.offers.requiredExperiences')"
               :items="referentiels.experiences"
             />
           </v-col>
@@ -109,7 +109,7 @@
           <v-col cols="12" md="6">
             <ComboboxMultiple
               v-model="form.study_level_ids"
-              label="Formations requises"
+              :label="$t('admin.offers.requiredEducation')"
               :items="referentiels.study_levels"
             />
           </v-col>
@@ -117,7 +117,7 @@
           <v-col cols="12" md="6">
             <ComboboxMultiple
               v-model="form.language_ids"
-              label="Langues"
+              :label="$t('admin.offers.languages')"
               :items="referentiels.languages"
             />
           </v-col>
@@ -125,7 +125,7 @@
       </v-card-text>
       <v-card-actions class="pa-4 pt-2 justify-end">
         <v-btn color="primary" :loading="saving" @click="save" prepend-icon="mdi-content-save-outline" size="large">
-          Enregistrer
+          {{ $t('admin.offers.save') }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -135,10 +135,13 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import WysiwygEditor from '../WysiwygEditor.vue'
 import ComboboxMultiple from '../shared/ComboboxMultiple.vue'
 import offreService from '../../services/offreService.js'
 import api from '../../services/api.js'
+
+const { t: $t } = useI18n()
 
 const route = useRoute()
 const router = useRouter()
@@ -217,7 +220,7 @@ const loadReferentiels = async () => {
     const res = await api.get('/public/referentiels')
     referentiels.value = res.data
   } catch (err) {
-    console.error('Erreur chargement référentiels:', err)
+    console.error($t('admin.offers.errorLoadingReferentials'), err)
   }
 }
 
@@ -270,7 +273,7 @@ const loadOffre = async () => {
       if (offre.image_url) imagePreview.value = offre.image_url
     }
   } catch (err) {
-    showSnack('Erreur lors du chargement', 'error')
+    showSnack($t('admin.offers.errorLoading'), 'error')
     console.error(err)
   }
 }
@@ -280,15 +283,15 @@ const save = async () => {
   try {
     if (isEdit.value) {
       await offreService.update(route.params.id, form.value)
-      showSnack('Offre modifiée avec succès')
+      showSnack($t('admin.offers.offerUpdated'))
     } else {
       await offreService.create(form.value)
-      showSnack('Offre créée avec succès')
+      showSnack($t('admin.offers.offerCreated'))
     }
     setTimeout(() => goBack(), 1000)
   } catch (err) {
     const errs = err.response?.data?.errors
-    const msg = errs ? Object.values(errs).flat().join(' | ') : err.response?.data?.message || "Erreur lors de l'enregistrement"
+    const msg = errs ? Object.values(errs).flat().join(' | ') : err.response?.data?.message || $t('admin.offers.errorSaving')
     showSnack(msg, 'error')
   } finally {
     saving.value = false
