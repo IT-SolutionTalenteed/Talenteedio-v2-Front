@@ -66,6 +66,19 @@
   "home": {
     "tagline": "Your recruitment platform"
   },
+  "loading": "Loading...",
+  "search": "Search",
+  "reset": "Reset",
+  "filteredBy": "Filtered by",
+  "share": {
+    "title": "Share",
+    "facebook": "Share on Facebook",
+    "twitter": "Share on X",
+    "linkedin": "Share on LinkedIn",
+    "copyLink": "Copy link",
+    "copy": "Copy",
+    "copied": "Copied"
+  },
   "favorites": {
     "title": "My favorites",
     "empty": "No favorite offers",
