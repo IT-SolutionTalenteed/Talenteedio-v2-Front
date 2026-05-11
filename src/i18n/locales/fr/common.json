@@ -66,6 +66,19 @@
   "home": {
     "tagline": "Votre plateforme de recrutement"
   },
+  "loading": "Chargement...",
+  "search": "Rechercher",
+  "reset": "Réinitialiser",
+  "filteredBy": "Filtré par",
+  "share": {
+    "title": "Partager",
+    "facebook": "Partager sur Facebook",
+    "twitter": "Partager sur X",
+    "linkedin": "Partager sur LinkedIn",
+    "copyLink": "Copier le lien",
+    "copy": "Copier",
+    "copied": "Copié"
+  },
   "favorites": {
     "title": "Mes favoris",
     "empty": "Aucune offre en favori",
