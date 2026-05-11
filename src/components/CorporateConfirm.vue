@@ -147,16 +147,6 @@
       </div>
     </section>
 
-    <!-- ══ FOOTER MINIMAL ══ -->
-    <div class="footer-bottom" style="background:var(--navy)">
-      <div class="container">
-        <p style="color:rgba(255,255,255,.5);font-size:12px;text-align:center;padding:16px 0">
-          © {{ currentYear }}
-          {{ t('corporateConfirm.footer.copyright') }}
-        </p>
-      </div>
-    </div>
-
     <Footer />
   </div>
 </template>
