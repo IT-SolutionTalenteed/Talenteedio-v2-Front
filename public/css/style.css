@@ -102,6 +102,11 @@ p { margin-bottom: 1em; }
   top: 0;
   z-index: 1000;
   box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  text-transform: uppercase;
+}
+
+.site-header * {
+  text-transform: uppercase;
 }
 .header-inner {
   display: flex;
