@@ -25,10 +25,10 @@
     "heroDesc": "Meet the companies that are hiring"
   },
   "countdown": {
-    "days": "days",
-    "hours": "hours",
-    "minutes": "minutes",
-    "seconds": "seconds"
+    "days": "d",
+    "hours": "h",
+    "minutes": "min",
+    "seconds": "sec"
   },
   "language": {
     "french": "Français",
