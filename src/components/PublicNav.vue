@@ -611,6 +611,11 @@ onUnmounted(() => {
   box-shadow: 0 1px 0 #e0e4ef;
   transition: box-shadow .25s;
   font-family: 'Open Sans', sans-serif;
+  text-transform: uppercase;
+}
+
+.site-header * {
+  text-transform: uppercase;
 }
 .site-header--scrolled {
   box-shadow: 0 4px 24px rgba(0,35,90,.10);
