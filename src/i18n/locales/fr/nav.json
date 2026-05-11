@@ -25,10 +25,10 @@
     "heroDesc": "Rencontrez les entreprises qui recrutent"
   },
   "countdown": {
-    "days": "jours",
-    "hours": "heures",
-    "minutes": "minutes",
-    "seconds": "secondes"
+    "days": "j",
+    "hours": "h",
+    "minutes": "min",
+    "seconds": "sec"
   },
   "language": {
     "french": "Français",
