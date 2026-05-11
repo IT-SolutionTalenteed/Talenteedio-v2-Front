@@ -111,8 +111,8 @@ const i18n = createI18n({
     fr,
     en
   },
-  silentTranslationWarn: true,
-  silentFallbackWarn: true,
+  missingWarn: false,
+  fallbackWarn: false,
   warnHtmlMessage: false,
   escapeParameter: false
 })
