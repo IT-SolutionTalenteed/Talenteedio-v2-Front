@@ -1,15 +1,17 @@
 <template>
   <div class="page-wrapper">
     <PublicNav />
-    
+
+    <section class="hero-section">
+      <div class="container">
+        <span class="hero-label">{{ t('bugReport.label') }}</span>
+        <h1 class="hero-title">{{ t('bugReport.title') }}</h1>
+        <p class="hero-desc">{{ t('bugReport.description') }}</p>
+      </div>
+    </section>
+
     <div class="bug-report-page">
       <div class="container">
-        <div class="bug-report-header">
-          <span class="label-blue">{{ t('bugReport.label') }}</span>
-          <h1>{{ t('bugReport.title') }}</h1>
-          <p>{{ t('bugReport.description') }}</p>
-        </div>
-
         <div class="bug-report-form-wrapper">
           <form @submit.prevent="submitReport" class="bug-report-form">
             <!-- Nom -->
@@ -198,34 +200,32 @@ const submitReport = async () => {
 </script>
 
 <style scoped>
-.bug-report-page {
-  min-height: 80vh;
-  padding: 80px 0;
-  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+.hero-section {
+  background: linear-gradient(135deg, #00235a 0%, #1a3a8a 100%);
+  padding: 80px 0 60px;
+  position: relative;
+  overflow: hidden;
 }
 
-.bug-report-header {
+.hero-section .container {
   text-align: center;
-  margin-bottom: 60px;
 }
 
-.bug-report-header h1 {
-  font-size: 42px;
-  font-weight: 800;
-  color: var(--navy);
-  margin: 12px 0 16px;
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(58, 155, 255, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
 }
 
-.bug-report-header p {
-  font-size: 18px;
-  color: var(--body-text);
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.label-blue {
+.hero-label {
   display: inline-block;
-  background: var(--blue);
+  background: rgba(255, 255, 255, 0.15);
   color: #fff;
   font-size: 11px;
   font-weight: 700;
@@ -233,6 +233,31 @@ const submitReport = async () => {
   text-transform: uppercase;
   padding: 4px 14px;
   border-radius: 50px;
+  margin-bottom: 14px;
+}
+
+.hero-title {
+  font-family: 'Sarun Pro', sans-serif;
+  font-size: 48px;
+  font-weight: 900;
+  color: #fff;
+  margin: 0 0 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.hero-desc {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 760px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.bug-report-page {
+  min-height: 80vh;
+  padding: 56px 0 80px;
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
 }
 
 .bug-report-form-wrapper {
@@ -408,12 +433,16 @@ const submitReport = async () => {
 }
 
 @media (max-width: 968px) {
+  .hero-title {
+    font-size: 36px;
+  }
+
+  .hero-desc {
+    font-size: 16px;
+  }
+
   .bug-report-form-wrapper {
     grid-template-columns: 1fr;
-  }
-  
-  .bug-report-header h1 {
-    font-size: 32px;
   }
   
   .bug-report-form {
