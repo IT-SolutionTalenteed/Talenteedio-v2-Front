@@ -52,7 +52,7 @@ import enCommonDashboard from './locales/en/common.json'
 
 // Merge translations with proper nesting
 const fr = {
-  ...frCommon,
+  common: frCommon,
   home: frHome,
   annonces: frAnnonces,
   auth: frAuth,
@@ -78,7 +78,7 @@ const fr = {
 }
 
 const en = {
-  ...enCommon,
+  common: enCommon,
   home: enHome,
   annonces: enAnnonces,
   auth: enAuth,
