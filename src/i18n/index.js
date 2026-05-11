@@ -52,6 +52,17 @@ import enCommonDashboard from './locales/en/common.json'
 
 // Merge translations with proper nesting
 const fr = {
+  'language.french': 'Français',
+  'language.english': 'Anglais',
+  share: {
+    title: 'Partager',
+    facebook: 'Partager sur Facebook',
+    twitter: 'Partager sur X',
+    linkedin: 'Partager sur LinkedIn',
+    copyLink: 'Copier le lien',
+    copy: 'Copier',
+    copied: 'Copié'
+  },
   common: frCommon,
   home: frHome,
   annonces: frAnnonces,
@@ -78,6 +89,17 @@ const fr = {
 }
 
 const en = {
+  'language-french': 'French',
+  'language-english': 'English',
+  share: {
+    title: 'Share',
+    facebook: 'Share on Facebook',
+    twitter: 'Share on X',
+    linkedin: 'Share on LinkedIn',
+    copyLink: 'Copy link',
+    copy: 'Copy',
+    copied: 'Copied'
+  },
   common: enCommon,
   home: enHome,
   annonces: enAnnonces,
