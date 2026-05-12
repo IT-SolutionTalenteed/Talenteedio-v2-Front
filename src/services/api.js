@@ -17,6 +17,10 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
+    const loc = typeof localStorage !== 'undefined'
+      ? (localStorage.getItem('locale') || 'fr')
+      : 'fr'
+    config.headers['X-Locale'] = loc === 'en' ? 'en' : 'fr'
     return config
   },
   (error) => {
