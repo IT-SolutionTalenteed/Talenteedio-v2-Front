@@ -162,7 +162,7 @@
             </div>
 
             <!-- Badge Nouveau (moins de 24h) -->
-            <span v-if="isNew(offre.created_at)" class="badge-new">{{ t('annonces.new') }}</span>
+            <span v-if="isNew(offre.created_at)" class="badge-new">{{ t('annonces.card.new') }}</span>
 
             <!-- Header carte : logo + entreprise -->
             <div class="offre-head">
