@@ -286,7 +286,13 @@
           <!-- Articles dynamiques (3 premiers) -->
           <div v-for="(article, index) in articles.slice(0, 3)" :key="article.id" class="triple-card animate-on-scroll" :class="`stagger-${index + 1}`">
             <div class="triple-card-img">
-              <img v-if="article.image_url" :src="article.image_url" :alt="article.title" loading="lazy">
+              <LoadedImage
+                v-if="article.image_url"
+                :src="article.image_url"
+                :alt="article.title"
+                loading="lazy"
+                :img-style="{ width: '100%', height: '100%', objectFit: 'cover' }"
+              />
               <div v-else class="triple-card-placeholder">
                 <i class="fa-solid fa-newspaper"></i>
               </div>
@@ -323,13 +329,17 @@
           >
             <!-- Image de l'offre -->
             <div v-if="offre.image_url" class="job-visual">
-              <div class="job-bg" :style="`background-image:url('${offre.image_url}')`"></div>
+              <DeferredCoverBackground :image-url="offre.image_url" />
             </div>
 
             <!-- Header : logo + entreprise + deadline -->
             <div class="job-head">
               <div class="job-logo">
-                <img v-if="offre.entreprise?.logo_url" :src="offre.entreprise.logo_url" :alt="offre.entreprise.nom" />
+                <LoadedImage
+                  v-if="offre.entreprise?.logo_url"
+                  :src="offre.entreprise.logo_url"
+                  :alt="offre.entreprise.nom"
+                />
                 <span v-else class="job-logo-initial">{{ offre.entreprise ? offre.entreprise.nom.charAt(0) : '?' }}</span>
               </div>
               <div class="job-company-info">
@@ -482,6 +492,8 @@ import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
+import LoadedImage from './shared/LoadedImage.vue'
+import DeferredCoverBackground from './shared/DeferredCoverBackground.vue'
 
 const { t, locale } = useI18n()
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
@@ -2614,13 +2626,6 @@ section {
   position: relative;
   border-radius: 16px 16px 0 0;
   overflow: hidden;
-}
-
-.job-bg {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
 }
 
 .job-head {
