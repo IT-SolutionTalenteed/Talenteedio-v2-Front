@@ -33,7 +33,12 @@
           class="featured-post"
         >
           <div class="featured-image">
-            <img v-if="featuredArticle.image_url" :src="featuredArticle.image_url" :alt="featuredArticle.title" />
+            <LoadedImage
+              v-if="featuredArticle.image_url"
+              :src="featuredArticle.image_url"
+              :alt="featuredArticle.title"
+              :img-style="{ width: '100%', height: '100%', objectFit: 'cover' }"
+            />
             <div v-else class="featured-image-placeholder"><i class="fa-solid fa-newspaper"></i></div>
             <span class="featured-tag">{{ t('blog.featured') }}</span>
           </div>
@@ -109,7 +114,13 @@
                 class="blog-card"
               >
                 <div class="blog-card-img">
-                  <img v-if="a.image_url" :src="a.image_url" :alt="a.title" />
+                  <LoadedImage
+                    v-if="a.image_url"
+                    :src="a.image_url"
+                    :alt="a.title"
+                    loading="lazy"
+                    :img-style="{ width: '100%', height: '100%', objectFit: 'cover' }"
+                  />
                   <div v-else class="blog-card-img-placeholder">
                     <i class="fa-regular fa-image"></i>
                   </div>
@@ -190,7 +201,12 @@
                   class="popular-post"
                 >
                   <div class="popular-thumb">
-                    <img v-if="a.image_url" :src="a.image_url" :alt="a.title" />
+                    <LoadedImage
+                      v-if="a.image_url"
+                      :src="a.image_url"
+                      :alt="a.title"
+                      :img-style="{ width: '100%', height: '100%', objectFit: 'cover' }"
+                    />
                     <i v-else class="fa-solid fa-newspaper"></i>
                   </div>
                   <div class="popular-info">
@@ -223,6 +239,7 @@ import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
+import LoadedImage from './shared/LoadedImage.vue'
 
 const { t, locale } = useI18n()
 const apiBase        = import.meta.env.VITE_API_URL || 'http://localhost:8000'
