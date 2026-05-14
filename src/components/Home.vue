@@ -93,18 +93,19 @@
             <span v-else class="logo-initial">{{ entreprise.nom.charAt(0).toUpperCase() }}</span>
             <span class="logo-name">{{ entreprise.nom }}</span>
           </router-link>
-          <!-- Set B — duplication pour boucle infinie (translateX -50%) -->
-          <router-link
-            v-for="(entreprise, i) in carouselSlides"
-            :key="`b${i}`"
-            to="/entreprises"
-            class="logo-item"
-            aria-hidden="true"
-          >
-            <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom" class="logo-img">
-            <span v-else class="logo-initial">{{ entreprise.nom.charAt(0).toUpperCase() }}</span>
-            <span class="logo-name">{{ entreprise.nom }}</span>
-          </router-link>
+          <!-- Set B — duplication pour boucle infinie (inert = pas au clavier / pas annoncé 2×) -->
+          <div class="logo-track-duplicate" inert>
+            <router-link
+              v-for="(entreprise, i) in carouselSlides"
+              :key="`b${i}`"
+              to="/entreprises"
+              class="logo-item"
+            >
+              <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom" class="logo-img">
+              <span v-else class="logo-initial">{{ entreprise.nom.charAt(0).toUpperCase() }}</span>
+              <span class="logo-name">{{ entreprise.nom }}</span>
+            </router-link>
+          </div>
         </div>
       </div>
       <div class="partners-cta animate-on-scroll">
@@ -1942,6 +1943,9 @@ section {
   width: max-content;
   animation: marquee 32s linear infinite;
 }
+.logo-track-duplicate {
+  display: contents;
+}
 .logo-track:hover { animation-play-state: paused; }
 @keyframes marquee {
   from { transform: translateX(0); }
@@ -2358,6 +2362,9 @@ section {
   gap: 0;
   width: max-content;
   animation: marquee 32s linear infinite;
+}
+.logo-track-duplicate {
+  display: contents;
 }
 
 .logo-track:hover { 
