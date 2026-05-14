@@ -18,8 +18,20 @@
 
     <template v-else>
 
-      <!-- ══ HERO ══ -->
-      <section class="artd-hero" :style="article.image_url ? { backgroundImage: `url('${article.image_url}')` } : {}">
+      <!-- ══ HERO (fond photo seulement une fois l’image entièrement chargée) ══ -->
+      <section
+        class="artd-hero"
+        :style="article.image_url && heroBgVisible ? { backgroundImage: `url('${article.image_url}')` } : {}"
+      >
+        <img
+          v-if="article.image_url"
+          :key="article.image_url"
+          :src="article.image_url"
+          alt=""
+          class="artd-hero-probe"
+          @load="heroBgVisible = true"
+          @error="heroBgVisible = true"
+        />
         <div class="artd-hero-overlay"></div>
         <div class="container">
           <div class="artd-hero-content">
@@ -66,7 +78,11 @@
                 <h3 class="artd-side-title">{{ t('blog.detail.publishedBy') }}</h3>
                 <div class="artd-author">
                   <div class="artd-author-logo">
-                    <img v-if="article.entreprise.logo_url" :src="article.entreprise.logo_url" :alt="article.entreprise.nom" />
+                    <LoadedImage
+                      v-if="article.entreprise.logo_url"
+                      :src="article.entreprise.logo_url"
+                      :alt="article.entreprise.nom"
+                    />
                     <span v-else>{{ article.entreprise.nom.charAt(0) }}</span>
                   </div>
                   <div>
@@ -138,6 +154,7 @@ import axios from 'axios'
 import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
 import ShareCard from './ShareCard.vue'
+import LoadedImage from './shared/LoadedImage.vue'
 import { useMeta } from '../composables/useMeta'
 
 const { t, locale } = useI18n()
@@ -146,6 +163,15 @@ const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const route   = useRoute()
 const article = ref(null)
 const loading = ref(true)
+const heroBgVisible = ref(false)
+
+watch(
+  () => article.value?.image_url,
+  (url) => {
+    heroBgVisible.value = !url
+  },
+  { immediate: true },
+)
 
 const load = async () => {
   loading.value = true
@@ -213,6 +239,14 @@ onUnmounted(() => {
   background: linear-gradient(135deg, #192bc2 0%, #2687e9 100%);
   background-size: cover; background-position: center;
   min-height: 320px; display: flex; align-items: flex-end;
+}
+.artd-hero-probe {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  border: 0;
 }
 .artd-hero-overlay {
   position: absolute; inset: 0;
