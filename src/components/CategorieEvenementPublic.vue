@@ -5,6 +5,15 @@
 
     <!-- ══ HERO ══ -->
     <section class="cat-hero" :style="heroStyle">
+      <img
+        v-if="categorie.image_url"
+        :key="categorie.image_url"
+        :src="categorie.image_url"
+        alt=""
+        class="cat-hero-probe"
+        @load="heroBgVisible = true"
+        @error="heroBgVisible = true"
+      />
       <div class="cat-hero-overlay"></div>
       <div class="container">
         <div class="cat-hero-content fade-in">
@@ -52,7 +61,13 @@
         <div class="cat-events-grid fade-in">
           <div v-for="ev in categorie.evenements" :key="ev.id" class="cat-event-card">
             <div class="cat-event-img">
-              <img v-if="ev.image_mise_en_avant_url" :src="ev.image_mise_en_avant_url" :alt="ev.titre" loading="lazy" />
+              <LoadedImage
+                v-if="ev.image_mise_en_avant_url"
+                :src="ev.image_mise_en_avant_url"
+                :alt="ev.titre"
+                loading="lazy"
+                :img-style="{ width: '100%', height: '100%', objectFit: 'cover' }"
+              />
               <div v-else class="cat-event-img-placeholder">
                 <i class="fa-solid fa-calendar-days"></i>
               </div>
@@ -77,7 +92,13 @@
                 <span class="cat-event-entreprises-label">{{ t('evenements.card.recruiters') }}</span>
                 <div class="cat-event-logos">
                   <template v-for="ent in ev.entreprises.slice(0,5)" :key="ent.id">
-                    <img v-if="ent.logo_url" :src="ent.logo_url" :alt="ent.nom" class="cat-ent-logo" :title="ent.nom" />
+                    <LoadedImage
+                      v-if="ent.logo_url"
+                      :src="ent.logo_url"
+                      :alt="ent.nom"
+                      img-class="cat-ent-logo"
+                      :title="ent.nom"
+                    />
                     <span v-else class="cat-ent-initials" :title="ent.nom">{{ ent.nom.charAt(0) }}</span>
                   </template>
                   <span v-if="ev.entreprises.length > 5" class="cat-ent-more">+{{ ev.entreprises.length - 5 }}</span>
@@ -133,7 +154,12 @@
             <div class="temoignage-quote"><i class="fa-solid fa-quote-left"></i></div>
             <p class="temoignage-contenu">{{ t.contenu }}</p>
             <div class="temoignage-author">
-              <img v-if="t.avatar_url" :src="t.avatar_url" :alt="t.auteur" class="temoignage-avatar" />
+              <LoadedImage
+                v-if="t.avatar_url"
+                :src="t.avatar_url"
+                :alt="t.auteur"
+                img-class="temoignage-avatar"
+              />
               <div v-else class="temoignage-avatar-placeholder">{{ t.auteur?.charAt(0) }}</div>
               <div>
                 <div class="temoignage-name">{{ t.auteur }}</div>
@@ -183,6 +209,7 @@ import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
+import LoadedImage from './shared/LoadedImage.vue'
 
 const { t, locale } = useI18n()
 const apiBase   = import.meta.env.VITE_API_URL || 'http://localhost:8000'
@@ -190,9 +217,18 @@ const route     = useRoute()
 const categorie = ref(null)
 const loading   = ref(true)
 const openFaq   = ref(null)
+const heroBgVisible = ref(false)
+
+watch(
+  () => categorie.value?.image_url,
+  (url) => {
+    heroBgVisible.value = !url
+  },
+  { immediate: true },
+)
 
 const heroStyle = computed(() => {
-  if (categorie.value?.image_url) {
+  if (categorie.value?.image_url && heroBgVisible.value) {
     return { '--cat-bg': `url('${categorie.value.image_url}')` }
   }
   return {}
@@ -276,6 +312,14 @@ onMounted(() => load(route.params.id))
 .cat-hero-overlay {
   position: absolute; inset: 0;
   background: rgba(0, 0, 0, 0.3);
+}
+.cat-hero-probe {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  border: 0;
 }
 .cat-hero-content { 
   position: relative; 
