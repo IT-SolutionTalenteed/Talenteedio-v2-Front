@@ -10,20 +10,48 @@
       </template>
     </v-toolbar>
 
-    <!-- Barre de recherche -->
+    <!-- Barre de recherche et filtres -->
     <div class="pa-3 pb-0">
-      <v-text-field
-        v-model="searchInput"
-        prepend-inner-icon="mdi-magnify"
-        :placeholder="t('admin.talents.searchPlaceholder')"
-        density="compact"
-        variant="outlined"
-        clearable
-        hide-details
-        style="max-width: 420px"
-        @update:model-value="onSearchChange"
-        @click:clear="onClear"
-      />
+      <div class="d-flex flex-wrap gap-3 align-center">
+        <v-text-field
+          v-model="searchInput"
+          prepend-inner-icon="mdi-magnify"
+          :placeholder="t('admin.talents.searchPlaceholder')"
+          density="compact"
+          variant="outlined"
+          clearable
+          hide-details
+          style="max-width: 420px"
+          @update:model-value="onSearchChange"
+          @click:clear="onClear"
+        />
+        
+        <v-select
+          v-model="sortBy"
+          :items="sortOptions"
+          item-title="label"
+          item-value="value"
+          :label="t('admin.talents.sortBy')"
+          density="compact"
+          variant="outlined"
+          hide-details
+          style="min-width: 200px"
+          @update:model-value="onSortChange"
+        />
+        
+        <v-select
+          v-model="sortOrder"
+          :items="sortOrderOptions"
+          item-title="label"
+          item-value="value"
+          :label="t('admin.talents.order')"
+          density="compact"
+          variant="outlined"
+          hide-details
+          style="min-width: 150px"
+          @update:model-value="onSortChange"
+        />
+      </div>
     </div>
 
     <v-data-table-server
@@ -40,7 +68,10 @@
     >
       <template #item.name="{ item }">
         <div class="font-weight-bold">{{ item.name }}</div>
-        <div v-if="item.titre_poste" class="text-caption text-medium-emphasis">{{ item.titre_poste }}</div>
+      </template>
+
+      <template #item.titre_poste="{ item }">
+        <span class="text-medium-emphasis">{{ item.titre_poste || '—' }}</span>
       </template>
 
       <template #item.role="{ item }">
@@ -120,6 +151,8 @@ const loading    = ref(false)
 const page       = ref(1)
 const perPage    = ref(25)
 const searchInput = ref('')
+const sortBy     = ref('created_at')
+const sortOrder  = ref('desc')
 const confirmRef = ref(null)
 
 let searchTimer = null
@@ -131,9 +164,21 @@ const showSnack = (msg, color = 'success') => {
   snackMsg.value = msg; snackColor.value = color; snackbar.value = true
 }
 
+const sortOptions = [
+  { value: 'created_at', label: t('admin.talents.sortByRegistrationDate') },
+  { value: 'name', label: t('admin.talents.sortByAlphabetical') },
+  { value: 'titre_poste', label: t('admin.talents.sortByJob') },
+]
+
+const sortOrderOptions = [
+  { value: 'asc', label: t('admin.talents.ascending') },
+  { value: 'desc', label: t('admin.talents.descending') },
+]
+
 const headers = [
   { title: t('admin.talents.name'), key: 'name', sortable: false },
   { title: t('admin.talents.email'), key: 'email', sortable: false },
+  { title: t('admin.talents.job'), key: 'titre_poste', sortable: false },
   { title: t('admin.talents.role'), key: 'role', sortable: false },
   { title: t('admin.talents.location'), key: 'localisation', sortable: false },
   { title: t('admin.talents.source'), key: 'source_provenance', sortable: false },
@@ -156,7 +201,7 @@ const statutOptions = [
 const loadPage = async () => {
   loading.value = true
   try {
-    const res = await talentService.getAll(page.value, perPage.value, searchInput.value)
+    const res = await talentService.getAll(page.value, perPage.value, searchInput.value, sortBy.value, sortOrder.value)
     talents.value = res.data.data
     total.value   = res.data.total
   } catch {
@@ -184,6 +229,11 @@ const onSearchChange = () => {
 
 const onClear = () => {
   searchInput.value = ''
+  page.value = 1
+  loadPage()
+}
+
+const onSortChange = () => {
   page.value = 1
   loadPage()
 }
