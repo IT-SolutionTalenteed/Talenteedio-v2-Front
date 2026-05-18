@@ -208,54 +208,168 @@
               </div>
             </div>
 
-            <!-- Étape 2: Formulaire Entreprise (simple) -->
+            <!-- Étape 2: Formulaire Entreprise (complet comme CompanyLanding) -->
             <div v-else-if="step === 2 && selectedProfile === 'entreprise'">
               <button class="btn-back" @click="step = 1">
                 <i class="fa-solid fa-arrow-left"></i> {{ t('auth.register.back') || 'Retour' }}
               </button>
 
               <form @submit.prevent="handleCompanyRegister" class="register-form">
-                <div class="form-fields">
-                  <div class="form-group">
-                    <label>{{ t('auth.register.companyName') || 'Nom de l\'entreprise' }} *</label>
-                    <input 
-                      v-model="form.nom" 
-                      type="text" 
-                      required 
-                      :placeholder="t('auth.register.companyNamePlaceholder') || 'Nom de votre entreprise'"
-                    />
-                  </div>
+                <!-- Infos entreprise -->
+                <div class="form-section-title">
+                  <i class="fa-solid fa-building-circle-check"></i>
+                  Informations entreprise
+                </div>
 
+                <div class="form-row">
                   <div class="form-group">
-                    <label>{{ t('auth.register.email') || 'Email' }} *</label>
-                    <input 
-                      v-model="form.email" 
-                      type="email" 
-                      required 
-                      :placeholder="t('auth.register.emailPlaceholder') || 'contact@entreprise.com'"
-                    />
+                    <label class="form-label">Nom de l'entreprise <span class="required">*</span></label>
+                    <input v-model="companyForm.nom" type="text" class="form-input" placeholder="Ex: Talenteed" required />
                   </div>
+                  <div class="form-group">
+                    <label class="form-label">Secteur d'activité <span class="required">*</span></label>
+                    <select v-model="companyForm.activity_sector_id" class="form-input" required>
+                      <option value="">Sélectionner</option>
+                      <option v-for="sector in sectors" :key="sector.id" :value="sector.id">{{ sector.name }}</option>
+                    </select>
+                  </div>
+                </div>
 
+                <div class="form-row">
                   <div class="form-group">
-                    <label>{{ t('auth.register.password') || 'Mot de passe' }} *</label>
-                    <input 
-                      v-model="form.password" 
-                      type="password" 
-                      required 
-                      :placeholder="t('auth.register.passwordPlaceholder') || 'Minimum 8 caractères'"
-                      minlength="8"
-                    />
+                    <label class="form-label">Taille de l'entreprise</label>
+                    <select v-model="companyForm.taille" class="form-input">
+                      <option value="">Sélectionner</option>
+                      <option value="1-10">1-10 employés</option>
+                      <option value="11-50">11-50 employés</option>
+                      <option value="51-200">51-200 employés</option>
+                      <option value="201-500">201-500 employés</option>
+                      <option value="500+">500+ employés</option>
+                    </select>
                   </div>
+                  <div class="form-group">
+                    <label class="form-label">Site web</label>
+                    <input v-model="companyForm.site_web" type="url" class="form-input" placeholder="https://exemple.com" />
+                  </div>
+                </div>
 
+                <div class="form-row">
                   <div class="form-group">
-                    <label>{{ t('auth.register.confirmPassword') || 'Confirmer le mot de passe' }} *</label>
-                    <input 
-                      v-model="form.password_confirmation" 
-                      type="password" 
-                      required 
-                      :placeholder="t('auth.register.confirmPasswordPlaceholder') || 'Retapez votre mot de passe'"
-                    />
+                    <label class="form-label">Ville</label>
+                    <input v-model="companyForm.ville" type="text" class="form-input" placeholder="Ex: Paris" />
                   </div>
+                  <div class="form-group">
+                    <label class="form-label">Pays</label>
+                    <input v-model="companyForm.pays" type="text" class="form-input" placeholder="Ex: France" />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Adresse</label>
+                  <input v-model="companyForm.adresse" type="text" class="form-input" placeholder="Ex: 123 rue de la République" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Description</label>
+                  <textarea v-model="companyForm.description" class="form-input" rows="3" placeholder="Décrivez votre entreprise..."></textarea>
+                </div>
+
+                <!-- Contact -->
+                <div class="form-section-title">
+                  <i class="fa-solid fa-user-tie"></i>
+                  Contact
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Nom complet <span class="required">*</span></label>
+                    <input v-model="companyForm.name" type="text" class="form-input" placeholder="Ex: Jean Dupont" required />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Poste / Fonction</label>
+                    <input v-model="companyForm.poste" type="text" class="form-input" placeholder="Ex: DRH, CEO" />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Email <span class="required">*</span></label>
+                    <input v-model="companyForm.email" type="email" class="form-input" placeholder="contact@entreprise.com" required />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Téléphone</label>
+                    <input v-model="companyForm.telephone" type="tel" class="form-input" placeholder="+33 1 23 45 67 89" />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Mot de passe <span class="required">*</span></label>
+                    <input v-model="companyForm.password" type="password" class="form-input" placeholder="Minimum 8 caractères" required minlength="8" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Confirmer le mot de passe <span class="required">*</span></label>
+                    <input v-model="companyForm.password_confirmation" type="password" class="form-input" placeholder="Retapez votre mot de passe" required />
+                  </div>
+                </div>
+
+                <!-- Choix du plan -->
+                <div class="form-section-title">
+                  <i class="fa-solid fa-crown"></i>
+                  Choisissez votre plan <span class="required">*</span>
+                </div>
+
+                <div v-if="plans.length" class="plans-grid">
+                  <label
+                    v-for="plan in plans"
+                    :key="plan.id"
+                    class="plan-card"
+                    :class="{ 'plan-card--selected': companyForm.plan_id === plan.id }"
+                  >
+                    <input type="radio" name="plan" :value="plan.id" v-model="companyForm.plan_id" class="plan-radio" />
+                    <div class="plan-card__top">
+                      <div class="plan-card__name">{{ plan.name }}</div>
+                      <div class="plan-card__price">
+                        <span class="plan-card__amount">{{ formatPlanPrice(plan.price) }}</span>
+                        <span class="plan-card__period">/mois</span>
+                      </div>
+                    </div>
+                    <ul class="plan-card__features">
+                      <li>
+                        <i class="fa-solid fa-briefcase"></i>
+                        <span v-if="plan.max_offres !== null">{{ plan.max_offres }} offre(s)</span>
+                        <span v-else>Offres illimitées</span>
+                      </li>
+                      <li>
+                        <i class="fa-solid fa-file-lines"></i>
+                        <span v-if="plan.max_articles !== null">{{ plan.max_articles }} article(s)</span>
+                        <span v-else>Articles illimités</span>
+                      </li>
+                      <li>
+                        <i class="fa-solid fa-calendar-check"></i>
+                        <span v-if="plan.max_evenements !== null">{{ plan.max_evenements }} événement(s)</span>
+                        <span v-else>Événements illimités</span>
+                      </li>
+                    </ul>
+                    <div class="plan-card__indicator">
+                      <i v-if="companyForm.plan_id === plan.id" class="fa-solid fa-circle-check"></i>
+                      <i v-else class="fa-regular fa-circle"></i>
+                      <span>{{ companyForm.plan_id === plan.id ? 'Sélectionné' : 'Choisir' }}</span>
+                    </div>
+                  </label>
+                </div>
+                <div v-else class="form-group">
+                  <p style="color: #6b7280; font-size: 14px;">Chargement des plans…</p>
+                </div>
+
+                <!-- Consent -->
+                <div class="consent-checkbox-wrapper">
+                  <label class="consent-checkbox">
+                    <input type="checkbox" v-model="companyForm.acceptedTerms" class="consent-input">
+                    <span class="consent-text">
+                      J'accepte les <a href="/terms-and-conditions" target="_blank" class="consent-link">conditions générales</a> et la <a href="/privacy-policy" target="_blank" class="consent-link">politique de confidentialité</a>
+                    </span>
+                  </label>
                 </div>
 
                 <div v-if="error" class="error-message">
@@ -268,7 +382,7 @@
                   {{ success }}
                 </div>
 
-                <button type="submit" class="btn-submit" :disabled="loading">
+                <button type="submit" class="btn-submit" :disabled="loading || !companyForm.plan_id || !companyForm.acceptedTerms">
                   <i v-if="loading" class="fa-solid fa-spinner fa-spin"></i>
                   <span v-else>{{ t('auth.register.createAccount') || 'Créer mon compte' }}</span>
                 </button>
@@ -324,6 +438,26 @@ const form = ref({
   password_confirmation: ''
 })
 
+// Formulaire entreprise (complet comme CompanyLanding)
+const companyForm = ref({
+  nom: '',
+  activity_sector_id: '',
+  taille: '',
+  site_web: '',
+  ville: '',
+  pays: '',
+  adresse: '',
+  description: '',
+  name: '',
+  poste: '',
+  email: '',
+  telephone: '',
+  password: '',
+  password_confirmation: '',
+  plan_id: null,
+  acceptedTerms: false
+})
+
 // Formulaire talent (complet comme TalentRegister)
 const talentForm = ref({
   nom: '',
@@ -344,6 +478,12 @@ const talentForm = ref({
 // Référentiels
 const activitySectors = ref([])
 const experiences = ref([])
+const sectors = ref([])
+const plans = ref([])
+
+// Formater le prix des plans
+const formatPlanPrice = (price) =>
+  new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price)
 
 // Charger les référentiels
 const loadReferentiels = async () => {
@@ -356,6 +496,20 @@ const loadReferentiels = async () => {
     experiences.value = expRes.data.data || expRes.data
   } catch (err) {
     console.error('Erreur chargement référentiels:', err)
+  }
+}
+
+// Charger les référentiels entreprise
+const loadCompanyReferentiels = async () => {
+  try {
+    const [refRes, plansRes] = await Promise.all([
+      axios.get(`${apiBase}/public/referentiels`),
+      axios.get(`${apiBase}/plans`),
+    ])
+    sectors.value = refRes.data.activity_sectors || []
+    plans.value = (plansRes.data || []).filter(p => p.is_active)
+  } catch (err) {
+    console.error('Erreur chargement référentiels entreprise:', err)
   }
 }
 
@@ -395,13 +549,33 @@ watch(() => props.show, (newVal) => {
       ville_relocation: '',
       consentAccepted: false
     }
+    companyForm.value = {
+      nom: '',
+      activity_sector_id: '',
+      taille: '',
+      site_web: '',
+      ville: '',
+      pays: '',
+      adresse: '',
+      description: '',
+      name: '',
+      poste: '',
+      email: '',
+      telephone: '',
+      password: '',
+      password_confirmation: '',
+      plan_id: null,
+      acceptedTerms: false
+    }
     error.value = ''
     success.value = ''
     loading.value = false
     
-    // Charger les référentiels si talent
+    // Charger les référentiels selon le profil
     if (props.defaultProfile === 'talent') {
       loadReferentiels()
+    } else if (props.defaultProfile === 'entreprise') {
+      loadCompanyReferentiels()
     }
   }
 })
@@ -411,6 +585,8 @@ const goToStep2 = () => {
     step.value = 2
     if (selectedProfile.value === 'talent') {
       loadReferentiels()
+    } else if (selectedProfile.value === 'entreprise') {
+      loadCompanyReferentiels()
     }
   }
 }
@@ -498,55 +674,58 @@ const handleCompanyRegister = async () => {
   success.value = ''
 
   // Validation
-  if (form.value.password !== form.value.password_confirmation) {
-    error.value = t('auth.register.passwordMismatch') || 'Les mots de passe ne correspondent pas'
+  if (companyForm.value.password !== companyForm.value.password_confirmation) {
+    error.value = 'Les mots de passe ne correspondent pas'
     return
   }
 
-  if (form.value.password.length < 8) {
-    error.value = t('auth.register.passwordTooShort') || 'Le mot de passe doit contenir au moins 8 caractères'
+  if (companyForm.value.password.length < 8) {
+    error.value = 'Le mot de passe doit contenir au moins 8 caractères'
+    return
+  }
+
+  if (!companyForm.value.plan_id) {
+    error.value = 'Veuillez choisir un plan'
     return
   }
 
   loading.value = true
 
   try {
-    const endpoint = `${apiBase}/register/entreprise`
+    const response = await axios.post(`${apiBase}/register`, {
+      name: companyForm.value.name,
+      email: companyForm.value.email,
+      password: companyForm.value.password,
+      password_confirmation: companyForm.value.password_confirmation,
+      role: 'entreprise',
+      company_name: companyForm.value.nom,
+      company_description: companyForm.value.description || undefined,
+      company_address: companyForm.value.adresse || undefined,
+      company_size: companyForm.value.taille || undefined,
+      company_poste: companyForm.value.poste || undefined,
+      activity_sector_id: companyForm.value.activity_sector_id || undefined,
+      plan_id: companyForm.value.plan_id,
+      company_city: companyForm.value.ville || undefined,
+      company_country: companyForm.value.pays || undefined,
+      company_website: companyForm.value.site_web || undefined,
+      company_phone: companyForm.value.telephone || undefined,
+    })
 
-    const payload = {
-      email: form.value.email,
-      password: form.value.password,
-      password_confirmation: form.value.password_confirmation,
-      nom: form.value.nom
-    }
-
-    const response = await axios.post(endpoint, payload)
-
-    // Stocker le token et les infos utilisateur
-    if (response.data.token) {
-      localStorage.setItem('token', response.data.token)
-      localStorage.setItem('userRole', 'entreprise')
-      localStorage.setItem('userId', response.data.user?.id || '')
-      
-      success.value = t('auth.register.success') || 'Inscription réussie ! Redirection...'
-      
-      // Rediriger après un court délai
-      setTimeout(() => {
-        emit('close')
-        // Recharger la page pour mettre à jour l'état d'authentification
-        window.location.reload()
-      }, 1500)
-    }
+    success.value = 'Inscription réussie ! Redirection...'
+    
+    setTimeout(() => {
+      emit('close')
+      // Afficher un message de confirmation
+      alert('Votre demande a été envoyée avec succès ! Notre équipe va examiner vos informations et vous contactera dans les plus brefs délais.')
+      window.location.href = '/'
+    }, 1500)
   } catch (err) {
-    if (err.response?.data?.errors) {
-      // Erreurs de validation Laravel
-      const errors = err.response.data.errors
-      const firstError = Object.values(errors)[0]
-      error.value = Array.isArray(firstError) ? firstError[0] : firstError
-    } else if (err.response?.data?.message) {
-      error.value = err.response.data.message
+    const data = err.response?.data
+    if (data?.errors) {
+      const first = Object.values(data.errors)[0]
+      error.value = Array.isArray(first) ? first[0] : first
     } else {
-      error.value = t('auth.register.error') || 'Une erreur est survenue lors de l\'inscription'
+      error.value = data?.message || 'Une erreur est survenue lors de l\'inscription'
     }
   } finally {
     loading.value = false
@@ -556,6 +735,8 @@ const handleCompanyRegister = async () => {
 onMounted(() => {
   if (props.defaultProfile === 'talent') {
     loadReferentiels()
+  } else if (props.defaultProfile === 'entreprise') {
+    loadCompanyReferentiels()
   }
 })
 </script>
@@ -985,6 +1166,117 @@ onMounted(() => {
 
 .consent-link:hover {
   color: #f07c00;
+}
+
+/* Plans */
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.plan-radio {
+  display: none;
+}
+
+.plan-card {
+  display: block;
+  border: 2px solid #e0e4ef;
+  border-radius: 12px;
+  padding: 18px;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+  background: #fff;
+}
+
+.plan-card:hover {
+  border-color: #3a9bff;
+  box-shadow: 0 4px 16px rgba(0, 35, 90, 0.1);
+  transform: translateY(-2px);
+}
+
+.plan-card--selected {
+  border-color: #3a9bff;
+  background: linear-gradient(135deg, #f0f4ff, #e8f0ff);
+  box-shadow: 0 4px 20px rgba(0, 35, 90, 0.15);
+}
+
+.plan-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.plan-card__name {
+  font-size: 15px;
+  font-weight: 800;
+  color: #041a57;
+}
+
+.plan-card__price {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.plan-card__amount {
+  display: block;
+  font-size: 18px;
+  font-weight: 800;
+  color: #3a9bff;
+  line-height: 1.2;
+}
+
+.plan-card__period {
+  font-size: 11px;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.plan-card--selected .plan-card__amount {
+  color: #3a9bff;
+}
+
+.plan-card__features {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+}
+
+.plan-card__features li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #475569;
+  padding: 4px 0;
+}
+
+.plan-card__features li i {
+  color: #3a9bff;
+  font-size: 12px;
+  flex-shrink: 0;
+  width: 14px;
+}
+
+.plan-card__indicator {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  padding-top: 8px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.plan-card--selected .plan-card__indicator {
+  color: #3a9bff;
+}
+
+.plan-card__indicator i {
+  font-size: 16px;
 }
 
 .error-message {
