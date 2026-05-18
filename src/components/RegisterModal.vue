@@ -13,53 +13,164 @@
           </div>
 
           <div class="modal-body">
-            <p class="register-info">
-              {{ t('auth.register.step1') }}
-            </p>
+            <!-- Étape 1: Sélection du profil -->
+            <div v-if="step === 1">
+              <p class="register-info">
+                {{ t('auth.register.step1') }}
+              </p>
 
-            <div class="profile-selection">
-              <button 
-                type="button"
-                class="profile-option"
-                :class="{ 'profile-option--active': selectedProfile === 'talent' }"
-                @click="selectedProfile = 'talent'"
-              >
-                <i class="fa-solid fa-user"></i>
-                <span>{{ t('auth.register.talentOption') }}</span>
-              </button>
-              <button 
-                type="button"
-                class="profile-option"
-                :class="{ 'profile-option--active': selectedProfile === 'entreprise' }"
-                @click="selectedProfile = 'entreprise'"
-              >
-                <i class="fa-solid fa-building"></i>
-                <span>{{ t('auth.register.companyOption') }}</span>
-              </button>
+              <div class="profile-selection">
+                <button 
+                  type="button"
+                  class="profile-option"
+                  :class="{ 'profile-option--active': selectedProfile === 'talent' }"
+                  @click="selectedProfile = 'talent'"
+                >
+                  <i class="fa-solid fa-user"></i>
+                  <span>{{ t('auth.register.talentOption') }}</span>
+                </button>
+                <button 
+                  type="button"
+                  class="profile-option"
+                  :class="{ 'profile-option--active': selectedProfile === 'entreprise' }"
+                  @click="selectedProfile = 'entreprise'"
+                >
+                  <i class="fa-solid fa-building"></i>
+                  <span>{{ t('auth.register.companyOption') }}</span>
+                </button>
+              </div>
+
+              <div class="register-actions">
+                <button 
+                  @click="goToStep2"
+                  class="btn-submit"
+                  :disabled="!selectedProfile"
+                >
+                  {{ t('auth.register.continue') || 'Continuer' }} <i class="fa-solid fa-arrow-right"></i>
+                </button>
+              </div>
             </div>
 
-            <div class="register-actions">
-              <button 
-                v-if="selectedProfile === 'talent'"
-                @click="goToTalentRegister"
-                class="btn-submit"
-              >
-                {{ t('auth.register.submit') }} <i class="fa-solid fa-arrow-right"></i>
+            <!-- Étape 2: Formulaire d'inscription -->
+            <div v-else-if="step === 2">
+              <button class="btn-back" @click="step = 1">
+                <i class="fa-solid fa-arrow-left"></i> {{ t('auth.register.back') || 'Retour' }}
               </button>
-              <button 
-                v-else-if="selectedProfile === 'entreprise'"
-                @click="goToCompanyRegister"
-                class="btn-submit"
-              >
-                {{ t('auth.register.submit') }} <i class="fa-solid fa-arrow-right"></i>
-              </button>
-              <button 
-                v-else
-                class="btn-submit"
-                disabled
-              >
-                {{ t('auth.register.selectProfile') }}
-              </button>
+
+              <form @submit.prevent="handleRegister" class="register-form">
+                <!-- Formulaire Talent -->
+                <div v-if="selectedProfile === 'talent'" class="form-fields">
+                  <div class="form-group">
+                    <label>{{ t('auth.register.firstName') || 'Prénom' }} *</label>
+                    <input 
+                      v-model="form.prenom" 
+                      type="text" 
+                      required 
+                      :placeholder="t('auth.register.firstNamePlaceholder') || 'Votre prénom'"
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label>{{ t('auth.register.lastName') || 'Nom' }} *</label>
+                    <input 
+                      v-model="form.nom" 
+                      type="text" 
+                      required 
+                      :placeholder="t('auth.register.lastNamePlaceholder') || 'Votre nom'"
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label>{{ t('auth.register.email') || 'Email' }} *</label>
+                    <input 
+                      v-model="form.email" 
+                      type="email" 
+                      required 
+                      :placeholder="t('auth.register.emailPlaceholder') || 'votre@email.com'"
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label>{{ t('auth.register.password') || 'Mot de passe' }} *</label>
+                    <input 
+                      v-model="form.password" 
+                      type="password" 
+                      required 
+                      :placeholder="t('auth.register.passwordPlaceholder') || 'Minimum 8 caractères'"
+                      minlength="8"
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label>{{ t('auth.register.confirmPassword') || 'Confirmer le mot de passe' }} *</label>
+                    <input 
+                      v-model="form.password_confirmation" 
+                      type="password" 
+                      required 
+                      :placeholder="t('auth.register.confirmPasswordPlaceholder') || 'Retapez votre mot de passe'"
+                    />
+                  </div>
+                </div>
+
+                <!-- Formulaire Entreprise -->
+                <div v-else-if="selectedProfile === 'entreprise'" class="form-fields">
+                  <div class="form-group">
+                    <label>{{ t('auth.register.companyName') || 'Nom de l\'entreprise' }} *</label>
+                    <input 
+                      v-model="form.nom" 
+                      type="text" 
+                      required 
+                      :placeholder="t('auth.register.companyNamePlaceholder') || 'Nom de votre entreprise'"
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label>{{ t('auth.register.email') || 'Email' }} *</label>
+                    <input 
+                      v-model="form.email" 
+                      type="email" 
+                      required 
+                      :placeholder="t('auth.register.emailPlaceholder') || 'contact@entreprise.com'"
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label>{{ t('auth.register.password') || 'Mot de passe' }} *</label>
+                    <input 
+                      v-model="form.password" 
+                      type="password" 
+                      required 
+                      :placeholder="t('auth.register.passwordPlaceholder') || 'Minimum 8 caractères'"
+                      minlength="8"
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label>{{ t('auth.register.confirmPassword') || 'Confirmer le mot de passe' }} *</label>
+                    <input 
+                      v-model="form.password_confirmation" 
+                      type="password" 
+                      required 
+                      :placeholder="t('auth.register.confirmPasswordPlaceholder') || 'Retapez votre mot de passe'"
+                    />
+                  </div>
+                </div>
+
+                <div v-if="error" class="error-message">
+                  <i class="fa-solid fa-triangle-exclamation"></i>
+                  {{ error }}
+                </div>
+
+                <div v-if="success" class="success-message">
+                  <i class="fa-solid fa-circle-check"></i>
+                  {{ success }}
+                </div>
+
+                <button type="submit" class="btn-submit" :disabled="loading">
+                  <i v-if="loading" class="fa-solid fa-spinner fa-spin"></i>
+                  <span v-else>{{ t('auth.register.createAccount') || 'Créer mon compte' }}</span>
+                </button>
+              </form>
             </div>
 
             <p class="auth-switch">
@@ -77,6 +188,7 @@
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import axios from 'axios'
 
 const props = defineProps({
   show: Boolean,
@@ -91,25 +203,119 @@ const emit = defineEmits(['close', 'switch-to-login'])
 const { t } = useI18n()
 const router = useRouter()
 
-const selectedProfile = ref(props.defaultProfile || '')
+const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
-// Si defaultProfile est 'talent', rediriger directement
+const step = ref(1)
+const selectedProfile = ref(props.defaultProfile || '')
+const loading = ref(false)
+const error = ref('')
+const success = ref('')
+
+const form = ref({
+  nom: '',
+  prenom: '',
+  email: '',
+  password: '',
+  password_confirmation: ''
+})
+
+// Réinitialiser le formulaire quand le modal s'ouvre/ferme
 watch(() => props.show, (newVal) => {
-  if (newVal && props.defaultProfile === 'talent') {
-    goToTalentRegister()
-  } else if (newVal && props.defaultProfile) {
-    selectedProfile.value = props.defaultProfile
+  if (newVal) {
+    // Si un profil par défaut est fourni, aller directement à l'étape 2
+    if (props.defaultProfile) {
+      selectedProfile.value = props.defaultProfile
+      step.value = 2
+    } else {
+      step.value = 1
+      selectedProfile.value = ''
+    }
+    // Réinitialiser le formulaire
+    form.value = {
+      nom: '',
+      prenom: '',
+      email: '',
+      password: '',
+      password_confirmation: ''
+    }
+    error.value = ''
+    success.value = ''
+    loading.value = false
   }
 })
 
-const goToTalentRegister = () => {
-  emit('close')
-  router.push('/talent-register')
+const goToStep2 = () => {
+  if (selectedProfile.value) {
+    step.value = 2
+  }
 }
 
-const goToCompanyRegister = () => {
-  emit('close')
-  router.push('/corporate-register')
+const handleRegister = async () => {
+  error.value = ''
+  success.value = ''
+
+  // Validation
+  if (form.value.password !== form.value.password_confirmation) {
+    error.value = t('auth.register.passwordMismatch') || 'Les mots de passe ne correspondent pas'
+    return
+  }
+
+  if (form.value.password.length < 8) {
+    error.value = t('auth.register.passwordTooShort') || 'Le mot de passe doit contenir au moins 8 caractères'
+    return
+  }
+
+  loading.value = true
+
+  try {
+    const endpoint = selectedProfile.value === 'talent' 
+      ? `${apiBase}/register/talent`
+      : `${apiBase}/register/entreprise`
+
+    const payload = {
+      email: form.value.email,
+      password: form.value.password,
+      password_confirmation: form.value.password_confirmation
+    }
+
+    if (selectedProfile.value === 'talent') {
+      payload.nom = form.value.nom
+      payload.prenom = form.value.prenom
+    } else {
+      payload.nom = form.value.nom
+    }
+
+    const response = await axios.post(endpoint, payload)
+
+    // Stocker le token et les infos utilisateur
+    if (response.data.token) {
+      localStorage.setItem('token', response.data.token)
+      localStorage.setItem('userRole', selectedProfile.value)
+      localStorage.setItem('userId', response.data.user?.id || '')
+      
+      success.value = t('auth.register.success') || 'Inscription réussie ! Redirection...'
+      
+      // Rediriger après un court délai
+      setTimeout(() => {
+        emit('close')
+        // Recharger la page pour mettre à jour l'état d'authentification
+        window.location.reload()
+      }, 1500)
+    }
+  } catch (err) {
+    if (err.response?.data?.errors) {
+      // Erreurs de validation Laravel
+      const errors = err.response.data.errors
+      const firstError = Object.values(errors)[0]
+      error.value = Array.isArray(firstError) ? firstError[0] : firstError
+    } else if (err.response?.data?.message) {
+      error.value = err.response.data.message
+    } else {
+      error.value = t('auth.register.error') || 'Une erreur est survenue lors de l\'inscription'
+    }
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 
@@ -133,6 +339,8 @@ const goToCompanyRegister = () => {
   max-width: 480px;
   position: relative;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .modal-close {
@@ -288,6 +496,7 @@ const goToCompanyRegister = () => {
   text-align: center;
   font-size: 13.5px;
   color: #6b7280;
+  margin: 0;
 }
 
 .auth-switch a {
@@ -302,6 +511,95 @@ const goToCompanyRegister = () => {
 
 .auth-switch a:hover {
   color: #3a9bff;
+}
+
+/* Formulaire d'inscription */
+.btn-back {
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 20px;
+  padding: 8px 0;
+  transition: color 0.2s;
+}
+
+.btn-back:hover {
+  color: #041a57;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.form-group input {
+  padding: 11px 14px;
+  border: 1.5px solid #e0e4ef;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #041a57;
+  font-family: 'Open Sans', sans-serif;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #3a9bff;
+}
+
+.form-group input::placeholder {
+  color: #9ca3af;
+}
+
+.error-message {
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  border-left: 4px solid #dc2626;
+  color: #991b1b;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.success-message {
+  background: #d1fae5;
+  border: 1px solid #a7f3d0;
+  border-left: 4px solid #10b981;
+  color: #065f46;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 /* Transitions */
