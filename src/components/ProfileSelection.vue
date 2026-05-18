@@ -191,21 +191,20 @@ const goToCorporateRegister = () => {
 /* Hero Section */
 .selection-hero {
   position: relative;
+  min-height: 60vh;
   background: linear-gradient(160deg, #020830 0%, #040a5d 50%, #0d1a8a 100%);
+  background-image: 
+    linear-gradient(160deg, rgba(2, 8, 48, 0.75) 0%, rgba(4, 10, 93, 0.75) 50%, rgba(13, 26, 138, 0.75) 100%),
+    url('/images/Inscri2.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
   color: #fff;
-  padding: 80px 0 60px;
+  padding: 100px 0 80px;
   text-align: center;
   overflow: hidden;
-}
-
-.selection-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(
-    45deg, transparent, transparent 35px,
-    rgba(255,255,255,.015) 35px, rgba(255,255,255,.015) 70px
-  );
+  display: flex;
+  align-items: center;
 }
 
 .hero-content {
@@ -213,6 +212,7 @@ const goToCorporateRegister = () => {
   z-index: 1;
   max-width: 800px;
   margin: 0 auto;
+  width: 100%;
 }
 
 .event-badge {
@@ -505,7 +505,8 @@ const goToCorporateRegister = () => {
   }
   
   .selection-hero {
-    padding: 60px 0 40px;
+    padding: 80px 0 60px;
+    min-height: 50vh;
   }
   
   .cards-section {
@@ -518,6 +519,13 @@ const goToCorporateRegister = () => {
 }
 
 @media (max-width: 600px) {
+  .selection-hero {
+    padding: 60px 0 40px;
+    min-height: 45vh;
+    background-size: cover;
+    background-position: center;
+  }
+  
   .profile-card {
     padding: 32px 24px;
   }
