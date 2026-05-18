@@ -12,7 +12,7 @@
 
     <!-- Barre de recherche et filtres -->
     <div class="pa-3 pb-0">
-      <div class="d-flex flex-wrap gap-3 align-center">
+      <div class="d-flex flex-wrap gap-3 align-center justify-space-between">
         <v-text-field
           v-model="searchInput"
           prepend-inner-icon="mdi-magnify"
@@ -21,13 +21,13 @@
           variant="outlined"
           clearable
           hide-details
-          style="max-width: 420px"
+          style="max-width: 420px; flex: 1 1 300px"
           @update:model-value="onSearchChange"
           @click:clear="onClear"
         />
         
         <v-select
-          v-model="sortBy"
+          v-model="sortOption"
           :items="sortOptions"
           item-title="label"
           item-value="value"
@@ -35,20 +35,7 @@
           density="compact"
           variant="outlined"
           hide-details
-          style="min-width: 200px"
-          @update:model-value="onSortChange"
-        />
-        
-        <v-select
-          v-model="sortOrder"
-          :items="sortOrderOptions"
-          item-title="label"
-          item-value="value"
-          :label="t('admin.talents.order')"
-          density="compact"
-          variant="outlined"
-          hide-details
-          style="min-width: 150px"
+          style="max-width: 240px; min-width: 200px"
           @update:model-value="onSortChange"
         />
       </div>
@@ -151,8 +138,7 @@ const loading    = ref(false)
 const page       = ref(1)
 const perPage    = ref(25)
 const searchInput = ref('')
-const sortBy     = ref('created_at')
-const sortOrder  = ref('desc')
+const sortOption = ref('created_at_desc')
 const confirmRef = ref(null)
 
 let searchTimer = null
@@ -165,14 +151,12 @@ const showSnack = (msg, color = 'success') => {
 }
 
 const sortOptions = [
-  { value: 'created_at', label: t('admin.talents.sortByRegistrationDate') },
-  { value: 'name', label: t('admin.talents.sortByAlphabetical') },
-  { value: 'titre_poste', label: t('admin.talents.sortByJob') },
-]
-
-const sortOrderOptions = [
-  { value: 'asc', label: t('admin.talents.ascending') },
-  { value: 'desc', label: t('admin.talents.descending') },
+  { value: 'created_at_desc', label: t('admin.talents.sortByNewest') },
+  { value: 'created_at_asc', label: t('admin.talents.sortByOldest') },
+  { value: 'name_asc', label: t('admin.talents.sortByNameAZ') },
+  { value: 'name_desc', label: t('admin.talents.sortByNameZA') },
+  { value: 'titre_poste_asc', label: t('admin.talents.sortByJobAZ') },
+  { value: 'titre_poste_desc', label: t('admin.talents.sortByJobZA') },
 ]
 
 const headers = [
@@ -201,7 +185,11 @@ const statutOptions = [
 const loadPage = async () => {
   loading.value = true
   try {
-    const res = await talentService.getAll(page.value, perPage.value, searchInput.value, sortBy.value, sortOrder.value)
+    // Extraire sortBy et sortOrder depuis sortOption
+    const lastUnderscore = sortOption.value.lastIndexOf('_')
+    const sortBy = sortOption.value.substring(0, lastUnderscore)
+    const sortOrder = sortOption.value.substring(lastUnderscore + 1)
+    const res = await talentService.getAll(page.value, perPage.value, searchInput.value, sortBy, sortOrder)
     talents.value = res.data.data
     total.value   = res.data.total
   } catch {
