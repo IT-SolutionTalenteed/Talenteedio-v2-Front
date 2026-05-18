@@ -602,19 +602,15 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   background: linear-gradient(160deg, #020830 0%, #040a5d 45%, #0d1a8a 75%, #040a5d 100%);
+  background-image: 
+    linear-gradient(160deg, rgba(2, 8, 48, 0.85) 0%, rgba(4, 10, 93, 0.85) 45%, rgba(13, 26, 138, 0.85) 75%, rgba(4, 10, 93, 0.85) 100%),
+    url('/images/Inscri.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   color: #fff;
   text-align: center;
   overflow: hidden;
-}
-
-.ats-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(
-    45deg, transparent, transparent 35px,
-    rgba(255,255,255,.018) 35px, rgba(255,255,255,.018) 70px
-  );
 }
 
 .ats-hero::after {
@@ -822,7 +818,7 @@ onUnmounted(() => {
 /* Main Section */
 .ats-section {
   padding: 80px 0 100px;
-  background: var(--light-bg);
+  background: var(--light-bg, #f5f7fa);
 }
 
 .container {
