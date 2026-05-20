@@ -89,7 +89,7 @@
             to="/entreprises"
             class="logo-item"
           >
-            <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom" class="logo-img">
+            <img v-if="entreprise.logo_url" v-lazy="entreprise.logo_url" :alt="entreprise.nom" class="logo-img">
             <span v-else class="logo-initial">{{ entreprise.nom.charAt(0).toUpperCase() }}</span>
             <span class="logo-name">{{ entreprise.nom }}</span>
           </router-link>
@@ -101,7 +101,7 @@
               to="/entreprises"
               class="logo-item"
             >
-              <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom" class="logo-img">
+              <img v-if="entreprise.logo_url" v-lazy="entreprise.logo_url" :alt="entreprise.nom" class="logo-img">
               <span v-else class="logo-initial">{{ entreprise.nom.charAt(0).toUpperCase() }}</span>
               <span class="logo-name">{{ entreprise.nom }}</span>
             </router-link>
@@ -203,22 +203,22 @@
             <div class="image-grid">
               <div class="image-column">
                 <div class="image-item image-tall">
-                  <img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=500&q=80" 
-                       alt="Networking event" loading="lazy">
+                  <img v-lazy="'https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=500&q=80'" 
+                       alt="Networking event">
                 </div>
                 <div class="image-item image-square">
-                  <img src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=500&q=80" 
-                       alt="Speaker" loading="lazy">
+                  <img v-lazy="'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=500&q=80'" 
+                       alt="Speaker">
                 </div>
               </div>
               <div class="image-column image-column--offset">
                 <div class="image-item image-square">
-                  <img src="https://images.unsplash.com/photo-1591115765373-5207764f72e7?w=500&q=80" 
-                       alt="Workshop" loading="lazy">
+                  <img v-lazy="'https://images.unsplash.com/photo-1591115765373-5207764f72e7?w=500&q=80'" 
+                       alt="Workshop">
                 </div>
                 <div class="image-item image-tall">
-                  <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=500&q=80" 
-                       alt="Panel discussion" loading="lazy">
+                  <img v-lazy="'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=500&q=80'" 
+                       alt="Panel discussion">
                 </div>
               </div>
             </div>
