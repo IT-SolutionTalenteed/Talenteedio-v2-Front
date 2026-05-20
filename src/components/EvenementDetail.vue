@@ -130,7 +130,7 @@
                 <div v-if="evenement.entreprises?.length" class="evd-companies-grid">
                   <div v-for="ent in evenement.entreprises" :key="ent.id" class="evd-company-card">
                     <div class="evd-company-logo">
-                      <img v-if="ent.logo_url" :src="ent.logo_url" :alt="ent.nom" />
+                      <img v-if="ent.logo_url" v-lazy="ent.logo_url" :alt="ent.nom" />
                       <span v-else class="evd-company-initial">{{ ent.nom.charAt(0) }}</span>
                     </div>
                     <h3 class="evd-company-name">{{ ent.nom }}</h3>
@@ -323,7 +323,7 @@
                   <div v-for="ent in mesEntretiens" :key="ent.id" class="evd-entretien-card">
                     <div class="evd-entretien-row">
                       <div class="evd-entretien-logo">
-                        <img v-if="ent.entreprise?.logo_url" :src="ent.entreprise.logo_url" :alt="ent.entreprise?.nom" />
+                        <img v-if="ent.entreprise?.logo_url" v-lazy="ent.entreprise.logo_url" :alt="ent.entreprise?.nom" />
                         <span v-else>{{ ent.entreprise?.nom?.charAt(0) || '?' }}</span>
                       </div>
                       <div class="evd-entretien-info">
@@ -425,7 +425,7 @@
                 <div class="evd-logos-mini">
                   <template v-for="ent in evenement.entreprises.slice(0, 12)" :key="ent.id">
                     <div class="evd-logo-mini" :title="ent.nom">
-                      <img v-if="ent.logo_url" :src="ent.logo_url" :alt="ent.nom" />
+                      <img v-if="ent.logo_url" v-lazy="ent.logo_url" :alt="ent.nom" />
                       <span v-else>{{ ent.nom.charAt(0) }}</span>
                     </div>
                   </template>
@@ -466,7 +466,7 @@
           <div class="evd-modal-header">
             <div class="evd-modal-company">
               <div class="evd-modal-logo">
-                <img v-if="rdvEntreprise.logo_url" :src="rdvEntreprise.logo_url" :alt="rdvEntreprise.nom" />
+                <img v-if="rdvEntreprise.logo_url" v-lazy="rdvEntreprise.logo_url" :alt="rdvEntreprise.nom" />
                 <span v-else>{{ rdvEntreprise.nom.charAt(0) }}</span>
               </div>
               <div>
