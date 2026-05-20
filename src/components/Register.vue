@@ -24,6 +24,9 @@
     <!-- ── Panneau droit ── -->
     <div class="auth-right">
       <div class="auth-card">
+        <router-link to="/" class="auth-card-logo" aria-label="Talenteed — Accueil">
+          <img src="/logo.png" alt="Talenteed" height="44">
+        </router-link>
         <div class="auth-card-header">
           <h1>{{ t('auth.register.title') }}</h1>
           <p>{{ t('auth.register.subtitle') }}</p>
@@ -332,6 +335,10 @@ const handleRegister = async () => {
   max-width: 480px;
 }
 
+.auth-card-logo {
+  display: none;
+}
+
 .auth-card-header {
   margin-bottom: 28px;
 }
@@ -636,6 +643,17 @@ const handleRegister = async () => {
 @media (max-width: 900px) {
   .auth-left {
     display: none;
+  }
+
+  .auth-card-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 28px;
+  }
+
+  .auth-card-logo img {
+    height: 44px;
+    width: auto;
   }
 }
 
