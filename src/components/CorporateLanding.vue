@@ -407,7 +407,7 @@ export default {
   position: relative;
   background: linear-gradient(160deg, #020830 0%, #040a5d 50%, #0d1a8a 100%);
   color: #fff;
-  padding: 48px 0 40px;
+  padding: 40px 0 32px;
   text-align: center;
   overflow: hidden;
 }
@@ -437,16 +437,16 @@ export default {
   text-transform: uppercase;
   padding: 7px 18px;
   border-radius: 50px;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 }
 
 .corp-hero-title {
-  font-size: clamp(22px, 3.5vw, 38px);
+  font-size: clamp(22px, 3.5vw, 36px);
   font-weight: 900;
   text-transform: uppercase;
   line-height: 1.2;
   letter-spacing: -0.3px;
-  margin: 0 0 14px;
+  margin: 0 0 10px;
 }
 
 .corp-hero-title em {
