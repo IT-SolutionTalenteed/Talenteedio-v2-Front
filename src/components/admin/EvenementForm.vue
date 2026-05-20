@@ -34,7 +34,7 @@
 
           <v-col cols="12">
             <div class="text-caption text-medium-emphasis mb-1">{{ t('admin.events.featuredImage') }}</div>
-            <input type="file" accept="image/*" @change="e => { imageFile = e.target.files[0]; imagePreview = e.target.files[0] ? URL.createObjectURL(e.target.files[0]) : null }" style="display:block;width:100%;" />
+            <input type="file" accept="image/*" @change="onImageChange" style="display:block;width:100%;" />
             <v-avatar v-if="imagePreview" size="80" rounded="lg" class="mt-2">
               <img :src="imagePreview" style="object-fit:cover;width:100%;height:100%" />
             </v-avatar>
@@ -105,10 +105,12 @@ import { useI18n } from 'vue-i18n'
 import WysiwygEditor from '../WysiwygEditor.vue'
 import ComboboxMultiple from '../shared/ComboboxMultiple.vue'
 import evenementService from '../../services/evenementService.js'
+import { useImageCompression } from '../../composables/useImageCompression.js'
 
 const route = useRoute()
 const router = useRouter()
 const { t } = useI18n()
+const { compressImage, validateFileSize, validateFileType, compressionError } = useImageCompression()
 
 const isEdit = computed(() => !!route.params.id)
 const saving = ref(false)
@@ -137,6 +139,31 @@ const emptyForm = () => ({
 const form = ref(emptyForm())
 
 const goBack = () => router.push({ name: 'AdminEvenements' })
+
+const onImageChange = async (event) => {
+  const file = event.target.files[0]
+  if (!file) return
+  
+  if (!validateFileType(file)) {
+    showSnack(compressionError.value, 'error')
+    return
+  }
+  
+  if (!validateFileSize(file, 5)) {
+    showSnack(compressionError.value, 'error')
+    return
+  }
+  
+  const compressedFile = await compressImage(file, {
+    maxWidth: 1920,
+    maxHeight: 1080,
+    quality: 0.85,
+    outputFormat: 'auto'
+  })
+  
+  imageFile.value = compressedFile
+  imagePreview.value = URL.createObjectURL(compressedFile)
+}
 
 const loadReferentiels = async () => {
   try {
