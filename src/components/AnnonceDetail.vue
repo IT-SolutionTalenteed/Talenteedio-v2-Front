@@ -92,7 +92,7 @@
                 <p class="od-cta-note">{{ t('annonces.detail.talentOnly') }}</p>
               </template>
               <template v-else>
-                <button type="button" class="btn btn--blue btn--lg" @click="showLoginModal = true">
+                <button type="button" class="btn btn--blue btn--lg od-btn-login" @click="showLoginModal = true">
                   <i class="fa-solid fa-lock" style="margin-right:6px;"></i>{{ t('annonces.detail.loginToApply') }}
                 </button>
                 <router-link to="/profile-selection" class="btn btn--orange btn--lg" style="margin-top:8px;">
@@ -246,7 +246,7 @@
                   </template>
                 </template>
                 <template v-else>
-                  <button type="button" class="btn btn--blue" style="display:block;width:100%;text-align:center;" @click="showLoginModal = true">
+                  <button type="button" class="btn btn--blue od-btn-login" style="display:block;width:100%;text-align:center;" @click="showLoginModal = true">
                     {{ t('annonces.detail.loginToApply') }}
                   </button>
                 </template>
@@ -863,6 +863,15 @@ onUnmounted(() => {
   min-width: 200px; 
 }
 .od-cta-note { font-size: 13px; color: rgba(255,255,255,.75); text-align: center; margin: 0 auto; }
+
+.od-btn-login,
+.od-btn-login:hover,
+.od-btn-login:focus {
+  color: #fff;
+}
+.od-btn-login i {
+  color: #fff;
+}
 
 .od-cta-row { display: flex; align-items: center; gap: 12px; }
 .od-cta-col { display: flex; flex-direction: column; gap: 12px; width: 100%; }
