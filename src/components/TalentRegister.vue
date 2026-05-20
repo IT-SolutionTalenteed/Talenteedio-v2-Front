@@ -55,7 +55,7 @@
           to="/entreprises"
           class="logo-item"
         >
-          <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom" class="logo-img">
+          <img v-if="entreprise.logo_url" v-lazy="entreprise.logo_url" :alt="entreprise.nom" class="logo-img">
           <span v-else class="logo-initial">{{ entreprise.nom.charAt(0).toUpperCase() }}</span>
           <span class="logo-name">{{ entreprise.nom }}</span>
         </router-link>
