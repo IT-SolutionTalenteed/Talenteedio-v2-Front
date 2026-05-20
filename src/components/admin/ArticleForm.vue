@@ -58,10 +58,12 @@ import WysiwygEditor from '../WysiwygEditor.vue'
 import ComboboxMultiple from '../shared/ComboboxMultiple.vue'
 import articleService from '../../services/articleService.js'
 import mediaCategoryService from '../../services/mediaCategoryService.js'
+import { useImageCompression } from '../../composables/useImageCompression.js'
 
 const route = useRoute()
 const router = useRouter()
 const { t } = useI18n()
+const { compressImage, validateFileSize, validateFileType, compressionError } = useImageCompression()
 
 const isEdit = computed(() => !!route.params.id)
 
@@ -91,11 +93,31 @@ const goBack = () => {
   router.push({ name: 'AdminArticles' })
 }
 
-const onImageChange = (event) => {
+const onImageChange = async (event) => {
   const file = event.target.files[0]
   if (!file) return
-  imageFile.value = file
-  imagePreview.value = URL.createObjectURL(file)
+  
+  // Validation
+  if (!validateFileType(file)) {
+    showSnack(compressionError.value, 'error')
+    return
+  }
+  
+  if (!validateFileSize(file, 5)) { // Max 5MB avant compression
+    showSnack(compressionError.value, 'error')
+    return
+  }
+  
+  // Compression automatique
+  const compressedFile = await compressImage(file, {
+    maxWidth: 1920,
+    maxHeight: 1080,
+    quality: 0.85,
+    outputFormat: 'auto' // Utilise WebP si supporté
+  })
+  
+  imageFile.value = compressedFile
+  imagePreview.value = URL.createObjectURL(compressedFile)
 }
 
 const loadMediaCategories = async () => {
