@@ -24,7 +24,7 @@
           <div class="od-hero-inner">
             <!-- Logo -->
             <div class="od-hero-logo">
-              <img v-if="offre.entreprise?.logo_url" :src="offre.entreprise.logo_url" :alt="offre.entreprise.nom" />
+              <img v-if="offre.entreprise?.logo_url" v-lazy="offre.entreprise.logo_url" :alt="offre.entreprise.nom" />
               <span v-else class="od-hero-initial">{{ offre.entreprise?.nom?.charAt(0) || '?' }}</span>
             </div>
             <!-- Infos principales -->
@@ -199,7 +199,7 @@
                 <h3 class="od-side-title">{{ t('annonces.detail.theCompany') }}</h3>
                 <div class="od-company">
                   <div class="od-company-logo">
-                    <img v-if="offre.entreprise.logo_url" :src="offre.entreprise.logo_url" :alt="offre.entreprise.nom" />
+                    <img v-if="offre.entreprise.logo_url" v-lazy="offre.entreprise.logo_url" :alt="offre.entreprise.nom" />
                     <span v-else>{{ offre.entreprise.nom.charAt(0) }}</span>
                   </div>
                   <div>
