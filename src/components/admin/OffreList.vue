@@ -38,12 +38,15 @@
         @update:model-value="onFilterChange"
       />
 
+      <v-spacer />
       <v-btn
-        v-if="!showArchived"
-        color="warning"
-        prepend-icon="mdi-archive"
-        variant="tonal"
-        @click="archiveAllOffres"
+        v-if="!showArchived && total > 0"
+        variant="text"
+        size="small"
+        color="medium-emphasis"
+        prepend-icon="mdi-archive-outline"
+        class="text-caption archive-all-btn"
+        @click="archiveAllDialog = true"
       >
         {{ t('admin.offers.archiveAll') }}
       </v-btn>
@@ -111,6 +114,27 @@
     </v-data-table-server>
 
     <ConfirmDialog ref="confirmRef" />
+
+    <v-dialog v-model="archiveAllDialog" max-width="480" persistent>
+      <v-card rounded="xl" elevation="8">
+        <v-card-text class="pa-6 text-center">
+          <v-avatar color="warning" variant="tonal" size="64" class="mb-4">
+            <v-icon size="32" color="warning">mdi-archive-alert-outline</v-icon>
+          </v-avatar>
+          <div class="text-h6 font-weight-semibold mb-2">{{ t('admin.offers.confirmArchiveAllTitle') }}</div>
+          <div class="text-body-2 text-medium-emphasis">{{ t('admin.offers.confirmArchiveAll') }}</div>
+        </v-card-text>
+        <v-card-actions class="pa-4 pt-0 d-flex ga-2">
+          <v-btn variant="tonal" class="flex-1-1" :disabled="archiveAllLoading" @click="archiveAllDialog = false">
+            {{ t('commonDashboard.confirm.cancel') }}
+          </v-btn>
+          <v-btn color="warning" variant="flat" class="flex-1-1" :loading="archiveAllLoading" @click="confirmArchiveAll">
+            <v-icon start>mdi-archive</v-icon>
+            {{ t('admin.offers.confirmArchiveAllBtn') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-card>
 </template>
 
@@ -131,6 +155,8 @@ const perPage     = ref(25)
 const searchInput = ref('')
 const showArchived = ref(false)
 const confirmRef  = ref(null)
+const archiveAllDialog = ref(false)
+const archiveAllLoading = ref(false)
 
 let searchTimer = null
 
@@ -228,20 +254,17 @@ const unarchiveItem = async (id) => {
   }
 }
 
-const archiveAllOffres = async () => {
-  const ok = await confirmRef.value.open({ 
-    message: t('admin.offers.confirmArchiveAll')
-  })
-  if (!ok) return
-  loading.value = true
+const confirmArchiveAll = async () => {
+  archiveAllLoading.value = true
   try {
     const res = await offreService.archiveAll()
+    archiveAllDialog.value = false
     showSnack(res.data.message || t('admin.offers.allOffersArchived'), 'success')
     await loadPage()
   } catch (err) {
     showSnack(err.response?.data?.message || t('admin.offers.errorArchive'), 'error')
   } finally {
-    loading.value = false
+    archiveAllLoading.value = false
   }
 }
 
@@ -262,3 +285,13 @@ const deleteItem = async (id) => {
 
 const formatDate = (d) => new Date(d).toLocaleDateString('fr-FR')
 </script>
+
+<style scoped>
+.archive-all-btn {
+  opacity: 0.75;
+  letter-spacing: 0;
+}
+.archive-all-btn:hover {
+  opacity: 1;
+}
+</style>
