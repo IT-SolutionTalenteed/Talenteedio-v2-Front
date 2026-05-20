@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run compress:images && vite build",
-    "build:no-compress": "vite build",
+    "build": "vite build",
+    "build:with-compress": "npm run compress:images && vite build",
     "compress:images": "node scripts/compress-images.js",
     "compress:images:init-cache": "node scripts/compress-images.js --init-cache",
     "preview": "vite preview"
