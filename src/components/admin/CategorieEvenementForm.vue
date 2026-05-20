@@ -153,7 +153,7 @@
                   <input
                     type="file"
                     accept="image/*"
-                    @change="e => { tem.avatarFile = e.target.files[0]; tem.avatarPreview = e.target.files[0] ? URL.createObjectURL(e.target.files[0]) : null }"
+                    @change="e => onTestimonialAvatarChange(e, tem)"
                     style="display:block;width:100%;"
                   />
                 </v-col>
@@ -180,8 +180,10 @@ import { useI18n } from 'vue-i18n'
 import categorieEvenementService from '../../services/categorieEvenementService.js'
 import temoignageService from '../../services/temoignageService.js'
 import ConfirmDialog from '../shared/ConfirmDialog.vue'
+import { useImageCompression } from '../../composables/useImageCompression.js'
 
 const { t: $t } = useI18n()
+const { compressImage, validateFileSize, validateFileType, compressionError } = useImageCompression()
 
 const route = useRoute()
 const router = useRouter()
@@ -260,12 +262,30 @@ onMounted(async () => {
   }
 })
 
-const onImageChange = (e) => {
+const onImageChange = async (e) => {
   const file = e.target.files?.[0]
   if (!file) return
-  imageFile.value = file
+  
+  if (!validateFileType(file)) {
+    showSnack(compressionError.value, 'error')
+    return
+  }
+  
+  if (!validateFileSize(file, 5)) {
+    showSnack(compressionError.value, 'error')
+    return
+  }
+  
+  const compressedFile = await compressImage(file, {
+    maxWidth: 1920,
+    maxHeight: 1080,
+    quality: 0.85,
+    outputFormat: 'auto'
+  })
+  
+  imageFile.value = compressedFile
   removeImageFlag.value = false
-  imagePreview.value = URL.createObjectURL(file)
+  imagePreview.value = URL.createObjectURL(compressedFile)
 }
 
 const onVideoChange = (e) => {
@@ -273,6 +293,31 @@ const onVideoChange = (e) => {
   if (!file) return
   videoFile.value = file
   removeVideoFlag.value = false
+}
+
+const onTestimonialAvatarChange = async (e, tem) => {
+  const file = e.target.files?.[0]
+  if (!file) return
+  
+  if (!validateFileType(file)) {
+    showSnack(compressionError.value, 'error')
+    return
+  }
+  
+  if (!validateFileSize(file, 2)) {
+    showSnack(compressionError.value, 'error')
+    return
+  }
+  
+  const compressedFile = await compressImage(file, {
+    maxWidth: 400,
+    maxHeight: 400,
+    quality: 0.85,
+    outputFormat: 'auto'
+  })
+  
+  tem.avatarFile = compressedFile
+  tem.avatarPreview = URL.createObjectURL(compressedFile)
 }
 
 const clearFileInput = (inputRef) => {
