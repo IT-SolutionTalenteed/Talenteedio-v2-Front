@@ -92,9 +92,9 @@
                 <p class="od-cta-note">{{ t('annonces.detail.talentOnly') }}</p>
               </template>
               <template v-else>
-                <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--blue btn--lg">
+                <button type="button" class="btn btn--blue btn--lg" @click="showLoginModal = true">
                   <i class="fa-solid fa-lock" style="margin-right:6px;"></i>{{ t('annonces.detail.loginToApply') }}
-                </router-link>
+                </button>
                 <router-link to="/profile-selection" class="btn btn--orange btn--lg" style="margin-top:8px;">
                   {{ t('annonces.detail.createAccount') }}
                 </router-link>
@@ -246,9 +246,9 @@
                   </template>
                 </template>
                 <template v-else>
-                  <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--blue" style="display:block;text-align:center;">
+                  <button type="button" class="btn btn--blue" style="display:block;width:100%;text-align:center;" @click="showLoginModal = true">
                     {{ t('annonces.detail.loginToApply') }}
-                  </router-link>
+                  </button>
                 </template>
               </div>
 
@@ -419,6 +419,18 @@
 
     <!-- ══ FOOTER ══ -->
     <Footer />
+
+    <LoginModal
+      :show="showLoginModal"
+      @close="showLoginModal = false"
+      @switch-to-register="handleSwitchToRegister"
+    />
+    <RegisterModal
+      :show="showRegisterModal"
+      :defaultProfile="registerDefaultProfile"
+      @close="showRegisterModal = false; registerDefaultProfile = null"
+      @switch-to-login="handleSwitchToLogin"
+    />
   </div>
 </template>
 
@@ -430,6 +442,8 @@ import axios from 'axios'
 import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
 import ShareCard from './ShareCard.vue'
+import LoginModal from './LoginModal.vue'
+import RegisterModal from './RegisterModal.vue'
 import { useFavoris } from '../composables/useFavoris.js'
 import { useMeta } from '../composables/useMeta'
 
@@ -452,6 +466,21 @@ const dejaPostule = ref(null) // null = chargement, true = déjà postulé, fals
 const showModal = ref(false)
 const cvFile = ref(null)
 const submitting = ref(false)
+
+const showLoginModal = ref(false)
+const showRegisterModal = ref(false)
+const registerDefaultProfile = ref(null)
+
+const handleSwitchToRegister = () => {
+  showLoginModal.value = false
+  registerDefaultProfile.value = 'talent'
+  showRegisterModal.value = true
+}
+
+const handleSwitchToLogin = () => {
+  showRegisterModal.value = false
+  showLoginModal.value = true
+}
 
 // Modal de matching
 const showMatchModal = ref(false)
