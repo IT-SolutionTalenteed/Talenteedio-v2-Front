@@ -18,7 +18,7 @@
       density="comfortable"
     >
       <template #item.image_url="{ item }">
-        <img v-if="item.image_url" :src="item.image_url" style="max-width:60px; border-radius:6px; display:block;" />
+        <img v-if="item.image_url" v-lazy="item.image_url" style="max-width:60px; border-radius:6px; display:block;" />
         <span v-else>-</span>
       </template>
 
