@@ -2,76 +2,181 @@ import imagemin from 'imagemin';
 import imageminMozjpeg from 'imagemin-mozjpeg';
 import imageminPngquant from 'imagemin-pngquant';
 import imageminWebp from 'imagemin-webp';
+import { createHash } from 'crypto';
 import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import { dirname, join, extname, basename } from 'path';
+import {
+  existsSync,
+  readFileSync,
+  writeFileSync,
+  readdirSync,
+  statSync,
+} from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const publicImagesPath = join(__dirname, '../public/images');
+const cacheFile = join(__dirname, '../.image-compression-cache.json');
 
-console.log('🖼️  Compression des images de background...\n');
+const SOURCE_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg']);
+
+const hashFile = (filePath) =>
+  createHash('sha256').update(readFileSync(filePath)).digest('hex');
+
+const loadCache = () => {
+  if (!existsSync(cacheFile)) return {};
+  try {
+    return JSON.parse(readFileSync(cacheFile, 'utf-8'));
+  } catch {
+    console.log('⚠️  Cache invalide, réinitialisation...');
+    return {};
+  }
+};
+
+const saveCache = (cache) => {
+  writeFileSync(cacheFile, JSON.stringify(cache, null, 2) + '\n');
+};
+
+const listSourceImages = () => {
+  if (!existsSync(publicImagesPath)) return [];
+  return readdirSync(publicImagesPath)
+    .filter((name) => SOURCE_EXTENSIONS.has(extname(name).toLowerCase()))
+    .map((name) => join(publicImagesPath, name));
+};
+
+const needsCompression = (filePath, cache) => {
+  const name = basename(filePath);
+  const hash = hashFile(filePath);
+  const entry = cache[name];
+  return !entry || entry.hash !== hash;
+};
+
+const needsWebp = (filePath, cache) => {
+  const name = basename(filePath);
+  const webpPath = filePath.replace(/\.(png|jpe?g)$/i, '.webp');
+  if (!existsSync(webpPath)) return true;
+  const entry = cache[name];
+  if (!entry?.webp) return true;
+  if (needsCompression(filePath, cache)) return true;
+  const sourceMtime = statSync(filePath).mtimeMs;
+  const webpMtime = statSync(webpPath).mtimeMs;
+  return webpMtime < sourceMtime;
+};
+
+const pngPlugins = [
+  imageminPngquant({
+    quality: [0.65, 0.8],
+    speed: 1,
+  }),
+];
+
+const jpegPlugins = [
+  imageminMozjpeg({
+    quality: 80,
+    progressive: true,
+  }),
+];
+
+const webpPlugins = [
+  imageminWebp({
+    quality: 80,
+  }),
+];
+
+const pluginsFor = (filePath) => {
+  const ext = extname(filePath).toLowerCase();
+  if (ext === '.png') return pngPlugins;
+  if (ext === '.jpg' || ext === '.jpeg') return jpegPlugins;
+  return null;
+};
+
+const initCacheOnly = process.argv.includes('--init-cache');
 
 (async () => {
-  try {
-    // Compression des PNG
-    const pngFiles = await imagemin([`${publicImagesPath}/*.png`], {
-      destination: publicImagesPath,
-      plugins: [
-        imageminPngquant({
-          quality: [0.65, 0.80],
-          speed: 1
-        })
-      ]
-    });
-    
-    if (pngFiles.length > 0) {
-      console.log(`✅ ${pngFiles.length} fichiers PNG compressés`);
-      pngFiles.forEach(file => {
-        console.log(`   - ${file.sourcePath.split('/').pop()}`);
-      });
-    }
+  console.log('🖼️  Compression des images de background...\n');
 
-    // Compression des JPEG/JPG
-    const jpgFiles = await imagemin([`${publicImagesPath}/*.{jpg,jpeg}`], {
-      destination: publicImagesPath,
-      plugins: [
-        imageminMozjpeg({
-          quality: 80,
-          progressive: true
-        })
-      ]
-    });
-    
-    if (jpgFiles.length > 0) {
-      console.log(`\n✅ ${jpgFiles.length} fichiers JPEG compressés`);
-      jpgFiles.forEach(file => {
-        console.log(`   - ${file.sourcePath.split('/').pop()}`);
-      });
-    }
+  const cache = loadCache();
+  const sources = listSourceImages();
 
-    // Génération de versions WebP (optionnel mais recommandé)
-    const webpFiles = await imagemin([`${publicImagesPath}/*.{png,jpg,jpeg}`], {
-      destination: publicImagesPath,
-      plugins: [
-        imageminWebp({
-          quality: 80
-        })
-      ]
-    });
-    
-    if (webpFiles.length > 0) {
-      console.log(`\n✅ ${webpFiles.length} versions WebP générées`);
-      webpFiles.forEach(file => {
-        const filename = file.sourcePath.split('/').pop();
-        const webpName = filename.replace(/\.(png|jpg|jpeg)$/i, '.webp');
-        console.log(`   - ${webpName}`);
-      });
+  if (initCacheOnly) {
+    for (const filePath of sources) {
+      const name = basename(filePath);
+      const webpPath = filePath.replace(/\.(png|jpe?g)$/i, '.webp');
+      cache[name] = {
+        hash: hashFile(filePath),
+        webp: existsSync(webpPath),
+      };
     }
-
-    console.log('\n✨ Compression terminée avec succès!\n');
-  } catch (error) {
-    console.error('❌ Erreur lors de la compression:', error);
-    process.exit(1);
+    for (const cachedName of Object.keys(cache)) {
+      if (!sources.some((p) => basename(p) === cachedName)) {
+        delete cache[cachedName];
+      }
+    }
+    saveCache(cache);
+    console.log(
+      `✨ Cache initialisé pour ${sources.length} image(s) (sans recompression).\n`,
+    );
+    return;
   }
-})();
+
+  if (sources.length === 0) {
+    console.log('ℹ️  Aucune image dans public/images.\n');
+    return;
+  }
+
+  const toCompress = sources.filter((p) => needsCompression(p, cache));
+  const toWebp = sources.filter((p) => needsWebp(p, cache));
+
+  if (toCompress.length === 0 && toWebp.length === 0) {
+    console.log('✨ Aucune nouvelle image à compresser (cache à jour).\n');
+    return;
+  }
+
+  let totalProcessed = 0;
+
+  for (const filePath of toCompress) {
+    const name = basename(filePath);
+    const plugins = pluginsFor(filePath);
+    if (!plugins) continue;
+
+    await imagemin([filePath], {
+      destination: publicImagesPath,
+      plugins,
+    });
+
+    const hash = hashFile(filePath);
+    cache[name] = { ...(cache[name] || {}), hash, webp: cache[name]?.webp ?? false };
+    console.log(`✅ ${name} compressé`);
+    totalProcessed += 1;
+  }
+
+  if (toWebp.length > 0) {
+    const webpResults = await imagemin(toWebp, {
+      destination: publicImagesPath,
+      plugins: webpPlugins,
+    });
+
+    for (const file of webpResults) {
+      const name = basename(file.sourcePath);
+      const webpName = name.replace(/\.(png|jpe?g)$/i, '.webp');
+      const hash = hashFile(file.sourcePath);
+      cache[name] = { hash, webp: true };
+      console.log(`✅ ${webpName} généré`);
+      totalProcessed += 1;
+    }
+  }
+
+  // Entrées orphelines : image supprimée du dossier
+  for (const cachedName of Object.keys(cache)) {
+    if (!sources.some((p) => basename(p) === cachedName)) {
+      delete cache[cachedName];
+    }
+  }
+
+  saveCache(cache);
+  console.log(`\n✨ ${totalProcessed} fichier(s) traité(s).\n`);
+})().catch((error) => {
+  console.error('❌ Erreur lors de la compression:', error);
+  process.exit(1);
+});
