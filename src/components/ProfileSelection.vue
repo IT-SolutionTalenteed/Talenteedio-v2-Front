@@ -191,7 +191,6 @@ const goToCorporateRegister = () => {
 /* Hero Section */
 .selection-hero {
   position: relative;
-  min-height: 60vh;
   background: linear-gradient(160deg, #020830 0%, #040a5d 50%, #0d1a8a 100%);
   background-image: 
     linear-gradient(160deg, rgba(2, 8, 48, 0.75) 0%, rgba(4, 10, 93, 0.75) 50%, rgba(13, 26, 138, 0.75) 100%),
@@ -200,11 +199,9 @@ const goToCorporateRegister = () => {
   background-position: center center;
   background-repeat: no-repeat;
   color: #fff;
-  padding: 100px 0 80px;
+  padding: 48px 0 40px;
   text-align: center;
   overflow: hidden;
-  display: flex;
-  align-items: center;
 }
 
 .hero-content {
@@ -228,15 +225,15 @@ const goToCorporateRegister = () => {
   text-transform: uppercase;
   padding: 8px 20px;
   border-radius: 50px;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 .hero-title {
-  font-size: clamp(32px, 5vw, 56px);
+  font-size: clamp(28px, 4vw, 44px);
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: -0.5px;
-  margin: 0 0 16px;
+  margin: 0 0 12px;
   line-height: 1.1;
 }
 
@@ -505,8 +502,7 @@ const goToCorporateRegister = () => {
   }
   
   .selection-hero {
-    padding: 80px 0 60px;
-    min-height: 50vh;
+    padding: 40px 0 32px;
   }
   
   .cards-section {
@@ -520,8 +516,7 @@ const goToCorporateRegister = () => {
 
 @media (max-width: 600px) {
   .selection-hero {
-    padding: 60px 0 40px;
-    min-height: 45vh;
+    padding: 36px 0 28px;
     background-size: cover;
     background-position: center;
   }
