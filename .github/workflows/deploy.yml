@@ -36,11 +36,16 @@ jobs:
             echo "Node: $(node -v)"
             echo "NPM: $(npm -v)"
 
+            PREVIOUS_COMMIT=$(git rev-parse HEAD)
+
             git fetch origin
             git reset --hard origin/main
             git pull origin main
 
             npm install
+
+            bash scripts/compress-images-if-changed.sh "$PREVIOUS_COMMIT" HEAD
+
             rm -rf dist/
             npm run build
 
