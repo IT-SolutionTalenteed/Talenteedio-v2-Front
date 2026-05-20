@@ -45,11 +45,26 @@ const listSourceImages = () => {
     .map((name) => join(publicImagesPath, name));
 };
 
+const fileFingerprint = (filePath) => {
+  const stats = statSync(filePath);
+  return { size: stats.size, mtimeMs: stats.mtimeMs };
+};
+
 const needsCompression = (filePath, cache) => {
   const name = basename(filePath);
-  const hash = hashFile(filePath);
   const entry = cache[name];
-  return !entry || entry.hash !== hash;
+  const { size, mtimeMs } = fileFingerprint(filePath);
+
+  if (
+    entry?.hash &&
+    entry.size === size &&
+    entry.mtimeMs === mtimeMs
+  ) {
+    return false;
+  }
+
+  const hash = hashFile(filePath);
+  return !entry?.hash || entry.hash !== hash;
 };
 
 const needsWebp = (filePath, cache) => {
@@ -103,8 +118,11 @@ const initCacheOnly = process.argv.includes('--init-cache');
     for (const filePath of sources) {
       const name = basename(filePath);
       const webpPath = filePath.replace(/\.(png|jpe?g)$/i, '.webp');
+      const { size, mtimeMs } = fileFingerprint(filePath);
       cache[name] = {
         hash: hashFile(filePath),
+        size,
+        mtimeMs,
         webp: existsSync(webpPath),
       };
     }
@@ -145,8 +163,15 @@ const initCacheOnly = process.argv.includes('--init-cache');
       plugins,
     });
 
+    const { size, mtimeMs } = fileFingerprint(filePath);
     const hash = hashFile(filePath);
-    cache[name] = { ...(cache[name] || {}), hash, webp: cache[name]?.webp ?? false };
+    cache[name] = {
+      ...(cache[name] || {}),
+      hash,
+      size,
+      mtimeMs,
+      webp: cache[name]?.webp ?? false,
+    };
     console.log(`✅ ${name} compressé`);
     totalProcessed += 1;
   }
@@ -160,8 +185,9 @@ const initCacheOnly = process.argv.includes('--init-cache');
     for (const file of webpResults) {
       const name = basename(file.sourcePath);
       const webpName = name.replace(/\.(png|jpe?g)$/i, '.webp');
+      const { size, mtimeMs } = fileFingerprint(file.sourcePath);
       const hash = hashFile(file.sourcePath);
-      cache[name] = { hash, webp: true };
+      cache[name] = { hash, size, mtimeMs, webp: true };
       console.log(`✅ ${webpName} généré`);
       totalProcessed += 1;
     }
