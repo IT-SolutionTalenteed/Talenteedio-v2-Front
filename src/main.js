@@ -16,6 +16,9 @@ import App from './App.vue'
 import router from './router'
 import i18n from './i18n'
 
+// Import lazy loading directive
+import { vLazy } from './composables/useLazyImage.js'
+
 // Import custom styles (après Vuetify pour priorité CSS)
 import './assets/scss/main.scss'
 import './assets/admin-custom.css'
@@ -57,5 +60,8 @@ app.use(i18n)
 app.use(CKEditor)
 app.use(vuetify)
 app.component('apexchart', VueApexCharts)
+
+// Enregistrer la directive lazy loading globalement
+app.directive('lazy', vLazy)
 
 app.mount('#app')
