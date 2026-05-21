@@ -60,7 +60,7 @@
             class="event-card"
           >
             <div v-if="event.image_url" class="event-image">
-              <img :src="event.image_url" :alt="event.titre" />
+              <img v-lazy="event.image_url" :alt="event.titre" />
             </div>
             <div class="event-content">
               <span v-if="event.categorie" class="event-category">{{ event.categorie.titre }}</span>
@@ -96,7 +96,7 @@
             class="event-card"
           >
             <div v-if="event.image_url" class="event-image">
-              <img :src="event.image_url" :alt="event.titre" />
+              <img v-lazy="event.image_url" :alt="event.titre" />
             </div>
             <div class="event-content">
               <h3 class="event-title">{{ event.titre }}</h3>
@@ -125,7 +125,7 @@
         </div>
         <div class="gallery-grid">
           <div v-for="(item, idx) in gallery" :key="idx" class="gallery-item">
-            <img :src="item.url" :alt="item.alt || 'Gallery image'" />
+            <img v-lazy="item.url" :alt="item.alt || 'Gallery image'" />
           </div>
         </div>
       </div>

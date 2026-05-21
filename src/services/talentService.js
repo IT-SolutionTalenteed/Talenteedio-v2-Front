@@ -1,7 +1,16 @@
 import api from './api.js'
 
 export const talentService = {
-  getAll: (page = 1, perPage = 25, search = '') => api.get(`/admin/talents?page=${page}&per_page=${perPage}&search=${encodeURIComponent(search)}`),
+  getAll: (page = 1, perPage = 25, search = '', sortBy = 'created_at', sortOrder = 'desc') => {
+    const params = new URLSearchParams({
+      page: page.toString(),
+      per_page: perPage.toString(),
+      search: search,
+      sort_by: sortBy,
+      sort_order: sortOrder
+    })
+    return api.get(`/admin/talents?${params.toString()}`)
+  },
   getOne: (id) => api.get(`/admin/talents/${id}`),
   updateProfil: (id, data) => api.patch(`/admin/talents/${id}/profil`, data),
   toggleSuspend: (id) => api.patch(`/admin/talents/${id}/suspend`),

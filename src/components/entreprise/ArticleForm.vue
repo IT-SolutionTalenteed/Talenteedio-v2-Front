@@ -19,7 +19,7 @@
           <div class="text-body-2 font-weight-medium mb-1">{{ $t('admin.articles.image') }}</div>
           <input type="file" accept="image/*" @change="e => imageFile = e.target.files[0]" />
           <div v-if="existingImageUrl" class="mt-2">
-            <img :src="existingImageUrl" style="max-width:120px; border-radius:8px;" />
+            <img v-lazy="existingImageUrl" style="max-width:120px; border-radius:8px;" />
           </div>
         </div>
 

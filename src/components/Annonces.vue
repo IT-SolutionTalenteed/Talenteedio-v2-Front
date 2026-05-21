@@ -158,16 +158,20 @@
           >
             <!-- Image de l'offre -->
             <div v-if="offre.image_url" class="offre-card-visual">
-              <div class="offre-card-bg" :style="`background-image:url('${offre.image_url}');background-size:cover;background-position:center`"></div>
+              <DeferredCoverBackground :image-url="offre.image_url" />
             </div>
 
             <!-- Badge Nouveau (moins de 24h) -->
-            <span v-if="isNew(offre.created_at)" class="badge-new">{{ t('annonces.new') }}</span>
+            <span v-if="isNew(offre.created_at)" class="badge-new">{{ t('annonces.card.new') }}</span>
 
             <!-- Header carte : logo + entreprise -->
             <div class="offre-head">
               <div class="offre-logo">
-                <img v-if="offre.entreprise?.logo_url" :src="offre.entreprise.logo_url" :alt="offre.entreprise.nom" />
+                <LoadedImage
+                  v-if="offre.entreprise?.logo_url"
+                  :src="offre.entreprise.logo_url"
+                  :alt="offre.entreprise.nom"
+                />
                 <span v-else class="offre-logo-initial">
                   {{ offre.entreprise ? offre.entreprise.nom.charAt(0) : '?' }}
                 </span>
@@ -255,6 +259,8 @@ import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
+import DeferredCoverBackground from './shared/DeferredCoverBackground.vue'
+import LoadedImage from './shared/LoadedImage.vue'
 import { useFavoris } from '../composables/useFavoris.js'
 
 const { t, locale } = useI18n()
@@ -901,11 +907,6 @@ onUnmounted(() => {
   position: relative;
   border-radius: 16px 16px 0 0;
   overflow: hidden;
-}
-
-.offre-card-bg {
-  position: absolute;
-  inset: 0;
 }
 
 .offre-card {

@@ -140,8 +140,10 @@ import WysiwygEditor from '../WysiwygEditor.vue'
 import ComboboxMultiple from '../shared/ComboboxMultiple.vue'
 import offreService from '../../services/offreService.js'
 import api from '../../services/api.js'
+import { useImageCompression } from '../../composables/useImageCompression.js'
 
 const { t: $t } = useI18n()
+const { compressImage, validateFileSize, validateFileType, compressionError } = useImageCompression()
 
 const route = useRoute()
 const router = useRouter()
@@ -199,12 +201,30 @@ watch([() => form.value.salaire_min, () => form.value.salaire_max], () => {
   }
 })
 
-const handleImageChange = (e) => {
+const handleImageChange = async (e) => {
   const file = e.target.files[0]
   if (!file) return
-  form.value.image = file
+  
+  if (!validateFileType(file)) {
+    showSnack(compressionError.value, 'error')
+    return
+  }
+  
+  if (!validateFileSize(file, 5)) {
+    showSnack(compressionError.value, 'error')
+    return
+  }
+  
+  const compressedFile = await compressImage(file, {
+    maxWidth: 1920,
+    maxHeight: 1080,
+    quality: 0.85,
+    outputFormat: 'auto'
+  })
+  
+  form.value.image = compressedFile
   form.value.remove_image = false
-  imagePreview.value = URL.createObjectURL(file)
+  imagePreview.value = URL.createObjectURL(compressedFile)
 }
 
 const removeImage = () => {

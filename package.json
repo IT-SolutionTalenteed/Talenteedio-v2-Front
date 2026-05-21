@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:with-compress": "npm run compress:images && vite build",
+    "compress:images": "node scripts/compress-images.js",
+    "compress:images:init-cache": "node scripts/compress-images.js --init-cache",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -29,6 +32,10 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.4",
+    "imagemin": "^9.0.1",
+    "imagemin-mozjpeg": "^10.0.0",
+    "imagemin-pngquant": "^10.0.0",
+    "imagemin-webp": "^8.0.0",
     "sass": "^1.98.0",
     "sass-loader": "^13.3.3",
     "vite": "^7.3.1",

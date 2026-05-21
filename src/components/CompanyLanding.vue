@@ -431,22 +431,20 @@ onMounted(loadReferentiels)
 .hero-section {
   position: relative;
   background: url('/images/Gemini_Generated_Image_gcxo7bgcxo7bgcxo.png') center/cover no-repeat;
-  min-height: 50vh;
-  display: flex;
-  align-items: center;
   color: #fff;
-  padding: 80px 0 60px;
+  padding: 48px 0 40px;
+  text-align: center;
 }
 .hero-overlay { position: absolute; inset: 0; background: rgba(4,10,93,0.75); }
 .hero-content { position: relative; z-index: 1; max-width: 800px; text-align: center; margin: 0 auto; }
 .hero-badge {
   display: inline-block; background: rgba(255,152,0,0.2); color: var(--orange);
   font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
-  padding: 8px 20px; border-radius: 50px; margin-bottom: 20px; border: 2px solid var(--orange);
+  padding: 8px 20px; border-radius: 50px; margin-bottom: 14px; border: 2px solid var(--orange);
 }
-.hero-title { font-size: 42px; font-weight: 800; line-height: 1.2; margin: 0 0 16px; text-shadow: 0 2px 20px rgba(0,0,0,.3); }
-.hero-subtitle { font-size: 18px; line-height: 1.6; opacity: .95; margin: 0 auto; max-width: 650px; }
-@media(max-width:768px) { .hero-title { font-size: 28px; } .hero-subtitle { font-size: 16px; } }
+.hero-title { font-size: clamp(26px, 4vw, 38px); font-weight: 800; line-height: 1.2; margin: 0 0 12px; text-shadow: 0 2px 20px rgba(0,0,0,.3); }
+.hero-subtitle { font-size: clamp(15px, 2vw, 17px); line-height: 1.6; opacity: .95; margin: 0 auto; max-width: 650px; }
+@media(max-width:768px) { .hero-section { padding: 40px 0 32px; } .hero-title { font-size: 26px; } .hero-subtitle { font-size: 15px; } }
 
 /* ══ CONFIRMATION ══ */
 .confirm-card {

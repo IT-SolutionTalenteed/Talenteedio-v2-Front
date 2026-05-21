@@ -14,6 +14,8 @@ export const categorieEvenementService = {
   },
   delete: (id) => api.delete(`/admin/categorie-evenements/${id}`),
   removeGalerieItem: (id, path) => api.delete(`/admin/categorie-evenements/${id}/galerie`, { data: { path } }),
+  removeImage: (id) => api.delete(`/admin/categorie-evenements/${id}/image`),
+  removeVideo: (id) => api.delete(`/admin/categorie-evenements/${id}/video`),
 
   // Témoignages
   attachTemoignage: (categorieId, temoignageId) =>

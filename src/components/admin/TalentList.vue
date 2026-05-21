@@ -10,20 +10,35 @@
       </template>
     </v-toolbar>
 
-    <!-- Barre de recherche -->
+    <!-- Barre de recherche et filtres -->
     <div class="pa-3 pb-0">
-      <v-text-field
-        v-model="searchInput"
-        prepend-inner-icon="mdi-magnify"
-        :placeholder="t('admin.talents.searchPlaceholder')"
-        density="compact"
-        variant="outlined"
-        clearable
-        hide-details
-        style="max-width: 420px"
-        @update:model-value="onSearchChange"
-        @click:clear="onClear"
-      />
+      <div class="d-flex flex-wrap gap-3 align-center justify-space-between">
+        <v-text-field
+          v-model="searchInput"
+          prepend-inner-icon="mdi-magnify"
+          :placeholder="t('admin.talents.searchPlaceholder')"
+          density="compact"
+          variant="outlined"
+          clearable
+          hide-details
+          style="max-width: 420px; flex: 1 1 300px"
+          @update:model-value="onSearchChange"
+          @click:clear="onClear"
+        />
+        
+        <v-select
+          v-model="sortOption"
+          :items="sortOptions"
+          item-title="label"
+          item-value="value"
+          :label="t('admin.talents.sortBy')"
+          density="compact"
+          variant="outlined"
+          hide-details
+          style="max-width: 240px; min-width: 200px"
+          @update:model-value="onSortChange"
+        />
+      </div>
     </div>
 
     <v-data-table-server
@@ -40,7 +55,10 @@
     >
       <template #item.name="{ item }">
         <div class="font-weight-bold">{{ item.name }}</div>
-        <div v-if="item.titre_poste" class="text-caption text-medium-emphasis">{{ item.titre_poste }}</div>
+      </template>
+
+      <template #item.titre_poste="{ item }">
+        <span class="text-medium-emphasis">{{ item.titre_poste || '—' }}</span>
       </template>
 
       <template #item.role="{ item }">
@@ -120,6 +138,7 @@ const loading    = ref(false)
 const page       = ref(1)
 const perPage    = ref(25)
 const searchInput = ref('')
+const sortOption = ref('created_at_desc')
 const confirmRef = ref(null)
 
 let searchTimer = null
@@ -131,9 +150,19 @@ const showSnack = (msg, color = 'success') => {
   snackMsg.value = msg; snackColor.value = color; snackbar.value = true
 }
 
+const sortOptions = [
+  { value: 'created_at_desc', label: t('admin.talents.sortByNewest') },
+  { value: 'created_at_asc', label: t('admin.talents.sortByOldest') },
+  { value: 'name_asc', label: t('admin.talents.sortByNameAZ') },
+  { value: 'name_desc', label: t('admin.talents.sortByNameZA') },
+  { value: 'titre_poste_asc', label: t('admin.talents.sortByJobAZ') },
+  { value: 'titre_poste_desc', label: t('admin.talents.sortByJobZA') },
+]
+
 const headers = [
   { title: t('admin.talents.name'), key: 'name', sortable: false },
   { title: t('admin.talents.email'), key: 'email', sortable: false },
+  { title: t('admin.talents.job'), key: 'titre_poste', sortable: false },
   { title: t('admin.talents.role'), key: 'role', sortable: false },
   { title: t('admin.talents.location'), key: 'localisation', sortable: false },
   { title: t('admin.talents.source'), key: 'source_provenance', sortable: false },
@@ -156,7 +185,11 @@ const statutOptions = [
 const loadPage = async () => {
   loading.value = true
   try {
-    const res = await talentService.getAll(page.value, perPage.value, searchInput.value)
+    // Extraire sortBy et sortOrder depuis sortOption
+    const lastUnderscore = sortOption.value.lastIndexOf('_')
+    const sortBy = sortOption.value.substring(0, lastUnderscore)
+    const sortOrder = sortOption.value.substring(lastUnderscore + 1)
+    const res = await talentService.getAll(page.value, perPage.value, searchInput.value, sortBy, sortOrder)
     talents.value = res.data.data
     total.value   = res.data.total
   } catch {
@@ -184,6 +217,11 @@ const onSearchChange = () => {
 
 const onClear = () => {
   searchInput.value = ''
+  page.value = 1
+  loadPage()
+}
+
+const onSortChange = () => {
   page.value = 1
   loadPage()
 }

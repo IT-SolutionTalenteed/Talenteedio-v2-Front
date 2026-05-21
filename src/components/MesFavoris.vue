@@ -50,7 +50,7 @@
           <div class="favoris-grid">
             <div v-for="offre in favoris" :key="offre.id" class="favori-card">
               <div class="favori-logo">
-                <img v-if="offre.entreprise?.logo_url" :src="offre.entreprise.logo_url" :alt="offre.entreprise.nom" />
+                <img v-if="offre.entreprise?.logo_url" v-lazy="offre.entreprise.logo_url" :alt="offre.entreprise.nom" />
                 <span v-else class="favori-initial">{{ offre.entreprise?.nom?.charAt(0) || '?' }}</span>
               </div>
               <div class="favori-body">

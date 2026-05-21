@@ -17,21 +17,30 @@
 
           <v-col cols="12" md="6">
             <div class="text-caption text-medium-emphasis mb-1">{{ $t('admin.eventCategories.image') }}</div>
-            <input type="file" accept="image/*" @change="e => { imageFile = e.target.files[0]; imagePreview = URL.createObjectURL(e.target.files[0]) }" style="display:block;width:100%;" />
-            <v-avatar v-if="imagePreview" size="80" rounded="lg" class="mt-2">
-              <img :src="imagePreview" style="object-fit:cover;width:100%;height:100%" />
-            </v-avatar>
-            <v-avatar v-else-if="editingItem?.image_url" size="80" rounded="lg" class="mt-2">
-              <img :src="editingItem.image_url" style="object-fit:cover;width:100%;height:100%" />
-            </v-avatar>
+            <input ref="imageInputRef" type="file" accept="image/*" @change="onImageChange" style="display:block;width:100%;" />
+            <div v-if="displayImageUrl" class="d-flex align-center gap-3 mt-2">
+              <v-avatar size="80" rounded="lg">
+                <img :src="displayImageUrl" style="object-fit:cover;width:100%;height:100%" />
+              </v-avatar>
+              <v-btn color="error" variant="tonal" size="small" prepend-icon="mdi-delete" @click="removeImage">
+                {{ $t('admin.eventCategories.removeImage') }}
+              </v-btn>
+            </div>
           </v-col>
 
           <v-col cols="12" md="6">
             <div class="text-caption text-medium-emphasis mb-1">{{ $t('admin.eventCategories.mainVideo') }}</div>
-            <input type="file" accept="video/*" @change="e => videoFile = e.target.files[0]" style="display:block;width:100%;" />
-            <p v-if="editingItem?.video_url" class="text-caption text-medium-emphasis mt-1">
-              {{ $t('admin.eventCategories.currentVideo') }} : <a :href="editingItem.video_url" target="_blank">{{ $t('admin.eventCategories.view') }}</a>
-            </p>
+            <input ref="videoInputRef" type="file" accept="video/*" @change="onVideoChange" style="display:block;width:100%;" />
+            <div v-if="displayVideoLabel" class="d-flex align-center flex-wrap gap-2 mt-2">
+              <span class="text-caption text-medium-emphasis">
+                {{ $t('admin.eventCategories.currentVideo') }} :
+                <a v-if="editingItem?.video_url && !videoFile" :href="editingItem.video_url" target="_blank">{{ $t('admin.eventCategories.view') }}</a>
+                <span v-else>{{ videoFile?.name }}</span>
+              </span>
+              <v-btn color="error" variant="tonal" size="small" prepend-icon="mdi-delete" @click="removeVideo">
+                {{ $t('admin.eventCategories.removeVideo') }}
+              </v-btn>
+            </div>
           </v-col>
 
           <v-col cols="12">
@@ -40,20 +49,20 @@
             <div v-if="editingItem?.galerie?.length" class="mt-2">
               <div class="text-caption text-medium-emphasis mb-1">{{ $t('admin.eventCategories.currentGallery') }} :</div>
               <div class="d-flex flex-wrap gap-2">
-                <div v-for="(path, i) in editingItem.galerie" :key="i" class="position-relative">
+                <div v-for="(path, i) in editingItem.galerie" :key="i" class="d-flex flex-column align-center ga-1 pa-1">
                   <v-avatar v-if="isImage(path)" size="80" rounded="lg">
                     <img :src="storageUrl(path)" style="object-fit:cover;width:100%;height:100%" />
                   </v-avatar>
                   <v-chip v-else size="small" prepend-icon="mdi-video">{{ path.split('/').pop() }}</v-chip>
                   <v-btn
-                    icon="mdi-close"
-                    size="x-small"
                     color="error"
-                    variant="elevated"
-                    class="position-absolute"
-                    style="top:-8px;right:-8px;"
+                    variant="tonal"
+                    size="x-small"
+                    prepend-icon="mdi-delete"
                     @click="removeGalerieItem(path)"
-                  />
+                  >
+                    {{ $t('common.actions.delete') }}
+                  </v-btn>
                 </div>
               </div>
             </div>
@@ -144,7 +153,7 @@
                   <input
                     type="file"
                     accept="image/*"
-                    @change="e => { tem.avatarFile = e.target.files[0]; tem.avatarPreview = e.target.files[0] ? URL.createObjectURL(e.target.files[0]) : null }"
+                    @change="e => onTestimonialAvatarChange(e, tem)"
                     style="display:block;width:100%;"
                   />
                 </v-col>
@@ -171,8 +180,10 @@ import { useI18n } from 'vue-i18n'
 import categorieEvenementService from '../../services/categorieEvenementService.js'
 import temoignageService from '../../services/temoignageService.js'
 import ConfirmDialog from '../shared/ConfirmDialog.vue'
+import { useImageCompression } from '../../composables/useImageCompression.js'
 
 const { t: $t } = useI18n()
+const { compressImage, validateFileSize, validateFileType, compressionError } = useImageCompression()
 
 const route = useRoute()
 const router = useRouter()
@@ -183,10 +194,26 @@ const API_BASE = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://lo
 const editingItem = ref(null)
 const imageFile = ref(null)
 const imagePreview = ref(null)
+const removeImageFlag = ref(false)
 const videoFile = ref(null)
+const removeVideoFlag = ref(false)
 const galerieFiles = ref([])
 const saving = ref(false)
 const confirmRef = ref(null)
+const imageInputRef = ref(null)
+const videoInputRef = ref(null)
+
+const displayImageUrl = computed(() => {
+  if (imagePreview.value) return imagePreview.value
+  if (removeImageFlag.value) return null
+  return editingItem.value?.image_url || null
+})
+
+const displayVideoLabel = computed(() => {
+  if (videoFile.value) return true
+  if (removeVideoFlag.value) return false
+  return !!editingItem.value?.video_url
+})
 
 const snackbar = ref(false)
 const snackMsg = ref('')
@@ -235,12 +262,76 @@ onMounted(async () => {
   }
 })
 
+const onImageChange = async (e) => {
+  const file = e.target.files?.[0]
+  if (!file) return
+  
+  if (!validateFileType(file)) {
+    showSnack(compressionError.value, 'error')
+    return
+  }
+  
+  if (!validateFileSize(file, 5)) {
+    showSnack(compressionError.value, 'error')
+    return
+  }
+  
+  const compressedFile = await compressImage(file, {
+    maxWidth: 1920,
+    maxHeight: 1080,
+    quality: 0.85,
+    outputFormat: 'auto'
+  })
+  
+  imageFile.value = compressedFile
+  removeImageFlag.value = false
+  imagePreview.value = URL.createObjectURL(compressedFile)
+}
+
+const onVideoChange = (e) => {
+  const file = e.target.files?.[0]
+  if (!file) return
+  videoFile.value = file
+  removeVideoFlag.value = false
+}
+
+const onTestimonialAvatarChange = async (e, tem) => {
+  const file = e.target.files?.[0]
+  if (!file) return
+  
+  if (!validateFileType(file)) {
+    showSnack(compressionError.value, 'error')
+    return
+  }
+  
+  if (!validateFileSize(file, 2)) {
+    showSnack(compressionError.value, 'error')
+    return
+  }
+  
+  const compressedFile = await compressImage(file, {
+    maxWidth: 400,
+    maxHeight: 400,
+    quality: 0.85,
+    outputFormat: 'auto'
+  })
+  
+  tem.avatarFile = compressedFile
+  tem.avatarPreview = URL.createObjectURL(compressedFile)
+}
+
+const clearFileInput = (inputRef) => {
+  if (inputRef.value) inputRef.value.value = ''
+}
+
 const buildFormData = () => {
   const fd = new FormData()
   fd.append('titre', form.value.titre)
   if (form.value.description) fd.append('description', form.value.description)
   if (imageFile.value) fd.append('image', imageFile.value)
+  else if (removeImageFlag.value) fd.append('remove_image', '1')
   if (videoFile.value) fd.append('video', videoFile.value)
+  else if (removeVideoFlag.value) fd.append('remove_video', '1')
   galerieFiles.value.forEach(f => fd.append('galerie[]', f))
   form.value.liste_details.filter(Boolean).forEach((v, i) => fd.append(`liste_details[${i}]`, v))
   form.value.liste_faqs.forEach((faq, i) => {
@@ -278,12 +369,74 @@ const save = async () => {
   }
 }
 
+const removeImage = async () => {
+  const ok = await confirmRef.value?.open({
+    title: $t('admin.eventCategories.confirmDeleteImage'),
+    message: $t('admin.eventCategories.confirmDeleteImageMessage'),
+  })
+  if (!ok) return
+
+  if (imageFile.value || imagePreview.value) {
+    imageFile.value = null
+    imagePreview.value = null
+    removeImageFlag.value = false
+    clearFileInput(imageInputRef)
+    return
+  }
+
+  if (!editingItem.value?.image_url) return
+
+  if (isEdit.value) {
+    try {
+      const res = await categorieEvenementService.removeImage(editingItem.value.id)
+      editingItem.value = { ...res.data, temoignages: editingItem.value.temoignages }
+      removeImageFlag.value = false
+      showSnack($t('admin.eventCategories.imageRemoved'))
+    } catch {
+      showSnack($t('admin.eventCategories.errorDelete'), 'error')
+    }
+  } else {
+    removeImageFlag.value = true
+  }
+}
+
+const removeVideo = async () => {
+  const ok = await confirmRef.value?.open({
+    title: $t('admin.eventCategories.confirmDeleteVideo'),
+    message: $t('admin.eventCategories.confirmDeleteVideoMessage'),
+  })
+  if (!ok) return
+
+  if (videoFile.value) {
+    videoFile.value = null
+    removeVideoFlag.value = false
+    clearFileInput(videoInputRef)
+    return
+  }
+
+  if (!editingItem.value?.video_url) return
+
+  if (isEdit.value) {
+    try {
+      const res = await categorieEvenementService.removeVideo(editingItem.value.id)
+      editingItem.value = { ...res.data, temoignages: editingItem.value.temoignages }
+      removeVideoFlag.value = false
+      showSnack($t('admin.eventCategories.videoRemoved'))
+    } catch {
+      showSnack($t('admin.eventCategories.errorDelete'), 'error')
+    }
+  } else {
+    removeVideoFlag.value = true
+  }
+}
+
 const removeGalerieItem = async (path) => {
   const ok = await confirmRef.value?.open({ title: $t('admin.eventCategories.confirmDeleteFile'), message: $t('admin.eventCategories.confirmDeleteFileMessage') })
   if (!ok) return
   try {
     const res = await categorieEvenementService.removeGalerieItem(editingItem.value.id, path)
     editingItem.value = { ...res.data, temoignages: editingItem.value.temoignages }
+    showSnack($t('admin.eventCategories.fileRemoved'))
   } catch {
     showSnack($t('admin.eventCategories.errorDelete'), 'error')
   }

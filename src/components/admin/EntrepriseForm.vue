@@ -41,7 +41,7 @@
           </v-col>
           <v-col cols="12" md="6">
             <div class="text-body-2 mb-1">Logo</div>
-            <input type="file" accept="image/*" @change="e => logoFile = e.target.files[0]" style="display:block;margin-bottom:8px" />
+            <input type="file" accept="image/*" @change="onLogoChange" style="display:block;margin-bottom:8px" />
             <v-avatar v-if="existingLogoUrl" size="48" class="mt-1">
               <img :src="existingLogoUrl" style="width:100%;height:100%;object-fit:cover" />
             </v-avatar>
@@ -201,9 +201,11 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import entrepriseService from '../../services/entrepriseService.js'
 import { parseApiError } from '../../utils/parseApiError.js'
+import { useImageCompression } from '../../composables/useImageCompression.js'
 
 const route = useRoute()
 const router = useRouter()
+const { compressImage, validateFileSize, validateFileType, compressionError } = useImageCompression()
 
 const isEdit = computed(() => !!route.params.id)
 
@@ -239,6 +241,31 @@ const showSnack = (msg, color = 'success') => {
 
 const goBack = () => {
   router.push({ name: 'AdminEntreprises' })
+}
+
+const onLogoChange = async (event) => {
+  const file = event.target.files[0]
+  if (!file) return
+  
+  if (!validateFileType(file)) {
+    showSnack(compressionError.value, 'error')
+    return
+  }
+  
+  if (!validateFileSize(file, 2)) {
+    showSnack(compressionError.value, 'error')
+    return
+  }
+  
+  const compressedFile = await compressImage(file, {
+    maxWidth: 800,
+    maxHeight: 800,
+    quality: 0.85,
+    outputFormat: 'auto'
+  })
+  
+  logoFile.value = compressedFile
+  existingLogoUrl.value = URL.createObjectURL(compressedFile)
 }
 
 const loadReferentiels = async () => {

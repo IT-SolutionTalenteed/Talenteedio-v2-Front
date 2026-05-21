@@ -89,22 +89,23 @@
             to="/entreprises"
             class="logo-item"
           >
-            <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom" class="logo-img">
+            <img v-if="entreprise.logo_url" v-lazy="entreprise.logo_url" :alt="entreprise.nom" class="logo-img">
             <span v-else class="logo-initial">{{ entreprise.nom.charAt(0).toUpperCase() }}</span>
             <span class="logo-name">{{ entreprise.nom }}</span>
           </router-link>
-          <!-- Set B — duplication pour boucle infinie (translateX -50%) -->
-          <router-link
-            v-for="(entreprise, i) in carouselSlides"
-            :key="`b${i}`"
-            to="/entreprises"
-            class="logo-item"
-            aria-hidden="true"
-          >
-            <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom" class="logo-img">
-            <span v-else class="logo-initial">{{ entreprise.nom.charAt(0).toUpperCase() }}</span>
-            <span class="logo-name">{{ entreprise.nom }}</span>
-          </router-link>
+          <!-- Set B — duplication pour boucle infinie (inert = pas au clavier / pas annoncé 2×) -->
+          <div class="logo-track-duplicate" inert>
+            <router-link
+              v-for="(entreprise, i) in carouselSlides"
+              :key="`b${i}`"
+              to="/entreprises"
+              class="logo-item"
+            >
+              <img v-if="entreprise.logo_url" v-lazy="entreprise.logo_url" :alt="entreprise.nom" class="logo-img">
+              <span v-else class="logo-initial">{{ entreprise.nom.charAt(0).toUpperCase() }}</span>
+              <span class="logo-name">{{ entreprise.nom }}</span>
+            </router-link>
+          </div>
         </div>
       </div>
       <div class="partners-cta animate-on-scroll">
@@ -202,22 +203,22 @@
             <div class="image-grid">
               <div class="image-column">
                 <div class="image-item image-tall">
-                  <img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=500&q=80" 
-                       alt="Networking event" loading="lazy">
+                  <img v-lazy="'https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=500&q=80'" 
+                       alt="Networking event">
                 </div>
                 <div class="image-item image-square">
-                  <img src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=500&q=80" 
-                       alt="Speaker" loading="lazy">
+                  <img v-lazy="'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=500&q=80'" 
+                       alt="Speaker">
                 </div>
               </div>
               <div class="image-column image-column--offset">
                 <div class="image-item image-square">
-                  <img src="https://images.unsplash.com/photo-1591115765373-5207764f72e7?w=500&q=80" 
-                       alt="Workshop" loading="lazy">
+                  <img v-lazy="'https://images.unsplash.com/photo-1591115765373-5207764f72e7?w=500&q=80'" 
+                       alt="Workshop">
                 </div>
                 <div class="image-item image-tall">
-                  <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=500&q=80" 
-                       alt="Panel discussion" loading="lazy">
+                  <img v-lazy="'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=500&q=80'" 
+                       alt="Panel discussion">
                 </div>
               </div>
             </div>
@@ -286,7 +287,13 @@
           <!-- Articles dynamiques (3 premiers) -->
           <div v-for="(article, index) in articles.slice(0, 3)" :key="article.id" class="triple-card animate-on-scroll" :class="`stagger-${index + 1}`">
             <div class="triple-card-img">
-              <img v-if="article.image_url" :src="article.image_url" :alt="article.title" loading="lazy">
+              <LoadedImage
+                v-if="article.image_url"
+                :src="article.image_url"
+                :alt="article.title"
+                loading="lazy"
+                :img-style="{ width: '100%', height: '100%', objectFit: 'cover' }"
+              />
               <div v-else class="triple-card-placeholder">
                 <i class="fa-solid fa-newspaper"></i>
               </div>
@@ -323,13 +330,17 @@
           >
             <!-- Image de l'offre -->
             <div v-if="offre.image_url" class="job-visual">
-              <div class="job-bg" :style="`background-image:url('${offre.image_url}')`"></div>
+              <DeferredCoverBackground :image-url="offre.image_url" />
             </div>
 
             <!-- Header : logo + entreprise + deadline -->
             <div class="job-head">
               <div class="job-logo">
-                <img v-if="offre.entreprise?.logo_url" :src="offre.entreprise.logo_url" :alt="offre.entreprise.nom" />
+                <LoadedImage
+                  v-if="offre.entreprise?.logo_url"
+                  :src="offre.entreprise.logo_url"
+                  :alt="offre.entreprise.nom"
+                />
                 <span v-else class="job-logo-initial">{{ offre.entreprise ? offre.entreprise.nom.charAt(0) : '?' }}</span>
               </div>
               <div class="job-company-info">
@@ -482,6 +493,8 @@ import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
+import LoadedImage from './shared/LoadedImage.vue'
+import DeferredCoverBackground from './shared/DeferredCoverBackground.vue'
 
 const { t, locale } = useI18n()
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
@@ -1930,6 +1943,9 @@ section {
   width: max-content;
   animation: marquee 32s linear infinite;
 }
+.logo-track-duplicate {
+  display: contents;
+}
 .logo-track:hover { animation-play-state: paused; }
 @keyframes marquee {
   from { transform: translateX(0); }
@@ -2347,6 +2363,9 @@ section {
   width: max-content;
   animation: marquee 32s linear infinite;
 }
+.logo-track-duplicate {
+  display: contents;
+}
 
 .logo-track:hover { 
   animation-play-state: paused; 
@@ -2614,13 +2633,6 @@ section {
   position: relative;
   border-radius: 16px 16px 0 0;
   overflow: hidden;
-}
-
-.job-bg {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
 }
 
 .job-head {

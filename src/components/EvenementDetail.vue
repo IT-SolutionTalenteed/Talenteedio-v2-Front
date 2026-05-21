@@ -67,6 +67,43 @@
             <!-- ── Colonne principale ── -->
             <div class="evd-main">
 
+              <!-- ══ ENTREPRISES PARTICIPANTES ══ -->
+              <div class="evd-block" id="entreprises-section">
+                <h2 class="evd-block-title">
+                  <i class="fa-solid fa-building"></i> {{ t('evenements.detail.participatingCompanies') }}
+                  <span class="evd-count">{{ evenement.entreprises?.length || 0 }}</span>
+                </h2>
+                <div v-if="evenement.entreprises?.length" class="evd-companies-grid">
+                  <div v-for="ent in evenement.entreprises" :key="ent.id" class="evd-company-card">
+                    <div class="evd-company-logo">
+                      <img v-if="ent.logo_url" v-lazy="ent.logo_url" :alt="ent.nom" />
+                      <span v-else class="evd-company-initial">{{ ent.nom.charAt(0) }}</span>
+                    </div>
+                    <h3 class="evd-company-name">{{ ent.nom }}</h3>
+                    <p v-if="ent.activity_sector" class="evd-company-sector">
+                      <i class="fa-solid fa-industry"></i> {{ ent.activity_sector.name }}
+                    </p>
+                    <p v-if="ent.ville || ent.pays" class="evd-company-loc">
+                      <i class="fa-solid fa-location-dot"></i>
+                      {{ [ent.ville, ent.pays].filter(Boolean).join(', ') }}
+                    </p>
+                    <div v-if="ent.offres?.length" class="evd-company-offres">
+                      <i class="fa-solid fa-briefcase"></i>
+                      {{ ent.offres.length }} {{ ent.offres.length > 1 ? t('evenements.detail.offers') : t('evenements.detail.offer') }}
+                    </div>
+                    <div class="evd-company-action">
+                      <router-link :to="`/entreprises/${ent.id}`" class="btn btn--outline-nav btn--sm">
+                        {{ t('evenements.detail.viewProfile') }}
+                      </router-link>
+                    </div>
+                  </div>
+                </div>
+                <div v-else class="evd-empty">
+                  <i class="fa-solid fa-building-circle-xmark"></i>
+                  <p>{{ t('evenements.detail.noCompanies') }}</p>
+                </div>
+              </div>
+
               <!-- Description -->
               <div v-if="evenement.description" class="evd-block">
                 <h2 class="evd-block-title"><i class="fa-solid fa-circle-info"></i> {{ t('evenements.detail.about') }}</h2>
@@ -118,43 +155,6 @@
                     <i class="fa-solid fa-spinner fa-spin" v-else></i>
                     {{ demandeLoading ? t('evenements.detail.sendingRequest') : t('evenements.detail.requestToParticipate') }}
                   </button>
-                </div>
-              </div>
-
-              <!-- ══ ENTREPRISES PARTICIPANTES ══ -->
-              <div class="evd-block" id="entreprises-section">
-                <h2 class="evd-block-title">
-                  <i class="fa-solid fa-building"></i> {{ t('evenements.detail.participatingCompanies') }}
-                  <span class="evd-count">{{ evenement.entreprises?.length || 0 }}</span>
-                </h2>
-                <div v-if="evenement.entreprises?.length" class="evd-companies-grid">
-                  <div v-for="ent in evenement.entreprises" :key="ent.id" class="evd-company-card">
-                    <div class="evd-company-logo">
-                      <img v-if="ent.logo_url" :src="ent.logo_url" :alt="ent.nom" />
-                      <span v-else class="evd-company-initial">{{ ent.nom.charAt(0) }}</span>
-                    </div>
-                    <h3 class="evd-company-name">{{ ent.nom }}</h3>
-                    <p v-if="ent.activity_sector" class="evd-company-sector">
-                      <i class="fa-solid fa-industry"></i> {{ ent.activity_sector.name }}
-                    </p>
-                    <p v-if="ent.ville || ent.pays" class="evd-company-loc">
-                      <i class="fa-solid fa-location-dot"></i>
-                      {{ [ent.ville, ent.pays].filter(Boolean).join(', ') }}
-                    </p>
-                    <div v-if="ent.offres?.length" class="evd-company-offres">
-                      <i class="fa-solid fa-briefcase"></i>
-                      {{ ent.offres.length }} {{ ent.offres.length > 1 ? t('evenements.detail.offers') : t('evenements.detail.offer') }}
-                    </div>
-                    <div class="evd-company-action">
-                      <router-link :to="`/entreprises/${ent.id}`" class="btn btn--outline-nav btn--sm">
-                        {{ t('evenements.detail.viewProfile') }}
-                      </router-link>
-                    </div>
-                  </div>
-                </div>
-                <div v-else class="evd-empty">
-                  <i class="fa-solid fa-building-circle-xmark"></i>
-                  <p>{{ t('evenements.detail.noCompanies') }}</p>
                 </div>
               </div>
 
@@ -323,7 +323,7 @@
                   <div v-for="ent in mesEntretiens" :key="ent.id" class="evd-entretien-card">
                     <div class="evd-entretien-row">
                       <div class="evd-entretien-logo">
-                        <img v-if="ent.entreprise?.logo_url" :src="ent.entreprise.logo_url" :alt="ent.entreprise?.nom" />
+                        <img v-if="ent.entreprise?.logo_url" v-lazy="ent.entreprise.logo_url" :alt="ent.entreprise?.nom" />
                         <span v-else>{{ ent.entreprise?.nom?.charAt(0) || '?' }}</span>
                       </div>
                       <div class="evd-entretien-info">
@@ -425,7 +425,7 @@
                 <div class="evd-logos-mini">
                   <template v-for="ent in evenement.entreprises.slice(0, 12)" :key="ent.id">
                     <div class="evd-logo-mini" :title="ent.nom">
-                      <img v-if="ent.logo_url" :src="ent.logo_url" :alt="ent.nom" />
+                      <img v-if="ent.logo_url" v-lazy="ent.logo_url" :alt="ent.nom" />
                       <span v-else>{{ ent.nom.charAt(0) }}</span>
                     </div>
                   </template>
@@ -466,7 +466,7 @@
           <div class="evd-modal-header">
             <div class="evd-modal-company">
               <div class="evd-modal-logo">
-                <img v-if="rdvEntreprise.logo_url" :src="rdvEntreprise.logo_url" :alt="rdvEntreprise.nom" />
+                <img v-if="rdvEntreprise.logo_url" v-lazy="rdvEntreprise.logo_url" :alt="rdvEntreprise.nom" />
                 <span v-else>{{ rdvEntreprise.nom.charAt(0) }}</span>
               </div>
               <div>

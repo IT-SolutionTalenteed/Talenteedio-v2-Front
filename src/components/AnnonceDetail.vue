@@ -24,7 +24,7 @@
           <div class="od-hero-inner">
             <!-- Logo -->
             <div class="od-hero-logo">
-              <img v-if="offre.entreprise?.logo_url" :src="offre.entreprise.logo_url" :alt="offre.entreprise.nom" />
+              <img v-if="offre.entreprise?.logo_url" v-lazy="offre.entreprise.logo_url" :alt="offre.entreprise.nom" />
               <span v-else class="od-hero-initial">{{ offre.entreprise?.nom?.charAt(0) || '?' }}</span>
             </div>
             <!-- Infos principales -->
@@ -92,9 +92,9 @@
                 <p class="od-cta-note">{{ t('annonces.detail.talentOnly') }}</p>
               </template>
               <template v-else>
-                <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--blue btn--lg">
+                <button type="button" class="btn btn--blue btn--lg od-btn-login" @click="showLoginModal = true">
                   <i class="fa-solid fa-lock" style="margin-right:6px;"></i>{{ t('annonces.detail.loginToApply') }}
-                </router-link>
+                </button>
                 <router-link to="/profile-selection" class="btn btn--orange btn--lg" style="margin-top:8px;">
                   {{ t('annonces.detail.createAccount') }}
                 </router-link>
@@ -199,7 +199,7 @@
                 <h3 class="od-side-title">{{ t('annonces.detail.theCompany') }}</h3>
                 <div class="od-company">
                   <div class="od-company-logo">
-                    <img v-if="offre.entreprise.logo_url" :src="offre.entreprise.logo_url" :alt="offre.entreprise.nom" />
+                    <img v-if="offre.entreprise.logo_url" v-lazy="offre.entreprise.logo_url" :alt="offre.entreprise.nom" />
                     <span v-else>{{ offre.entreprise.nom.charAt(0) }}</span>
                   </div>
                   <div>
@@ -246,9 +246,9 @@
                   </template>
                 </template>
                 <template v-else>
-                  <router-link :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`" class="btn btn--blue" style="display:block;text-align:center;">
+                  <button type="button" class="btn btn--blue od-btn-login" style="display:block;width:100%;text-align:center;" @click="showLoginModal = true">
                     {{ t('annonces.detail.loginToApply') }}
-                  </router-link>
+                  </button>
                 </template>
               </div>
 
@@ -419,6 +419,18 @@
 
     <!-- ══ FOOTER ══ -->
     <Footer />
+
+    <LoginModal
+      :show="showLoginModal"
+      @close="showLoginModal = false"
+      @switch-to-register="handleSwitchToRegister"
+    />
+    <RegisterModal
+      :show="showRegisterModal"
+      :defaultProfile="registerDefaultProfile"
+      @close="showRegisterModal = false; registerDefaultProfile = null"
+      @switch-to-login="handleSwitchToLogin"
+    />
   </div>
 </template>
 
@@ -430,6 +442,8 @@ import axios from 'axios'
 import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
 import ShareCard from './ShareCard.vue'
+import LoginModal from './LoginModal.vue'
+import RegisterModal from './RegisterModal.vue'
 import { useFavoris } from '../composables/useFavoris.js'
 import { useMeta } from '../composables/useMeta'
 
@@ -452,6 +466,21 @@ const dejaPostule = ref(null) // null = chargement, true = déjà postulé, fals
 const showModal = ref(false)
 const cvFile = ref(null)
 const submitting = ref(false)
+
+const showLoginModal = ref(false)
+const showRegisterModal = ref(false)
+const registerDefaultProfile = ref(null)
+
+const handleSwitchToRegister = () => {
+  showLoginModal.value = false
+  registerDefaultProfile.value = 'talent'
+  showRegisterModal.value = true
+}
+
+const handleSwitchToLogin = () => {
+  showRegisterModal.value = false
+  showLoginModal.value = true
+}
 
 // Modal de matching
 const showMatchModal = ref(false)
@@ -834,6 +863,15 @@ onUnmounted(() => {
   min-width: 200px; 
 }
 .od-cta-note { font-size: 13px; color: rgba(255,255,255,.75); text-align: center; margin: 0 auto; }
+
+.od-btn-login,
+.od-btn-login:hover,
+.od-btn-login:focus {
+  color: #fff;
+}
+.od-btn-login i {
+  color: #fff;
+}
 
 .od-cta-row { display: flex; align-items: center; gap: 12px; }
 .od-cta-col { display: flex; flex-direction: column; gap: 12px; width: 100%; }

@@ -55,7 +55,7 @@
           to="/entreprises"
           class="logo-item"
         >
-          <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom" class="logo-img">
+          <img v-if="entreprise.logo_url" v-lazy="entreprise.logo_url" :alt="entreprise.nom" class="logo-img">
           <span v-else class="logo-initial">{{ entreprise.nom.charAt(0).toUpperCase() }}</span>
           <span class="logo-name">{{ entreprise.nom }}</span>
         </router-link>
@@ -597,24 +597,17 @@ onUnmounted(() => {
 /* Hero Section */
 .ats-hero {
   position: relative;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 48px 0 56px;
   background: linear-gradient(160deg, #020830 0%, #040a5d 45%, #0d1a8a 75%, #040a5d 100%);
+  background-image: 
+    linear-gradient(160deg, rgba(2, 8, 48, 0.85) 0%, rgba(4, 10, 93, 0.85) 45%, rgba(13, 26, 138, 0.85) 75%, rgba(4, 10, 93, 0.85) 100%),
+    url('/images/Inscri.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   color: #fff;
   text-align: center;
   overflow: hidden;
-}
-
-.ats-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(
-    45deg, transparent, transparent 35px,
-    rgba(255,255,255,.018) 35px, rgba(255,255,255,.018) 70px
-  );
 }
 
 .ats-hero::after {
@@ -623,7 +616,7 @@ onUnmounted(() => {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 120px;
+  height: 48px;
   background: linear-gradient(to bottom, transparent, rgba(245,247,250,.15));
 }
 
@@ -631,7 +624,8 @@ onUnmounted(() => {
   position: relative;
   z-index: 1;
   max-width: 820px;
-  padding: 40px 24px;
+  margin: 0 auto;
+  padding: 0 24px;
 }
 
 .ats-event-badge {
@@ -645,17 +639,17 @@ onUnmounted(() => {
   font-weight: 700;
   letter-spacing: 1.8px;
   text-transform: uppercase;
-  padding: 9px 22px;
+  padding: 8px 20px;
   border-radius: 50px;
-  margin-bottom: 32px;
+  margin-bottom: 20px;
 }
 
 .ats-hero-title {
-  font-size: clamp(26px, 4.5vw, 52px);
+  font-size: clamp(24px, 4vw, 42px);
   font-weight: 900;
   line-height: 1.15;
   letter-spacing: -0.5px;
-  margin: 0 0 22px;
+  margin: 0 0 14px;
   text-transform: uppercase;
 }
 
@@ -668,7 +662,7 @@ onUnmounted(() => {
   font-size: clamp(15px, 2vw, 18px);
   line-height: 1.75;
   opacity: .88;
-  margin: 0 auto 40px;
+  margin: 0 auto 24px;
   max-width: 640px;
 }
 
@@ -706,7 +700,7 @@ onUnmounted(() => {
 
 .ats-scroll-hint {
   position: absolute;
-  bottom: 36px;
+  bottom: 16px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
@@ -822,7 +816,7 @@ onUnmounted(() => {
 /* Main Section */
 .ats-section {
   padding: 80px 0 100px;
-  background: var(--light-bg);
+  background: var(--light-bg, #f5f7fa);
 }
 
 .container {

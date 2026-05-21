@@ -33,7 +33,11 @@
           class="featured-post"
         >
           <div class="featured-image">
-            <img v-if="featuredArticle.image_url" :src="featuredArticle.image_url" :alt="featuredArticle.title" />
+            <LoadedImage
+              v-if="featuredArticle.image_url"
+              :src="featuredArticle.image_url"
+              :alt="featuredArticle.title"
+            />
             <div v-else class="featured-image-placeholder"><i class="fa-solid fa-newspaper"></i></div>
             <span class="featured-tag">{{ t('blog.featured') }}</span>
           </div>
@@ -109,7 +113,13 @@
                 class="blog-card"
               >
                 <div class="blog-card-img">
-                  <img v-if="a.image_url" :src="a.image_url" :alt="a.title" />
+                  <LoadedImage
+                    v-if="a.image_url"
+                    :src="a.image_url"
+                    :alt="a.title"
+                    loading="lazy"
+                    :img-style="{ width: '100%', height: '100%', objectFit: 'cover' }"
+                  />
                   <div v-else class="blog-card-img-placeholder">
                     <i class="fa-regular fa-image"></i>
                   </div>
@@ -190,7 +200,12 @@
                   class="popular-post"
                 >
                   <div class="popular-thumb">
-                    <img v-if="a.image_url" :src="a.image_url" :alt="a.title" />
+                    <LoadedImage
+                      v-if="a.image_url"
+                      :src="a.image_url"
+                      :alt="a.title"
+                      :img-style="{ width: '100%', height: '100%', objectFit: 'cover' }"
+                    />
                     <i v-else class="fa-solid fa-newspaper"></i>
                   </div>
                   <div class="popular-info">
@@ -223,6 +238,7 @@ import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
+import LoadedImage from './shared/LoadedImage.vue'
 
 const { t, locale } = useI18n()
 const apiBase        = import.meta.env.VITE_API_URL || 'http://localhost:8000'
@@ -519,17 +535,23 @@ onMounted(async () => {
 .featured-image {
   position: relative;
   min-height: 280px;
-  max-height: 280px;
+  height: 100%;
+  align-self: stretch;
   background: linear-gradient(135deg, #00235a, #1a3a8a);
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
 }
-.featured-image img {
-  width: 100%; height: 100%;
+.featured-image :deep(.loaded-img) {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   transition: transform .4s;
 }
-.featured-post:hover .featured-image img { transform: scale(1.04); }
+.featured-post:hover .featured-image :deep(.loaded-img) { transform: scale(1.04); }
 .featured-image-placeholder { font-size: 64px; color: rgba(255,255,255,.3); }
 
 .featured-tag {
@@ -710,7 +732,7 @@ onMounted(async () => {
 }
 @media (max-width: 768px) {
   .featured-post { grid-template-columns: 1fr; }
-  .featured-image { min-height: 180px; max-height: 180px; }
+  .featured-image { min-height: 180px; height: auto; }
   .featured-content { padding: 24px; }
   .sidebar-widget { min-width: 100%; }
 }

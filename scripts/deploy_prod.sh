@@ -45,6 +45,10 @@ echo ""
 echo "📦 Installing dependencies..."
 npm install || { echo "❌ npm install failed"; exit 1; }
 
+# ── Compression images (uniquement si public/images/ a changé) ───────────
+echo ""
+bash scripts/compress-images-if-changed.sh "$PREVIOUS_COMMIT" HEAD
+
 # ── Build ─────────────────────────────────────────────────────────────────
 echo ""
 echo "🏗️  Building application..."

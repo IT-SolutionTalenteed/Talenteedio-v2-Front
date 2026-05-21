@@ -126,7 +126,7 @@
             <!-- Logo centré -->
             <div class="ent-logo-wrap">
               <div class="ent-logo">
-                <img v-if="e.logo_url" :src="e.logo_url" :alt="e.nom" />
+                <img v-if="e.logo_url" v-lazy="e.logo_url" :alt="e.nom" />
                 <span v-else class="ent-initials">{{ e.nom.charAt(0).toUpperCase() }}</span>
               </div>
             </div>

@@ -22,7 +22,7 @@
         <div class="container">
           <div class="ed-hero-inner">
             <div class="ed-hero-logo">
-              <img v-if="entreprise.logo_url" :src="entreprise.logo_url" :alt="entreprise.nom" />
+              <img v-if="entreprise.logo_url" v-lazy="entreprise.logo_url" :alt="entreprise.nom" />
               <span v-else class="ed-hero-initial">{{ entreprise.nom.charAt(0) }}</span>
             </div>
             <div class="ed-hero-info">
@@ -161,7 +161,7 @@
                 <div class="ed-articles-grid">
                   <router-link v-for="a in displayedArticles" :key="a.id" :to="`/blog/${a.id}`" class="ed-article-card">
                     <div class="ed-article-img">
-                      <img v-if="a.image_url" :src="a.image_url" :alt="a.title" />
+                      <img v-if="a.image_url" v-lazy="a.image_url" :alt="a.title" />
                       <div v-else class="ed-article-placeholder"><i class="fa-solid fa-newspaper"></i></div>
                     </div>
                     <div class="ed-article-body">
