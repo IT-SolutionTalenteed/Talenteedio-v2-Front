@@ -252,8 +252,8 @@ const loadStatus = async () => {
   try {
     const res = await brevoService.getStatus()
     status.value = res.data
-  } catch {
-    error.value = 'Impossible de charger le statut Brevo'
+  } catch (err) {
+    error.value = err.response?.data?.message || 'Impossible de charger le statut Brevo'
   } finally {
     loading.value = false
   }
@@ -266,8 +266,8 @@ const runSetup = async () => {
     const res = await brevoService.setup()
     setupOutput.value = res.data.output
     successMsg.value = res.data.message
-  } catch {
-    error.value = 'Erreur lors du setup Brevo'
+  } catch (err) {
+    error.value = err.response?.data?.message || 'Erreur lors du setup Brevo'
   } finally {
     settingUp.value = false
   }
@@ -279,15 +279,15 @@ const syncSelected = async () => {
   successMsg.value = ''
   try {
     const items = selected.value.map(key => {
-      const [type, ...idParts] = key.split('-')
-      return { type, id: Number(idParts.join('-')) }
+      const c = allContacts.value.find(x => x.key === key)
+      return { type: c.type, id: c.id }
     })
     const res = await brevoService.sync(items)
     successMsg.value = res.data.message
     selected.value = []
     await loadStatus()
-  } catch {
-    error.value = 'Erreur lors de la synchronisation de la sélection'
+  } catch (err) {
+    error.value = err.response?.data?.message || 'Erreur lors de la synchronisation de la sélection'
   } finally {
     syncing.value = false
   }
@@ -299,11 +299,11 @@ const syncAll = async () => {
   successMsg.value = ''
   try {
     const res = await brevoService.syncAll()
-    status.value = { ...status.value, last_sync: res.data.last_sync }
     successMsg.value = res.data.message
     await loadStatus()
-  } catch {
-    error.value = 'Erreur lors de la synchronisation complète'
+    selected.value = []
+  } catch (err) {
+    error.value = err.response?.data?.message || 'Erreur lors de la synchronisation complète'
   } finally {
     syncingAll.value = false
   }
