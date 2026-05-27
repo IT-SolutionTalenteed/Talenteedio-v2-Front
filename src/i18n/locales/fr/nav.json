@@ -60,7 +60,8 @@
     "crm": {
       "title": "CRM HubSpot",
       "import": "Import XLS",
-      "sync": "Sync CRM HubSpot"
+      "sync": "Sync CRM HubSpot",
+      "syncBrevo": "Sync Brevo"
     },
     "talents": "Talents",
     "companies": "Entreprises",

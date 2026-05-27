@@ -234,6 +234,7 @@ const PAGE_TITLES = {
   admins: t('nav.admin.admins'),
   'import-candidats': t('nav.admin.crm.import'),
   'sync-crm': t('nav.admin.crm.sync'),
+  'sync-brevo': t('nav.admin.crm.syncBrevo'),
   candidatures: t('nav.admin.jobs.applications'),
   profile: t('nav.admin.profile'),
   'evenement-participations': t('nav.admin.events.participation'),
@@ -319,6 +320,7 @@ const sideNav = computed(() => {
         children: [
           { label: t('nav.admin.crm.import'), route: { name: 'AdminImportCandidats' }, icon: 'mdi-upload' },
           { label: t('nav.admin.crm.sync'), route: { name: 'AdminSyncCrm' }, icon: 'mdi-sync' },
+          { label: t('nav.admin.crm.syncBrevo'), route: { name: 'AdminSyncBrevo' }, icon: 'mdi-email-sync' },
         ],
       },
       {

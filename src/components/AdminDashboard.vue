@@ -350,6 +350,7 @@
   <FeedbackList           v-if="activeTab === 'feedbacks'" />
   <ImportCandidats        v-if="activeTab === 'import-candidats'" />
   <SyncCrm               v-if="activeTab === 'sync-crm'" />
+  <SyncBrevo             v-if="activeTab === 'sync-brevo'" />
   <CandidatureList       v-if="activeTab === 'candidatures'" />
   <ParticipationList     v-if="activeTab === 'evenement-participations'" />
   <JobContractList        v-if="activeTab === 'job-contracts'" />
@@ -393,6 +394,7 @@ import EntretienList from './admin/EntretienList.vue'
 import FeedbackList from './admin/FeedbackList.vue'
 import ImportCandidats from './admin/ImportCandidats.vue'
 import SyncCrm from './admin/SyncCrm.vue'
+import SyncBrevo from './admin/SyncBrevo.vue'
 import CandidatureList from './admin/CandidatureList.vue'
 import ParticipationList from './admin/ParticipationList.vue'
 import AdminList from './admin/AdminList.vue'

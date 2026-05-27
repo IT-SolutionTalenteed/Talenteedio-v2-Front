@@ -212,6 +212,7 @@ const routes = [
       { path: 'feedbacks', name: 'AdminFeedbacks', component: AdminDashboard, meta: adminMeta },
       { path: 'import-candidats', name: 'AdminImportCandidats', component: AdminDashboard, meta: adminMeta },
       { path: 'sync-crm', name: 'AdminSyncCrm', component: AdminDashboard, meta: adminMeta },
+      { path: 'sync-brevo', name: 'AdminSyncBrevo', component: AdminDashboard, meta: adminMeta },
       { path: 'offres', name: 'AdminOffres', component: AdminDashboard, meta: adminMeta },
       { path: 'offres/create', name: 'AdminOffreCreate', component: OffreAdminForm, meta: adminMeta },
       { path: 'offres/:id/edit', name: 'AdminOffreEdit', component: OffreAdminForm, meta: adminMeta },
