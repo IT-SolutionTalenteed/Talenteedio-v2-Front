@@ -95,6 +95,10 @@
         </v-chip>
       </template>
 
+      <template #item.created_at="{ item }">
+        <span class="text-medium-emphasis">{{ formatDate(item.created_at) }}</span>
+      </template>
+
       <template #item.actions="{ item }">
         <div class="d-flex gap-1">
           <v-btn icon="mdi-pencil" size="small" color="primary" variant="tonal" @click="router.push({ name: 'AdminTalentEdit', params: { id: item.id } })" :title="t('admin.talents.editProfile')" />
@@ -150,6 +154,12 @@ const showSnack = (msg, color = 'success') => {
   snackMsg.value = msg; snackColor.value = color; snackbar.value = true
 }
 
+const formatDate = (dateStr) => {
+  if (!dateStr) return '—'
+  const d = new Date(dateStr)
+  return d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })
+}
+
 const sortOptions = [
   { value: 'created_at_desc', label: t('admin.talents.sortByNewest') },
   { value: 'created_at_asc', label: t('admin.talents.sortByOldest') },
@@ -168,6 +178,7 @@ const headers = [
   { title: t('admin.talents.source'), key: 'source_provenance', sortable: false },
   { title: t('admin.talents.crmStatus'), key: 'statut_crm', sortable: false },
   { title: t('admin.talents.state'), key: 'etat', sortable: false },
+  { title: 'Date', key: 'created_at', sortable: false },
   { title: '', key: 'actions', sortable: false, align: 'end' },
 ]
 
