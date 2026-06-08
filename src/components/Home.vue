@@ -4,66 +4,47 @@
 
     <PublicNav />
 
-    <!-- ══ HERO SECTION — Style moderne inspiré de zai.html ══ -->
-    <section v-if="event" class="hero-modern">
+    <!-- ══ HERO SECTION — Image plein écran ══ -->
+    <section v-if="event" class="hero-modern" :style="heroSectionStyle">
       <div class="container">
-        <div class="hero-grid">
-          <div class="hero-content">
-            <div class="animate-on-scroll stagger-1">
-              <span class="hero-badge">
-                {{ eventDateRange }}
-              </span>
-            </div>
-
-            <h1 class="hero-title animate-on-scroll stagger-2">
-              {{ event.titre }}
-            </h1>
-
-            <p class="hero-description animate-on-scroll stagger-3">
-              {{ event.ville }}{{ event.pays ? ', ' + event.pays : '' }}
-            </p>
-
-            <div class="hero-actions animate-on-scroll stagger-4">
-              <router-link to="/profile-selection" class="btn-primary">
-                {{ t('home.hero.subscribe') }}
-              </router-link>
-            </div>
-
-            <!-- Countdown -->
-            <div class="countdown-modern animate-on-scroll stagger-5">
-              <div class="countdown-item">
-                <div class="countdown-value">{{ cd.days }}</div>
-                <div class="countdown-label">{{ t('home.hero.days') }}</div>
-              </div>
-              <div class="countdown-item">
-                <div class="countdown-value">{{ cd.hours }}</div>
-                <div class="countdown-label">{{ t('home.hero.hours') }}</div>
-              </div>
-              <div class="countdown-item">
-                <div class="countdown-value">{{ cd.minutes }}</div>
-                <div class="countdown-label">{{ t('home.hero.minutes') }}</div>
-              </div>
-              <div class="countdown-item">
-                <div class="countdown-value">{{ cd.seconds }}</div>
-                <div class="countdown-label">{{ t('home.hero.seconds') }}</div>
-              </div>
-            </div>
+        <div class="hero-content">
+          <div class="animate-on-scroll stagger-1">
+            <span class="hero-badge">
+              {{ eventDateRange }}
+            </span>
           </div>
 
-          <div class="hero-visual animate-on-scroll stagger-6">
-            <div class="hero-image-container">
-              <div class="hero-image-bg" :style="heroStyle"></div>
-              <div class="hero-stats-overlay">
-                <div class="stat-item">
-                  <div class="stat-number">5 000+</div>
-                  <div class="stat-label">{{ t('home.stats.participants') }}</div>
-                </div>
-                <div class="stat-divider"></div>
-                <div class="stat-item">
-                  <div class="stat-number">30+</div>
-                  <div class="stat-label">{{ t('home.stats.countries') }}</div>
-                </div>
-              </div>
+          <h1 class="hero-title animate-on-scroll stagger-2">
+            {{ event.titre }}
+          </h1>
+
+          <p class="hero-description animate-on-scroll stagger-3">
+            {{ event.ville }}{{ event.pays ? ', ' + event.pays : '' }}
+          </p>
+
+          <div class="hero-actions animate-on-scroll stagger-4">
+            <router-link to="/profile-selection" class="btn-primary">
+              {{ t('home.hero.subscribe') }}
+            </router-link>
+          </div>
+
+          <!-- Countdown -->
+          <div class="countdown-modern animate-on-scroll stagger-5">
+            <div class="countdown-item">
+              <div class="countdown-value">{{ cd.days }}</div>
+              <div class="countdown-label">{{ t('home.hero.days') }}</div>
+            </div>
+            <div class="countdown-item">
+              <div class="countdown-value">{{ cd.hours }}</div>
+              <div class="countdown-label">{{ t('home.hero.hours') }}</div>
+            </div>
+            <div class="countdown-item">
+              <div class="countdown-value">{{ cd.minutes }}</div>
+              <div class="countdown-label">{{ t('home.hero.minutes') }}</div>
+            </div>
+            <div class="countdown-item">
+              <div class="countdown-value">{{ cd.seconds }}</div>
+              <div class="countdown-label">{{ t('home.hero.seconds') }}</div>
             </div>
           </div>
         </div>
@@ -580,8 +561,8 @@ function startCountdown() {
   timer = setInterval(tick, 1000)
 }
 
-// ── Style hero — image de fond dynamique ──────────────────
-const heroStyle = computed(() => {
+// ── Style hero — image plein écran ────────────────────────
+const heroSectionStyle = computed(() => {
   if (event.value?.image_mise_en_avant_url) {
     return { backgroundImage: `url('${event.value.image_mise_en_avant_url}')` }
   }
@@ -917,7 +898,10 @@ body {
 
 /* ── Hero Section ─────────────────────────────────── */
 .hero-modern {
-  background: linear-gradient(160deg, var(--navy) 0%, #040a5d 45%, var(--blue) 75%, var(--navy) 100%);
+  background-color: var(--navy);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   height: calc(100vh - 80px);
   min-height: 600px;
   position: relative;
@@ -927,31 +911,21 @@ body {
   padding-top: 0;
 }
 
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 64px;
-  align-items: center;
-  position: relative;
-  z-index: 10;
+.hero-modern::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(4, 10, 93, 0.52);
+  z-index: 0;
 }
 
-@media (max-width: 1024px) {
-  .hero-grid {
-    grid-template-columns: 1fr;
-    gap: 48px;
-    text-align: center;
-  }
-  .hero-visual {
-    order: -1;
-  }
-  .hero-stats-overlay {
-    position: relative;
-    bottom: auto;
-    left: auto;
-    margin-top: 20px;
-    align-self: center;
-  }
+.hero-modern .container {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-content {
+  max-width: 680px;
 }
 
 .hero-badge {
@@ -1040,94 +1014,6 @@ body {
   margin-top: 8px;
 }
 
-/* Hero Visual */
-.hero-visual {
-  position: relative;
-}
-
-.hero-image-container {
-  position: relative;
-  aspect-ratio: 4/5;
-  border-radius: 16px;
-  overflow: visible;
-}
-
-.hero-image-bg {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  border-radius: 16px;
-  z-index: 1;
-}
-
-.hero-image-bg::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
-  z-index: 2;
-}
-
-.hero-stats-overlay {
-  position: absolute;
-  bottom: -32px;
-  left: -32px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(240, 124, 0, 0.2);
-  padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  min-width: 200px;
-  z-index: 10;
-}
-
-@media (max-width: 768px) {
-  .hero-stats-overlay {
-    position: relative;
-    bottom: auto;
-    left: auto;
-    margin-top: 20px;
-    padding: 16px;
-    gap: 16px;
-    justify-content: center;
-  }
-}
-
-.stat-item {
-  text-align: center;
-  flex-shrink: 0;
-}
-
-.stat-number {
-  font-size: 30px;
-  font-weight: 700;
-  color: var(--orange);
-  line-height: 1;
-  margin-bottom: 4px;
-}
-
-.stat-number--blue {
-  color: var(--blue);
-}
-
-.stat-label {
-  font-size: 14px;
-  color: #6b7280;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.stat-divider {
-  width: 1px;
-  height: 48px;
-  background: #e5e7eb;
-  flex-shrink: 0;
-}
 
 /* Scroll indicator */
 .scroll-indicator {
@@ -1621,15 +1507,19 @@ section {
   .hero-modern {
     height: auto;
     min-height: calc(100vh - 80px);
-    padding-top: 40px;
-    padding-bottom: 40px;
+    padding-top: 60px;
+    padding-bottom: 60px;
   }
-  
+
+  .hero-content {
+    max-width: 100%;
+  }
+
   .hero-actions {
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
   }
-  
+
   .hero-actions .btn-primary,
   .hero-actions .btn-secondary {
     width: 100%;
