@@ -911,6 +911,14 @@ body {
   padding-top: 0;
 }
 
+.hero-modern::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.45);
+  z-index: 0;
+}
+
 .hero-modern .container {
   position: relative;
   z-index: 1;
