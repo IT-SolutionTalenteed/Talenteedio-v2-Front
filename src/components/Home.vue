@@ -915,7 +915,7 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.45);
+  background: rgba(4, 10, 93, 0.52);
   z-index: 0;
 }
 
