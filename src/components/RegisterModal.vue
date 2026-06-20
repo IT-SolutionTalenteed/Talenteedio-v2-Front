@@ -640,10 +640,10 @@ const handleTalentRegister = async () => {
       formData.append('competences', talentForm.value.competences)
     }
     if (talentForm.value.pays_relocation) {
-      formData.append('pays_souhaites', JSON.stringify([talentForm.value.pays_relocation]))
+      formData.append('pays_souhaites[]', talentForm.value.pays_relocation)
     }
     if (talentForm.value.ville_relocation) {
-      formData.append('villes_souhaitees', JSON.stringify([talentForm.value.ville_relocation]))
+      formData.append('villes_souhaitees[]', talentForm.value.ville_relocation)
     }
     
     const response = await api.post('/public/ats/register', formData, {
