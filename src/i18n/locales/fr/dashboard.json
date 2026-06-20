@@ -11,6 +11,8 @@
     },
     "charts": {
       "evolution": "Évolution des inscriptions",
+      "previousMonth": "Mois précédent",
+      "nextMonth": "Mois suivant",
       "sectors": "Secteurs d'activité",
       "contracts": "Offres par type de contrat",
       "applications": "Candidatures par statut",

@@ -1,7 +1,7 @@
 <template>
   <!-- Vue d'ensemble -->
   <div v-if="activeTab === 'overview'">
-    <!-- Bannière bienvenue -->
+    <!-- Bannière bienvenue avec navigation mois -->
     <v-card
       class="mb-6 overflow-hidden"
       color="primary"
@@ -18,7 +18,30 @@
               {{ t('dashboard.admin.subtitle') }}
             </div>
           </div>
-          <v-icon size="72" style="color:rgba(255,255,255,0.15)">mdi-shield-crown</v-icon>
+          <div class="d-flex align-center ga-3">
+            <div class="d-flex align-center ga-2 px-4 py-2" style="background:rgba(255,255,255,0.15); border-radius:12px">
+              <v-btn
+                icon="mdi-chevron-left"
+                variant="text"
+                size="small"
+                color="white"
+                @click="navigateMonth(-1)"
+                :title="t('dashboard.admin.charts.previousMonth')"
+              />
+              <div class="text-body-1 font-weight-bold text-white px-2" style="min-width:120px; text-align:center">
+                {{ currentMonthLabel }}
+              </div>
+              <v-btn
+                icon="mdi-chevron-right"
+                variant="text"
+                size="small"
+                color="white"
+                @click="navigateMonth(1)"
+                :title="t('dashboard.admin.charts.nextMonth')"
+              />
+            </div>
+            <v-icon size="72" style="color:rgba(255,255,255,0.15)">mdi-shield-crown</v-icon>
+          </div>
         </div>
       </v-card-text>
     </v-card>
@@ -37,9 +60,12 @@
             <div class="d-flex align-center justify-space-between mb-3">
               <div>
                 <div class="text-h4 font-weight-bold text-primary">
-                  {{ totalTalents !== null ? totalTalents : '—' }}
+                  {{ monthTalents }}
                 </div>
                 <div class="text-body-2 text-medium-emphasis mt-1">{{ t('dashboard.admin.stats.talents') }}</div>
+                <div class="text-caption text-medium-emphasis mt-1">
+                  Total: {{ totalTalents !== null ? totalTalents : '—' }}
+                </div>
               </div>
               <v-avatar color="primary" variant="tonal" size="52" rounded="lg">
                 <v-icon size="26">mdi-account-tie-outline</v-icon>
@@ -69,13 +95,16 @@
               <div>
                 <div class="d-flex align-center ga-2">
                   <div class="text-h4 font-weight-bold text-success">
-                    {{ totalEntreprises !== null ? totalEntreprises : '—' }}
+                    {{ monthEntreprises }}
                   </div>
                   <v-chip v-if="pendingEntreprises > 0" size="x-small" color="warning" variant="tonal">
                     {{ pendingEntreprises }} {{ t('dashboard.admin.stats.pending') }}
                   </v-chip>
                 </div>
                 <div class="text-body-2 text-medium-emphasis mt-1">{{ t('dashboard.admin.stats.companies') }}</div>
+                <div class="text-caption text-medium-emphasis mt-1">
+                  Total: {{ totalEntreprises !== null ? totalEntreprises : '—' }}
+                </div>
               </div>
               <v-avatar color="success" variant="tonal" size="52" rounded="lg">
                 <v-icon size="26">mdi-office-building-outline</v-icon>
@@ -104,9 +133,12 @@
             <div class="d-flex align-center justify-space-between mb-3">
               <div>
                 <div class="text-h4 font-weight-bold text-warning">
-                  {{ totalOffres !== null ? totalOffres : '—' }}
+                  {{ monthOffres }}
                 </div>
                 <div class="text-body-2 text-medium-emphasis mt-1">{{ t('dashboard.admin.stats.offers') }}</div>
+                <div class="text-caption text-medium-emphasis mt-1">
+                  Total: {{ totalOffres !== null ? totalOffres : '—' }}
+                </div>
               </div>
               <v-avatar color="warning" variant="tonal" size="52" rounded="lg">
                 <v-icon size="26">mdi-briefcase-outline</v-icon>
@@ -135,9 +167,12 @@
             <div class="d-flex align-center justify-space-between mb-3">
               <div>
                 <div class="text-h4 font-weight-bold text-info">
-                  {{ totalEvenements !== null ? totalEvenements : '—' }}
+                  {{ monthEvenements }}
                 </div>
                 <div class="text-body-2 text-medium-emphasis mt-1">{{ t('dashboard.admin.stats.events') }}</div>
+                <div class="text-caption text-medium-emphasis mt-1">
+                  Total: {{ totalEvenements !== null ? totalEvenements : '—' }}
+                </div>
               </div>
               <v-avatar color="info" variant="tonal" size="52" rounded="lg">
                 <v-icon size="26">mdi-calendar-star</v-icon>
@@ -166,11 +201,16 @@
           </v-card-title>
           <v-card-text class="pa-5 pt-2">
             <apexchart
+              v-if="inscriptionsChart.series[0].data.length > 0"
+              :key="currentMonthLabel"
               type="area"
               height="320"
               :options="inscriptionsChart.options"
               :series="inscriptionsChart.series"
             />
+            <div v-else class="d-flex align-center justify-center" style="height: 320px">
+              <v-progress-circular indeterminate color="primary" />
+            </div>
           </v-card-text>
         </v-card>
       </v-col>
@@ -410,6 +450,16 @@ const pendingEntreprises = ref(0)
 const totalOffres = ref(null)
 const totalEvenements = ref(null)
 
+// Totaux pour le mois sélectionné
+const monthTalents = ref(0)
+const monthEntreprises = ref(0)
+const monthOffres = ref(0)
+const monthEvenements = ref(0)
+
+// État pour la navigation du mois dans le graphique d'évolution
+const currentMonth = ref(new Date())
+const currentMonthLabel = ref('')
+
 // ══════════════════════════════════════════════════════════
 // SPARKLINES (mini graphiques dans les cards)
 // ══════════════════════════════════════════════════════════
@@ -533,16 +583,36 @@ const inscriptionsChart = ref({
       strokeDashArray: 4
     },
     tooltip: {
+      enabled: true,
+      shared: true,
+      intersect: false,
       theme: 'light',
-      x: { show: true },
+      x: {
+        show: true,
+        formatter: (val, opts) => {
+          // Afficher la date depuis les catégories
+          const categories = opts.w.config.xaxis.categories
+          return categories[opts.dataPointIndex] || val
+        }
+      },
       y: {
-        formatter: (val) => val + ' inscriptions'
+        formatter: (val, opts) => {
+          if (val === undefined || val === null) return '0 inscription'
+          return val + (val > 1 ? ' inscriptions' : ' inscription')
+        },
+        title: {
+          formatter: (seriesName) => seriesName + ': '
+        }
+      },
+      marker: {
+        show: true
       }
     },
     markers: {
       size: 5,
       hover: {
-        size: 7
+        size: 7,
+        sizeOffset: 3
       }
     }
   }
@@ -749,38 +819,43 @@ const candidaturesChart = ref({
 // CHARGEMENT DES DONNÉES
 // ══════════════════════════════════════════════════════════
 
-onMounted(async () => {
+/**
+ * Charger les données d'évolution pour le mois sélectionné
+ */
+const loadEvolutionData = async () => {
   try {
-    // Charger les stats de base pour les cards
-    const [talentsRes, entreprisesRes, offresRes, evenementsRes] = await Promise.all([
-      api.get('/admin/talents?page=1&per_page=1'),
-      api.get('/admin/entreprises'),
-      api.get('/admin/offres?page=1&per_page=1'),
-      api.get('/admin/evenements')
-    ])
-
-    totalTalents.value = talentsRes.data.total ?? null
-    const ents = entreprisesRes.data
-    totalEntreprises.value = Array.isArray(ents) ? ents.length : (ents.total ?? null)
-    pendingEntreprises.value = Array.isArray(ents) ? ents.filter(e => e.status === 'pending').length : 0
-    totalOffres.value = offresRes.data.total ?? null
-    const evts = evenementsRes.data
-    totalEvenements.value = Array.isArray(evts) ? evts.length : (evts.total ?? null)
-
-    // Charger toutes les stats depuis l'endpoint
-    const statsRes = await api.get('/admin/dashboard-stats')
+    const year = currentMonth.value.getFullYear()
+    const month = String(currentMonth.value.getMonth() + 1).padStart(2, '0')
+    const monthYear = `${year}-${month}`
+    
+    const statsRes = await api.get('/admin/dashboard-stats', {
+      params: { month: monthYear }
+    })
     const stats = statsRes.data
 
-    // SPARKLINES (7 derniers jours)
-    talentsSparkline.value.series[0].data = stats.sparklines.talents
-    entreprisesSparkline.value.series[0].data = stats.sparklines.entreprises
-    offresSparkline.value.series[0].data = stats.sparklines.offres
-    evenementsSparkline.value.series[0].data = stats.sparklines.evenements
+    // Mettre à jour le label du mois
+    currentMonthLabel.value = stats.evolution.month
 
-    // ÉVOLUTION DES INSCRIPTIONS (6 mois)
-    inscriptionsChart.value.options.xaxis.categories = stats.evolution.months
-    inscriptionsChart.value.series[0].data = stats.evolution.talents
-    inscriptionsChart.value.series[1].data = stats.evolution.entreprises
+    // TOTAUX POUR LE MOIS SÉLECTIONNÉ
+    monthTalents.value = stats.totals_for_month.talents
+    monthEntreprises.value = stats.totals_for_month.entreprises
+    monthOffres.value = stats.totals_for_month.offres
+    monthEvenements.value = stats.totals_for_month.evenements
+
+    // ÉVOLUTION DES INSCRIPTIONS (jour par jour pour le mois)
+    inscriptionsChart.value = {
+      series: [
+        { name: 'Talents', data: stats.evolution.talents },
+        { name: 'Entreprises', data: stats.evolution.entreprises }
+      ],
+      options: {
+        ...inscriptionsChart.value.options,
+        xaxis: {
+          ...inscriptionsChart.value.options.xaxis,
+          categories: stats.evolution.days
+        }
+      }
+    }
 
     // SECTEURS D'ACTIVITÉ
     if (stats.secteurs && stats.secteurs.length > 0) {
@@ -792,6 +867,15 @@ onMounted(async () => {
         options: {
           ...secteursChart.value.options,
           labels: labels
+        }
+      }
+    } else {
+      // Aucune donnée pour ce mois
+      secteursChart.value = {
+        series: [1],
+        options: {
+          ...secteursChart.value.options,
+          labels: ['Aucune donnée']
         }
       }
     }
@@ -806,6 +890,15 @@ onMounted(async () => {
         }
       }
       contratsChart.value.series[0].data = stats.offres_par_contrat.map(c => c.count)
+    } else {
+      contratsChart.value.options = {
+        ...contratsChart.value.options,
+        xaxis: {
+          ...contratsChart.value.options.xaxis,
+          categories: []
+        }
+      }
+      contratsChart.value.series[0].data = []
     }
 
     // CANDIDATURES PAR STATUT
@@ -829,6 +922,47 @@ onMounted(async () => {
         labels: candidaturesLabels
       }
     }
+
+    // SPARKLINES (7 derniers jours du mois)
+    talentsSparkline.value.series[0].data = stats.sparklines.talents
+    entreprisesSparkline.value.series[0].data = stats.sparklines.entreprises
+    offresSparkline.value.series[0].data = stats.sparklines.offres
+    evenementsSparkline.value.series[0].data = stats.sparklines.evenements
+  } catch (e) {
+    console.error('Erreur chargement évolution:', e)
+  }
+}
+
+/**
+ * Naviguer vers le mois précédent ou suivant
+ */
+const navigateMonth = async (direction) => {
+  const newDate = new Date(currentMonth.value)
+  newDate.setMonth(newDate.getMonth() + direction)
+  currentMonth.value = newDate
+  await loadEvolutionData()
+}
+
+onMounted(async () => {
+  try {
+    // Charger les stats de base pour les cards
+    const [talentsRes, entreprisesRes, offresRes, evenementsRes] = await Promise.all([
+      api.get('/admin/talents?page=1&per_page=1'),
+      api.get('/admin/entreprises'),
+      api.get('/admin/offres?page=1&per_page=1'),
+      api.get('/admin/evenements')
+    ])
+
+    totalTalents.value = talentsRes.data.total ?? null
+    const ents = entreprisesRes.data
+    totalEntreprises.value = Array.isArray(ents) ? ents.length : (ents.total ?? null)
+    pendingEntreprises.value = Array.isArray(ents) ? ents.filter(e => e.status === 'pending').length : 0
+    totalOffres.value = offresRes.data.total ?? null
+    const evts = evenementsRes.data
+    totalEvenements.value = Array.isArray(evts) ? evts.length : (evts.total ?? null)
+
+    // Charger les données d'évolution pour le mois actuel
+    await loadEvolutionData()
 
   } catch (e) {
     console.error('Erreur chargement dashboard:', e)
