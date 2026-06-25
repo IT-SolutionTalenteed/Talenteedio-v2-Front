@@ -529,10 +529,10 @@ const handleSubmit = async () => {
       formData.append('competences', form.value.competences)
     }
     if (form.value.pays_relocation) {
-      formData.append('pays_souhaites', JSON.stringify([form.value.pays_relocation]))
+      formData.append('pays_souhaites[]', form.value.pays_relocation)
     }
     if (form.value.ville_relocation) {
-      formData.append('villes_souhaitees', JSON.stringify([form.value.ville_relocation]))
+      formData.append('villes_souhaitees[]', form.value.ville_relocation)
     }
     
     const response = await api.post('/public/ats/register', formData, {
