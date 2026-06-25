@@ -296,7 +296,7 @@
                 </div>
               </div>
 
-              <div v-else class="evd-block evd-cta-login-block">
+              <div v-else-if="evenement.id === 1" class="evd-block evd-cta-login-block">
                 <div class="evd-cta-login-inner">
                   <div class="evd-cta-login-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
                   <div>
@@ -431,7 +431,7 @@
                 </div>
               </div>
 
-              <div class="evd-side-card evd-side-cta">
+              <div v-if="evenement.id === 1" class="evd-side-card evd-side-cta">
                 <template v-if="isTalent">
                   <p>{{ t('evenements.detail.readyForMatching') }}</p>
                   <button class="btn btn--blue" style="width:100%;" @click="scrollToMatching">
