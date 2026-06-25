@@ -26,7 +26,8 @@
   "agenda": {
     "label": "Agenda",
     "title": "Événements",
-    "description": "Les prochains événements de cette catégorie"
+    "description": "Les prochains événements de cette catégorie",
+    "empty": "Aucun événement à venir pour le moment."
   },
   "card": {
     "featured": "Mis en avant",

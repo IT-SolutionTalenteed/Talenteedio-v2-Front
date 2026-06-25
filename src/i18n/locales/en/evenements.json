@@ -26,7 +26,8 @@
   "agenda": {
     "label": "Agenda",
     "title": "Events",
-    "description": "Upcoming events in this category"
+    "description": "Upcoming events in this category",
+    "empty": "No upcoming events yet."
   },
   "card": {
     "featured": "Featured",

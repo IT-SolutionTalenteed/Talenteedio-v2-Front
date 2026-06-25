@@ -32,33 +32,36 @@
     </section>
 
     <!-- ══ DÉTAILS ══ -->
-    <section v-if="categorie.liste_details && categorie.liste_details.length" class="cat-details">
+    <section v-if="validDetails.length" class="cat-details">
       <div class="container">
         <div class="cat-section-header fade-in">
           <span class="label-blue">{{ t('evenements.details.label') }}</span>
           <h2>{{ t('evenements.details.about') }}</h2>
         </div>
         <div class="cat-details-grid fade-in">
-          <div v-for="(detail, i) in categorie.liste_details" :key="i" class="cat-detail-item">
+          <div v-for="(detail, i) in validDetails" :key="i" class="cat-detail-item">
             <div class="cat-detail-num">{{ String(i + 1).padStart(2, '0') }}</div>
             <div class="cat-detail-content">
-              <h4 class="cat-detail-title">{{ detail.titre }}</h4>
-              <p class="cat-detail-text">{{ detail.description }}</p>
+              <h4 v-if="detailTitle(detail)" class="cat-detail-title">{{ detailTitle(detail) }}</h4>
+              <p class="cat-detail-text">{{ detailText(detail) }}</p>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ══ ÉVÉNEMENTS DE CETTE CATÉGORIE ══ -->
-    <section v-if="categorie.evenements && categorie.evenements.length" class="cat-events">
+    <!-- ══ ÉVÉNEMENTS DE CETTE CATÉGORIE (toujours affiché) ══ -->
+    <section class="cat-events">
       <div class="container">
         <div class="cat-section-header fade-in">
           <span class="label-blue">{{ t('evenements.agenda.label') }}</span>
           <h2>{{ t('evenements.agenda.title') }}</h2>
           <p>{{ t('evenements.agenda.description') }}</p>
         </div>
-        <div class="cat-events-grid fade-in">
+        <div v-if="!(categorie.evenements && categorie.evenements.length)" class="cat-events-empty fade-in">
+          {{ t('evenements.agenda.empty') }}
+        </div>
+        <div v-else class="cat-events-grid fade-in">
           <div v-for="ev in categorie.evenements" :key="ev.id" class="cat-event-card">
             <div class="cat-event-img">
               <LoadedImage
@@ -116,7 +119,7 @@
     </section>
 
     <!-- ══ FAQs ══ -->
-    <section v-if="categorie.liste_faqs && categorie.liste_faqs.length" class="cat-faqs">
+    <section v-if="validFaqs.length" class="cat-faqs">
       <div class="container">
         <div class="cat-section-header fade-in">
           <span class="label-blue">{{ t('evenements.faq.label') }}</span>
@@ -124,7 +127,7 @@
         </div>
         <div class="cat-faqs-list fade-in">
           <div
-            v-for="(faq, i) in categorie.liste_faqs"
+            v-for="(faq, i) in validFaqs"
             :key="i"
             class="faq-item"
             :class="{ 'faq-item--open': openFaq === i }"
@@ -143,27 +146,27 @@
     </section>
 
     <!-- ══ TÉMOIGNAGES ══ -->
-    <section v-if="categorie.temoignages && categorie.temoignages.length" class="cat-temoignages">
+    <section v-if="validTemoignages.length" class="cat-temoignages">
       <div class="container">
         <div class="cat-section-header fade-in">
           <span class="label-blue">{{ t('evenements.testimonials.label') }}</span>
           <h2>{{ t('evenements.testimonials.title') }}</h2>
         </div>
         <div class="cat-temoignages-grid fade-in">
-          <div v-for="t in categorie.temoignages" :key="t.id" class="temoignage-card">
+          <div v-for="tem in validTemoignages" :key="tem.id" class="temoignage-card">
             <div class="temoignage-quote"><i class="fa-solid fa-quote-left"></i></div>
-            <p class="temoignage-contenu">{{ t.contenu }}</p>
+            <p class="temoignage-contenu">{{ tem.contenu }}</p>
             <div class="temoignage-author">
               <LoadedImage
-                v-if="t.avatar_url"
-                :src="t.avatar_url"
-                :alt="t.auteur"
+                v-if="tem.avatar_url"
+                :src="tem.avatar_url"
+                :alt="tem.auteur"
                 img-class="temoignage-avatar"
               />
-              <div v-else class="temoignage-avatar-placeholder">{{ t.auteur?.charAt(0) }}</div>
+              <div v-else class="temoignage-avatar-placeholder">{{ tem.auteur?.charAt(0) }}</div>
               <div>
-                <div class="temoignage-name">{{ t.auteur }}</div>
-                <div class="temoignage-poste">{{ t.poste }}</div>
+                <div class="temoignage-name">{{ tem.auteur }}</div>
+                <div class="temoignage-poste">{{ tem.poste }}</div>
               </div>
             </div>
           </div>
@@ -233,6 +236,24 @@ const heroStyle = computed(() => {
   }
   return {}
 })
+
+// Un détail peut être une simple string (format actuel) ou un objet { titre, description } (legacy)
+const detailTitle = (d) => (d && typeof d === 'object') ? (d.titre || '') : ''
+const detailText  = (d) => (d && typeof d === 'object') ? (d.description || d.titre || '') : (d || '')
+
+// Listes filtrées : on masque les sections sans contenu réel (évite les "01/02" et FAQ vides)
+const validDetails = computed(() =>
+  (categorie.value?.liste_details || []).filter(d => (detailTitle(d) || detailText(d)).trim())
+)
+const validFaqs = computed(() =>
+  (categorie.value?.liste_faqs || []).filter(f => {
+    const q = (f && typeof f === 'object') ? f.question : f
+    return q && String(q).trim()
+  })
+)
+const validTemoignages = computed(() =>
+  (categorie.value?.temoignages || []).filter(tm => (tm?.contenu || '').trim())
+)
 
 const setupObserver = () => {
   if (typeof IntersectionObserver !== 'undefined') {
@@ -385,6 +406,7 @@ onMounted(() => load(route.params.id))
 
 /* ── Événements ── */
 .cat-events { padding: 80px 0; background: var(--light-bg, #f5f7fa); }
+.cat-events-empty { text-align: center; color: var(--body-text); font-size: 15px; padding: 24px 0; }
 .cat-events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 28px; }
 .cat-event-card {
   background: #fff; border-radius: 14px; overflow: hidden;
