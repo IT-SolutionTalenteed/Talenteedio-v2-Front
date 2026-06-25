@@ -1520,9 +1520,10 @@ onUnmounted(() => {
 }
 .evd-featured-image img {
   width: 100%;
+  max-height: 500px;
   height: auto;
   display: block;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 12px;
 }
 </style>
