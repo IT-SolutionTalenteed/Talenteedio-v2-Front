@@ -1513,8 +1513,9 @@ onUnmounted(() => {
 /* Section image pleine largeur (événement ID 2) */
 .evd-featured-image {
   width: 100%;
-  margin: 0;
-  padding: 0;
+  max-width: var(--container-width, 1200px);
+  margin: 0 auto;
+  padding: 0 var(--container-padding, 20px);
   display: block;
 }
 .evd-featured-image img {
@@ -1522,5 +1523,6 @@ onUnmounted(() => {
   height: auto;
   display: block;
   object-fit: cover;
+  border-radius: 12px;
 }
 </style>
