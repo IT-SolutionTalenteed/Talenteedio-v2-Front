@@ -19,7 +19,7 @@
     <template v-else>
 
       <!-- ══ HERO ══ -->
-      <section class="evd-hero" :style="heroStyle">
+      <section class="evd-hero" :style="evenement.id === 2 ? {} : heroStyle">
         <div class="evd-hero-overlay"></div>
         <div class="container">
           <div class="evd-hero-content">
@@ -57,6 +57,11 @@
             </div>
           </div>
         </div>
+      </section>
+
+      <!-- ══ IMAGE SECTION (EVENT ID 2 ONLY) ══ -->
+      <section v-if="evenement.id === 2 && evenement.image_mise_en_avant_url" class="evd-featured-image">
+        <img :src="evenement.image_mise_en_avant_url" :alt="evenement.titre" />
       </section>
 
       <!-- ══ CORPS ══ -->
@@ -1504,4 +1509,18 @@ onUnmounted(() => {
 }
 .evd-feedback-textarea:focus { border-color: var(--blue); }
 .evd-feedback-form-btns { display: flex; gap: 8px; justify-content: flex-end; }
+
+/* Section image pleine largeur (événement ID 2) */
+.evd-featured-image {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+.evd-featured-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
 </style>
