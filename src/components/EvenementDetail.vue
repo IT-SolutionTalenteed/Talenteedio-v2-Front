@@ -68,12 +68,12 @@
             <div class="evd-main">
 
               <!-- ══ ENTREPRISES PARTICIPANTES ══ -->
-              <div class="evd-block" id="entreprises-section">
+              <div v-if="evenement.entreprises?.length" class="evd-block" id="entreprises-section">
                 <h2 class="evd-block-title">
                   <i class="fa-solid fa-building"></i> {{ t('evenements.detail.participatingCompanies') }}
-                  <span class="evd-count">{{ evenement.entreprises?.length || 0 }}</span>
+                  <span class="evd-count">{{ evenement.entreprises.length }}</span>
                 </h2>
-                <div v-if="evenement.entreprises?.length" class="evd-companies-grid">
+                <div class="evd-companies-grid">
                   <div v-for="ent in evenement.entreprises" :key="ent.id" class="evd-company-card">
                     <div class="evd-company-logo">
                       <img v-if="ent.logo_url" v-lazy="ent.logo_url" :alt="ent.nom" />
@@ -97,10 +97,6 @@
                       </router-link>
                     </div>
                   </div>
-                </div>
-                <div v-else class="evd-empty">
-                  <i class="fa-solid fa-building-circle-xmark"></i>
-                  <p>{{ t('evenements.detail.noCompanies') }}</p>
                 </div>
               </div>
 
