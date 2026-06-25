@@ -333,11 +333,16 @@ const buildFormData = () => {
   if (videoFile.value) fd.append('video', videoFile.value)
   else if (removeVideoFlag.value) fd.append('remove_video', '1')
   galerieFiles.value.forEach(f => fd.append('galerie[]', f))
-  form.value.liste_details.filter(Boolean).forEach((v, i) => fd.append(`liste_details[${i}]`, v))
-  form.value.liste_faqs.forEach((faq, i) => {
-    fd.append(`liste_faqs[${i}][question]`, faq.question)
-    fd.append(`liste_faqs[${i}][reponse]`, faq.reponse)
-  })
+  form.value.liste_details
+    .map(v => (v || '').trim())
+    .filter(Boolean)
+    .forEach((v, i) => fd.append(`liste_details[${i}]`, v))
+  form.value.liste_faqs
+    .filter(faq => (faq.question || '').trim())
+    .forEach((faq, i) => {
+      fd.append(`liste_faqs[${i}][question]`, faq.question.trim())
+      fd.append(`liste_faqs[${i}][reponse]`, faq.reponse || '')
+    })
   form.value.liste_temoignages.forEach((tem, i) => {
     if (!tem.auteur || !tem.contenu) return
     fd.append(`temoignages[${i}][auteur]`, tem.auteur)
