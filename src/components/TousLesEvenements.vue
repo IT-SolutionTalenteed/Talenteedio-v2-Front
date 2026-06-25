@@ -24,22 +24,29 @@
             :to="`/evenements/${event.id}`"
             class="event-card"
           >
-            <div v-if="event.image_url" class="event-image">
-              <img v-lazy="event.image_url" :alt="event.titre" />
+            <div class="event-image">
+              <img
+                v-if="event.image_mise_en_avant_url"
+                v-lazy="event.image_mise_en_avant_url"
+                :alt="event.titre"
+              />
+              <div v-else class="event-image-placeholder">
+                <i class="fa-solid fa-calendar-days"></i>
+              </div>
+              <span v-if="event.date_debut" class="event-date-badge">
+                <i class="fa-solid fa-calendar"></i>
+                {{ formatDate(event.date_debut) }}
+              </span>
             </div>
             <div class="event-content">
-              <span v-if="event.categorie" class="event-category">{{ event.categorie.titre }}</span>
               <h3 class="event-title">{{ event.titre }}</h3>
-              <div class="event-meta">
-                <span v-if="event.date_debut" class="event-date">
-                  <i class="fa-solid fa-calendar"></i>
-                  {{ formatDate(event.date_debut) }}
-                </span>
-                <span v-if="event.lieu" class="event-location">
-                  <i class="fa-solid fa-location-dot"></i>
-                  {{ event.lieu }}
-                </span>
-              </div>
+              <p v-if="event.description" class="event-desc">
+                {{ truncate(stripHtml(event.description), 120) }}
+              </p>
+              <span class="event-link">
+                {{ t('evenements.card.viewEvent') }}
+                <i class="fa-solid fa-arrow-right"></i>
+              </span>
             </div>
           </router-link>
         </div>
@@ -114,6 +121,18 @@ function formatDate(dateStr) {
   if (!dateStr) return ''
   const d = new Date(dateStr)
   return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+}
+
+function stripHtml(html) {
+  if (!html) return ''
+  const tmp = document.createElement('div')
+  tmp.innerHTML = html
+  return tmp.textContent || tmp.innerText || ''
+}
+
+function truncate(str, len) {
+  if (!str) return ''
+  return str.length > len ? str.slice(0, len).trimEnd() + '…' : str
 }
 
 onMounted(async () => {
@@ -233,21 +252,25 @@ onMounted(async () => {
 }
 
 .event-card {
+  display: flex;
+  flex-direction: column;
   background: #fff;
-  border-radius: 16px;
+  border-radius: 18px;
   overflow: hidden;
   text-decoration: none;
-  border: 2px solid #e0e4ef;
-  transition: all 0.3s ease;
+  border: 1px solid #e8ecf5;
+  box-shadow: 0 4px 18px rgba(0, 35, 90, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .event-card:hover {
   border-color: #3a9bff;
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(58,155,255,0.15);
+  transform: translateY(-6px);
+  box-shadow: 0 18px 44px rgba(58, 155, 255, 0.18);
 }
 
 .event-image {
+  position: relative;
   width: 100%;
   height: 200px;
   overflow: hidden;
@@ -258,56 +281,92 @@ onMounted(async () => {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: transform 0.4s ease;
 }
 
 .event-card:hover .event-image img {
-  transform: scale(1.05);
+  transform: scale(1.06);
+}
+
+.event-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52px;
+  color: rgba(255, 255, 255, 0.5);
+  background: linear-gradient(135deg, #00235a 0%, #1a3a8a 100%);
+}
+
+.event-date-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #00235a;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(6px);
+  border-radius: 50px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+}
+
+.event-date-badge i {
+  color: #3a9bff;
+  font-size: 12px;
 }
 
 .event-content {
-  padding: 20px;
-}
-
-.event-category {
-  display: inline-block;
-  padding: 4px 12px;
-  background: #eef2ff;
-  color: #3a9bff;
-  font-size: 12px;
-  font-weight: 700;
-  border-radius: 50px;
-  margin-bottom: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 22px;
 }
 
 .event-title {
-  font-size: 18px;
+  font-size: 19px;
   font-weight: 700;
   color: #00235a;
-  margin: 0 0 12px;
-  line-height: 1.4;
+  margin: 0 0 10px;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.event-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.event-desc {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0 0 18px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.event-date,
-.event-location {
-  display: flex;
+.event-link {
+  margin-top: auto;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
-  color: #64748b;
+  font-size: 14px;
+  font-weight: 700;
+  color: #3a9bff;
+  transition: gap 0.25s ease;
 }
 
-.event-date i,
-.event-location i {
-  color: #3a9bff;
+.event-card:hover .event-link {
+  gap: 12px;
+}
+
+.event-link i {
   font-size: 12px;
 }
 
