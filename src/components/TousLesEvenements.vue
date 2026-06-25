@@ -10,44 +10,9 @@
       </div>
     </section>
 
-    <!-- Catégories d'événements -->
-    <section class="section-categories">
-      <div class="container">
-        <div class="section-header animate-on-scroll">
-          <span class="section-label">{{ t('evenements.all.categoriesLabel') }}</span>
-          <h2 class="section-title">{{ t('evenements.all.categoriesTitle') }}</h2>
-          <p class="section-description">{{ t('evenements.all.categoriesDescription') }}</p>
-        </div>
-        <div v-if="loading.categories" class="loading-state">{{ t('common.loading') }}</div>
-        <div v-else-if="categories.length === 0" class="empty-state">
-          {{ t('evenements.all.noCategories') }}
-        </div>
-        <div v-else class="categories-grid">
-          <router-link
-            v-for="cat in categories"
-            :key="cat.id"
-            :to="`/evenements/categorie/${cat.id}`"
-            class="category-card"
-          >
-            <div class="category-icon">
-              <i class="fa-solid fa-calendar-days"></i>
-            </div>
-            <h3 class="category-title">{{ cat.titre }}</h3>
-            <p v-if="cat.description" class="category-desc">{{ cat.description }}</p>
-            <span class="category-arrow"><i class="fa-solid fa-arrow-right"></i></span>
-          </router-link>
-        </div>
-      </div>
-    </section>
-
     <!-- Événements -->
     <section class="section-events">
       <div class="container">
-        <div class="section-header animate-on-scroll">
-          <span class="section-label">{{ t('evenements.all.eventsLabel') }}</span>
-          <h2 class="section-title">{{ t('evenements.all.eventsTitle') }}</h2>
-          <p class="section-description">{{ t('evenements.all.eventsDescription') }}</p>
-        </div>
         <div v-if="loading.events" class="loading-state">{{ t('common.loading') }}</div>
         <div v-else-if="allEvents.length === 0" class="empty-state">
           {{ t('evenements.all.noEvents') }}
@@ -64,41 +29,6 @@
             </div>
             <div class="event-content">
               <span v-if="event.categorie" class="event-category">{{ event.categorie.titre }}</span>
-              <h3 class="event-title">{{ event.titre }}</h3>
-              <div class="event-meta">
-                <span v-if="event.date_debut" class="event-date">
-                  <i class="fa-solid fa-calendar"></i>
-                  {{ formatDate(event.date_debut) }}
-                </span>
-                <span v-if="event.lieu" class="event-location">
-                  <i class="fa-solid fa-location-dot"></i>
-                  {{ event.lieu }}
-                </span>
-              </div>
-            </div>
-          </router-link>
-        </div>
-      </div>
-    </section>
-
-    <!-- Événements orphelins (sans catégorie) -->
-    <section v-if="orphanEvents.length > 0" class="section-orphans">
-      <div class="container">
-        <div class="section-header animate-on-scroll">
-          <span class="section-label">{{ t('evenements.all.orphanEventsLabel') }}</span>
-          <h2 class="section-title">{{ t('evenements.all.orphanEventsTitle') }}</h2>
-        </div>
-        <div class="events-grid">
-          <router-link
-            v-for="event in orphanEvents"
-            :key="event.id"
-            :to="`/evenements/${event.id}`"
-            class="event-card"
-          >
-            <div v-if="event.image_url" class="event-image">
-              <img v-lazy="event.image_url" :alt="event.titre" />
-            </div>
-            <div class="event-content">
               <h3 class="event-title">{{ event.titre }}</h3>
               <div class="event-meta">
                 <span v-if="event.date_debut" class="event-date">
@@ -172,14 +102,11 @@ const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 // Initialiser les animations au scroll
 useScrollAnimations()
 
-const categories = ref([])
 const allEvents = ref([])
-const orphanEvents = ref([])
 const gallery = ref([])
 const testimonials = ref([])
 
 const loading = ref({
-  categories: true,
   events: true
 })
 
@@ -191,18 +118,10 @@ function formatDate(dateStr) {
 
 onMounted(async () => {
   try {
-    // Charger les catégories
-    const catRes = await axios.get(`${apiBase}/public/categories-evenements`)
-    categories.value = catRes.data
-    loading.value.categories = false
-
-    // Charger tous les événements
+    // Charger tous les événements disponibles (réponse paginée Laravel)
     const eventsRes = await axios.get(`${apiBase}/public/evenements`)
-    const events = Array.isArray(eventsRes.data) ? eventsRes.data : []
-
-    // Séparer les événements avec et sans catégorie
-    allEvents.value = events.filter(e => e.categorie_evenement_id)
-    orphanEvents.value = events.filter(e => !e.categorie_evenement_id)
+    const payload = eventsRes.data
+    allEvents.value = Array.isArray(payload) ? payload : (payload?.data ?? [])
     loading.value.events = false
 
     // Charger la galerie (si endpoint disponible)
@@ -222,7 +141,6 @@ onMounted(async () => {
     }
   } catch (error) {
     console.error('Error loading events data:', error)
-    loading.value.categories = false
     loading.value.events = false
   }
 })
@@ -282,9 +200,7 @@ onMounted(async () => {
 }
 
 /* Sections */
-.section-categories,
 .section-events,
-.section-orphans,
 .section-gallery,
 .section-testimonials {
   padding: 60px 0;
@@ -309,97 +225,10 @@ onMounted(async () => {
   font-size: 16px;
 }
 
-/* Categories Grid */
-.categories-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
-}
-
-.category-card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 32px 24px;
-  text-decoration: none;
-  border: 2px solid #e0e4ef;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.category-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #3a9bff, #f29f1f);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.3s ease;
-}
-
-.category-card:hover {
-  border-color: #3a9bff;
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(58,155,255,0.15);
-}
-
-.category-card:hover::before {
-  transform: scaleX(1);
-}
-
-.category-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #3a9bff, #1a7fd8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  color: #fff;
-  margin-bottom: 20px;
-}
-
-.category-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #00235a;
-  margin: 0 0 8px;
-}
-
-.category-desc {
-  font-size: 14px;
-  color: #64748b;
-  line-height: 1.6;
-  margin: 0 0 16px;
-}
-
-.category-arrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #f0f4ff;
-  color: #3a9bff;
-  font-size: 12px;
-  transition: all 0.3s ease;
-}
-
-.category-card:hover .category-arrow {
-  background: #3a9bff;
-  color: #fff;
-  transform: translateX(4px);
-}
-
 /* Events Grid */
 .events-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 28px;
 }
 
@@ -560,6 +389,12 @@ onMounted(async () => {
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  .events-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
   .hero-title {
     font-size: 36px;
@@ -573,7 +408,6 @@ onMounted(async () => {
     font-size: 28px;
   }
 
-  .categories-grid,
   .events-grid,
   .testimonials-grid {
     grid-template-columns: 1fr;
