@@ -3,6 +3,9 @@
   "all": {
     "title": "All Events",
     "description": "Discover all our HR events, recruitment forums and professional meetings",
+    "allEvents": "All events",
+    "upcomingEvents": "Upcoming events",
+    "pastEvents": "Past events",
     "categoriesLabel": "Categories",
     "categoriesTitle": "Event Categories",
     "categoriesDescription": "Explore our different categories of professional events",
