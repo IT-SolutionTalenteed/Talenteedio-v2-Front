@@ -125,7 +125,7 @@ import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
 import { useScrollAnimations } from '../composables/useScrollAnimations.js'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
 // Initialiser les animations au scroll
@@ -160,7 +160,8 @@ const filteredEvents = computed(() => {
 function formatDate(dateStr) {
   if (!dateStr) return ''
   const d = new Date(dateStr)
-  return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+  const localeCode = locale.value === 'fr' ? 'fr-FR' : 'en-US'
+  return d.toLocaleDateString(localeCode, { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
 function stripHtml(html) {
