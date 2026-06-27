@@ -3,6 +3,9 @@
   "all": {
     "title": "Tous les événements",
     "description": "Découvrez tous nos événements RH, forums de recrutement et rencontres professionnelles",
+    "allEvents": "Tous les événements",
+    "upcomingEvents": "Événements à venir",
+    "pastEvents": "Événements passés",
     "categoriesLabel": "Catégories",
     "categoriesTitle": "Catégories d'événements",
     "categoriesDescription": "Explorez nos différentes catégories d'événements professionnels",

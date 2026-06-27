@@ -13,18 +13,40 @@
     <!-- Événements -->
     <section class="section-events">
       <div class="container">
+        <!-- Tabs de filtrage -->
+        <div class="events-tabs">
+          <button 
+            :class="['tab-btn', { active: activeTab === 'all' }]"
+            @click="activeTab = 'all'"
+          >
+            {{ t('evenements.all.allEvents') }}
+          </button>
+          <button 
+            :class="['tab-btn', { active: activeTab === 'upcoming' }]"
+            @click="activeTab = 'upcoming'"
+          >
+            {{ t('evenements.all.upcomingEvents') }}
+          </button>
+          <button 
+            :class="['tab-btn', { active: activeTab === 'past' }]"
+            @click="activeTab = 'past'"
+          >
+            {{ t('evenements.all.pastEvents') }}
+          </button>
+        </div>
+
         <div v-if="loading.events" class="loading-state">{{ t('common.loading') }}</div>
-        <div v-else-if="allEvents.length === 0" class="empty-state">
+        <div v-else-if="filteredEvents.length === 0" class="empty-state">
           {{ t('evenements.all.noEvents') }}
         </div>
         <div v-else class="events-grid">
           <router-link
-            v-for="event in allEvents"
+            v-for="event in filteredEvents"
             :key="event.id"
             :to="`/evenements/${event.id}`"
             class="event-card"
           >
-            <div class="event-image">
+            <div class="event-image" :class="{ 'event-past': isEventPast(event) }">
               <img
                 v-if="event.image_mise_en_avant_url"
                 v-lazy="event.image_mise_en_avant_url"
@@ -96,7 +118,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
@@ -112,9 +134,27 @@ useScrollAnimations()
 const allEvents = ref([])
 const gallery = ref([])
 const testimonials = ref([])
+const activeTab = ref('all')
 
 const loading = ref({
   events: true
+})
+
+function isEventPast(event) {
+  if (!event.date_fin && !event.date_debut) return false
+  const endDate = event.date_fin || event.date_debut
+  return new Date(endDate) < new Date()
+}
+
+const filteredEvents = computed(() => {
+  if (activeTab.value === 'all') {
+    return allEvents.value
+  } else if (activeTab.value === 'upcoming') {
+    return allEvents.value.filter(event => !isEventPast(event))
+  } else if (activeTab.value === 'past') {
+    return allEvents.value.filter(event => isEventPast(event))
+  }
+  return allEvents.value
 })
 
 function formatDate(dateStr) {
@@ -235,6 +275,40 @@ onMounted(async () => {
   text-transform: uppercase;
 }
 
+/* Tabs de filtrage */
+.events-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  padding: 12px 28px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #64748b;
+  background: #fff;
+  border: 2px solid #e8ecf5;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.tab-btn:hover {
+  border-color: #3a9bff;
+  color: #3a9bff;
+}
+
+.tab-btn.active {
+  background: linear-gradient(135deg, #3a9bff 0%, #1a7cd8 100%);
+  border-color: #3a9bff;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(58, 155, 255, 0.25);
+}
+
 /* Loading & Empty States */
 .loading-state,
 .empty-state {
@@ -286,6 +360,17 @@ onMounted(async () => {
 
 .event-card:hover .event-image img {
   transform: scale(1.06);
+}
+
+/* Événements passés - image grisée */
+.event-image.event-past img {
+  filter: grayscale(100%);
+  opacity: 0.6;
+}
+
+.event-card:hover .event-image.event-past img {
+  filter: grayscale(80%);
+  opacity: 0.75;
 }
 
 .event-image-placeholder {
