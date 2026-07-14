@@ -165,6 +165,7 @@ const sideNav = computed(() => {
           { label: 'Expériences', route: { name: 'AdminExperiences' } },
           { label: 'Langues', route: { name: 'AdminLanguages' } },
           { label: 'Secteurs d\'activité', route: { name: 'AdminActivitySectors' } },
+          { label: 'Pays', route: { name: 'AdminCountries' } },
           { label: 'CGU / Mentions légales', route: { name: 'AdminLegalPages' } }
         ]
       }

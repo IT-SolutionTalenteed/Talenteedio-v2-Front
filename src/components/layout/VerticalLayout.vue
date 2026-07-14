@@ -229,6 +229,7 @@ const PAGE_TITLES = {
   experiences: t('nav.admin.jobs.experiences'),
   languages: t('nav.admin.jobs.languages'),
   'activity-sectors': t('nav.admin.jobs.sectors'),
+  countries: 'Pays',
   'legal-pages': t('nav.admin.legalPages'),
   'plans': t('nav.admin.plans'),
   admins: t('nav.admin.admins'),
@@ -301,6 +302,7 @@ const sideNav = computed(() => {
           { label: t('nav.admin.jobs.experiences'), route: { name: 'AdminExperiences' }, icon: 'mdi-clock-outline' },
           { label: t('nav.admin.jobs.languages'), route: { name: 'AdminLanguages' }, icon: 'mdi-translate' },
           { label: t('nav.admin.jobs.sectors'), route: { name: 'AdminActivitySectors' }, icon: 'mdi-sitemap-outline' },
+          { label: 'Pays', route: { name: 'AdminCountries' }, icon: 'mdi-flag-outline' },
         ],
       },
       {

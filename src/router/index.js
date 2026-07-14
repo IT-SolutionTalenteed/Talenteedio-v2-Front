@@ -40,6 +40,7 @@ import StudyLevelForm from '../components/admin/StudyLevelForm.vue'
 import ExperienceForm from '../components/admin/ExperienceForm.vue'
 import LanguageForm from '../components/admin/LanguageForm.vue'
 import ActivitySectorForm from '../components/admin/ActivitySectorForm.vue'
+import CountryForm from '../components/admin/CountryForm.vue'
 import MediaCategoryForm from '../components/admin/MediaCategoryForm.vue'
 import LegalPageForm from '../components/admin/LegalPageForm.vue'
 import AdminArticleForm from '../components/admin/ArticleForm.vue'
@@ -258,6 +259,9 @@ const routes = [
       { path: 'activity-sectors', name: 'AdminActivitySectors', component: AdminDashboard, meta: adminMeta },
       { path: 'activity-sectors/create', name: 'AdminActivitySectorCreate', component: ActivitySectorForm, meta: adminMeta },
       { path: 'activity-sectors/:id/edit', name: 'AdminActivitySectorEdit', component: ActivitySectorForm, meta: adminMeta },
+      { path: 'countries', name: 'AdminCountries', component: AdminDashboard, meta: adminMeta },
+      { path: 'countries/create', name: 'AdminCountryCreate', component: CountryForm, meta: adminMeta },
+      { path: 'countries/:id/edit', name: 'AdminCountryEdit', component: CountryForm, meta: adminMeta },
       { path: 'legal-pages', name: 'AdminLegalPages', component: AdminDashboard, meta: adminMeta },
       { path: 'legal-pages/create', name: 'AdminLegalPageCreate', component: LegalPageForm, meta: adminMeta },
       { path: 'legal-pages/:id/edit', name: 'AdminLegalPageEdit', component: LegalPageForm, meta: adminMeta },
