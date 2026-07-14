@@ -388,6 +388,7 @@
   <TalentList             v-if="activeTab === 'talents'" />
   <EntretienList          v-if="activeTab === 'entretiens'" />
   <FeedbackList           v-if="activeTab === 'feedbacks'" />
+  <ObservatorySubmissionList v-if="activeTab === 'observatory-submissions'" />
   <ImportCandidats        v-if="activeTab === 'import-candidats'" />
   <SyncCrm               v-if="activeTab === 'sync-crm'" />
   <SyncBrevo             v-if="activeTab === 'sync-brevo'" />
@@ -432,6 +433,7 @@ import EntrepriseList from './admin/EntrepriseList.vue'
 import TalentList from './admin/TalentList.vue'
 import EntretienList from './admin/EntretienList.vue'
 import FeedbackList from './admin/FeedbackList.vue'
+import ObservatorySubmissionList from './admin/ObservatorySubmissionList.vue'
 import ImportCandidats from './admin/ImportCandidats.vue'
 import SyncCrm from './admin/SyncCrm.vue'
 import SyncBrevo from './admin/SyncBrevo.vue'

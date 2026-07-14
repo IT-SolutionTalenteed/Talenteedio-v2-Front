@@ -312,6 +312,7 @@ const sideNav = computed(() => {
           { label: t('nav.admin.events.participation'), route: { name: 'AdminParticipations' }, icon: 'mdi-domain' },
           { label: t('nav.admin.events.interviews'), route: { name: 'AdminEntretiens' }, icon: 'mdi-calendar-account-outline' },
           { label: t('nav.admin.events.feedbacks'), route: { name: 'AdminFeedbacks' }, icon: 'mdi-message-text-outline' },
+          { label: 'Africa Talent Observatory', route: { name: 'AdminObservatorySubmissions' }, icon: 'mdi-earth' },
         ],
       },
       {

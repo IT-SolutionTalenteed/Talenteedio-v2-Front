@@ -149,6 +149,7 @@ const sideNav = computed(() => {
           { label: 'Talents', route: { name: 'AdminTalents' } },
           { label: 'Entretiens par stand', route: { name: 'AdminEntretiens' } },
           { label: 'Feedbacks', route: { name: 'AdminFeedbacks' } },
+          { label: 'Africa Talent Observatory', route: { name: 'AdminObservatorySubmissions' } },
           { label: 'Import XLS', route: { name: 'AdminImportCandidats' } },
           { label: 'Sync CRM HubSpot', route: { name: 'AdminSyncCrm' } }
         ]
