@@ -899,6 +899,21 @@ body {
   background: rgba(240, 124, 0, 0.05);
 }
 
+/* Bouton secondaire dans le hero (fond sombre) : bien visible */
+.hero-actions .btn-secondary {
+  color: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(4px);
+  font-weight: 600;
+}
+
+.hero-actions .btn-secondary:hover {
+  color: var(--navy);
+  border-color: #fff;
+  background: #fff;
+}
+
 /* ── Hero Section ─────────────────────────────────── */
 .hero-modern {
   background-color: var(--navy);
