@@ -127,7 +127,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
 import observatoryService from '../services/observatoryService.js'
@@ -149,31 +149,19 @@ const errors = ref({})
 const success = ref(false)
 const successMessage = ref('')
 
-// Pays de résidence (Europe principalement)
-const paysResidence = [
-  'Belgique', 'France', 'Allemagne', 'Pays-Bas', 'Luxembourg', 'Suisse',
-  'Royaume-Uni', 'Espagne', 'Italie', 'Portugal', 'Irlande', 'Autriche',
-  'Suède', 'Danemark', 'Norvège', 'Finlande', 'Autre',
-]
+// Référentiels chargés depuis l'API (aucune liste codée en dur)
+const countries = ref([])
+const secteurs = ref([])
 
-// Pays d'origine ou d'attachement (Afrique)
-const paysOrigine = [
-  'Algérie', 'Angola', 'Bénin', 'Burkina Faso', 'Burundi', 'Cameroun',
-  'Cap-Vert', 'Congo (RDC)', 'Congo (Brazzaville)', "Côte d'Ivoire", 'Égypte',
-  'Éthiopie', 'Gabon', 'Ghana', 'Guinée', 'Kenya', 'Madagascar', 'Mali',
-  'Maroc', 'Maurice', 'Mauritanie', 'Niger', 'Nigéria', 'Ouganda', 'Rwanda',
-  'Sénégal', 'Somalie', 'Soudan', 'Tanzanie', 'Tchad', 'Togo', 'Tunisie',
-  'Zambie', 'Zimbabwe', 'Autre',
-]
+// Pays de résidence = région Europe ; Pays d'origine = région Afrique
+const paysResidence = computed(() =>
+  countries.value.filter(c => c.region === 'europe').map(c => c.name)
+)
+const paysOrigine = computed(() =>
+  countries.value.filter(c => c.region === 'afrique').map(c => c.name)
+)
 
-// Secteurs d'activité
-const secteurs = [
-  'Technologie', 'Ingénierie', 'Finance', 'Santé', 'Éducation', 'Agriculture',
-  'Transport', 'Médias', 'Arts & Culture', 'Hôtellerie & Tourisme',
-  'Commerce', 'Autre',
-]
-
-// Lien avec la diaspora
+// Lien avec la diaspora : petit ensemble fixe (non issu d'un référentiel BD)
 const liensDiaspora = [
   'Membre de la diaspora',
   'Association',
@@ -181,6 +169,16 @@ const liensDiaspora = [
   'Partenaire',
   'Autre',
 ]
+
+onMounted(async () => {
+  try {
+    const { data } = await observatoryService.getReferentiels()
+    countries.value = data.countries || []
+    secteurs.value = (data.activity_sectors || []).map(s => s.name)
+  } catch (e) {
+    error.value = "Impossible de charger les listes (pays, secteurs). Veuillez réessayer."
+  }
+})
 
 const submitForm = async () => {
   loading.value = true
