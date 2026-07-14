@@ -23,8 +23,11 @@
           </p>
 
           <div class="hero-actions animate-on-scroll stagger-4">
-            <router-link to="/profile-selection" class="btn-primary">
+            <a href="https://africatalentsummit.eventbrite.com" target="_blank" rel="noopener" class="btn-primary">
               {{ t('home.hero.subscribe') }}
+            </a>
+            <router-link to="/africa-talent-observatory" class="btn-secondary">
+              {{ t('home.hero.joinObservatory') }}
             </router-link>
           </div>
 

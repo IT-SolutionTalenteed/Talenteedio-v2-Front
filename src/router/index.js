@@ -29,6 +29,7 @@ import ForgotPassword from '../components/ForgotPassword.vue'
 import ResetPassword from '../components/ResetPassword.vue'
 import NotFound from '../components/NotFound.vue'
 import SignalerBug from '../components/SignalerBug.vue'
+import AfricaTalentObservatory from '../components/AfricaTalentObservatory.vue'
 import DeleteAccount from '../components/DeleteAccount.vue'
 
 // Admin form pages
@@ -137,6 +138,11 @@ const routes = [
     component: SignalerBug
   },
   {
+    path: '/africa-talent-observatory',
+    name: 'AfricaTalentObservatory',
+    component: AfricaTalentObservatory
+  },
+  {
     path: '/login',
     name: 'Login',
     component: Login
@@ -210,6 +216,7 @@ const routes = [
       { path: 'talents/:id/edit', name: 'AdminTalentEdit', component: TalentForm, meta: adminMeta },
       { path: 'entretiens', name: 'AdminEntretiens', component: AdminDashboard, meta: adminMeta },
       { path: 'feedbacks', name: 'AdminFeedbacks', component: AdminDashboard, meta: adminMeta },
+      { path: 'observatory-submissions', name: 'AdminObservatorySubmissions', component: AdminDashboard, meta: adminMeta },
       { path: 'import-candidats', name: 'AdminImportCandidats', component: AdminDashboard, meta: adminMeta },
       { path: 'sync-crm', name: 'AdminSyncCrm', component: AdminDashboard, meta: adminMeta },
       { path: 'sync-brevo', name: 'AdminSyncBrevo', component: AdminDashboard, meta: adminMeta },
