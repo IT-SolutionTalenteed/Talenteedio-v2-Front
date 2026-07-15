@@ -153,13 +153,12 @@ const successMessage = ref('')
 const countries = ref([])
 const secteurs = ref([])
 
-// Pays de résidence = région Europe ; Pays d'origine = région Afrique
-const paysResidence = computed(() =>
-  countries.value.filter(c => c.region === 'europe').map(c => c.name)
+// Tous les pays du monde, triés — proposés à la fois en résidence et en origine
+const allCountries = computed(() =>
+  countries.value.map(c => c.name).sort((a, b) => a.localeCompare(b, 'fr'))
 )
-const paysOrigine = computed(() =>
-  countries.value.filter(c => c.region === 'afrique').map(c => c.name)
-)
+const paysResidence = allCountries
+const paysOrigine = allCountries
 
 // Lien avec la diaspora : petit ensemble fixe (non issu d'un référentiel BD)
 const liensDiaspora = [
