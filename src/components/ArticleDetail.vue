@@ -41,7 +41,7 @@
             </div>
             <h1 class="artd-title">{{ article.title }}</h1>
             <div class="artd-hero-meta">
-              <span><i class="fa-regular fa-calendar"></i> {{ formatDate(article.created_at) }}</span>
+              <span><i class="fa-regular fa-calendar"></i> {{ formatDate(article.published_at || article.created_at) }}</span>
               <span v-if="article.entreprise">
                 <i class="fa-solid fa-building"></i> {{ article.entreprise.nom }}
               </span>

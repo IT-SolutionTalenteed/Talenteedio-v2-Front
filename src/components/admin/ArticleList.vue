@@ -49,7 +49,7 @@
       </template>
 
       <template #item.created_at="{ item }">
-        <span class="text-medium-emphasis">{{ formatDate(item.created_at) }}</span>
+        <span class="text-medium-emphasis">{{ formatDate(item.published_at || item.created_at) }}</span>
       </template>
 
       <template #item.actions="{ item }">

@@ -283,7 +283,7 @@
               </div>
             </div>
             <div class="triple-card-body">
-              <div class="article-date">{{ formatDate(article.created_at) }}</div>
+              <div class="article-date">{{ formatDate(article.published_at || article.created_at) }}</div>
               <h3>{{ article.title }}</h3>
               <p>{{ truncate(stripHtml(article.content), 120) }}</p>
               <router-link :to="`/blog/${article.id}`" class="article-link">

@@ -167,7 +167,7 @@
                     <div class="ed-article-body">
                       <span v-if="a.media_categories?.length" class="blog-cat-badge">{{ a.media_categories[0].name }}</span>
                       <h3 class="ed-article-title">{{ a.title }}</h3>
-                      <p class="ed-article-date"><i class="fa-regular fa-calendar"></i> {{ formatDate(a.created_at) }}</p>
+                      <p class="ed-article-date"><i class="fa-regular fa-calendar"></i> {{ formatDate(a.published_at || a.created_at) }}</p>
                     </div>
                   </router-link>
                 </div>

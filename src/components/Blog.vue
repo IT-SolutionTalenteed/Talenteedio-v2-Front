@@ -47,7 +47,7 @@
                 <i class="fa-solid fa-folder" style="color:var(--orange)"></i>
                 {{ featuredArticle.media_categories[0].name }}
               </span>
-              <span><i class="fa-regular fa-calendar" style="color:var(--orange)"></i> {{ formatDate(featuredArticle.created_at) }}</span>
+              <span><i class="fa-regular fa-calendar" style="color:var(--orange)"></i> {{ formatDate(featuredArticle.published_at || featuredArticle.created_at) }}</span>
             </div>
             <div v-if="featuredArticle.entreprise || featuredArticle.admin" class="featured-author">
               <i class="fa-solid fa-user-circle"></i>
@@ -130,7 +130,7 @@
                       {{ a.media_categories[0].name }}
                     </span>
                     <span class="blog-date">
-                      <i class="fa-regular fa-clock"></i> {{ formatDate(a.created_at) }}
+                      <i class="fa-regular fa-clock"></i> {{ formatDate(a.published_at || a.created_at) }}
                     </span>
                   </div>
                   <div v-if="a.entreprise || a.admin" class="blog-author">
@@ -211,7 +211,7 @@
                   <div class="popular-info">
                     <h4>{{ truncate(a.title, 60) }}</h4>
                     <span class="popular-date">
-                      <i class="fa-regular fa-calendar"></i> {{ formatDate(a.created_at) }}
+                      <i class="fa-regular fa-calendar"></i> {{ formatDate(a.published_at || a.created_at) }}
                     </span>
                   </div>
                 </router-link>
