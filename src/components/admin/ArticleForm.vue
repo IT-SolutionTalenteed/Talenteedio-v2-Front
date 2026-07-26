@@ -36,7 +36,18 @@
             </v-avatar>
           </v-col>
 
-          <v-col cols="12">
+          <v-col cols="12" md="6">
+            <v-text-field
+              v-model="form.published_at"
+              :label="t('admin.articles.publishedAt')"
+              type="date"
+              variant="outlined"
+              density="compact"
+              hide-details
+            />
+          </v-col>
+
+          <v-col cols="12" md="6" class="d-flex align-center">
             <v-checkbox v-model="form.is_published" :label="t('admin.articles.published')" density="compact" hide-details />
           </v-col>
         </v-row>
@@ -67,10 +78,13 @@ const { compressImage, validateFileSize, validateFileType, compressionError } = 
 
 const isEdit = computed(() => !!route.params.id)
 
+const todayISO = () => new Date().toISOString().slice(0, 10)
+
 const form = ref({
   title: '',
   content: '',
   is_published: false,
+  published_at: todayISO(),
   media_category_ids: []
 })
 const imageFile = ref(null)
@@ -139,6 +153,7 @@ const loadArticle = async () => {
         title: item.title || '',
         content: item.content || '',
         is_published: item.is_published,
+        published_at: item.published_at ? item.published_at.slice(0, 10) : (item.created_at ? item.created_at.slice(0, 10) : todayISO()),
         media_category_ids: item.media_categories ? item.media_categories.map(cat => cat.id) : []
       }
       existingImageUrl.value = item.image_url || null
@@ -153,6 +168,9 @@ const buildFormData = () => {
   formData.append('title', form.value.title)
   formData.append('content', form.value.content)
   formData.append('is_published', form.value.is_published ? '1' : '0')
+  if (form.value.published_at) {
+    formData.append('published_at', form.value.published_at)
+  }
   form.value.media_category_ids.forEach(id => {
     formData.append('media_category_ids[]', id)
   })

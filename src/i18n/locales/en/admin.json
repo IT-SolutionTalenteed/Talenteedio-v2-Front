@@ -153,6 +153,7 @@
     "content": "Content",
     "status": "Status",
     "published": "Published",
+    "publishedAt": "Publication date",
     "draft": "Draft",
     "categories": "Categories",
     "mediaCategories": "Media Categories",

@@ -153,6 +153,7 @@
     "content": "Contenu",
     "status": "Statut",
     "published": "Publié",
+    "publishedAt": "Date de publication",
     "draft": "Brouillon",
     "categories": "Catégories",
     "mediaCategories": "Catégories Média",
