@@ -1,7 +1,7 @@
 import api from './api.js'
 
 export const articleService = {
-  getAll: () => api.get('/admin/articles'),
+  getAll: (page = 1) => api.get(`/admin/articles?page=${page}`),
 
   getById: (id) => api.get(`/admin/articles/${id}`),
 

@@ -60,6 +60,14 @@
       </template>
     </v-data-table>
 
+    <v-pagination
+      v-if="pagination.last_page > 1"
+      v-model="pagination.current_page"
+      :length="pagination.last_page"
+      @update:model-value="loadPage"
+      class="mt-2"
+    />
+
     <ConfirmDialog ref="confirmRef" />
   </v-card>
 </template>
@@ -75,6 +83,7 @@ const router = useRouter()
 const { t } = useI18n()
 const articles = ref([])
 const loading = ref(false)
+const pagination = ref({ current_page: 1, last_page: 1 })
 const confirmRef = ref(null)
 
 const snackbar = ref(false)
@@ -95,11 +104,12 @@ const headers = computed(() => [
   { title: '', key: 'actions', sortable: false, align: 'end' },
 ])
 
-const loadArticles = async () => {
+const loadPage = async (page = 1) => {
   loading.value = true
   try {
-    const response = await articleService.getAll()
-    articles.value = response.data.data || response.data
+    const res = await articleService.getAll(page)
+    articles.value = res.data.data
+    pagination.value = { current_page: res.data.current_page, last_page: res.data.last_page }
   } catch {
     showSnack(t('admin.articles.errorLoading'), 'error')
   } finally {
@@ -114,7 +124,7 @@ const deleteArticle = async (id) => {
   try {
     await articleService.delete(id)
     showSnack(t('admin.articles.articleDeleted'))
-    await loadArticles()
+    await loadPage(pagination.value.current_page)
   } catch (err) {
     showSnack(err.response?.data?.message || t('admin.articles.errorDelete'), 'error')
   } finally {
@@ -124,5 +134,5 @@ const deleteArticle = async (id) => {
 
 const formatDate = (dateString) => new Date(dateString).toLocaleDateString('fr-FR')
 
-onMounted(loadArticles)
+onMounted(() => loadPage(1))
 </script>
