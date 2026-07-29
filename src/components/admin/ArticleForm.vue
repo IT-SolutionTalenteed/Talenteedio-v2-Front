@@ -26,7 +26,7 @@
           </v-col>
 
           <v-col cols="12" md="6">
-            <div class="text-caption text-medium-emphasis mb-1">{{ t('admin.articles.image') }}</div>
+            <div class="text-caption text-medium-emphasis mb-1">{{ t('admin.articles.coverImage') }}</div>
             <input type="file" accept="image/*" @change="onImageChange" style="display:block;width:100%;" />
             <v-avatar v-if="imagePreview" size="80" rounded="lg" class="mt-2">
               <img :src="imagePreview" style="object-fit:cover;width:100%;height:100%" />
@@ -34,6 +34,36 @@
             <v-avatar v-else-if="existingImageUrl" size="80" rounded="lg" class="mt-2">
               <img :src="existingImageUrl" style="object-fit:cover;width:100%;height:100%" />
             </v-avatar>
+          </v-col>
+
+          <v-col cols="12">
+            <div class="text-caption text-medium-emphasis mb-1">{{ t('admin.articles.galleryImages') }}</div>
+            <input type="file" accept="image/*" multiple @change="onGalleryImagesChange" style="display:block;width:100%;" />
+            <div v-if="existingImages.length || galleryImagePreviews.length" class="media-grid mt-2">
+              <div v-for="m in existingImages" :key="'ex-img-' + m.id" class="media-thumb">
+                <img :src="m.url" />
+                <v-btn icon="mdi-close" size="x-small" color="error" variant="flat" class="media-remove" @click="removeExistingMedia(m.id)" />
+              </div>
+              <div v-for="(p, i) in galleryImagePreviews" :key="'new-img-' + i" class="media-thumb">
+                <img :src="p" />
+                <v-btn icon="mdi-close" size="x-small" color="error" variant="flat" class="media-remove" @click="removeNewImage(i)" />
+              </div>
+            </div>
+          </v-col>
+
+          <v-col cols="12">
+            <div class="text-caption text-medium-emphasis mb-1">{{ t('admin.articles.videos') }}</div>
+            <input type="file" accept="video/*" multiple @change="onVideosChange" style="display:block;width:100%;" />
+            <div v-if="existingVideos.length || videoPreviews.length" class="media-grid mt-2">
+              <div v-for="m in existingVideos" :key="'ex-vid-' + m.id" class="media-thumb video">
+                <video :src="m.url" controls preload="metadata" />
+                <v-btn icon="mdi-close" size="x-small" color="error" variant="flat" class="media-remove" @click="removeExistingMedia(m.id)" />
+              </div>
+              <div v-for="(p, i) in videoPreviews" :key="'new-vid-' + i" class="media-thumb video">
+                <video :src="p" controls preload="metadata" />
+                <v-btn icon="mdi-close" size="x-small" color="error" variant="flat" class="media-remove" @click="removeNewVideo(i)" />
+              </div>
+            </div>
           </v-col>
 
           <v-col cols="12" md="6">
@@ -93,6 +123,23 @@ const existingImageUrl = ref(null)
 const mediaCategories = ref([])
 const saving = ref(false)
 
+// Galerie (images multiples + vidéos)
+const galleryImageFiles = ref([])      // nouveaux fichiers image (compressés)
+const galleryImagePreviews = ref([])   // URLs objet pour l'aperçu
+const videoFiles = ref([])             // nouveaux fichiers vidéo
+const videoPreviews = ref([])          // URLs objet pour l'aperçu
+const existingMedia = ref([])          // médias déjà enregistrés (édition)
+const removedMediaIds = ref([])        // ids des médias existants à supprimer
+
+const MAX_VIDEO_MB = 100
+
+const existingImages = computed(() =>
+  existingMedia.value.filter(m => m.type === 'image' && !removedMediaIds.value.includes(m.id))
+)
+const existingVideos = computed(() =>
+  existingMedia.value.filter(m => m.type === 'video' && !removedMediaIds.value.includes(m.id))
+)
+
 const snackbar = ref(false)
 const snackMsg = ref('')
 const snackColor = ref('success')
@@ -134,6 +181,64 @@ const onImageChange = async (event) => {
   imagePreview.value = URL.createObjectURL(compressedFile)
 }
 
+const onGalleryImagesChange = async (event) => {
+  const files = Array.from(event.target.files || [])
+  for (const file of files) {
+    if (!validateFileType(file)) {
+      showSnack(compressionError.value, 'error')
+      continue
+    }
+    if (!validateFileSize(file, 5)) {
+      showSnack(compressionError.value, 'error')
+      continue
+    }
+    const compressedFile = await compressImage(file, {
+      maxWidth: 1920,
+      maxHeight: 1080,
+      quality: 0.85,
+      outputFormat: 'auto'
+    })
+    galleryImageFiles.value.push(compressedFile)
+    galleryImagePreviews.value.push(URL.createObjectURL(compressedFile))
+  }
+  event.target.value = '' // permet de re-sélectionner le même fichier
+}
+
+const removeNewImage = (index) => {
+  URL.revokeObjectURL(galleryImagePreviews.value[index])
+  galleryImageFiles.value.splice(index, 1)
+  galleryImagePreviews.value.splice(index, 1)
+}
+
+const onVideosChange = (event) => {
+  const files = Array.from(event.target.files || [])
+  for (const file of files) {
+    if (!file.type.startsWith('video/')) {
+      showSnack(t('admin.articles.invalidVideo'), 'error')
+      continue
+    }
+    if (file.size > MAX_VIDEO_MB * 1024 * 1024) {
+      showSnack(t('admin.articles.videoTooLarge', { max: MAX_VIDEO_MB }), 'error')
+      continue
+    }
+    videoFiles.value.push(file)
+    videoPreviews.value.push(URL.createObjectURL(file))
+  }
+  event.target.value = ''
+}
+
+const removeNewVideo = (index) => {
+  URL.revokeObjectURL(videoPreviews.value[index])
+  videoFiles.value.splice(index, 1)
+  videoPreviews.value.splice(index, 1)
+}
+
+const removeExistingMedia = (id) => {
+  if (!removedMediaIds.value.includes(id)) {
+    removedMediaIds.value.push(id)
+  }
+}
+
 const loadMediaCategories = async () => {
   try {
     const res = await mediaCategoryService.getAll()
@@ -157,6 +262,7 @@ const loadArticle = async () => {
         media_category_ids: item.media_categories ? item.media_categories.map(cat => cat.id) : []
       }
       existingImageUrl.value = item.image_url || null
+      existingMedia.value = item.media || []
     }
   } catch (err) {
     showSnack(t('admin.articles.errorLoading'), 'error')
@@ -177,6 +283,15 @@ const buildFormData = () => {
   if (imageFile.value) {
     formData.append('image', imageFile.value)
   }
+  galleryImageFiles.value.forEach(file => {
+    formData.append('images[]', file)
+  })
+  videoFiles.value.forEach(file => {
+    formData.append('videos[]', file)
+  })
+  removedMediaIds.value.forEach(id => {
+    formData.append('removed_media_ids[]', id)
+  })
   return formData
 }
 
@@ -204,3 +319,36 @@ onMounted(async () => {
   if (isEdit.value) await loadArticle()
 })
 </script>
+
+<style scoped>
+.media-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.media-thumb {
+  position: relative;
+  width: 120px;
+  height: 90px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+.media-thumb.video {
+  width: 160px;
+}
+.media-thumb img,
+.media-thumb video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.media-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 2;
+}
+</style>
