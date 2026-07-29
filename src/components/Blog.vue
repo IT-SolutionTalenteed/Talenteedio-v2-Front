@@ -315,8 +315,15 @@ const goToPage = (p) => {
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
-const featuredArticle = computed(() => articles.value[0] || null)
-const restArticles    = computed(() => articles.value.slice(1))
+// À la une : l'article publié avec la date de publication la plus récente
+const publishedDate = (a) => new Date(a.published_at || a.created_at).getTime()
+const featuredArticle = computed(() => {
+  if (!articles.value.length) return null
+  return [...articles.value].sort((a, b) => publishedDate(b) - publishedDate(a))[0]
+})
+const restArticles = computed(() =>
+  articles.value.filter(a => a.id !== featuredArticle.value?.id)
+)
 
 const catCount = (catId) => {
   return allArticles.value.filter(a => 
