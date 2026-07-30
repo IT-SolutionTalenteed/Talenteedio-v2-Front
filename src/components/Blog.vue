@@ -26,42 +26,6 @@
     <section class="blog-body">
       <div class="container">
 
-        <!-- Featured article (premier de la liste) -->
-        <router-link
-          v-if="!loading && featuredArticle"
-          :to="`/blog/${featuredArticle.id}`"
-          class="featured-post"
-        >
-          <div class="featured-image">
-            <LoadedImage
-              v-if="featuredArticle.image_url"
-              :src="featuredArticle.image_url"
-              :alt="featuredArticle.title"
-            />
-            <div v-else class="featured-image-placeholder"><i class="fa-solid fa-newspaper"></i></div>
-            <span class="featured-tag">{{ t('blog.featured') }}</span>
-          </div>
-          <div class="featured-content">
-            <div class="featured-meta">
-              <span v-if="featuredArticle.media_categories?.length">
-                <i class="fa-solid fa-folder" style="color:var(--orange)"></i>
-                {{ featuredArticle.media_categories[0].name }}
-              </span>
-              <span><i class="fa-regular fa-calendar" style="color:var(--orange)"></i> {{ formatDate(featuredArticle.published_at || featuredArticle.created_at) }}</span>
-            </div>
-            <div v-if="featuredArticle.entreprise || featuredArticle.admin" class="featured-author">
-              <i class="fa-solid fa-user-circle"></i>
-              <span v-if="featuredArticle.entreprise">{{ featuredArticle.entreprise.nom }}</span>
-              <span v-else-if="featuredArticle.admin">{{ featuredArticle.admin.name || 'Admin' }}</span>
-            </div>
-            <h2 class="featured-title">{{ featuredArticle.title }}</h2>
-            <p class="featured-excerpt">{{ truncate(stripHtml(featuredArticle.content), 180) }}</p>
-            <span class="featured-link">
-              {{ t('blog.card.readMore') }} <i class="fa-solid fa-arrow-right"></i>
-            </span>
-          </div>
-        </router-link>
-
         <!-- Tabs catégories -->
         <div class="cat-tabs-wrap">
           <button class="cat-arrow cat-arrow--left" @click="scrollTabs(-200)" :class="{ 'cat-arrow--hidden': !canScrollLeft }">
@@ -315,16 +279,8 @@ const goToPage = (p) => {
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
-// À la une : uniquement en page 1, l'article publié avec la date de publication la plus récente.
-// Les pages suivantes n'affichent que des cards.
-const publishedDate = (a) => new Date(a.published_at || a.created_at).getTime()
-const featuredArticle = computed(() => {
-  if (currentPage.value !== 1 || !articles.value.length) return null
-  return [...articles.value].sort((a, b) => publishedDate(b) - publishedDate(a))[0]
-})
-const restArticles = computed(() =>
-  articles.value.filter(a => a.id !== featuredArticle.value?.id)
-)
+// Tous les articles sont affichés sous forme de cards, sans mise en avant.
+const restArticles = computed(() => articles.value)
 
 const catCount = (catId) => {
   return allArticles.value.filter(a => 
@@ -520,123 +476,6 @@ onMounted(async () => {
 .cat-tab--active { background: var(--navy); border-color: var(--navy); color: #fff; }
 
 /* ════════════════════════════════
-   FEATURED POST
-════════════════════════════════ */
-.featured-post {
-  position: relative;
-  display: block;
-  min-height: 460px;
-  background: var(--navy);
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0,35,90,.10);
-  border: 1.5px solid var(--border);
-  margin-bottom: 32px;
-  text-decoration: none;
-  color: inherit;
-  transition: box-shadow .2s, transform .2s;
-}
-.featured-post:hover {
-  box-shadow: 0 16px 48px rgba(0,35,90,.16);
-  transform: translateY(-3px);
-}
-
-/* L'image couvre la totalité de la card, le texte passe par-dessus */
-.featured-image {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #00235a, #1a3a8a);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-.featured-image :deep(.loaded-img) {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform .4s;
-}
-.featured-post:hover .featured-image :deep(.loaded-img) { transform: scale(1.04); }
-.featured-image-placeholder { font-size: 64px; color: rgba(255,255,255,.3); }
-
-.featured-tag {
-  position: absolute; top: 18px; left: 18px; z-index: 3;
-  background: var(--orange); color: #fff;
-  font-size: 11px; font-weight: 700;
-  letter-spacing: 1px; text-transform: uppercase;
-  padding: 5px 14px; border-radius: 50px;
-}
-
-.featured-content {
-  position: relative;
-  z-index: 2;
-  min-height: 460px;
-  padding: 36px 40px;
-  display: flex; flex-direction: column; justify-content: flex-end; gap: 14px;
-  /* Dégradé de lisibilité du texte par-dessus l'image */
-  background: linear-gradient(
-    to top,
-    rgba(0,35,90,.94) 0%,
-    rgba(0,35,90,.80) 30%,
-    rgba(0,35,90,.30) 62%,
-    rgba(0,35,90,.05) 100%
-  );
-}
-
-.featured-meta {
-  display: flex; align-items: center; gap: 16px;
-  font-size: 13px; color: rgba(255,255,255,.85);
-}
-.featured-meta i { margin-right: 4px; }
-
-.featured-author {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #fff;
-  padding: 6px 12px;
-  background: rgba(255,255,255,0.16);
-  border-radius: 50px;
-  width: fit-content;
-}
-.featured-author i {
-  font-size: 14px;
-}
-
-.featured-title {
-  font-family: 'Sarun Pro', sans-serif;
-  font-size: clamp(22px, 2.6vw, 34px);
-  font-weight: 800;
-  color: #fff;
-  margin: 0;
-  line-height: 1.25;
-  max-width: 820px;
-}
-
-.featured-excerpt {
-  font-size: 14px; color: rgba(255,255,255,.82);
-  line-height: 1.7; margin: 0;
-  max-width: 820px;
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.featured-link {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 13px; font-weight: 700;
-  color: var(--orange);
-  transition: gap .2s;
-}
-.featured-post:hover .featured-link { gap: 12px; }
-
-/* ════════════════════════════════
    LAYOUT 2 COLONNES
 ════════════════════════════════ */
 .blog-layout {
@@ -752,8 +591,6 @@ onMounted(async () => {
   .blog-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 768px) {
-  .featured-post { min-height: 340px; }
-  .featured-content { min-height: 340px; padding: 24px; }
   .sidebar-widget { min-width: 100%; }
 }
 
