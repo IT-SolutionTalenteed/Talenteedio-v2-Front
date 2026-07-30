@@ -598,7 +598,7 @@ onMounted(async () => {
 /* L'image couvre toute la card, le texte passe par-dessus */
 .blog-card {
   position: relative;
-  min-height: 440px;
+  min-height: 500px;
   background: var(--navy);
   border-radius: 16px;
   border: 1.5px solid var(--border);
