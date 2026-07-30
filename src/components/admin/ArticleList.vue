@@ -12,6 +12,11 @@
       </template>
     </v-toolbar>
 
+    <v-tabs v-model="showArchived" color="primary" density="compact" class="px-2">
+      <v-tab :value="false" prepend-icon="mdi-file-document-outline">{{ t('admin.articles.active') }}</v-tab>
+      <v-tab :value="true" prepend-icon="mdi-archive-outline">{{ t('admin.articles.archivedTab') }}</v-tab>
+    </v-tabs>
+
     <v-data-table
       :headers="headers"
       :items="articles"
@@ -35,6 +40,9 @@
         <v-chip size="small" :color="item.is_published ? 'success' : 'default'">
           {{ item.is_published ? t('admin.articles.published') : t('admin.articles.draft') }}
         </v-chip>
+        <v-chip v-if="item.archived_at" color="warning" size="x-small" prepend-icon="mdi-archive" class="ml-1">
+          {{ t('admin.articles.archived') }}
+        </v-chip>
       </template>
 
       <template #item.media_categories="{ item }">
@@ -55,6 +63,24 @@
       <template #item.actions="{ item }">
         <div class="d-flex gap-1">
           <v-btn icon="mdi-pencil" size="small" color="primary" variant="tonal" @click="router.push({ name: 'AdminArticleEdit', params: { id: item.id } })" />
+          <v-btn
+            v-if="item.archived_at"
+            icon="mdi-archive-arrow-up"
+            size="small"
+            color="success"
+            variant="tonal"
+            :title="t('admin.articles.unarchive')"
+            @click="unarchiveArticle(item.id)"
+          />
+          <v-btn
+            v-else
+            icon="mdi-archive-arrow-down"
+            size="small"
+            color="warning"
+            variant="tonal"
+            :title="t('admin.articles.archive')"
+            @click="archiveArticle(item.id)"
+          />
           <v-btn icon="mdi-delete" size="small" color="error" variant="tonal" @click="deleteArticle(item.id)" />
         </div>
       </template>
@@ -73,7 +99,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import articleService from '../../services/articleService.js'
@@ -84,6 +110,7 @@ const { t } = useI18n()
 const articles = ref([])
 const loading = ref(false)
 const pagination = ref({ current_page: 1, last_page: 1 })
+const showArchived = ref(false)
 const confirmRef = ref(null)
 
 const snackbar = ref(false)
@@ -107,11 +134,41 @@ const headers = computed(() => [
 const loadPage = async (page = 1) => {
   loading.value = true
   try {
-    const res = await articleService.getAll(page)
+    const res = await articleService.getAll(page, showArchived.value)
     articles.value = res.data.data
     pagination.value = { current_page: res.data.current_page, last_page: res.data.last_page }
   } catch {
     showSnack(t('admin.articles.errorLoading'), 'error')
+  } finally {
+    loading.value = false
+  }
+}
+
+const archiveArticle = async (id) => {
+  const ok = await confirmRef.value.open({ message: t('admin.articles.confirmArchive') })
+  if (!ok) return
+  loading.value = true
+  try {
+    await articleService.archive(id)
+    showSnack(t('admin.articles.articleArchived'))
+    await loadPage(pagination.value.current_page)
+  } catch (err) {
+    showSnack(err.response?.data?.message || t('admin.articles.errorArchive'), 'error')
+  } finally {
+    loading.value = false
+  }
+}
+
+const unarchiveArticle = async (id) => {
+  const ok = await confirmRef.value.open({ message: t('admin.articles.confirmUnarchive') })
+  if (!ok) return
+  loading.value = true
+  try {
+    await articleService.unarchive(id)
+    showSnack(t('admin.articles.articleUnarchived'))
+    await loadPage(pagination.value.current_page)
+  } catch (err) {
+    showSnack(err.response?.data?.message || t('admin.articles.errorUnarchive'), 'error')
   } finally {
     loading.value = false
   }
@@ -133,6 +190,9 @@ const deleteArticle = async (id) => {
 }
 
 const formatDate = (dateString) => new Date(dateString).toLocaleDateString('fr-FR')
+
+// Changement d'onglet Actifs / Archivés → on repart de la page 1
+watch(showArchived, () => loadPage(1))
 
 onMounted(() => loadPage(1))
 </script>
