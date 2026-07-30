@@ -171,7 +171,19 @@
     "articleUpdated": "Article modifié avec succès",
     "errorLoading": "Erreur lors du chargement des articles",
     "errorDelete": "Erreur lors de la suppression",
-    "errorSave": "Erreur lors de l'enregistrement"
+    "errorSave": "Erreur lors de l'enregistrement",
+    "active": "Actifs",
+    "archivedTab": "Archivés",
+    "archived": "Archivé",
+    "archive": "Archiver",
+    "unarchive": "Désarchiver",
+    "confirmArchive": "Archiver cet article ? Il ne sera plus visible sur le blog mais restera accessible dans l'administration.",
+    "confirmUnarchive": "Désarchiver cet article ? Il redeviendra visible sur le blog s'il est publié.",
+    "articleArchived": "Article archivé avec succès",
+    "articleUnarchived": "Article désarchivé avec succès",
+    "errorArchive": "Erreur lors de l'archivage",
+    "errorUnarchive": "Erreur lors du désarchivage",
+    "noArchived": "Aucun article archivé"
   },
   "events": {
     "title": "Gestion des Événements",

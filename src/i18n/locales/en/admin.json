@@ -171,7 +171,19 @@
     "articleUpdated": "Article updated successfully",
     "errorLoading": "Error loading articles",
     "errorDelete": "Error deleting",
-    "errorSave": "Error saving"
+    "errorSave": "Error saving",
+    "active": "Active",
+    "archivedTab": "Archived",
+    "archived": "Archived",
+    "archive": "Archive",
+    "unarchive": "Unarchive",
+    "confirmArchive": "Archive this article? It will no longer be visible on the blog but will remain accessible in the administration.",
+    "confirmUnarchive": "Unarchive this article? It will become visible on the blog again if published.",
+    "articleArchived": "Article archived successfully",
+    "articleUnarchived": "Article unarchived successfully",
+    "errorArchive": "Error archiving",
+    "errorUnarchive": "Error unarchiving",
+    "noArchived": "No archived article"
   },
   "events": {
     "title": "Event Management",
