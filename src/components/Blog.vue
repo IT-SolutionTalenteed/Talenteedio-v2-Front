@@ -315,10 +315,11 @@ const goToPage = (p) => {
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
-// À la une : l'article publié avec la date de publication la plus récente
+// À la une : uniquement en page 1, l'article publié avec la date de publication la plus récente.
+// Les pages suivantes n'affichent que des cards.
 const publishedDate = (a) => new Date(a.published_at || a.created_at).getTime()
 const featuredArticle = computed(() => {
-  if (!articles.value.length) return null
+  if (currentPage.value !== 1 || !articles.value.length) return null
   return [...articles.value].sort((a, b) => publishedDate(b) - publishedDate(a))[0]
 })
 const restArticles = computed(() =>
@@ -522,9 +523,10 @@ onMounted(async () => {
    FEATURED POST
 ════════════════════════════════ */
 .featured-post {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  background: #fff;
+  position: relative;
+  display: block;
+  min-height: 460px;
+  background: var(--navy);
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(0,35,90,.10);
@@ -539,11 +541,10 @@ onMounted(async () => {
   transform: translateY(-3px);
 }
 
+/* L'image couvre la totalité de la card, le texte passe par-dessus */
 .featured-image {
-  position: relative;
-  min-height: 280px;
-  height: 100%;
-  align-self: stretch;
+  position: absolute;
+  inset: 0;
   background: linear-gradient(135deg, #00235a, #1a3a8a);
   display: flex;
   align-items: center;
@@ -562,7 +563,7 @@ onMounted(async () => {
 .featured-image-placeholder { font-size: 64px; color: rgba(255,255,255,.3); }
 
 .featured-tag {
-  position: absolute; top: 18px; left: 18px;
+  position: absolute; top: 18px; left: 18px; z-index: 3;
   background: var(--orange); color: #fff;
   font-size: 11px; font-weight: 700;
   letter-spacing: 1px; text-transform: uppercase;
@@ -570,13 +571,24 @@ onMounted(async () => {
 }
 
 .featured-content {
+  position: relative;
+  z-index: 2;
+  min-height: 460px;
   padding: 36px 40px;
-  display: flex; flex-direction: column; justify-content: center; gap: 14px;
+  display: flex; flex-direction: column; justify-content: flex-end; gap: 14px;
+  /* Dégradé de lisibilité du texte par-dessus l'image */
+  background: linear-gradient(
+    to top,
+    rgba(0,35,90,.94) 0%,
+    rgba(0,35,90,.80) 30%,
+    rgba(0,35,90,.30) 62%,
+    rgba(0,35,90,.05) 100%
+  );
 }
 
 .featured-meta {
   display: flex; align-items: center; gap: 16px;
-  font-size: 13px; color: #6b7280;
+  font-size: 13px; color: rgba(255,255,255,.85);
 }
 .featured-meta i { margin-right: 4px; }
 
@@ -586,9 +598,9 @@ onMounted(async () => {
   gap: 8px;
   font-size: 13px;
   font-weight: 600;
-  color: var(--blue);
+  color: #fff;
   padding: 6px 12px;
-  background: rgba(58,155,255,0.08);
+  background: rgba(255,255,255,0.16);
   border-radius: 50px;
   width: fit-content;
 }
@@ -598,16 +610,18 @@ onMounted(async () => {
 
 .featured-title {
   font-family: 'Sarun Pro', sans-serif;
-  font-size: clamp(20px, 2.2vw, 28px);
+  font-size: clamp(22px, 2.6vw, 34px);
   font-weight: 800;
-  color: var(--navy);
+  color: #fff;
   margin: 0;
   line-height: 1.25;
+  max-width: 820px;
 }
 
 .featured-excerpt {
-  font-size: 14px; color: #6b7280;
+  font-size: 14px; color: rgba(255,255,255,.82);
   line-height: 1.7; margin: 0;
+  max-width: 820px;
   display: -webkit-box;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
@@ -738,9 +752,8 @@ onMounted(async () => {
   .blog-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 768px) {
-  .featured-post { grid-template-columns: 1fr; }
-  .featured-image { min-height: 180px; height: auto; }
-  .featured-content { padding: 24px; }
+  .featured-post { min-height: 340px; }
+  .featured-content { min-height: 340px; padding: 24px; }
   .sidebar-widget { min-width: 100%; }
 }
 
