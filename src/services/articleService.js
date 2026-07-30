@@ -1,7 +1,7 @@
 import api from './api.js'
 
 export const articleService = {
-  getAll: (page = 1) => api.get(`/admin/articles?page=${page}`),
+  getAll: (page = 1, archived = false) => api.get(`/admin/articles?page=${page}&archived=${archived}`),
 
   getById: (id) => api.get(`/admin/articles/${id}`),
 
@@ -16,7 +16,11 @@ export const articleService = {
     })
   },
 
-  delete: (id) => api.delete(`/admin/articles/${id}`)
+  delete: (id) => api.delete(`/admin/articles/${id}`),
+
+  archive: (id) => api.post(`/admin/articles/${id}/archive`),
+
+  unarchive: (id) => api.post(`/admin/articles/${id}/unarchive`)
 }
 
 export default articleService
