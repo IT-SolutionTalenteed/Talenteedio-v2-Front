@@ -1,0 +1,42 @@
+# Sans ce fichier, /robots.txt tombe sur le catch-all de la SPA et renvoie du
+# HTML. Les robots d'aperçu de Meta (Facebook, WhatsApp) considèrent alors le
+# robots.txt comme invalide et renoncent à charger la page : plus aucun aperçu
+# de partage n'est généré.
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /login
+Disallow: /talent
+Disallow: /entreprise
+Disallow: /reset-password
+Disallow: /forgot-password
+Disallow: /delete-account
+
+# Robots d'aperçu des réseaux sociaux : accès complet indispensable.
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: facebookcatalog
+Allow: /
+
+User-agent: Facebot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: Slackbot
+Allow: /
+
+User-agent: TelegramBot
+Allow: /
+
+User-agent: Discordbot
+Allow: /
