@@ -18,20 +18,8 @@
 
     <template v-else>
 
-      <!-- ══ HERO (fond photo seulement une fois l’image entièrement chargée) ══ -->
-      <section
-        class="artd-hero"
-        :style="article.image_url && heroBgVisible ? { backgroundImage: `url('${article.image_url}')` } : {}"
-      >
-        <img
-          v-if="article.image_url"
-          :key="article.image_url"
-          :src="article.image_url"
-          alt=""
-          class="artd-hero-probe"
-          @load="heroBgVisible = true"
-          @error="heroBgVisible = true"
-        />
+      <!-- ══ HERO (dégradé uniquement, l’image de couverture est dans le contenu) ══ -->
+      <section class="artd-hero">
         <div class="artd-hero-overlay"></div>
         <div class="container">
           <div class="artd-hero-content">
@@ -60,6 +48,17 @@
 
             <!-- Contenu -->
             <article class="artd-content">
+              <!-- Image de couverture -->
+              <figure v-if="article.image_url" class="artd-cover">
+                <LoadedImage
+                  :key="article.image_url"
+                  :src="article.image_url"
+                  :alt="article.title"
+                  loading="eager"
+                  img-class="artd-cover-img"
+                />
+              </figure>
+
               <div class="artd-rich" v-html="article.content"></div>
 
               <!-- Retour -->
@@ -163,15 +162,6 @@ const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const route   = useRoute()
 const article = ref(null)
 const loading = ref(true)
-const heroBgVisible = ref(false)
-
-watch(
-  () => article.value?.image_url,
-  (url) => {
-    heroBgVisible.value = !url
-  },
-  { immediate: true },
-)
 
 const load = async () => {
   loading.value = true
@@ -237,16 +227,7 @@ onUnmounted(() => {
   position: relative;
   padding: 80px 0 60px;
   background: linear-gradient(135deg, #192bc2 0%, #2687e9 100%);
-  background-size: cover; background-position: center;
   min-height: 320px; display: flex; align-items: flex-end;
-}
-.artd-hero-probe {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  pointer-events: none;
-  border: 0;
 }
 .artd-hero-overlay {
   position: absolute; inset: 0;
@@ -288,6 +269,23 @@ onUnmounted(() => {
   background: #fff; border-radius: 14px;
   padding: 36px; box-shadow: 0 2px 10px rgba(0,0,0,.06);
 }
+/* Image de couverture (au-dessus du texte) */
+.artd-cover {
+  margin: 0 0 28px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f1f3f8;
+}
+.artd-cover :deep(.artd-cover-img) {
+  display: block;
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+}
+@media (max-width: 600px) {
+  .artd-cover :deep(.artd-cover-img) { max-height: 240px; }
+}
+
 .artd-rich {
   font-size: 15px; color: var(--navy); line-height: 1.9;
 }
