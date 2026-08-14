@@ -48,19 +48,55 @@
 
             <!-- Contenu -->
             <article class="artd-content">
-              <!-- Image de couverture -->
+              <!-- Image de couverture + galerie -->
               <figure
-                v-if="article.image_url"
+                v-if="slides.length"
                 class="artd-cover"
-                :class="{ 'artd-cover--portrait': coverIsPortrait }"
+                :class="{ 'artd-cover--portrait': currentIsPortrait }"
               >
                 <LoadedImage
-                  :key="article.image_url"
-                  :src="article.image_url"
+                  :key="currentSlide"
+                  :src="currentSlide"
                   :alt="article.title"
                   loading="eager"
                   img-class="artd-cover-img"
                 />
+
+                <template v-if="slides.length > 1">
+                  <button
+                    type="button"
+                    class="artd-cover-nav artd-cover-nav--prev"
+                    :aria-label="t('blog.detail.gallery.previous')"
+                    @click="goToSlide(activeSlide - 1)"
+                  >
+                    <i class="fa-solid fa-chevron-left"></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="artd-cover-nav artd-cover-nav--next"
+                    :aria-label="t('blog.detail.gallery.next')"
+                    @click="goToSlide(activeSlide + 1)"
+                  >
+                    <i class="fa-solid fa-chevron-right"></i>
+                  </button>
+
+                  <figcaption class="artd-cover-counter">
+                    {{ t('blog.detail.gallery.counter', { current: activeSlide + 1, total: slides.length }) }}
+                  </figcaption>
+
+                  <div class="artd-cover-dots">
+                    <button
+                      v-for="(slide, i) in slides"
+                      :key="slide"
+                      type="button"
+                      class="artd-cover-dot"
+                      :class="{ 'is-active': i === activeSlide }"
+                      :aria-label="t('blog.detail.gallery.goTo', { index: i + 1 })"
+                      :aria-current="i === activeSlide"
+                      @click="goToSlide(i)"
+                    ></button>
+                  </div>
+                </template>
               </figure>
 
               <div class="artd-rich" v-html="article.content"></div>
@@ -150,7 +186,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, onUnmounted } from 'vue'
+import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
@@ -166,21 +202,46 @@ const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const route   = useRoute()
 const article = ref(null)
 const loading = ref(true)
-// Les visuels d'article peuvent être en portrait (1080x1350) : on mesure l'image
+
+// Couverture + galerie d'images, parcourues dans le même cadre.
+const activeSlide = ref(0)
+const slides = computed(() => {
+  const urls = []
+  if (article.value?.image_url) urls.push(article.value.image_url)
+  for (const m of article.value?.media || []) {
+    if (m.type === 'image' && m.url && !urls.includes(m.url)) urls.push(m.url)
+  }
+  return urls
+})
+const currentSlide = computed(() => slides.value[activeSlide.value] || null)
+
+const goToSlide = (index) => {
+  const total = slides.value.length
+  if (!total) return
+  activeSlide.value = (index + total) % total
+}
+
+// Les visuels peuvent être en portrait (1080x1350) : on mesure chaque image
 // pour l'afficher entière au lieu de la rogner dans le cadre paysage.
-const coverIsPortrait = ref(false)
+const portraitByUrl = ref({})
+const currentIsPortrait = computed(() => !!portraitByUrl.value[currentSlide.value])
 
 watch(
-  () => article.value?.image_url,
-  (url) => {
-    coverIsPortrait.value = false
-    if (!url) return
-    const probe = new Image()
-    probe.onload = () => {
-      if (article.value?.image_url !== url) return
-      coverIsPortrait.value = probe.naturalHeight > probe.naturalWidth
+  slides,
+  (urls) => {
+    activeSlide.value = 0
+    portraitByUrl.value = {}
+    for (const url of urls) {
+      const probe = new Image()
+      probe.onload = () => {
+        if (!slides.value.includes(url)) return
+        portraitByUrl.value = {
+          ...portraitByUrl.value,
+          [url]: probe.naturalHeight > probe.naturalWidth,
+        }
+      }
+      probe.src = url
     }
-    probe.src = url
   },
   { immediate: true },
 )
@@ -293,6 +354,7 @@ onUnmounted(() => {
 }
 /* Image de couverture (au-dessus du texte) */
 .artd-cover {
+  position: relative;
   margin: 0 0 28px;
   border-radius: 12px;
   overflow: hidden;
@@ -319,6 +381,44 @@ onUnmounted(() => {
 @media (max-width: 600px) {
   .artd-cover--portrait :deep(.artd-cover-img) { max-height: 460px; }
 }
+
+/* Navigation galerie */
+.artd-cover-nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 40px; height: 40px; border: 0; border-radius: 50%;
+  background: rgba(4,10,93,.55); color: #fff;
+  font-size: 15px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .18s ease;
+}
+.artd-cover-nav:hover { background: rgba(4,10,93,.85); }
+.artd-cover-nav--prev { left: 12px; }
+.artd-cover-nav--next { right: 12px; }
+@media (max-width: 600px) {
+  .artd-cover-nav { width: 34px; height: 34px; font-size: 13px; }
+  .artd-cover-nav--prev { left: 8px; }
+  .artd-cover-nav--next { right: 8px; }
+}
+
+.artd-cover-counter {
+  position: absolute; top: 12px; right: 12px;
+  background: rgba(4,10,93,.6); color: #fff;
+  font-size: 12px; font-weight: 600;
+  padding: 3px 10px; border-radius: 50px;
+}
+
+.artd-cover-dots {
+  position: absolute; left: 0; right: 0; bottom: 12px;
+  display: flex; justify-content: center; gap: 7px;
+}
+.artd-cover-dot {
+  width: 8px; height: 8px; padding: 0; border: 0; border-radius: 50%;
+  background: rgba(255,255,255,.5); cursor: pointer;
+  box-shadow: 0 1px 3px rgba(4,10,93,.45);
+  transition: background .18s ease, transform .18s ease;
+}
+.artd-cover-dot:hover { background: rgba(255,255,255,.8); }
+.artd-cover-dot.is-active { background: #fff; transform: scale(1.25); }
 
 .artd-rich {
   font-size: 15px; color: var(--navy); line-height: 1.9;

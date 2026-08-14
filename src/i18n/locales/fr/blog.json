@@ -26,6 +26,12 @@
     "viewProfile": "Voir le profil",
     "categories": "Catégories",
     "ctaText": "Rejoignez notre communauté de talents",
-    "ctaAction": "Souscrire gratuitement"
+    "ctaAction": "Souscrire gratuitement",
+    "gallery": {
+      "previous": "Image précédente",
+      "next": "Image suivante",
+      "goTo": "Aller à l'image {index}",
+      "counter": "{current} / {total}"
+    }
   }
 }

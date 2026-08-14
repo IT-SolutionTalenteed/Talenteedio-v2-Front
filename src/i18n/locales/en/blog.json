@@ -26,6 +26,12 @@
     "viewProfile": "View profile",
     "categories": "Categories",
     "ctaText": "Join our talent community",
-    "ctaAction": "Subscribe for free"
+    "ctaAction": "Subscribe for free",
+    "gallery": {
+      "previous": "Previous image",
+      "next": "Next image",
+      "goTo": "Go to image {index}",
+      "counter": "{current} / {total}"
+    }
   }
 }
