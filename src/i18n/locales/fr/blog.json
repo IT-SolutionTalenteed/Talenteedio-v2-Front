@@ -28,9 +28,9 @@
     "ctaText": "Rejoignez notre communauté de talents",
     "ctaAction": "Souscrire gratuitement",
     "gallery": {
-      "previous": "Image précédente",
-      "next": "Image suivante",
-      "goTo": "Aller à l'image {index}",
+      "previous": "Média précédent",
+      "next": "Média suivant",
+      "goTo": "Aller au média {index}",
       "counter": "{current} / {total}"
     }
   }

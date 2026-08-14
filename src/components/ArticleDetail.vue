@@ -54,9 +54,19 @@
                 class="artd-cover"
                 :class="{ 'artd-cover--portrait': currentIsPortrait }"
               >
+                <video
+                  v-if="currentSlide?.type === 'video'"
+                  :key="currentSlide.url"
+                  :src="currentSlide.url"
+                  class="artd-cover-img artd-cover-video"
+                  controls
+                  playsinline
+                  preload="metadata"
+                ></video>
                 <LoadedImage
-                  :key="currentSlide"
-                  :src="currentSlide"
+                  v-else-if="currentSlide"
+                  :key="currentSlide.url"
+                  :src="currentSlide.url"
                   :alt="article.title"
                   loading="eager"
                   img-class="artd-cover-img"
@@ -84,13 +94,17 @@
                     {{ t('blog.detail.gallery.counter', { current: activeSlide + 1, total: slides.length }) }}
                   </figcaption>
 
-                  <div class="artd-cover-dots">
+                  <!-- Remontées au-dessus des contrôles natifs quand une vidéo est affichée -->
+                  <div
+                    class="artd-cover-dots"
+                    :class="{ 'artd-cover-dots--video': currentSlide?.type === 'video' }"
+                  >
                     <button
                       v-for="(slide, i) in slides"
-                      :key="slide"
+                      :key="slide.url"
                       type="button"
                       class="artd-cover-dot"
-                      :class="{ 'is-active': i === activeSlide }"
+                      :class="{ 'is-active': i === activeSlide, 'is-video': slide.type === 'video' }"
                       :aria-label="t('blog.detail.gallery.goTo', { index: i + 1 })"
                       :aria-current="i === activeSlide"
                       @click="goToSlide(i)"
@@ -203,15 +217,21 @@ const route   = useRoute()
 const article = ref(null)
 const loading = ref(true)
 
-// Couverture + galerie d'images, parcourues dans le même cadre.
+// Couverture + galerie (images et vidéos), parcourues dans le même cadre.
 const activeSlide = ref(0)
 const slides = computed(() => {
-  const urls = []
-  if (article.value?.image_url) urls.push(article.value.image_url)
-  for (const m of article.value?.media || []) {
-    if (m.type === 'image' && m.url && !urls.includes(m.url)) urls.push(m.url)
+  const items = []
+  const seen = new Set()
+  const push = (type, url) => {
+    if (!url || seen.has(url)) return
+    seen.add(url)
+    items.push({ type, url })
   }
-  return urls
+  push('image', article.value?.image_url)
+  for (const m of article.value?.media || []) {
+    push(m.type === 'video' ? 'video' : 'image', m.url)
+  }
+  return items
 })
 const currentSlide = computed(() => slides.value[activeSlide.value] || null)
 
@@ -221,27 +241,37 @@ const goToSlide = (index) => {
   activeSlide.value = (index + total) % total
 }
 
-// Les visuels peuvent être en portrait (1080x1350) : on mesure chaque image
-// pour l'afficher entière au lieu de la rogner dans le cadre paysage.
+// Les visuels peuvent être en portrait (1080x1350) : on mesure chaque média
+// pour l'afficher entier au lieu de le rogner dans le cadre paysage.
 const portraitByUrl = ref({})
-const currentIsPortrait = computed(() => !!portraitByUrl.value[currentSlide.value])
+const currentIsPortrait = computed(() => !!portraitByUrl.value[currentSlide.value?.url])
+
+const measure = ({ type, url }) => {
+  const markPortrait = (width, height) => {
+    if (!width || !height) return
+    if (!slides.value.some((s) => s.url === url)) return
+    portraitByUrl.value = { ...portraitByUrl.value, [url]: height > width }
+  }
+
+  if (type === 'video') {
+    const probe = document.createElement('video')
+    probe.preload = 'metadata'
+    probe.onloadedmetadata = () => markPortrait(probe.videoWidth, probe.videoHeight)
+    probe.src = url
+    return
+  }
+
+  const probe = new Image()
+  probe.onload = () => markPortrait(probe.naturalWidth, probe.naturalHeight)
+  probe.src = url
+}
 
 watch(
   slides,
-  (urls) => {
+  (items) => {
     activeSlide.value = 0
     portraitByUrl.value = {}
-    for (const url of urls) {
-      const probe = new Image()
-      probe.onload = () => {
-        if (!slides.value.includes(url)) return
-        portraitByUrl.value = {
-          ...portraitByUrl.value,
-          [url]: probe.naturalHeight > probe.naturalWidth,
-        }
-      }
-      probe.src = url
-    }
+    items.forEach(measure)
   },
   { immediate: true },
 )
@@ -369,6 +399,11 @@ onUnmounted(() => {
 @media (max-width: 600px) {
   .artd-cover :deep(.artd-cover-img) { max-height: 240px; }
 }
+/* La vidéo n'est jamais rognée : on la contient dans le cadre, fond sombre */
+.artd-cover .artd-cover-video {
+  object-fit: contain;
+  background: #0a1033;
+}
 
 /* Portrait (ex. 1080x1350) : image entière, centrée, sans recadrage */
 .artd-cover--portrait { display: flex; justify-content: center; }
@@ -411,6 +446,7 @@ onUnmounted(() => {
   position: absolute; left: 0; right: 0; bottom: 12px;
   display: flex; justify-content: center; gap: 7px;
 }
+.artd-cover-dots--video { bottom: 54px; }
 .artd-cover-dot {
   width: 8px; height: 8px; padding: 0; border: 0; border-radius: 50%;
   background: rgba(255,255,255,.5); cursor: pointer;
@@ -419,6 +455,8 @@ onUnmounted(() => {
 }
 .artd-cover-dot:hover { background: rgba(255,255,255,.8); }
 .artd-cover-dot.is-active { background: #fff; transform: scale(1.25); }
+/* Les vidéos se distinguent des images dans la pagination */
+.artd-cover-dot.is-video { border-radius: 2px; }
 
 .artd-rich {
   font-size: 15px; color: var(--navy); line-height: 1.9;
