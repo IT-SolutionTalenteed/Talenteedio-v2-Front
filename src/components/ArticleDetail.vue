@@ -49,7 +49,11 @@
             <!-- Contenu -->
             <article class="artd-content">
               <!-- Image de couverture -->
-              <figure v-if="article.image_url" class="artd-cover">
+              <figure
+                v-if="article.image_url"
+                class="artd-cover"
+                :class="{ 'artd-cover--portrait': coverIsPortrait }"
+              >
                 <LoadedImage
                   :key="article.image_url"
                   :src="article.image_url"
@@ -162,6 +166,24 @@ const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const route   = useRoute()
 const article = ref(null)
 const loading = ref(true)
+// Les visuels d'article peuvent être en portrait (1080x1350) : on mesure l'image
+// pour l'afficher entière au lieu de la rogner dans le cadre paysage.
+const coverIsPortrait = ref(false)
+
+watch(
+  () => article.value?.image_url,
+  (url) => {
+    coverIsPortrait.value = false
+    if (!url) return
+    const probe = new Image()
+    probe.onload = () => {
+      if (article.value?.image_url !== url) return
+      coverIsPortrait.value = probe.naturalHeight > probe.naturalWidth
+    }
+    probe.src = url
+  },
+  { immediate: true },
+)
 
 const load = async () => {
   loading.value = true
@@ -284,6 +306,18 @@ onUnmounted(() => {
 }
 @media (max-width: 600px) {
   .artd-cover :deep(.artd-cover-img) { max-height: 240px; }
+}
+
+/* Portrait (ex. 1080x1350) : image entière, centrée, sans recadrage */
+.artd-cover--portrait { display: flex; justify-content: center; }
+.artd-cover--portrait :deep(.artd-cover-img) {
+  width: auto;
+  max-width: 100%;
+  max-height: 620px;
+  object-fit: contain;
+}
+@media (max-width: 600px) {
+  .artd-cover--portrait :deep(.artd-cover-img) { max-height: 460px; }
 }
 
 .artd-rich {
