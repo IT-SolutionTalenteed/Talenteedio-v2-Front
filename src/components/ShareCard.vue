@@ -3,6 +3,16 @@
     <h3 class="share-title">
       <i class="fa-solid fa-share-nodes"></i> {{ t('share.title') }}
     </h3>
+    <!-- Aperçu de ce qui sera partagé (titre, image, domaine) -->
+    <div v-if="shareTitle" class="share-preview">
+      <img v-if="image && !imageFailed" :src="image" :alt="shareTitle" class="share-preview__img" @error="imageFailed = true">
+      <div class="share-preview__body">
+        <span class="share-preview__domain">{{ domain }}</span>
+        <span class="share-preview__title">{{ shareTitle }}</span>
+        <span v-if="description" class="share-preview__desc">{{ description }}</span>
+      </div>
+    </div>
+
     <div class="share-btns">
       <a :href="facebookUrl" target="_blank" rel="noopener" class="share-btn share-btn--facebook" :title="t('share.facebook')">
         <i class="fa-brands fa-facebook-f"></i>
@@ -29,14 +39,21 @@ import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
-  text: { type: String, default: '' }
+  // Titre du contenu partagé : sert de texte de partage et d'aperçu
+  text: { type: String, default: '' },
+  image: { type: String, default: '' },
+  description: { type: String, default: '' }
 })
 
 const { t } = useI18n()
 const copied = ref(false)
+const imageFailed = ref(false)
+
+const shareTitle = computed(() => props.text || document.title)
+const domain = computed(() => window.location.hostname)
 
 const pageUrl = computed(() => encodeURIComponent(window.location.href))
-const pageText = computed(() => encodeURIComponent(props.text || document.title))
+const pageText = computed(() => encodeURIComponent(shareTitle.value))
 
 const facebookUrl = computed(() => `https://www.facebook.com/sharer/sharer.php?u=${pageUrl.value}`)
 const twitterUrl  = computed(() => `https://twitter.com/intent/tweet?url=${pageUrl.value}&text=${pageText.value}`)
@@ -65,6 +82,37 @@ const copyLink = async () => {
   margin: 0 0 14px; display: flex; align-items: center; gap: 8px;
 }
 .share-title i { color: var(--blue); }
+
+.share-preview {
+  display: flex; gap: 10px; align-items: stretch;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 10px; overflow: hidden;
+  margin-bottom: 14px;
+  background: var(--light-bg, #f5f7fa);
+}
+.share-preview__img {
+  width: 72px; min-height: 72px; object-fit: cover; flex-shrink: 0;
+  background: #e8edf3;
+}
+.share-preview__body {
+  display: flex; flex-direction: column; gap: 3px;
+  padding: 9px 10px; min-width: 0;
+}
+.share-preview__domain {
+  font-size: 10.5px; text-transform: uppercase; letter-spacing: .4px;
+  color: var(--muted-text, #7a869a);
+}
+.share-preview__title {
+  font-size: 13px; font-weight: 700; color: var(--navy); line-height: 1.3;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.share-preview__desc {
+  font-size: 11.5px; color: var(--muted-text, #7a869a); line-height: 1.35;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.share-preview__img + .share-preview__body { padding-left: 0; }
 .share-btns {
   display: grid;
   grid-template-columns: 1fr 1fr;

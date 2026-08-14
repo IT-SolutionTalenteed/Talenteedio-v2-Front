@@ -452,7 +452,7 @@
               </div>
 
               <!-- Partage -->
-              <ShareCard :text="evenement.titre" />
+              <ShareCard :text="evenement.titre" :image="evenement.image_mise_en_avant_url" />
 
             </aside>
           </div>

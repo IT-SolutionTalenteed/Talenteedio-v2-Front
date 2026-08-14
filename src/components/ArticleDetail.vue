@@ -183,7 +183,7 @@
               </div>
 
               <!-- Partage -->
-              <ShareCard :text="article.title" />
+              <ShareCard :text="article.title" :image="article.image_url" />
 
             </aside>
           </div>

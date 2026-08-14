@@ -253,7 +253,7 @@
               </div>
 
               <!-- Partage -->
-              <ShareCard :text="offre.titre" />
+              <ShareCard :text="offre.titre" :image="offre.image_url || offre.entreprise?.logo_url" />
 
             </aside>
           </div>
