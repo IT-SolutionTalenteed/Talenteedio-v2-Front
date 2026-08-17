@@ -96,6 +96,10 @@
                     <span class="blog-date">
                       <i class="fa-regular fa-clock"></i> {{ formatDate(a.published_at || a.created_at) }}
                     </span>
+                    <span class="blog-date">
+                      <i class="fa-solid fa-eye"></i>
+                      {{ formatViews(a.views_count) }} {{ t('blog.detail.views', a.views_count || 0) }}
+                    </span>
                   </div>
                   <div v-if="a.entreprise || a.admin" class="blog-author">
                     <i class="fa-solid fa-user-circle"></i>
@@ -299,6 +303,9 @@ const paginationPages = computed(() => {
   pages.push(total)
   return pages
 })
+
+const formatViews = (count) =>
+  new Intl.NumberFormat(locale.value === 'en' ? 'en-US' : 'fr-FR').format(count || 0)
 
 const formatDate = (iso) => {
   if (!iso) return ''
