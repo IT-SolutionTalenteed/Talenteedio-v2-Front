@@ -1,5 +1,8 @@
 <template>
   <div>
+    <!-- Barre fixe : l'annonce d'événement et le menu défilent solidaires. -->
+    <div ref="barRef" class="site-bar">
+
     <!-- ══ TOPBAR ÉVÉNEMENT FEATURED ══ -->
     <div v-if="featuredEvent" class="topbar">
       <router-link :to="`/evenements/${featuredEvent.id}`" class="topbar-mobile-link"></router-link>
@@ -237,6 +240,11 @@
       </div>
     </header>
 
+    </div>
+
+    <!-- Reprend la place laissée par la barre, sortie du flux par `fixed`. -->
+    <div class="site-header-spacer" :style="{ height: barHeight + 'px' }"></div>
+
     <!-- ══ MOBILE DRAWER (outside header, sibling) ══ -->
     <Transition name="mob-overlay">
       <div v-if="menuOpen" class="mob-drawer" @click.self="menuOpen = false">
@@ -365,7 +373,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
@@ -429,6 +437,26 @@ function onClickOutside(e) {
   if (userWrapRef.value   && !userWrapRef.value.contains(e.target))   userOpen.value   = false
 }
 
+/*
+ * Barre fixe : annonce d'événement et menu restent solidaires en haut de page.
+ *
+ * Le composant est inséré comme frère des sections de page, si bien que son
+ * conteneur ne fait que sa propre hauteur : un `position: sticky` n'aurait
+ * aucune marge pour tenir et défilerait avec la page. D'où `position: fixed`,
+ * qui sort la barre du flux — et le cale ci-dessous qui reprend sa place pour
+ * que le contenu ne passe pas dessous.
+ */
+const barRef    = ref(null)
+const barHeight = ref(0)
+
+function measureBar() {
+  barHeight.value = barRef.value?.offsetHeight || 0
+  // Publiée en variable CSS pour que les colonnes collantes des pages se calent
+  // sous la barre au lieu de disparaître derrière : une seule source de vérité,
+  // qui suit automatiquement la présence ou non de l'annonce d'événement.
+  document.documentElement.style.setProperty('--site-bar-h', `${barHeight.value}px`)
+}
+
 function onScroll() { isScrolled.value = window.scrollY > 50 }
 
 function pad(n) { return String(n).padStart(2, '0') }
@@ -439,9 +467,16 @@ function tickCountdown(target) {
   countdown.value = { days: pad(Math.floor(s/86400)), hours: pad(Math.floor((s%86400)/3600)), minutes: pad(Math.floor((s%3600)/60)), seconds: pad(s%60) }
 }
 
+// L'annonce d'événement arrive après coup (appel API) et la barre change de
+// hauteur au changement de largeur : on remesure dans les deux cas.
+watch(featuredEvent, () => nextTick(measureBar))
+
 onMounted(async () => {
   window.addEventListener('scroll', onScroll, { passive: true })
+  window.addEventListener('resize', measureBar)
   document.addEventListener('click', onClickOutside)
+  measureBar()
+  onScroll()
   loadFavoris()
   try {
     const [catRes, evRes] = await Promise.all([
@@ -460,6 +495,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
   window.removeEventListener('scroll', onScroll)
+  window.removeEventListener('resize', measureBar)
   document.removeEventListener('click', onClickOutside)
   if (countdownTimer) clearInterval(countdownTimer)
 })
@@ -605,11 +641,18 @@ onUnmounted(() => {
 /* ════════════════════════════════
    HEADER
 ════════════════════════════════ */
+/* `fixed` et non `sticky` : le conteneur du composant ne fait que la hauteur
+   de la barre, un élément sticky n'y aurait aucune marge pour tenir. */
+.site-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
 .site-header {
   background: #fff;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
   box-shadow: 0 1px 0 #e0e4ef;
   transition: box-shadow .25s;
   font-family: 'Open Sans', sans-serif;

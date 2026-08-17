@@ -576,7 +576,7 @@ onUnmounted(() => {
 ════════════════════════════════ */
 .search-sticky-wrap {
   position: sticky;
-  top: 0;
+  top: var(--site-bar-h, 72px);
   z-index: 100;
   background: var(--navy, #00235a);
   border-bottom: 1px solid rgba(255,255,255,.08);

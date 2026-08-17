@@ -1208,7 +1208,7 @@ onUnmounted(() => {
 
 .sticky-cta-wrap {
   position: sticky;
-  top: 100px;
+  top: calc(var(--site-bar-h, 72px) + 28px);
 }
 
 .sticky-cta-card {

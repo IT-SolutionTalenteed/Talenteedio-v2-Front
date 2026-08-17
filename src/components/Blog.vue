@@ -514,7 +514,7 @@ onMounted(async () => {
   flex-direction: column; 
   gap: 24px;
   position: sticky;
-  top: 90px;
+  top: calc(var(--site-bar-h, 72px) + 18px);
   align-self: flex-start;
 }
 
