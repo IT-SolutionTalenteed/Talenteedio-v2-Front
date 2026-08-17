@@ -126,6 +126,15 @@
             <!-- Sidebar -->
             <aside class="artd-sidebar">
 
+              <!-- Vues -->
+              <div class="artd-side-card artd-views">
+                <i class="fa-solid fa-eye artd-views-icon"></i>
+                <div>
+                  <p class="artd-views-count">{{ formattedViews }}</p>
+                  <p class="artd-views-label">{{ t('blog.detail.views', article.views_count || 0) }}</p>
+                </div>
+              </div>
+
               <!-- Auteur Entreprise -->
               <div v-if="article.entreprise" class="artd-side-card">
                 <h3 class="artd-side-title">{{ t('blog.detail.publishedBy') }}</h3>
@@ -295,11 +304,48 @@ const load = async () => {
         url: window.location.href,
         type: 'article'
       })
+
+      registerView(article.value.id)
     }
   } catch {
     article.value = null
   } finally {
     loading.value = false
+  }
+}
+
+// ── Compteur de vues ──
+// Une vue par navigateur et par tranche de 24h : le marqueur en localStorage
+// évite de recompter à chaque rafraîchissement. Le serveur applique la même
+// fenêtre de son côté, au cas où ce marqueur disparaîtrait.
+const VIEW_WINDOW_MS = 24 * 60 * 60 * 1000
+
+const formattedViews = computed(() =>
+  new Intl.NumberFormat(locale.value === 'en' ? 'en-US' : 'fr-FR')
+    .format(article.value?.views_count || 0),
+)
+
+const alreadyCountedRecently = (id) => {
+  try {
+    const last = Number(localStorage.getItem(`article_view_${id}`))
+    return Boolean(last) && Date.now() - last < VIEW_WINDOW_MS
+  } catch {
+    // Navigation privée ou stockage refusé : on laisse le serveur trancher.
+    return false
+  }
+}
+
+const registerView = async (id) => {
+  if (alreadyCountedRecently(id)) return
+
+  try {
+    const res = await axios.post(`${apiBase}/public/articles/${id}/view`)
+    if (article.value?.id === id) {
+      article.value = { ...article.value, views_count: res.data.views_count }
+    }
+    localStorage.setItem(`article_view_${id}`, String(Date.now()))
+  } catch {
+    // Le compteur affiché reste celui du chargement : jamais de blocage de page.
   }
 }
 
@@ -500,6 +546,15 @@ onUnmounted(() => {
   padding: 24px; box-shadow: 0 2px 10px rgba(0,0,0,.06);
 }
 .artd-side-title { font-size: 15px; font-weight: 700; color: var(--navy); margin: 0 0 16px; }
+
+.artd-views { display: flex; align-items: center; gap: 14px; padding: 18px 24px; }
+.artd-views-icon {
+  width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+  background: var(--light-bg, #f5f7fa); color: var(--blue);
+  display: flex; align-items: center; justify-content: center; font-size: 16px;
+}
+.artd-views-count { font-size: 20px; font-weight: 800; color: var(--navy); margin: 0; line-height: 1.1; }
+.artd-views-label { font-size: 12px; color: #6b7280; margin: 2px 0 0; }
 
 .artd-author { display: flex; gap: 12px; align-items: center; }
 .artd-author-logo {
