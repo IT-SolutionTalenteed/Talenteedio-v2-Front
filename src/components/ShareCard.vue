@@ -14,15 +14,15 @@
     </div>
 
     <div class="share-btns">
-      <a :href="facebookUrl" target="_blank" rel="noopener" class="share-btn share-btn--facebook" :title="t('share.facebook')">
+      <a :href="facebookUrl" target="_blank" rel="noopener" class="share-btn share-btn--facebook" :title="t('share.facebook')" @click="emit('share', 'facebook')">
         <i class="fa-brands fa-facebook-f"></i>
         <span>Facebook</span>
       </a>
-      <a :href="twitterUrl" target="_blank" rel="noopener" class="share-btn share-btn--twitter" :title="t('share.twitter')">
+      <a :href="twitterUrl" target="_blank" rel="noopener" class="share-btn share-btn--twitter" :title="t('share.twitter')" @click="emit('share', 'twitter')">
         <i class="fa-brands fa-x-twitter"></i>
         <span>Twitter</span>
       </a>
-      <a :href="linkedinUrl" target="_blank" rel="noopener" class="share-btn share-btn--linkedin" :title="t('share.linkedin')">
+      <a :href="linkedinUrl" target="_blank" rel="noopener" class="share-btn share-btn--linkedin" :title="t('share.linkedin')" @click="emit('share', 'linkedin')">
         <i class="fa-brands fa-linkedin-in"></i>
         <span>LinkedIn</span>
       </a>
@@ -45,6 +45,11 @@ const props = defineProps({
   description: { type: String, default: '' }
 })
 
+// Signale le réseau sur lequel le visiteur vient de cliquer. Le composant ne
+// compte rien lui-même : les pages qui tiennent un compteur (les articles)
+// écoutent cet événement, les autres l'ignorent.
+const emit = defineEmits(['share'])
+
 const { t } = useI18n()
 const copied = ref(false)
 const imageFailed = ref(false)
@@ -63,6 +68,7 @@ const copyLink = async () => {
   try {
     await navigator.clipboard.writeText(window.location.href)
     copied.value = true
+    emit('share', 'copy')
     setTimeout(() => copied.value = false, 2000)
   } catch {
     // fallback

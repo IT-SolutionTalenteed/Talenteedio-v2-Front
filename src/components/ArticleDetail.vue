@@ -126,12 +126,21 @@
             <!-- Sidebar -->
             <aside class="artd-sidebar">
 
-              <!-- Vues -->
-              <div class="artd-side-card artd-views">
-                <i class="fa-solid fa-eye artd-views-icon"></i>
-                <div>
-                  <p class="artd-views-count">{{ formattedViews }}</p>
-                  <p class="artd-views-label">{{ t('blog.detail.views', article.views_count || 0) }}</p>
+              <!-- Audience -->
+              <div class="artd-side-card artd-stats">
+                <div class="artd-stat">
+                  <i class="fa-solid fa-eye artd-stat-icon"></i>
+                  <div>
+                    <p class="artd-stat-count">{{ formatCount(article.views_count) }}</p>
+                    <p class="artd-stat-label">{{ t('blog.detail.views', article.views_count || 0) }}</p>
+                  </div>
+                </div>
+                <div class="artd-stat">
+                  <i class="fa-solid fa-share-nodes artd-stat-icon"></i>
+                  <div>
+                    <p class="artd-stat-count">{{ formatCount(article.shares_count) }}</p>
+                    <p class="artd-stat-label">{{ t('blog.detail.shares', article.shares_count || 0) }}</p>
+                  </div>
                 </div>
               </div>
 
@@ -192,7 +201,7 @@
               </div>
 
               <!-- Partage -->
-              <ShareCard :text="article.title" :image="article.image_url" />
+              <ShareCard :text="article.title" :image="article.image_url" @share="registerShare" />
 
             </aside>
           </div>
@@ -314,38 +323,63 @@ const load = async () => {
   }
 }
 
-// ── Compteur de vues ──
-// Une vue par navigateur et par tranche de 24h : le marqueur en localStorage
-// évite de recompter à chaque rafraîchissement. Le serveur applique la même
-// fenêtre de son côté, au cas où ce marqueur disparaîtrait.
-const VIEW_WINDOW_MS = 24 * 60 * 60 * 1000
+// ── Compteurs d'audience ──
+// Une vue par navigateur et par tranche de 24h, un partage par réseau sur la
+// même fenêtre : le marqueur en localStorage évite de recompter. Le serveur
+// applique la même règle de son côté, au cas où ce marqueur disparaîtrait.
+const COUNT_WINDOW_MS = 24 * 60 * 60 * 1000
 
-const formattedViews = computed(() =>
-  new Intl.NumberFormat(locale.value === 'en' ? 'en-US' : 'fr-FR')
-    .format(article.value?.views_count || 0),
-)
+const formatCount = (count) =>
+  new Intl.NumberFormat(locale.value === 'en' ? 'en-US' : 'fr-FR').format(count || 0)
 
-const alreadyCountedRecently = (id) => {
+const countedRecently = (key) => {
   try {
-    const last = Number(localStorage.getItem(`article_view_${id}`))
-    return Boolean(last) && Date.now() - last < VIEW_WINDOW_MS
+    const last = Number(localStorage.getItem(key))
+    return Boolean(last) && Date.now() - last < COUNT_WINDOW_MS
   } catch {
     // Navigation privée ou stockage refusé : on laisse le serveur trancher.
     return false
   }
 }
 
+const markCounted = (key) => {
+  try {
+    localStorage.setItem(key, String(Date.now()))
+  } catch {
+    // Idem : sans stockage local, seul le garde-fou serveur s'applique.
+  }
+}
+
 const registerView = async (id) => {
-  if (alreadyCountedRecently(id)) return
+  const key = `article_view_${id}`
+  if (countedRecently(key)) return
 
   try {
     const res = await axios.post(`${apiBase}/public/articles/${id}/view`)
     if (article.value?.id === id) {
       article.value = { ...article.value, views_count: res.data.views_count }
     }
-    localStorage.setItem(`article_view_${id}`, String(Date.now()))
+    markCounted(key)
   } catch {
     // Le compteur affiché reste celui du chargement : jamais de blocage de page.
+  }
+}
+
+const registerShare = async (network) => {
+  const id = article.value?.id
+  if (!id) return
+
+  const key = `article_share_${id}_${network}`
+  if (countedRecently(key)) return
+
+  try {
+    const res = await axios.post(`${apiBase}/public/articles/${id}/share`, { network })
+    if (article.value?.id === id) {
+      article.value = { ...article.value, shares_count: res.data.shares_count }
+    }
+    markCounted(key)
+  } catch {
+    // Le partage part quand même vers le réseau : on n'interrompt jamais le geste.
   }
 }
 
@@ -547,14 +581,16 @@ onUnmounted(() => {
 }
 .artd-side-title { font-size: 15px; font-weight: 700; color: var(--navy); margin: 0 0 16px; }
 
-.artd-views { display: flex; align-items: center; gap: 14px; padding: 18px 24px; }
-.artd-views-icon {
-  width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+.artd-stats { display: flex; gap: 10px; padding: 18px 20px; }
+.artd-stat { display: flex; align-items: center; gap: 11px; flex: 1; min-width: 0; }
+.artd-stat + .artd-stat { border-left: 1px solid var(--border, #e2e8f0); padding-left: 10px; }
+.artd-stat-icon {
+  width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
   background: var(--light-bg, #f5f7fa); color: var(--blue);
-  display: flex; align-items: center; justify-content: center; font-size: 16px;
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
 }
-.artd-views-count { font-size: 20px; font-weight: 800; color: var(--navy); margin: 0; line-height: 1.1; }
-.artd-views-label { font-size: 12px; color: #6b7280; margin: 2px 0 0; }
+.artd-stat-count { font-size: 19px; font-weight: 800; color: var(--navy); margin: 0; line-height: 1.1; }
+.artd-stat-label { font-size: 11.5px; color: #6b7280; margin: 2px 0 0; }
 
 .artd-author { display: flex; gap: 12px; align-items: center; }
 .artd-author-logo {

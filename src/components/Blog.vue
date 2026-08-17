@@ -96,10 +96,6 @@
                     <span class="blog-date">
                       <i class="fa-regular fa-clock"></i> {{ formatDate(a.published_at || a.created_at) }}
                     </span>
-                    <span class="blog-date">
-                      <i class="fa-solid fa-eye"></i>
-                      {{ formatViews(a.views_count) }} {{ t('blog.detail.views', a.views_count || 0) }}
-                    </span>
                   </div>
                   <div v-if="a.entreprise || a.admin" class="blog-author">
                     <i class="fa-solid fa-user-circle"></i>
@@ -108,9 +104,19 @@
                   </div>
                   <h3 class="blog-card-title">{{ a.title }}</h3>
                   <p class="blog-card-excerpt">{{ truncate(stripHtml(a.content), 120) }}</p>
-                  <span class="blog-read-more">
-                    {{ t('blog.card.readMore') }} <i class="fa-solid fa-arrow-right"></i>
-                  </span>
+                  <div class="blog-card-foot">
+                    <span class="blog-read-more">
+                      {{ t('blog.card.readMore') }} <i class="fa-solid fa-arrow-right"></i>
+                    </span>
+                    <span class="blog-card-stats">
+                      <span :title="t('blog.detail.views', a.views_count || 0)">
+                        <i class="fa-solid fa-eye"></i> {{ formatCount(a.views_count) }}
+                      </span>
+                      <span :title="t('blog.detail.shares', a.shares_count || 0)">
+                        <i class="fa-solid fa-share-nodes"></i> {{ formatCount(a.shares_count) }}
+                      </span>
+                    </span>
+                  </div>
                 </div>
               </router-link>
             </div>
@@ -304,7 +310,7 @@ const paginationPages = computed(() => {
   return pages
 })
 
-const formatViews = (count) =>
+const formatCount = (count) =>
   new Intl.NumberFormat(locale.value === 'en' ? 'en-US' : 'fr-FR').format(count || 0)
 
 const formatDate = (iso) => {
@@ -720,6 +726,18 @@ onMounted(async () => {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* Pied de carte : l'appel à lire d'un côté, l'audience de l'autre */
+.blog-card-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; flex-wrap: wrap;
+}
+.blog-card-stats {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 12px; color: rgba(255,255,255,.8);
+}
+.blog-card-stats > span { display: inline-flex; align-items: center; gap: 5px; }
+.blog-card-stats i { font-size: 11px; }
 
 /* Lire la suite */
 .blog-read-more {
