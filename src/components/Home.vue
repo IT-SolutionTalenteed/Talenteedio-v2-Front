@@ -23,11 +23,8 @@
           </p>
 
           <div class="hero-actions animate-on-scroll stagger-4">
-            <a href="https://www.eventbrite.fr/e/billets-africa-talent-summit-luxembourg-1993826693312?aff=ebdsoporgprofile" target="_blank" rel="noopener" class="btn-primary">
+            <a href="https://registration.africatalentsummit.com" target="_blank" rel="noopener" class="btn-primary">
               {{ t('home.hero.subscribe') }}
-            </a>
-            <a href="https://africatalentsummit.com/passport-questionnaire/" target="_blank" rel="noopener" class="btn-secondary">
-              {{ t('home.hero.joinObservatory') }}
             </a>
           </div>
 
