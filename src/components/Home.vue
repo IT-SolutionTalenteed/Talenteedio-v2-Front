@@ -4,50 +4,103 @@
 
     <PublicNav />
 
-    <!-- ══ HERO SECTION — Image plein écran ══ -->
-    <section v-if="event" class="hero-modern" :style="heroSectionStyle">
+    <!-- ══ HERO — Carrousel des événements ══ -->
+    <section
+      v-if="heroEvent"
+      class="hero-modern"
+      :class="{ 'hero-modern--carousel': heroEvents.length > 1 }"
+      role="region"
+      :aria-label="t('home.hero.carouselLabel')"
+      :aria-roledescription="t('home.hero.carouselRole')"
+      :tabindex="heroEvents.length > 1 ? 0 : undefined"
+      @mouseenter="heroHovered = true"
+      @mouseleave="heroHovered = false"
+      @focusin="heroFocused = true"
+      @focusout="onHeroFocusOut"
+      @keydown.left.prevent="goToHeroEvent(activeHeroIndex - 1)"
+      @keydown.right.prevent="goToHeroEvent(activeHeroIndex + 1)"
+      @touchstart.passive="onHeroTouchStart"
+      @touchend.passive="onHeroTouchEnd"
+    >
+      <Transition name="hero-cover">
+        <div :key="heroEvent.id" class="hero-cover" :style="heroSectionStyle" aria-hidden="true"></div>
+      </Transition>
+
       <div class="container">
-        <div class="hero-content">
-          <div class="animate-on-scroll stagger-1">
-            <span class="hero-badge">
-              {{ eventDateRange }}
-            </span>
+        <Transition name="hero-slide" mode="out-in">
+          <div :key="heroEvent.id" class="hero-content">
+            <div v-if="eventDateRange">
+              <span class="hero-badge">{{ eventDateRange }}</span>
+            </div>
+
+            <h1 class="hero-title">
+              <router-link :to="`/evenements/${heroEvent.id}`" class="hero-title-link">
+                {{ heroEvent.titre }}
+              </router-link>
+            </h1>
+
+            <p v-if="isHeroPromotionVisible" class="hero-description">
+              {{ heroEvent.ville }}{{ heroEvent.pays ? ', ' + heroEvent.pays : '' }}
+            </p>
+
+            <div v-if="isHeroPromotionVisible" class="hero-actions">
+              <router-link :to="`/evenements/${heroEvent.id}`" class="btn-primary">
+                {{ t('home.hero.viewEvent') }}
+              </router-link>
+            </div>
+
+            <div v-if="isHeroCountdownVisible" class="countdown-modern">
+              <div class="countdown-item">
+                <div class="countdown-value">{{ cd.days }}</div>
+                <div class="countdown-label">{{ t('home.hero.days') }}</div>
+              </div>
+              <div class="countdown-item">
+                <div class="countdown-value">{{ cd.hours }}</div>
+                <div class="countdown-label">{{ t('home.hero.hours') }}</div>
+              </div>
+              <div class="countdown-item">
+                <div class="countdown-value">{{ cd.minutes }}</div>
+                <div class="countdown-label">{{ t('home.hero.minutes') }}</div>
+              </div>
+              <div class="countdown-item">
+                <div class="countdown-value">{{ cd.seconds }}</div>
+                <div class="countdown-label">{{ t('home.hero.seconds') }}</div>
+              </div>
+            </div>
           </div>
+        </Transition>
+      </div>
 
-          <h1 class="hero-title animate-on-scroll stagger-2">
-            {{ event.titre }}
-          </h1>
-
-          <p v-if="isEventPromotionVisible" class="hero-description animate-on-scroll stagger-3">
-            {{ event.ville }}{{ event.pays ? ', ' + event.pays : '' }}
-          </p>
-
-          <div v-if="isEventPromotionVisible" class="hero-actions animate-on-scroll stagger-4">
-            <a href="https://registration.africatalentsummit.com" target="_blank" rel="noopener" class="btn-primary">
-              {{ t('home.hero.subscribe') }}
-            </a>
-          </div>
-
-          <!-- Countdown -->
-          <div v-if="isEventPromotionVisible" class="countdown-modern animate-on-scroll stagger-5">
-            <div class="countdown-item">
-              <div class="countdown-value">{{ cd.days }}</div>
-              <div class="countdown-label">{{ t('home.hero.days') }}</div>
-            </div>
-            <div class="countdown-item">
-              <div class="countdown-value">{{ cd.hours }}</div>
-              <div class="countdown-label">{{ t('home.hero.hours') }}</div>
-            </div>
-            <div class="countdown-item">
-              <div class="countdown-value">{{ cd.minutes }}</div>
-              <div class="countdown-label">{{ t('home.hero.minutes') }}</div>
-            </div>
-            <div class="countdown-item">
-              <div class="countdown-value">{{ cd.seconds }}</div>
-              <div class="countdown-label">{{ t('home.hero.seconds') }}</div>
-            </div>
-          </div>
+      <div v-if="heroEvents.length > 1" class="hero-carousel-controls container">
+        <div class="hero-carousel-arrows">
+          <button type="button" class="hero-carousel-button" :aria-label="t('home.hero.previousEvent')" @click="goToHeroEvent(activeHeroIndex - 1)">
+            <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+          </button>
+          <button type="button" class="hero-carousel-button" :aria-label="t('home.hero.nextEvent')" @click="goToHeroEvent(activeHeroIndex + 1)">
+            <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+          </button>
         </div>
+        <div class="hero-carousel-dots" role="group" :aria-label="t('home.hero.carouselLabel')">
+          <button
+            v-for="(item, index) in heroEvents"
+            :key="item.id"
+            type="button"
+            class="hero-carousel-dot"
+            :class="{ 'hero-carousel-dot--active': activeHeroIndex === index }"
+            :aria-current="activeHeroIndex === index ? 'true' : undefined"
+            :aria-label="t('home.hero.showEvent', { title: item.titre })"
+            @click="goToHeroEvent(index)"
+          ></button>
+        </div>
+        <div class="hero-carousel-playback">
+          <span class="hero-carousel-counter" aria-hidden="true">{{ activeHeroIndex + 1 }} / {{ heroEvents.length }}</span>
+          <button type="button" class="hero-carousel-button" :aria-label="t(isCarouselPlaying ? 'home.hero.pauseCarousel' : 'home.hero.playCarousel')" @click="isCarouselPlaying = !isCarouselPlaying">
+            <i :class="isCarouselPlaying ? 'fa-solid fa-pause' : 'fa-solid fa-play'" aria-hidden="true"></i>
+          </button>
+        </div>
+        <span class="hero-carousel-sr-only" :aria-live="isHeroAutoAdvancing ? 'off' : 'polite'" aria-atomic="true">
+          {{ t('home.hero.slideStatus', { current: activeHeroIndex + 1, total: heroEvents.length, title: heroEvent.titre }) }}
+        </span>
       </div>
     </section>
 
@@ -381,7 +434,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import PublicNav from './PublicNav.vue'
@@ -399,8 +452,83 @@ const isEventPromotionVisible = computed(() => isEventActive(event.value, now.va
 const articles   = ref([])
 const categories = ref([])
 const offres   = ref([])
-const cd       = ref({ days: '000', hours: '00', minutes: '00', seconds: '00' })
-let   timer    = null
+const heroEvents = ref([])
+const activeHeroIndex = ref(0)
+const heroEvent = computed(() => heroEvents.value[activeHeroIndex.value] || null)
+const isHeroPromotionVisible = computed(() => isEventActive(heroEvent.value, now.value))
+const heroHovered = ref(false)
+const heroFocused = ref(false)
+const isCarouselPlaying = ref(true)
+const isPageVisible = ref(true)
+const isHeroAutoAdvancing = computed(() =>
+  heroEvents.value.length > 1 && isCarouselPlaying.value &&
+  !heroHovered.value && !heroFocused.value && isPageVisible.value
+)
+const requestController = new AbortController()
+const animationObservers = []
+let timer = null
+let heroRotationTimer = null
+let motionPreference = null
+let heroTouchStart = null
+
+function startHeroRotation() {
+  if (heroRotationTimer) clearInterval(heroRotationTimer)
+  heroRotationTimer = setInterval(() => {
+    if (isHeroAutoAdvancing.value) goToHeroEvent(activeHeroIndex.value + 1)
+  }, 7000)
+}
+
+function goToHeroEvent(index) {
+  if (heroEvents.value.length < 2 || requestController.signal.aborted) return
+  activeHeroIndex.value = (index + heroEvents.value.length) % heroEvents.value.length
+  startHeroRotation()
+}
+
+function onHeroFocusOut(focusEvent) {
+  heroFocused.value = focusEvent.currentTarget.contains(focusEvent.relatedTarget)
+}
+
+function onHeroTouchStart(touchEvent) {
+  if (touchEvent.target.closest('a, button')) return
+  const touch = touchEvent.touches[0]
+  heroTouchStart = { x: touch.clientX, y: touch.clientY }
+}
+
+function onHeroTouchEnd(touchEvent) {
+  if (!heroTouchStart) return
+  const touch = touchEvent.changedTouches[0]
+  const deltaX = touch.clientX - heroTouchStart.x
+  const deltaY = touch.clientY - heroTouchStart.y
+  heroTouchStart = null
+  if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
+    goToHeroEvent(activeHeroIndex.value + (deltaX < 0 ? 1 : -1))
+  }
+}
+
+function onPageVisibilityChange() {
+  isPageVisible.value = !document.hidden
+}
+
+function onMotionPreferenceChange(change) {
+  if (change.matches) isCarouselPlaying.value = false
+}
+
+async function loadHeroEvents() {
+  let page = 1
+  let lastPage = 1
+  do {
+    const response = await axios.get(`${apiBase}/public/evenements`, {
+      params: { per_page: 50, page },
+      signal: requestController.signal,
+    })
+    if (requestController.signal.aborted) return
+    const data = response.data
+    const items = Array.isArray(data) ? data : (data.data || [])
+    heroEvents.value = [...heroEvents.value, ...items]
+    lastPage = Number(data.last_page) || 1
+    page++
+  } while (page <= lastPage)
+}
 
 // Auth state
 const isLoggedIn = computed(() => !!localStorage.getItem('token'))
@@ -419,85 +547,84 @@ const carouselSlides = computed(() => {
 
 // ── Chargement des données ─────────────────────────────────
 onMounted(async () => {
-  // Initialize language from localStorage (using same key as i18n config)
   const savedLanguage = localStorage.getItem('locale')
-  if (savedLanguage && (savedLanguage === 'fr' || savedLanguage === 'en')) {
-    locale.value = savedLanguage
+  if (savedLanguage === 'fr' || savedLanguage === 'en') locale.value = savedLanguage
+
+  motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)')
+  isCarouselPlaying.value = !motionPreference.matches
+  motionPreference.addEventListener('change', onMotionPreferenceChange)
+  onPageVisibilityChange()
+  document.addEventListener('visibilitychange', onPageVisibilityChange)
+  timer = setInterval(() => { now.value = Date.now() }, 1000)
+  startHeroRotation()
+
+  const config = { signal: requestController.signal }
+  const [heroRes, evRes, artRes, offRes, catRes] = await Promise.allSettled([
+    loadHeroEvents(),
+    axios.get(`${apiBase}/public/featured-event`, config),
+    axios.get(`${apiBase}/public/articles`, config),
+    axios.get(`${apiBase}/public/offres`, { ...config, params: { per_page: 6 } }),
+    axios.get(`${apiBase}/public/categories-evenements`, config),
+  ])
+  if (requestController.signal.aborted) return
+
+  if (evRes.status === 'fulfilled') event.value = evRes.value.data
+  if (heroRes.status === 'rejected') {
+    console.error('Erreur chargement événements accueil', heroRes.reason)
+    if (!heroEvents.value.length && event.value) heroEvents.value = [event.value]
   }
+  if (artRes.status === 'fulfilled') articles.value = artRes.value.data
+  if (offRes.status === 'fulfilled') offres.value = offRes.value.data.data || offRes.value.data
+  if (catRes.status === 'fulfilled') categories.value = catRes.value.data
 
-  try {
-    const [evRes, artRes, offRes] = await Promise.all([
-      axios.get(`${apiBase}/public/featured-event`),
-      axios.get(`${apiBase}/public/articles`),
-      axios.get(`${apiBase}/public/offres`, { params: { per_page: 6 } }),
-    ])
-    event.value    = evRes.data
-    articles.value = artRes.data
-    offres.value   = offRes.data.data || offRes.data
-  } catch (e) {
-    console.error('Erreur chargement page accueil', e)
-  }
-
-  try {
-    const catRes = await axios.get(`${apiBase}/public/categories-evenements`)
-    categories.value = catRes.data
-  } catch {}
-
-  startCountdown()
+  await nextTick()
+  if (requestController.signal.aborted) return
   initAnimations()
   initCounterAnimation()
 })
 
 onUnmounted(() => {
+  requestController.abort()
   if (timer) clearInterval(timer)
+  if (heroRotationTimer) clearInterval(heroRotationTimer)
+  motionPreference?.removeEventListener('change', onMotionPreferenceChange)
+  document.removeEventListener('visibilitychange', onPageVisibilityChange)
+  animationObservers.forEach(observer => observer.disconnect())
 })
 
-// ── Countdown ─────────────────────────────────────────────
+// ── Countdown de l'événement affiché ───────────────────────
 const countdownTarget = computed(() => {
-  if (!event.value?.date_debut) return null
-  const dateStr = event.value.date_debut.substring(0, 10)
-  const timeStr = event.value.heure_debut_journee
-    ? event.value.heure_debut_journee.substring(0, 5)
-    : '08:00'
-  return new Date(`${dateStr}T${timeStr}:00`)
+  if (!heroEvent.value?.date_debut) return null
+  const date = heroEvent.value.date_debut.substring(0, 10)
+  const time = (heroEvent.value.heure_debut_journee || '08:00').substring(0, 5)
+  return new Date(`${date}T${time}:00`)
+})
+const isHeroCountdownVisible = computed(() =>
+  isHeroPromotionVisible.value && countdownTarget.value?.getTime() > now.value
+)
+const cd = computed(() => {
+  const diff = Math.max(0, (countdownTarget.value?.getTime() || 0) - now.value)
+  return {
+    days: pad(Math.floor(diff / 86400000), 3),
+    hours: pad(Math.floor((diff % 86400000) / 3600000), 2),
+    minutes: pad(Math.floor((diff % 3600000) / 60000), 2),
+    seconds: pad(Math.floor((diff % 60000) / 1000), 2),
+  }
 })
 
-function startCountdown() {
-  function tick() {
-    now.value = Date.now()
-    if (!countdownTarget.value) return
-    const diff = Math.max(0, countdownTarget.value - new Date())
-    const d = Math.floor(diff / 86400000)
-    const h = Math.floor((diff % 86400000) / 3600000)
-    const m = Math.floor((diff % 3600000)  / 60000)
-    const s = Math.floor((diff % 60000)    / 1000)
-    cd.value = { days: pad(d, 3), hours: pad(h, 2), minutes: pad(m, 2), seconds: pad(s, 2) }
-  }
-  tick()
-  timer = setInterval(tick, 1000)
-}
-
-// ── Style hero — image plein écran ────────────────────────
+// ── Image et dates de l'événement affiché ──────────────────
 const heroSectionStyle = computed(() => {
-  if (event.value?.image_mise_en_avant_url) {
-    return { backgroundImage: `url('${event.value.image_mise_en_avant_url}')` }
-  }
-  return {}
+  const image = heroEvent.value?.image_mise_en_avant_url
+  return image ? { backgroundImage: `url(${JSON.stringify(image)})` } : {}
 })
 
-// ── Computed ──────────────────────────────────────────────
 const eventDateRange = computed(() => {
-  if (!event.value) return ''
+  if (!heroEvent.value) return ''
   const lang = locale.value === 'en' ? 'en-US' : 'fr-FR'
-  const d = (str) => {
-    const dt = new Date(str)
-    return dt.toLocaleDateString(lang, { day: 'numeric', month: 'long', year: 'numeric' })
-  }
-  if (event.value.date_debut && event.value.date_fin) {
-    return `${d(event.value.date_debut)} – ${d(event.value.date_fin)}`
-  }
-  if (event.value.date_debut) return d(event.value.date_debut)
-  return ''
+  const format = str => new Date(str).toLocaleDateString(lang, { day: 'numeric', month: 'long', year: 'numeric' })
+  const { date_debut, date_fin } = heroEvent.value
+  if (date_debut && date_fin) return `${format(date_debut)} – ${format(date_fin)}`
+  return date_debut ? format(date_debut) : ''
 })
 
 // ── Utilitaires ───────────────────────────────────────────
@@ -546,6 +673,7 @@ function initAnimations() {
     rootMargin: '0px 0px -50px 0px'
   })
 
+  animationObservers.push(observer)
   document.querySelectorAll('.animate-on-scroll').forEach(el => {
     observer.observe(el)
   })
@@ -563,6 +691,7 @@ function initCounterAnimation() {
     })
   }, { threshold: 0.5 })
 
+  animationObservers.push(observer)
   document.querySelectorAll('.stat-number-large').forEach(el => {
     observer.observe(el)
   })
@@ -847,12 +976,13 @@ body {
   position: absolute;
   inset: 0;
   background: rgba(4, 10, 93, 0.52);
-  z-index: 0;
+  z-index: 1;
+  pointer-events: none;
 }
 
 .hero-modern .container {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .hero-content {
@@ -3040,6 +3170,83 @@ section {
   .stats-grid {
     grid-template-columns: 1fr;
   }
+}
+
+
+/* ── Navigation du carrousel hero ───────────────────── */
+.hero-cover {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.hero-title-link { color: inherit; text-decoration: none; }
+.hero-title-link:hover { color: inherit; }
+.hero-modern:focus-visible,
+.hero-title-link:focus-visible,
+.hero-carousel-button:focus-visible,
+.hero-carousel-dot:focus-visible { outline: 3px solid #f29f1f; outline-offset: 4px; }
+.hero-modern--carousel { min-height: 600px; }
+.hero-modern--carousel > .container:not(.hero-carousel-controls) { padding-bottom: 80px; }
+.hero-modern .hero-carousel-controls {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+.hero-carousel-arrows,
+.hero-carousel-playback { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.hero-carousel-button {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255,255,255,.5);
+  border-radius: 50%;
+  background: rgba(4,10,93,.4);
+  color: #fff;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+.hero-carousel-button:hover { background: #f07c00; border-color: #f07c00; }
+.hero-carousel-dots { display: flex; gap: 4px; overflow-x: auto; min-width: 0; padding: 6px; }
+.hero-carousel-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.hero-carousel-dot::before { content: ''; width: 8px; height: 8px; background: rgba(255,255,255,.6); border-radius: 8px; transition: width .2s, background .2s; }
+.hero-carousel-dot--active::before { width: 24px; background: #f29f1f; }
+.hero-carousel-counter { color: #fff; white-space: nowrap; font-size: 13px; font-weight: 600; }
+.hero-carousel-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.hero-cover-enter-active, .hero-cover-leave-active { transition: opacity .65s ease; }
+.hero-cover-enter-from, .hero-cover-leave-to { opacity: 0; }
+.hero-slide-enter-active, .hero-slide-leave-active { transition: opacity .25s ease, transform .25s ease; }
+.hero-slide-enter-from { opacity: 0; transform: translateY(14px); }
+.hero-slide-leave-to { opacity: 0; transform: translateY(-10px); }
+@media (prefers-reduced-motion: reduce) {
+  .hero-cover-enter-active, .hero-cover-leave-active,
+  .hero-slide-enter-active, .hero-slide-leave-active,
+  .hero-carousel-dot::before { transition: none; }
+}
+@media (max-width: 640px) {
+  .hero-modern--carousel { min-height: 560px; }
+  .hero-modern .hero-carousel-controls { gap: 8px; bottom: 20px; }
+  .hero-carousel-arrows, .hero-carousel-playback { gap: 6px; }
+  .hero-carousel-counter { font-size: 11px; }
 }
 
 </style>
