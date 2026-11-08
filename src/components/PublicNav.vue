@@ -4,7 +4,7 @@
     <div ref="barRef" class="site-bar">
 
     <!-- ══ TOPBAR ÉVÉNEMENT FEATURED ══ -->
-    <div v-if="featuredEvent" class="topbar">
+    <div v-if="isEventPromotionVisible" class="topbar">
       <router-link :to="`/evenements/${featuredEvent.id}`" class="topbar-mobile-link"></router-link>
       <div class="topbar-inner container">
         <div class="topbar-left">
@@ -378,6 +378,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import { useFavoris } from '../composables/useFavoris.js'
+import { isEventActive } from '../utils/eventVisibility.js'
 
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const route   = useRoute()
@@ -390,6 +391,8 @@ const menuOpen        = ref(false)
 const activeMega      = ref(null)
 const mobileAccordion = ref(null)
 const featuredEvent = ref(null)
+const now = ref(Date.now())
+const isEventPromotionVisible = computed(() => isEventActive(featuredEvent.value, now.value))
 const countdown     = ref({ days: '00', hours: '00', minutes: '00', seconds: '00' })
 let   countdownTimer = null
 
@@ -461,7 +464,8 @@ function onScroll() { isScrolled.value = window.scrollY > 50 }
 
 function pad(n) { return String(n).padStart(2, '0') }
 function tickCountdown(target) {
-  const diff = target - Date.now()
+  now.value = Date.now()
+  const diff = target - now.value
   if (diff <= 0) { countdown.value = { days:'00', hours:'00', minutes:'00', seconds:'00' }; return }
   const s = Math.floor(diff / 1000)
   countdown.value = { days: pad(Math.floor(s/86400)), hours: pad(Math.floor((s%86400)/3600)), minutes: pad(Math.floor((s%3600)/60)), seconds: pad(s%60) }
@@ -469,7 +473,7 @@ function tickCountdown(target) {
 
 // L'annonce d'événement arrive après coup (appel API) et la barre change de
 // hauteur au changement de largeur : on remesure dans les deux cas.
-watch(featuredEvent, () => nextTick(measureBar))
+watch(isEventPromotionVisible, () => nextTick(measureBar))
 
 onMounted(async () => {
   window.addEventListener('scroll', onScroll, { passive: true })
