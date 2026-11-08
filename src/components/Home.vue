@@ -18,18 +18,18 @@
             {{ event.titre }}
           </h1>
 
-          <p class="hero-description animate-on-scroll stagger-3">
+          <p v-if="isEventPromotionVisible" class="hero-description animate-on-scroll stagger-3">
             {{ event.ville }}{{ event.pays ? ', ' + event.pays : '' }}
           </p>
 
-          <div class="hero-actions animate-on-scroll stagger-4">
+          <div v-if="isEventPromotionVisible" class="hero-actions animate-on-scroll stagger-4">
             <a href="https://registration.africatalentsummit.com" target="_blank" rel="noopener" class="btn-primary">
               {{ t('home.hero.subscribe') }}
             </a>
           </div>
 
           <!-- Countdown -->
-          <div class="countdown-modern animate-on-scroll stagger-5">
+          <div v-if="isEventPromotionVisible" class="countdown-modern animate-on-scroll stagger-5">
             <div class="countdown-item">
               <div class="countdown-value">{{ cd.days }}</div>
               <div class="countdown-label">{{ t('home.hero.days') }}</div>
@@ -52,7 +52,7 @@
     </section>
 
     <!-- 2. SECTION ILS RECRUTENT — Entreprises Participantes ══ -->
-    <section v-if="event && event.entreprises && event.entreprises.length" class="section-partners">
+    <section v-if="isEventPromotionVisible && event.entreprises && event.entreprises.length" class="section-partners">
       <div class="container">
         <div class="partners-header animate-on-scroll">
           <span class="section-label">{{ t('home.partners.label') }}</span>
@@ -375,7 +375,7 @@
     </section>
 
     <!-- 9. SECTION EVENT — Africa Talent Summit Luxembourg countdown ══ -->
-    <section class="section-event" v-if="event">
+    <section class="section-event" v-if="isEventPromotionVisible">
       <!-- SVG defs pour les dégradés -->
       <svg width="0" height="0" style="position:absolute">
         <defs>
@@ -476,11 +476,14 @@ import PublicNav from './PublicNav.vue'
 import Footer from './Footer.vue'
 import LoadedImage from './shared/LoadedImage.vue'
 import DeferredCoverBackground from './shared/DeferredCoverBackground.vue'
+import { isEventActive } from '../utils/eventVisibility.js'
 
 const { t, locale } = useI18n()
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
 const event      = ref(null)
+const now = ref(Date.now())
+const isEventPromotionVisible = computed(() => isEventActive(event.value, now.value))
 const articles   = ref([])
 const categories = ref([])
 const offres   = ref([])
@@ -549,6 +552,7 @@ const countdownTarget = computed(() => {
 
 function startCountdown() {
   function tick() {
+    now.value = Date.now()
     if (!countdownTarget.value) return
     const diff = Math.max(0, countdownTarget.value - new Date())
     const d = Math.floor(diff / 86400000)
