@@ -44,7 +44,7 @@
 
         <!-- Logo -->
         <router-link to="/" class="site-logo" @click="menuOpen = false">
-          <img src="/logo.png" alt="Talenteed" height="56" />
+          <img src="/logo.svg" alt="Talenteed.io" width="239" height="72" />
           <span class="site-tagline">{{ t('home.tagline') }}</span>
         </router-link>
 
@@ -253,7 +253,7 @@
           <!-- Drawer header -->
           <div class="mob-head">
             <router-link to="/" class="mob-logo" @click="menuOpen = false">
-              <img src="/logo.png" alt="Talenteed" height="44" />
+              <img src="/logo.svg" alt="Talenteed.io" width="239" height="72" />
             </router-link>
             <button class="mob-close" @click="menuOpen = false" aria-label="Fermer">
               <i class="fa-solid fa-xmark"></i>
