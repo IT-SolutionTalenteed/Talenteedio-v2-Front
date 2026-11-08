@@ -40,7 +40,7 @@
               </span>
             </div>
             <!-- CTA selon rôle -->
-            <div class="evd-hero-cta">
+            <div v-if="isEventParticipationOpen" class="evd-hero-cta">
               <template v-if="isTalent">
                 <button class="btn btn--orange btn--lg" @click="scrollToMatching">
                   <i class="fa-solid fa-wand-magic-sparkles" style="margin-right:6px;"></i>{{ t('evenements.detail.launchMatching') }}
@@ -112,7 +112,7 @@
               </div>
 
               <!-- ══ PARTICIPATION ENTREPRISE ══ -->
-              <div v-if="isEntreprise" class="evd-block evd-participation-block">
+              <div v-if="isEntreprise && (isEventParticipationOpen || estParticipant || maDemandeStatut)" class="evd-block evd-participation-block">
                 <h2 class="evd-block-title">
                   <i class="fa-solid fa-handshake"></i> {{ t('evenements.detail.participation') }}
                 </h2>
@@ -159,7 +159,7 @@
                 </div>
               </div>
 
-              <div v-if="isTalent" class="evd-block evd-matching-block" id="matching-section">
+              <div v-if="isTalent && isEventParticipationOpen" class="evd-block evd-matching-block" id="matching-section">
                 <h2 class="evd-block-title">
                   <i class="fa-solid fa-wand-magic-sparkles"></i> {{ t('evenements.detail.matchingTitle') }}
                 </h2>
@@ -301,7 +301,7 @@
                 </div>
               </div>
 
-              <div v-else-if="evenement.id === 1" class="evd-block evd-cta-login-block">
+              <div v-else-if="isEventParticipationOpen && evenement.id === 1" class="evd-block evd-cta-login-block">
                 <div class="evd-cta-login-inner">
                   <div class="evd-cta-login-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
                   <div>
@@ -436,7 +436,7 @@
                 </div>
               </div>
 
-              <div v-if="evenement.id === 1" class="evd-side-card evd-side-cta">
+              <div v-if="isEventParticipationOpen && evenement.id === 1" class="evd-side-card evd-side-cta">
                 <template v-if="isTalent">
                   <p>{{ t('evenements.detail.readyForMatching') }}</p>
                   <button class="btn btn--blue" style="width:100%;" @click="scrollToMatching">
@@ -460,7 +460,7 @@
       </section>
 
       <!-- ══ MODAL RÉSERVATION ══ -->
-      <div v-if="rdvEntreprise" class="evd-modal-overlay" @click.self="rdvEntreprise = null">
+      <div v-if="isEventParticipationOpen && rdvEntreprise" class="evd-modal-overlay" @click.self="rdvEntreprise = null">
         <div class="evd-modal">
 
           <!-- Header modal -->
@@ -572,6 +572,7 @@ import RegisterModal from './RegisterModal.vue'
 import api from '../services/api.js'
 import { useCountries } from '../composables/useCountries.js'
 import { useMeta } from '../composables/useMeta'
+import { isEventActive } from '../utils/eventVisibility.js'
 
 const { t, locale } = useI18n()
 const { setMeta, resetMeta } = useMeta()
@@ -581,6 +582,9 @@ const route   = useRoute()
 // ── Data ──────────────────────────────────────────────────────
 const evenement = ref(null)
 const loading   = ref(true)
+const now = ref(Date.now())
+const isEventParticipationOpen = computed(() => isEventActive(evenement.value, now.value))
+let eventVisibilityTimer = null
 
 // ── Auth ──────────────────────────────────────────────────────
 const isLoggedIn   = ref(!!localStorage.getItem('token'))
@@ -938,6 +942,7 @@ watch(() => route.params.id, () => {
 })
 
 onMounted(async () => {
+  eventVisibilityTimer = setInterval(() => { now.value = Date.now() }, 1000)
   await load()
   if (isTalent.value) {
     loadActivitySectors()
@@ -949,6 +954,7 @@ onMounted(async () => {
 })
 
 onUnmounted(() => {
+  if (eventVisibilityTimer) clearInterval(eventVisibilityTimer)
   resetMeta()
 })
 </script>
