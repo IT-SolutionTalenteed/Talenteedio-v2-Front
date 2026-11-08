@@ -10,7 +10,16 @@
     "days": "Days",
     "hours": "Hours",
     "minutes": "Minutes",
-    "seconds": "Seconds"
+    "seconds": "Seconds",
+    "viewEvent": "Discover the event",
+    "carouselLabel": "Our events",
+    "carouselRole": "carousel",
+    "previousEvent": "Previous event",
+    "nextEvent": "Next event",
+    "showEvent": "Show: {title}",
+    "pauseCarousel": "Pause slideshow",
+    "playCarousel": "Resume slideshow",
+    "slideStatus": "Event {current} of {total}: {title}"
   },
   "about": {
     "label": "About",
