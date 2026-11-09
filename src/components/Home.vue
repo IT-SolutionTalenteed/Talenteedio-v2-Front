@@ -3259,7 +3259,7 @@ section {
 
 /* Les autres événements affichent leur visuel dans une colonne dédiée. */
 .hero-modern--split {
-  background: linear-gradient(135deg, #f5f7fb, #fff8ee);
+  background: linear-gradient(135deg, #040a5d 0%, #192bc2 100%);
 }
 .hero-modern--split::before { display: none; }
 .hero-modern--split .hero-event-layout {
@@ -3270,14 +3270,15 @@ section {
   gap: clamp(32px, 5vw, 80px);
 }
 .hero-modern--split .hero-content { max-width: none; min-width: 0; }
-.hero-modern--split .hero-badge { background: rgba(240,124,0,.08); color: #ad5300; backdrop-filter: none; }
-.hero-modern--split .hero-title { color: var(--navy); font-size: clamp(2rem, 4vw, 3.75rem); overflow-wrap: anywhere; }
+.hero-modern--split .hero-badge { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.35); color: #ffd58c; backdrop-filter: none; }
+.hero-modern--split .hero-title { color: #fff; font-size: clamp(2rem, 4vw, 3.75rem); overflow-wrap: anywhere; }
 .hero-modern--split .hero-description,
-.hero-event-description { color: #526075; font-size: 16px; line-height: 1.7; margin: 0 0 24px; max-width: none; }
+.hero-event-description { color: #eef2ff; font-size: 16px; line-height: 1.7; margin: 0 0 24px; max-width: none; }
 .hero-modern--split .hero-actions { margin-bottom: 24px; justify-content: flex-start; }
+.hero-modern--split .hero-actions .btn-primary { color: #040a5d; font-weight: 700; }
 .hero-modern--split .countdown-modern { justify-content: flex-start; }
-.hero-modern--split .countdown-value { color: var(--navy); }
-.hero-modern--split .countdown-label { color: #526075; }
+.hero-modern--split .countdown-value { color: #fff; }
+.hero-modern--split .countdown-label { color: #eef2ff; }
 .hero-event-visual {
   display: flex;
   align-items: center;
@@ -3291,11 +3292,11 @@ section {
 .hero-event-image { display: block; width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; }
 .hero-modern--split .hero-event-layout--text-only { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
 .hero-modern--split .hero-event-layout--text-only .hero-content { max-width: 680px; }
-.hero-modern--split .hero-carousel-button { background: #fff; border-color: #cbd5e1; color: var(--navy); backdrop-filter: none; }
-.hero-modern--split .hero-carousel-button:hover:not(:disabled) { background: #f07c00; border-color: #f07c00; color: #fff; }
-.hero-modern--split .hero-carousel-dot::before { background: #a7b1c2; }
-.hero-modern--split .hero-carousel-dot--active::before { background: #f07c00; }
-.hero-modern--split .hero-carousel-counter { color: var(--navy); }
+.hero-modern--split .hero-carousel-button { background: rgba(4,10,93,.35); border-color: rgba(255,255,255,.6); color: #fff; backdrop-filter: none; }
+.hero-modern--split .hero-carousel-button:hover:not(:disabled) { background: #f07c00; border-color: #f07c00; color: #040a5d; }
+.hero-modern--split .hero-carousel-dot::before { background: rgba(255,255,255,.7); }
+.hero-modern--split .hero-carousel-dot--active::before { background: #f29f1f; }
+.hero-modern--split .hero-carousel-counter { color: #fff; }
 @media (max-width: 900px) {
   .hero-modern--split .hero-event-layout { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); gap: 20px; }
   .hero-modern--split .hero-content { max-height: 55vh; }
