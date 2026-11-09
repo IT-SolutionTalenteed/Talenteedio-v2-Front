@@ -1,12 +1,5 @@
 {
   "hero": {
-    "defaultTitle": "Africa Talent Summit",
-    "defaultLocation": "Luxembourg",
-    "defaultDescription": "The largest gathering of African talents and leaders shaping the future of the continent.",
-    "subscriptionsOpen": "SUBSCRIPTIONS ARE OPEN – RESERVE YOUR SPOT",
-    "subscribe": "Subscribe",
-    "joinObservatory": "Join Africa Talent Observatory",
-    "viewProgram": "View program",
     "days": "Days",
     "hours": "Hours",
     "minutes": "Minutes",
@@ -23,39 +16,33 @@
   },
   "about": {
     "label": "About",
-    "title": "Revolutionizing the African talent landscape",
-    "description1": "The Africa Talent Summit is the reference platform for discovering, developing and connecting African talents with global opportunities.",
-    "description2": "For three days, join thousands of professionals, entrepreneurs, investors and decision-makers to shape the future of work in Africa together.",
+    "title": "Talenteed.io, connecting talent with opportunity",
+    "description1": "Talenteed.io brings together job opportunities, companies, events and HR content to help you move forward in your career.",
+    "description2": "Explore opportunities, discover employers and prepare your next steps with career advice and profile matching.",
     "networking": {
-      "title": "Networking",
-      "description": "Connect with African industry leaders"
+      "title": "Talent & employers",
+      "description": "Discover companies and grow your professional network."
     },
     "innovation": {
-      "title": "Innovation",
-      "description": "Discover the latest trends and innovations"
+      "title": "Advice & matching",
+      "description": "Prepare your applications and identify opportunities that fit your profile."
     }
   },
-  "stats": {
-    "participants": "Expected participants",
-    "speakers": "Speakers",
-    "countries": "Countries represented",
-    "sessions": "Sessions & Workshops"
-  },
   "cta": {
-    "title": "Ready to join the movement?",
-    "description": "Don't miss this unique opportunity to connect with the best talents and leaders in Africa.",
-    "earlyBird": "Early bird registration",
-    "becomePartner": "Become a partner"
+    "title": "Move your career forward with Talenteed.io",
+    "description": "Create your profile to explore opportunities, discover companies and access your personal workspace.",
+    "createAccount": "Create my account",
+    "discoverCompanies": "Explore companies"
   },
   "quicklinks": {
     "findJob": {
       "title": "Find a job",
-      "description": "Your gateway to infinite possibilities and exciting career opportunities",
+      "description": "Discover job openings and find opportunities that fit your experience.",
       "action": "Browse jobs"
     },
     "events": {
       "title": "Events",
-      "description": "Participate in HR events and expand your professional network",
+      "description": "Explore HR events and professional meetings on the platform.",
       "action": "Discover"
     },
     "articles": {
@@ -64,7 +51,7 @@
       "action": "Read"
     },
     "matching": {
-      "title": "Matching Profile",
+      "title": "Profile matching",
       "description": "Find opportunities that perfectly match your profile and skills",
       "action": "Discover my match"
     }
@@ -78,7 +65,7 @@
   "triple": {
     "watermark": "Our Blog",
     "title": "Blog Articles",
-    "description": "Career advice, HR news and African labor market analysis, written by our experts to help you advance:",
+    "description": "Career advice, HR news and insights into the world of work to support your professional plans.",
     "readMore": "Read more",
     "thinkTank": {
       "title": "Career Advice",
@@ -104,5 +91,24 @@
   "eventSection": {
     "participate": "Participate"
   },
-  "tagline": "The alternative media for HR"
+  "tagline": "The alternative media for HR",
+  "platform": {
+    "label": "Talenteed.io services",
+    "jobs": {
+      "title": "Job opportunities",
+      "description": "Explore opportunities and find your next role."
+    },
+    "companies": {
+      "title": "Companies",
+      "description": "Discover employers and what they do."
+    },
+    "resources": {
+      "title": "Career advice",
+      "description": "Stay informed and prepare your applications."
+    },
+    "events": {
+      "title": "HR events",
+      "description": "Discover professional events and networking opportunities."
+    }
+  }
 }
