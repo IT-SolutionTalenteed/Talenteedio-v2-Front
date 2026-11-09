@@ -129,3 +129,41 @@
     transition: none;
   }
 }
+
+
+/* Les titres dynamiques publics sont bornés à deux lignes. Le texte complet
+   reste dans le DOM ; Africa Talent Summit Luxembourg conserve toutes ses lignes. */
+:is(.home-page, .page-wrapper, .tous-evenements) :is(
+  .triple-card h3,
+  .job-title,
+  .offre-title a,
+  .blog-card-title,
+  .artd-title,
+  .od-hero-title,
+  .ent-name,
+  .ed-hero-title,
+  .ed-offre-title,
+  .ed-event-title,
+  .ed-article-title,
+  .event-title,
+  .cat-event-body h3,
+  .cat-hero-content h1,
+  .evd-hero-title
+):not(.title-full) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+:is(.page-wrapper, .tous-evenements) :is(h1, h3).title-full {
+  display: block;
+  -webkit-line-clamp: unset;
+  line-clamp: unset;
+  overflow: visible;
+  overflow-wrap: anywhere;
+}
