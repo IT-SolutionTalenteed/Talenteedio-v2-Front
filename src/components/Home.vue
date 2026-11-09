@@ -8,6 +8,7 @@
     <section
       v-if="heroEvent"
       class="hero-modern hero-modern--carousel"
+      :class="{ 'hero-modern--split': !isLuxembourgHero }"
       role="region"
       :aria-label="t('home.hero.carouselLabel')"
       :aria-roledescription="t('home.hero.carouselRole')"
@@ -22,46 +23,69 @@
       @touchend.passive="onHeroTouchEnd"
     >
       <Transition name="hero-cover">
-        <div :key="heroEvent.id" class="hero-cover" :style="heroSectionStyle" aria-hidden="true"></div>
+        <div v-if="isLuxembourgHero" :key="heroEvent.id" class="hero-cover" :style="heroSectionStyle" aria-hidden="true"></div>
       </Transition>
 
       <div class="container">
         <Transition name="hero-slide" mode="out-in">
-          <div :key="heroEvent.id" class="hero-content">
-            <div v-if="eventDateRange">
-              <span class="hero-badge">{{ eventDateRange }}</span>
+          <div :key="heroEvent.id" class="hero-event-layout">
+            <div class="hero-content">
+              <div v-if="eventDateRange">
+                <span class="hero-badge">{{ eventDateRange }}</span>
+              </div>
+
+              <h1 class="hero-title">
+                {{ heroEvent.titre }}
+              </h1>
+
+              <p v-if="isHeroPromotionVisible" class="hero-description">
+                {{ heroEvent.ville }}{{ heroEvent.pays ? ', ' + heroEvent.pays : '' }}
+              </p>
+
+              <p v-if="!isLuxembourgHero && heroDescription" class="hero-event-description">
+                {{ heroDescription }}
+              </p>
+
+              <div class="hero-actions">
+                <router-link :to="`/evenements/${heroEvent.id}`" class="btn-primary">
+                  {{ t('home.hero.viewEvent') }}
+                </router-link>
+              </div>
+
+              <div v-if="isHeroCountdownVisible" class="countdown-modern">
+                <div class="countdown-item">
+                  <div class="countdown-value">{{ cd.days }}</div>
+                  <div class="countdown-label">{{ t('home.hero.days') }}</div>
+                </div>
+                <div class="countdown-item">
+                  <div class="countdown-value">{{ cd.hours }}</div>
+                  <div class="countdown-label">{{ t('home.hero.hours') }}</div>
+                </div>
+                <div class="countdown-item">
+                  <div class="countdown-value">{{ cd.minutes }}</div>
+                  <div class="countdown-label">{{ t('home.hero.minutes') }}</div>
+                </div>
+                <div class="countdown-item">
+                  <div class="countdown-value">{{ cd.seconds }}</div>
+                  <div class="countdown-label">{{ t('home.hero.seconds') }}</div>
+                </div>
+              </div>
             </div>
 
-            <h1 class="hero-title">
-              {{ heroEvent.titre }}
-            </h1>
-
-            <p v-if="isHeroPromotionVisible" class="hero-description">
-              {{ heroEvent.ville }}{{ heroEvent.pays ? ', ' + heroEvent.pays : '' }}
-            </p>
-
-            <div class="hero-actions">
-              <router-link :to="`/evenements/${heroEvent.id}`" class="btn-primary">
-                {{ t('home.hero.viewEvent') }}
-              </router-link>
-            </div>
-
-            <div v-if="isHeroCountdownVisible" class="countdown-modern">
-              <div class="countdown-item">
-                <div class="countdown-value">{{ cd.days }}</div>
-                <div class="countdown-label">{{ t('home.hero.days') }}</div>
-              </div>
-              <div class="countdown-item">
-                <div class="countdown-value">{{ cd.hours }}</div>
-                <div class="countdown-label">{{ t('home.hero.hours') }}</div>
-              </div>
-              <div class="countdown-item">
-                <div class="countdown-value">{{ cd.minutes }}</div>
-                <div class="countdown-label">{{ t('home.hero.minutes') }}</div>
-              </div>
-              <div class="countdown-item">
-                <div class="countdown-value">{{ cd.seconds }}</div>
-                <div class="countdown-label">{{ t('home.hero.seconds') }}</div>
+            <div v-if="!isLuxembourgHero" class="hero-event-visual">
+              <img
+                v-if="heroEvent.image_mise_en_avant_url"
+                :src="heroEvent.image_mise_en_avant_url"
+                :alt="heroEvent.titre"
+                class="hero-event-image"
+                loading="eager"
+                decoding="async"
+              >
+              <div v-else class="hero-event-placeholder" aria-hidden="true">
+                <svg viewBox="0 0 80 80" fill="none">
+                  <rect x="12" y="18" width="56" height="50" rx="10" />
+                  <path d="M12 34h56M26 12v14M54 12v14M26 46h10M44 46h10M26 56h10" />
+                </svg>
               </div>
             </div>
           </div>
@@ -89,12 +113,7 @@
             @click="goToHeroEvent(index)"
           ></button>
         </div>
-        <div class="hero-carousel-playback">
-          <span class="hero-carousel-counter" aria-hidden="true">{{ activeHeroIndex + 1 }} / {{ heroEvents.length }}</span>
-          <button v-if="heroEvents.length > 1" type="button" class="hero-carousel-button" :aria-label="t(isCarouselPlaying ? 'home.hero.pauseCarousel' : 'home.hero.playCarousel')" @click="isCarouselPlaying = !isCarouselPlaying">
-            <i :class="isCarouselPlaying ? 'fa-solid fa-pause' : 'fa-solid fa-play'" aria-hidden="true"></i>
-          </button>
-        </div>
+        <span class="hero-carousel-counter" aria-hidden="true">{{ activeHeroIndex + 1 }} / {{ heroEvents.length }}</span>
         <span class="hero-carousel-sr-only" :aria-live="isHeroAutoAdvancing ? 'off' : 'polite'" aria-atomic="true">
           {{ t('home.hero.slideStatus', { current: activeHeroIndex + 1, total: heroEvents.length, title: heroEvent.titre }) }}
         </span>
@@ -452,6 +471,8 @@ const offres   = ref([])
 const heroEvents = ref([])
 const activeHeroIndex = ref(0)
 const heroEvent = computed(() => heroEvents.value[activeHeroIndex.value] || null)
+const isLuxembourgHero = computed(() => String(heroEvent.value?.id) === '1')
+const heroDescription = computed(() => truncate(stripHtml(heroEvent.value?.description), 320))
 const isHeroPromotionVisible = computed(() => isEventActive(heroEvent.value, now.value))
 const heroHovered = ref(false)
 const heroFocused = ref(false)
@@ -611,6 +632,7 @@ const cd = computed(() => {
 
 // ── Image et dates de l'événement affiché ──────────────────
 const heroSectionStyle = computed(() => {
+  if (!isLuxembourgHero.value) return {}
   const image = heroEvent.value?.image_mise_en_avant_url
   return image ? { backgroundImage: `url(${JSON.stringify(image)})` } : {}
 })
@@ -3194,8 +3216,7 @@ section {
   gap: 16px;
   width: 100%;
 }
-.hero-carousel-arrows,
-.hero-carousel-playback { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.hero-carousel-arrows { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 .hero-carousel-button {
   width: 44px;
   height: 44px;
@@ -3241,8 +3262,61 @@ section {
 @media (max-width: 640px) {
   .hero-modern--carousel { min-height: 560px; }
   .hero-modern .hero-carousel-controls { gap: 8px; bottom: 20px; }
-  .hero-carousel-arrows, .hero-carousel-playback { gap: 6px; }
+  .hero-carousel-arrows { gap: 6px; }
   .hero-carousel-counter { font-size: 11px; }
+}
+
+/* Les autres événements affichent leur visuel dans une colonne dédiée. */
+.hero-modern--split {
+  height: auto;
+  min-height: max(600px, calc(100svh - var(--site-bar-h, 80px)));
+  padding: 64px 0 96px;
+  background: linear-gradient(135deg, #f5f7fb, #fff8ee);
+}
+.hero-modern--split::before { display: none; }
+.hero-modern--split > .container:not(.hero-carousel-controls) { padding-bottom: 0; }
+.hero-modern--split .hero-event-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(32px, 5vw, 80px);
+}
+.hero-modern--split .hero-content { max-width: none; min-width: 0; }
+.hero-modern--split .hero-badge { background: rgba(240,124,0,.08); color: #ad5300; backdrop-filter: none; }
+.hero-modern--split .hero-title { color: var(--navy); font-size: clamp(2rem, 4vw, 3.75rem); overflow-wrap: anywhere; }
+.hero-modern--split .hero-description,
+.hero-event-description { color: #526075; font-size: 16px; line-height: 1.7; margin: 0 0 24px; max-width: none; }
+.hero-modern--split .hero-actions { margin-bottom: 24px; justify-content: flex-start; }
+.hero-modern--split .countdown-modern { justify-content: flex-start; }
+.hero-modern--split .countdown-value { color: var(--navy); }
+.hero-modern--split .countdown-label { color: #526075; }
+.hero-event-visual {
+  aspect-ratio: 1;
+  max-height: 540px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 24px 64px rgba(4,10,93,.1);
+  overflow: hidden;
+}
+.hero-event-image { display: block; width: 100%; height: 100%; object-fit: contain; border-radius: 12px; }
+.hero-event-placeholder { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; background: #f5f7fb; border-radius: 12px; }
+.hero-event-placeholder svg { width: 96px; height: 96px; stroke: #f07c00; stroke-width: 3; stroke-linecap: round; }
+.hero-modern--split .hero-carousel-button { background: #fff; border-color: #cbd5e1; color: var(--navy); backdrop-filter: none; }
+.hero-modern--split .hero-carousel-button:hover:not(:disabled) { background: #f07c00; border-color: #f07c00; color: #fff; }
+.hero-modern--split .hero-carousel-dot::before { background: #a7b1c2; }
+.hero-modern--split .hero-carousel-dot--active::before { background: #f07c00; }
+.hero-modern--split .hero-carousel-counter { color: var(--navy); }
+@media (max-width: 900px) {
+  .hero-modern--split { padding: 40px 0 96px; }
+  .hero-modern--split .hero-event-layout { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .hero-event-visual { width: 100%; max-width: 540px; justify-self: center; aspect-ratio: 4 / 3; }
+}
+@media (max-width: 640px) {
+  .hero-modern--split .hero-title { font-size: clamp(2rem, 8vw, 3rem); }
+  .hero-event-visual { padding: 12px; border-radius: 18px; }
 }
 
 </style>
