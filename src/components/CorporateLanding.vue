@@ -184,7 +184,7 @@
               <p class="cta-text">
                 {{ t('corporateLanding.cta.description') }}
               </p>
-              <a href="https://calendly.com" target="_blank" rel="noopener"
+              <a href="mailto:contact@talenteed.io"
                 class="btn btn--orange btn--lg btn--block">
                 <i class="fa-solid fa-calendar-check"></i>
                 {{ t('corporateLanding.cta.button') }}
@@ -204,7 +204,7 @@
       </div>
     </section>
 
-    <!-- ══ À PROPOS DE L'ÉVÉNEMENT ══ -->
+    <!-- ══ À PROPOS DE TALENTEED.IO ══ -->
     <section class="event-footer-section">
       <div class="container">
         <div class="event-footer-inner">
@@ -223,9 +223,9 @@
           </p>
 
           <div class="event-kpis">
-            <div v-for="kpi in kpis" :key="kpi.label" class="event-kpi">
-              <span class="event-kpi-number">{{ kpi.number }}</span>
-              <span class="event-kpi-label">{{ kpi.label }}</span>
+            <div v-for="highlight in platformHighlights" :key="highlight.title" class="event-kpi">
+              <span class="event-kpi-title">{{ highlight.title }}</span>
+              <span class="event-kpi-label">{{ highlight.description }}</span>
             </div>
           </div>
 
@@ -320,13 +320,11 @@ export default {
         { icon: 'fa-solid fa-headset', text: this.t('corporateLanding.benefits.support') }
       ]
     },
-    kpis() {
-      return [
-        { number: '2 000+', label: this.t('corporateLanding.eventFooter.kpis.talents') },
-        { number: '2', label: this.t('corporateLanding.eventFooter.kpis.days') },
-        { number: '30+', label: this.t('corporateLanding.eventFooter.kpis.countries') },
-        { number: '100%', label: this.t('corporateLanding.eventFooter.kpis.preselected') }
-      ]
+    platformHighlights() {
+      return ['jobs', 'companies', 'events', 'resources'].map(key => ({
+        title: this.t(`corporateLanding.eventFooter.highlights.${key}.title`),
+        description: this.t(`corporateLanding.eventFooter.highlights.${key}.description`)
+      }))
     },
     carouselSlides() {
       if (!this.event?.entreprises?.length) return []
@@ -595,10 +593,9 @@ export default {
 }
 
 .event-kpis {
-  display: flex;
-  justify-content: center;
-  gap: 48px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
   margin: 40px 0;
 }
 
@@ -609,8 +606,8 @@ export default {
   gap: 6px;
 }
 
-.event-kpi-number {
-  font-size: 44px;
+.event-kpi-title {
+  font-size: clamp(20px, 2.4vw, 28px);
   font-weight: 900;
   color: #f07c00;
   line-height: 1;
@@ -653,8 +650,8 @@ export default {
 }
 
 @media (max-width: 600px) {
-  .event-kpis { gap: 28px; }
-  .event-kpi-number { font-size: 34px; }
+  .event-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
+  .event-kpi-title { font-size: 24px; }
 }
 
 /* Consent Checkbox */
