@@ -1,21 +1,21 @@
 {
   "hero": {
-    "eventLabel": "Africa Talent Summit — 5 & 6 Novembre 2026",
+    "eventLabel": "Talenteed.io — Entreprises & recrutement",
     "title": "Accédez aux talents que votre croissance exige"
   },
   "confirmation": {
     "title": "Merci pour votre inscription !",
-    "subtitle": "Votre demande de partenariat a bien été enregistrée.",
+    "subtitle": "Votre demande entreprise a bien été enregistrée.",
     "subtitleContinue": "Finalisez votre inscription en créant votre mot de passe —",
     "subtitleContact": "nous vous recontacterons dans les meilleurs délais",
-    "subtitleEnd": "pour vous présenter les opportunités du Summit.",
+    "subtitleEnd": "pour échanger sur vos besoins de recrutement et les services Talenteed.io.",
     "note": "Un e-mail de confirmation vous sera envoyé dès que votre compte sera actif. Notre équipe vous contactera",
     "noteStrong": "dans les meilleurs délais",
     "noteEnd": "pour un premier échange sans engagement.",
     "contactNote": "Vous pouvez également nous joindre directement au",
     "contactPhone": "+352 20 60 162",
     "contactOr": "ou par e-mail à",
-    "contactEmail": "contact.africatalentsummit.com"
+    "contactEmail": "contact{'@'}talenteed.io"
   },
   "password": {
     "sectionTitle": "Choisissez votre mot de passe",
