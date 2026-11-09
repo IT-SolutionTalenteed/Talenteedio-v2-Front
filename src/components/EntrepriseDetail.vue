@@ -146,7 +146,7 @@
                       <span class="ed-event-month">{{ new Date(ev.date_debut).toLocaleDateString(locale === 'en' ? 'en-US' : 'fr-FR', { month: 'short' }) }}</span>
                     </div>
                     <div class="ed-event-body">
-                      <h3 class="ed-event-title">{{ ev.titre }}</h3>
+                      <h3 class="ed-event-title" :class="{ 'title-full': String(ev.id) === '1' }" :title="ev.titre">{{ ev.titre }}</h3>
                     </div>
                   </div>
                 </div>
