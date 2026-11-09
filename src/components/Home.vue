@@ -164,38 +164,38 @@
         <div class="quicklinks-grid">
 
           <router-link to="/annonces" class="ql-card animate-on-scroll">
-            <div class="ql-icon"><i class="fa-solid fa-briefcase"></i></div>
+            <div class="ql-icon"><i aria-hidden="true" class="fa-solid fa-briefcase"></i></div>
             <div class="ql-body">
               <h3>{{ t('home.quicklinks.findJob.title') }}</h3>
               <p>{{ t('home.quicklinks.findJob.description') }}</p>
-              <span class="ql-link">{{ t('home.quicklinks.findJob.action') }} <i class="fa-solid fa-arrow-right"></i></span>
+              <span class="ql-link">{{ t('home.quicklinks.findJob.action') }} <i aria-hidden="true" class="fa-solid fa-arrow-right"></i></span>
             </div>
           </router-link>
 
           <router-link to="/evenements" class="ql-card animate-on-scroll stagger-1">
-            <div class="ql-icon ql-icon--orange"><i class="fa-solid fa-calendar-days"></i></div>
+            <div class="ql-icon"><i aria-hidden="true" class="fa-solid fa-calendar-days"></i></div>
             <div class="ql-body">
               <h3>{{ t('home.quicklinks.events.title') }}</h3>
               <p>{{ t('home.quicklinks.events.description') }}</p>
-              <span class="ql-link">{{ t('home.quicklinks.events.action') }} <i class="fa-solid fa-arrow-right"></i></span>
+              <span class="ql-link">{{ t('home.quicklinks.events.action') }} <i aria-hidden="true" class="fa-solid fa-arrow-right"></i></span>
             </div>
           </router-link>
 
           <router-link to="/blog" class="ql-card animate-on-scroll stagger-2">
-            <div class="ql-icon ql-icon--green"><i class="fa-solid fa-newspaper"></i></div>
+            <div class="ql-icon"><i aria-hidden="true" class="fa-solid fa-newspaper"></i></div>
             <div class="ql-body">
               <h3>{{ t('home.quicklinks.articles.title') }}</h3>
               <p>{{ t('home.quicklinks.articles.description') }}</p>
-              <span class="ql-link">{{ t('home.quicklinks.articles.action') }} <i class="fa-solid fa-arrow-right"></i></span>
+              <span class="ql-link">{{ t('home.quicklinks.articles.action') }} <i aria-hidden="true" class="fa-solid fa-arrow-right"></i></span>
             </div>
           </router-link>
 
           <router-link :to="isLoggedIn && userRole === 'talent' ? '/talent' : '/login'" class="ql-card ql-card--featured animate-on-scroll stagger-3">
-            <div class="ql-icon ql-icon--white"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+            <div class="ql-icon"><i aria-hidden="true" class="fa-solid fa-wand-magic-sparkles"></i></div>
             <div class="ql-body">
               <h3>{{ t('home.quicklinks.matching.title') }}</h3>
               <p>{{ t('home.quicklinks.matching.description') }}</p>
-              <span class="ql-link">{{ t('home.quicklinks.matching.action') }} <i class="fa-solid fa-arrow-right"></i></span>
+              <span class="ql-link">{{ t('home.quicklinks.matching.action') }} <i aria-hidden="true" class="fa-solid fa-arrow-right"></i></span>
             </div>
           </router-link>
 
@@ -1352,145 +1352,63 @@ section {
   }
 }
 
-/* ── Quick Links Section ─────────────────────────────── */
-.section-quicklinks {
-  padding: 80px 0;
-  background: var(--light-bg);
-  width: 100%;
-}
-
-.quicklinks-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-}
-
-@media (max-width: 1024px) {
-  .quicklinks-grid { 
-    grid-template-columns: repeat(2, 1fr); 
-  }
-}
-
-@media (max-width: 600px) {
-  .quicklinks-grid { 
-    grid-template-columns: 1fr; 
-  }
-}
-
+/* ── Accès rapides Talenteed.io ───────────────────────── */
+.section-quicklinks { padding: 80px 0; background: #f6f7fc; }
+.quicklinks-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
 .ql-card {
+  --card-accent: #fff;
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 44px 36px;
-  border-radius: 14px;
-  box-shadow: 0 4px 20px rgba(0,0,0,.15);
-  text-decoration: none;
-  border: none;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  min-height: 260px;
-  position: relative;
+  gap: 28px;
+  min-width: 0;
+  min-height: 340px;
+  padding: 30px 26px;
   overflow: hidden;
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 22px;
+  background: linear-gradient(135deg, #040a5d, #192bc2);
+  text-decoration: none;
+  box-shadow: 0 5px 20px rgba(4,10,93,.08);
+  transition: transform .25s, box-shadow .25s, border-color .25s;
 }
-
 .ql-card::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  transition: left 0.5s;
+  inset: 0 0 auto;
+  height: 4px;
+  background: var(--card-accent);
+  opacity: 0;
+  transition: opacity .25s;
 }
+.ql-card:hover, .ql-card.visible:hover { transform: translateY(-6px); border-color: rgba(255,255,255,.4); box-shadow: 0 18px 35px rgba(4,10,93,.09); }
+.ql-card:hover::before { opacity: 1; }
+.ql-card:focus-visible { outline: 3px solid #f07c00; outline-offset: 5px; }
+.ql-card:nth-child(1) { background: linear-gradient(135deg, #040a5d 0%, #192bc2 100%); }
+.ql-card:nth-child(2) { background: linear-gradient(135deg, #192bc2 0%, #2687e9 100%); }
+.ql-card:nth-child(3) { background: linear-gradient(135deg, #2687e9 0%, #5ba3f0 100%); }
+.ql-card:nth-child(4) { background: linear-gradient(135deg, #f49f0a 0%, #ffb52e 100%); }
+.ql-icon { width: 56px; height: 56px; border-radius: 17px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,.16); color: #fff; font-size: 23px; flex-shrink: 0; }
 
-.ql-card:hover::before {
-  left: 100%;
-}
-
-.ql-card:hover {
-  box-shadow: 0 20px 40px rgba(0,0,0,.25);
-  transform: translateY(-8px);
-}
-
-.ql-card:nth-child(1) { 
-  background: linear-gradient(135deg,#040a5d 0%,#192bc2 100%); 
-}
-.ql-card:nth-child(2) { 
-  background: linear-gradient(135deg,#f07c00 0%,#f29f1f 100%); 
-}
-.ql-card:nth-child(3) { 
-  background: linear-gradient(135deg,#2687e9 0%,#5ba3f0 100%); 
-}
-.ql-card:nth-child(4) { 
-  background: linear-gradient(135deg,#f49f0a 0%,#ffb52e 100%); 
-}
-
-.ql-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 14px;
-  background: rgba(255,255,255,.18);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 26px;
-  color: #fff;
-  flex-shrink: 0;
-  position: relative;
-  z-index: 1;
-}
-
-.ql-body {
-  position: relative;
-  z-index: 1;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.ql-body h3 {
-  font-size: 20px;
-  font-weight: 700;
-  color: #fff;
-  margin: 0 0 10px;
-  line-height: 1.3;
-}
-
-.ql-body p {
-  font-size: 15px;
-  color: rgba(255,255,255,.85);
-  line-height: 1.65;
-  margin: 0 0 20px;
-  flex: 1;
-}
-
-.ql-link {
-  font-size: 14px;
-  font-weight: 700;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: auto;
-  padding: 10px 18px;
-  background: rgba(255,255,255,.18);
-  border-radius: 50px;
-  align-self: flex-start;
-  transition: all 0.3s ease;
-}
-
-.ql-card:hover .ql-link { 
-  background: rgba(255,255,255,.28); 
-}
-
-.ql-link i { 
-  font-size: 11px; 
-  transition: transform .2s; 
-}
-
-.ql-card:hover .ql-link i { 
-  transform: translateX(4px); 
-}
+.ql-body { position: relative; display: flex; flex-direction: column; flex: 1; }
+.ql-body h3 { margin: 0 0 14px; color: #fff; font-size: 24px; font-weight: 700; line-height: 1.25; text-transform: none; letter-spacing: -.5px; }
+.ql-body p { flex: 1; margin: 0 0 28px; color: #f0f3ff; font-size: 14px; line-height: 1.75; }
+.ql-link { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.25); color: var(--card-accent); font-size: 12px; font-weight: 700; line-height: 1.5; }
+.ql-link i { display: flex; align-items: center; justify-content: center; flex: 0 0 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,.18); font-size: 12px; transition: transform .25s, background .25s; }
+.ql-card:hover .ql-link i { transform: translateX(3px); background: rgba(255,255,255,.3); }
+.ql-card--featured { --card-accent: #040a5d; }
+.ql-card--featured::after { content: ''; position: absolute; z-index: -1; top: -75px; right: -90px; width: 240px; height: 240px; border: 1px solid rgba(255,255,255,.14); border-radius: 50%; box-shadow: 0 0 0 28px rgba(255,255,255,.035), 0 0 0 56px rgba(255,255,255,.025); pointer-events: none; }
+.ql-card:nth-child(3) { --card-accent: #040a5d; }
+.ql-card:nth-child(3) .ql-icon, .ql-card--featured .ql-icon { background: rgba(255,255,255,.28); color: #040a5d; }
+.ql-card:nth-child(3) .ql-body h3, .ql-card--featured .ql-body h3 { color: #040a5d; }
+.ql-card:nth-child(3) .ql-body p, .ql-card--featured .ql-body p { color: #10234e; }
+.ql-card:nth-child(3) .ql-link, .ql-card--featured .ql-link { border-color: rgba(4,10,93,.18); }
+.ql-card--featured .ql-link i { background: #040a5d; color: #fff; }
+.ql-card--featured:hover .ql-link i { background: #192bc2; }
+@media (max-width: 1024px) { .quicklinks-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .quicklinks-grid { grid-template-columns: minmax(0, 1fr); } .ql-card { min-height: 300px; gap: 22px; } }
+@media (prefers-reduced-motion: reduce) { .ql-card, .ql-card::before, .ql-link i { transition: none; } .ql-card:hover, .ql-card.visible:hover, .ql-card:hover .ql-link i { transform: none; } }
 
 /* ── Container ─────────────────────────────────── */
 .container {
@@ -1677,90 +1595,13 @@ section {
   transform: rotate(180deg);
 }
 
-/* ── 4 cards accès rapide ─────────────────────────────── */
-.section-quicklinks {
-  padding: 80px 0;
-  background: var(--light-bg, #f5f7fa);
-}
-.quicklinks-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-}
-@media (max-width: 1024px) {
-  .quicklinks-grid { grid-template-columns: repeat(2, 1fr); }
-  .partners-title { font-size: 42px; }
-}
+@media (max-width: 1024px) { .partners-title { font-size: 42px; } }
 @media (max-width: 600px) {
-  .quicklinks-grid { grid-template-columns: 1fr; }
   .partners-title { font-size: 34px; }
   .partners-title::after { width: 70px; height: 3px; }
   .partners-desc { font-size: 16px; }
   .partners-label { font-size: 11px; padding: 6px 16px; }
 }
-.ql-card {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 44px 36px;
-  border-radius: var(--radius-lg, 14px);
-  box-shadow: 0 4px 20px rgba(0,0,0,.15);
-  text-decoration: none;
-  border: none;
-  transition: box-shadow .2s, transform .2s;
-  min-height: 260px;
-}
-.ql-card:hover {
-  box-shadow: 0 10px 32px rgba(0,0,0,.22);
-  transform: translateY(-5px);
-}
-.ql-card:nth-child(1) { background: linear-gradient(135deg,#040a5d 0%,#192bc2 100%); }
-.ql-card:nth-child(2) { background: linear-gradient(135deg,#192bc2 0%,#2687e9 100%); }
-.ql-card:nth-child(3) { background: linear-gradient(135deg,#2687e9 0%,#5ba3f0 100%); }
-.ql-card:nth-child(4) { background: linear-gradient(135deg,#f49f0a 0%,#ffb52e 100%); }
-.ql-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 14px;
-  background: rgba(255,255,255,.18);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 26px;
-  color: #fff;
-  flex-shrink: 0;
-}
-.ql-body h3 {
-  font-size: 20px;
-  font-weight: 700;
-  color: #fff;
-  margin: 0 0 10px;
-  line-height: 1.3;
-}
-.ql-body p {
-  font-size: 15px;
-  color: rgba(255,255,255,.85);
-  line-height: 1.65;
-  margin: 0 0 20px;
-  flex: 1;
-}
-.ql-link {
-  font-size: 14px;
-  font-weight: 700;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: auto;
-  padding: 10px 18px;
-  background: rgba(255,255,255,.18);
-  border-radius: 50px;
-  align-self: flex-start;
-  transition: background .2s;
-}
-.ql-card:hover .ql-link { background: rgba(255,255,255,.28); }
-.ql-link i { font-size: 11px; transition: transform .2s; }
-.ql-card:hover .ql-link i { transform: translateX(4px); }
 
 /* ── Section partenaires ──────────────────────────────── */
 .section-partners {
@@ -3027,7 +2868,6 @@ section {
 }
 
 @media (max-width: 768px) {
-  .quicklinks-grid,
   .jobs-grid,
   .home-offres-grid,
   .feature-cards,
