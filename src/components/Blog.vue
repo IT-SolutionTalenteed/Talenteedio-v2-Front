@@ -58,7 +58,7 @@
 
             <!-- Skeleton -->
             <div v-if="loading" class="blog-grid">
-              <div v-for="n in 6" :key="n" class="blog-card blog-card--skeleton">
+              <div v-for="n in perPage" :key="n" class="blog-card blog-card--skeleton">
                 <div class="sk-img"></div>
                 <div class="sk-body">
                   <div class="sk-line sk-line--sm"></div>
@@ -224,7 +224,7 @@ const currentPage    = ref(1)
 const totalPages     = ref(1)
 const totalArticles  = ref(0)
 const activeCategory = ref(null)
-const perPage        = 9
+const perPage        = 8
 
 const tabsRef        = ref(null)
 const canScrollLeft  = ref(false)
