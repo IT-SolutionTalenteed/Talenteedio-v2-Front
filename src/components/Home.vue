@@ -28,13 +28,13 @@
 
       <div class="container">
         <Transition name="hero-slide" mode="out-in">
-          <div :key="heroEvent.id" class="hero-event-layout">
+          <div :key="heroEvent.id" class="hero-event-layout" :class="{ 'hero-event-layout--text-only': !heroEvent.image_mise_en_avant_url }">
             <div class="hero-content">
               <div v-if="eventDateRange">
                 <span class="hero-badge">{{ eventDateRange }}</span>
               </div>
 
-              <h1 class="hero-title">
+              <h1 class="hero-title" :title="heroEvent.titre">
                 {{ heroEvent.titre }}
               </h1>
 
@@ -72,21 +72,14 @@
               </div>
             </div>
 
-            <div v-if="!isLuxembourgHero" class="hero-event-visual">
+            <div v-if="!isLuxembourgHero && heroEvent.image_mise_en_avant_url" class="hero-event-visual">
               <img
-                v-if="heroEvent.image_mise_en_avant_url"
                 :src="heroEvent.image_mise_en_avant_url"
                 :alt="heroEvent.titre"
                 class="hero-event-image"
                 loading="eager"
                 decoding="async"
               >
-              <div v-else class="hero-event-placeholder" aria-hidden="true">
-                <svg viewBox="0 0 80 80" fill="none">
-                  <rect x="12" y="18" width="56" height="50" rx="10" />
-                  <path d="M12 34h56M26 12v14M54 12v14M26 46h10M44 46h10M26 56h10" />
-                </svg>
-              </div>
             </div>
           </div>
         </Transition>
@@ -981,8 +974,8 @@ body {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  height: calc(100vh - 80px);
-  min-height: 600px;
+  height: 100vh;
+  min-height: 0;
   position: relative;
   display: flex;
   align-items: center;
@@ -1585,8 +1578,6 @@ section {
 
 @media (max-width: 640px) {
   .hero-modern {
-    height: auto;
-    min-height: calc(100vh - 80px);
     padding-top: 60px;
     padding-bottom: 60px;
   }
@@ -2925,8 +2916,6 @@ section {
 /* ── Responsive overrides home ─────────────────────── */
 @media (max-width: 1180px) {
   .hero-modern {
-    height: auto;
-    min-height: 560px;
     padding: 56px 0 72px;
   }
 
@@ -2982,7 +2971,6 @@ section {
   }
 
   .hero-modern {
-    min-height: auto;
     padding: 40px 0 56px;
   }
 
@@ -3203,8 +3191,11 @@ section {
 .hero-modern:focus-visible,
 .hero-carousel-button:focus-visible,
 .hero-carousel-dot:focus-visible { outline: 3px solid #f29f1f; outline-offset: 4px; }
-.hero-modern--carousel { min-height: 600px; }
-.hero-modern--carousel > .container:not(.hero-carousel-controls) { padding-bottom: 80px; }
+.hero-modern--carousel { height: 100vh; min-height: 0; padding: 40px 0 88px; }
+.hero-modern--carousel > .container:not(.hero-carousel-controls) { height: 100%; min-height: 0; display: flex; align-items: center; padding-bottom: 0; }
+.hero-event-layout { width: 100%; max-height: 100%; min-height: 0; }
+.hero-modern--carousel .hero-title { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; }
+.hero-modern--carousel .hero-content { max-height: 100%; overflow-y: auto; scrollbar-width: thin; }
 .hero-modern .hero-carousel-controls {
   position: absolute;
   bottom: 24px;
@@ -3260,7 +3251,7 @@ section {
   .hero-carousel-dot::before { transition: none; }
 }
 @media (max-width: 640px) {
-  .hero-modern--carousel { min-height: 560px; }
+  .hero-modern--carousel { padding: 24px 0 80px; }
   .hero-modern .hero-carousel-controls { gap: 8px; bottom: 20px; }
   .hero-carousel-arrows { gap: 6px; }
   .hero-carousel-counter { font-size: 11px; }
@@ -3268,15 +3259,12 @@ section {
 
 /* Les autres événements affichent leur visuel dans une colonne dédiée. */
 .hero-modern--split {
-  height: auto;
-  min-height: max(600px, calc(100svh - var(--site-bar-h, 80px)));
-  padding: 64px 0 96px;
   background: linear-gradient(135deg, #f5f7fb, #fff8ee);
 }
 .hero-modern--split::before { display: none; }
-.hero-modern--split > .container:not(.hero-carousel-controls) { padding-bottom: 0; }
 .hero-modern--split .hero-event-layout {
   display: grid;
+  height: 100%;
   grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
   align-items: center;
   gap: clamp(32px, 5vw, 80px);
@@ -3291,32 +3279,42 @@ section {
 .hero-modern--split .countdown-value { color: var(--navy); }
 .hero-modern--split .countdown-label { color: #526075; }
 .hero-event-visual {
-  aspect-ratio: 1;
-  max-height: 540px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  height: 100%;
+  max-height: 100%;
   min-width: 0;
-  padding: 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 24px;
-  background: #fff;
-  box-shadow: 0 24px 64px rgba(4,10,93,.1);
-  overflow: hidden;
+  min-height: 0;
 }
-.hero-event-image { display: block; width: 100%; height: 100%; object-fit: contain; border-radius: 12px; }
-.hero-event-placeholder { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; background: #f5f7fb; border-radius: 12px; }
-.hero-event-placeholder svg { width: 96px; height: 96px; stroke: #f07c00; stroke-width: 3; stroke-linecap: round; }
+.hero-event-image { display: block; width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; }
+.hero-modern--split .hero-event-layout--text-only { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
+.hero-modern--split .hero-event-layout--text-only .hero-content { max-width: 680px; }
 .hero-modern--split .hero-carousel-button { background: #fff; border-color: #cbd5e1; color: var(--navy); backdrop-filter: none; }
 .hero-modern--split .hero-carousel-button:hover:not(:disabled) { background: #f07c00; border-color: #f07c00; color: #fff; }
 .hero-modern--split .hero-carousel-dot::before { background: #a7b1c2; }
 .hero-modern--split .hero-carousel-dot--active::before { background: #f07c00; }
 .hero-modern--split .hero-carousel-counter { color: var(--navy); }
 @media (max-width: 900px) {
-  .hero-modern--split { padding: 40px 0 96px; }
-  .hero-modern--split .hero-event-layout { grid-template-columns: minmax(0, 1fr); gap: 32px; }
-  .hero-event-visual { width: 100%; max-width: 540px; justify-self: center; aspect-ratio: 4 / 3; }
+  .hero-modern--split .hero-event-layout { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); gap: 20px; }
+  .hero-modern--split .hero-content { max-height: 55vh; }
+  .hero-modern--split .hero-event-layout--text-only { grid-template-rows: minmax(0, 1fr); }
+  .hero-modern--split .hero-event-layout--text-only .hero-content { max-height: 100%; }
+  .hero-event-visual { width: 100%; }
 }
 @media (max-width: 640px) {
-  .hero-modern--split .hero-title { font-size: clamp(2rem, 8vw, 3rem); }
-  .hero-event-visual { padding: 12px; border-radius: 18px; }
+  .hero-modern--carousel .hero-title { margin-bottom: 16px; }
+  .hero-modern--split .hero-title { font-size: clamp(1.7rem, 6vw, 2.4rem); }
+  .hero-modern--carousel .hero-badge { margin-bottom: 14px; font-size: 10px; letter-spacing: 1px; }
+  .hero-modern--split .hero-description,
+  .hero-event-description { font-size: 14px; line-height: 1.5; margin-bottom: 12px; }
+  .hero-event-description { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
+  .hero-modern--split .hero-actions { margin-bottom: 12px; }
+  .hero-modern--carousel .countdown-modern { flex-wrap: nowrap; gap: 12px; }
+  .hero-modern--carousel .countdown-item { flex: 1; min-width: 0; width: auto; }
+  .hero-modern--carousel .countdown-value { font-size: 24px; }
+  .hero-modern--carousel .countdown-label { font-size: 9px; letter-spacing: 1px; }
 }
 
 </style>
