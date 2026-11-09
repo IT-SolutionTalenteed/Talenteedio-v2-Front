@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Barre fixe : l'annonce d'événement et le menu défilent solidaires. -->
-    <div ref="barRef" class="site-bar">
+    <div ref="barRef" class="site-bar" :class="{ 'site-bar--overlay': overlay }">
 
     <!-- ══ TOPBAR ÉVÉNEMENT FEATURED ══ -->
     <div v-if="isEventPromotionVisible" class="topbar">
@@ -39,12 +39,12 @@
     </div>
 
     <!-- ══ HEADER ══ -->
-    <header class="site-header" :class="{ 'site-header--scrolled': isScrolled }">
+    <header class="site-header" :class="{ 'site-header--scrolled': isScrolled, 'site-header--transparent': isTransparent }">
       <div class="container header-inner">
 
         <!-- Logo -->
         <router-link to="/" class="site-logo" @click="menuOpen = false">
-          <img src="/logo.svg" alt="Talenteed.io" width="239" height="72" />
+          <img :src="isTransparent ? '/logo-light.svg' : '/logo.svg'" alt="Talenteed.io" width="239" height="72" />
           <span class="site-tagline">{{ t('home.tagline') }}</span>
         </router-link>
 
@@ -243,7 +243,7 @@
     </div>
 
     <!-- Reprend la place laissée par la barre, sortie du flux par `fixed`. -->
-    <div class="site-header-spacer" :style="{ height: barHeight + 'px' }"></div>
+    <div v-if="!overlay" class="site-header-spacer" :style="{ height: barHeight + 'px' }"></div>
 
     <!-- ══ MOBILE DRAWER (outside header, sibling) ══ -->
     <Transition name="mob-overlay">
@@ -380,6 +380,10 @@ import axios from 'axios'
 import { useFavoris } from '../composables/useFavoris.js'
 import { isEventActive } from '../utils/eventVisibility.js'
 
+const props = defineProps({
+  overlay: { type: Boolean, default: false },
+})
+
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const route   = useRoute()
 const router  = useRouter()
@@ -387,6 +391,7 @@ const { locale, t } = useI18n()
 
 const categories    = ref([])
 const isScrolled      = ref(false)
+const isTransparent = computed(() => props.overlay && !isScrolled.value)
 const menuOpen        = ref(false)
 const activeMega      = ref(null)
 const mobileAccordion = ref(null)
@@ -447,7 +452,8 @@ function onClickOutside(e) {
  * conteneur ne fait que sa propre hauteur : un `position: sticky` n'aurait
  * aucune marge pour tenir et défilerait avec la page. D'où `position: fixed`,
  * qui sort la barre du flux — et le cale ci-dessous qui reprend sa place pour
- * que le contenu ne passe pas dessous.
+ * que le contenu ne passe pas dessous. En mode superposition, le hero réserve
+ * lui-même l'espace utile et le cale est omis, même après défilement.
  */
 const barRef    = ref(null)
 const barHeight = ref(0)
@@ -474,6 +480,7 @@ function tickCountdown(target) {
 // L'annonce d'événement arrive après coup (appel API) et la barre change de
 // hauteur au changement de largeur : on remesure dans les deux cas.
 watch(isEventPromotionVisible, () => nextTick(measureBar))
+watch(() => props.overlay, () => nextTick(measureBar))
 
 onMounted(async () => {
   window.addEventListener('scroll', onScroll, { passive: true })
@@ -658,7 +665,7 @@ onUnmounted(() => {
 .site-header {
   background: #fff;
   box-shadow: 0 1px 0 #e0e4ef;
-  transition: box-shadow .25s;
+  transition: background-color .25s, box-shadow .25s;
   font-family: 'Open Sans', sans-serif;
   text-transform: uppercase;
 }
@@ -667,6 +674,7 @@ onUnmounted(() => {
   text-transform: uppercase;
 }
 .site-header--scrolled {
+  background: #fff;
   box-shadow: 0 4px 24px rgba(0,35,90,.10);
 }
 
@@ -1273,5 +1281,29 @@ onUnmounted(() => {
     display: block;
     position: absolute; inset: 0; z-index: 2;
   }
+}
+/* Menu en superposition sur le hero sombre, avant défilement. */
+.site-header--transparent { background: transparent; box-shadow: none; }
+.site-header--transparent .site-tagline { color: #ffd58c; }
+.site-header--transparent .nav-link { color: #fff; }
+.site-header--transparent .nav-link:hover,
+.site-header--transparent .nav-link--active { color: #ffd58c; }
+.site-header--transparent .nav-link::after { background: #f29f1f; }
+.site-header--transparent .lang-chevron,
+.site-header--transparent .user-chevron { color: #fff; }
+.site-header--transparent .lang-btn:hover,
+.site-header--transparent .lang-wrap:hover .lang-btn { background: rgba(255,255,255,.12); }
+.site-header--transparent .btn-nav--outline { background: transparent; border-color: rgba(255,255,255,.7); color: #fff; }
+.site-header--transparent .btn-nav--outline:hover { background: rgba(255,255,255,.12); border-color: #fff; }
+.site-header--transparent .btn-nav--filled { background: #f29f1f; border-color: #f29f1f; color: #040a5d; }
+.site-header--transparent .btn-nav--filled:hover { background: #f07c00; border-color: #f07c00; }
+.site-header--transparent .fav-btn:not(.fav-btn--active) { color: #fff; }
+.site-header--transparent .fav-btn:hover { background: rgba(255,255,255,.12); }
+.site-header--transparent .user-pill { border-color: rgba(255,255,255,.6); color: #fff; }
+.site-header--transparent .user-pill:hover { background: rgba(255,255,255,.12); border-color: #fff; }
+.site-header--transparent .user-avatar { background: rgba(255,255,255,.15); color: #fff; }
+.site-header--transparent .burger span { background: #fff; }
+@media (prefers-reduced-motion: reduce) {
+  .site-header { transition: none; }
 }
 </style>
