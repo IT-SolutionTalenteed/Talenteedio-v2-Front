@@ -61,7 +61,7 @@
               </span>
             </div>
             <div class="event-content">
-              <h3 class="event-title">{{ event.titre }}</h3>
+              <h3 class="event-title" :class="{ 'title-full': String(event.id) === '1' }" :title="event.titre">{{ event.titre }}</h3>
               <p v-if="event.description" class="event-desc">
                 {{ truncate(stripHtml(event.description), 120) }}
               </p>
