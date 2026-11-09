@@ -24,7 +24,7 @@
         <div class="container">
           <div class="evd-hero-content">
             <span class="label-white" v-if="evenement.categorie">{{ evenement.categorie.titre }}</span>
-            <h1 class="evd-hero-title">{{ evenement.titre }}</h1>
+            <h1 class="evd-hero-title" :class="{ 'title-full': String(evenement.id) === '1' }" :title="evenement.titre">{{ evenement.titre }}</h1>
             <div class="evd-hero-meta">
               <span v-if="evenement.date_debut">
                 <i class="fa-solid fa-calendar"></i>
