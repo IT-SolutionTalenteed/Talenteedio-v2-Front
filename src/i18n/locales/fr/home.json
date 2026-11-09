@@ -1,12 +1,5 @@
 {
   "hero": {
-    "defaultTitle": "Africa Talent Summit",
-    "defaultLocation": "Luxembourg",
-    "defaultDescription": "Le plus grand rassemblement des talents africains et des leaders qui façonnent l'avenir du continent.",
-    "subscriptionsOpen": "LES SOUSCRIPTIONS SONT OUVERTES – RÉSERVEZ VOTRE PLACE",
-    "subscribe": "Souscrire",
-    "joinObservatory": "Rejoindre Africa Talent Observatory",
-    "viewProgram": "Voir le programme",
     "days": "Jours",
     "hours": "Heures",
     "minutes": "Minutes",
@@ -23,39 +16,33 @@
   },
   "about": {
     "label": "À propos",
-    "title": "Révolutionner le paysage des talents africains",
-    "description1": "L'Africa Talent Summit est la plateforme de référence pour la découverte, le développement et la connexion des talents africains avec les opportunités mondiales.",
-    "description2": "Durant trois jours, rejoignez des milliers de professionnels, entrepreneurs, investisseurs et décideurs pour façonner ensemble l'avenir du travail en Afrique.",
+    "title": "Talenteed.io, le lien entre talents et opportunités",
+    "description1": "Talenteed.io réunit offres d’emploi, entreprises, événements et contenus RH pour vous aider à faire avancer votre parcours professionnel.",
+    "description2": "Explorez les opportunités, découvrez les recruteurs et préparez vos prochaines étapes grâce à nos conseils carrière et au matching de profils.",
     "networking": {
-      "title": "Networking",
-      "description": "Connectez-vous avec des leaders de l'industrie africaine"
+      "title": "Talents & recruteurs",
+      "description": "Découvrez les entreprises et développez votre réseau professionnel."
     },
     "innovation": {
-      "title": "Innovation",
-      "description": "Découvrez les dernières tendances et innovations"
+      "title": "Conseils & matching",
+      "description": "Préparez vos candidatures et identifiez les opportunités adaptées à votre profil."
     }
   },
-  "stats": {
-    "participants": "Participants attendus",
-    "speakers": "Intervenants",
-    "countries": "Pays représentés",
-    "sessions": "Sessions & Ateliers"
-  },
   "cta": {
-    "title": "Prêt à rejoindre le mouvement?",
-    "description": "Ne manquez pas cette opportunité unique de connecter avec les meilleurs talents et leaders d'Afrique.",
-    "earlyBird": "Inscription early bird",
-    "becomePartner": "Devenir partenaire"
+    "title": "Faites avancer votre parcours avec Talenteed.io",
+    "description": "Créez votre profil pour explorer les opportunités, découvrir les entreprises et accéder à votre espace personnel.",
+    "createAccount": "Créer mon compte",
+    "discoverCompanies": "Découvrir les entreprises"
   },
   "quicklinks": {
     "findJob": {
       "title": "Trouver un emploi",
-      "description": "Votre porte d'entrée vers des possibilités infinies et des opportunités de carrière passionnantes",
+      "description": "Découvrez les offres et trouvez les opportunités qui correspondent à votre parcours.",
       "action": "Parcourir les emplois"
     },
     "events": {
       "title": "Événements",
-      "description": "Participez aux événements RH et développez votre réseau professionnel",
+      "description": "Retrouvez les événements RH et les rencontres professionnelles de la plateforme.",
       "action": "Découvrir"
     },
     "articles": {
@@ -64,7 +51,7 @@
       "action": "Lire les articles"
     },
     "matching": {
-      "title": "Matching Profile",
+      "title": "Matching de profils",
       "description": "Trouvez les opportunités qui correspondent parfaitement à votre profil et vos compétences",
       "action": "Découvrir mon match"
     }
@@ -78,7 +65,7 @@
   "triple": {
     "watermark": "Notre Blog",
     "title": "Articles de Blog",
-    "description": "Conseils carrière, actualités RH et analyses du marché du travail africain, rédigés par nos experts pour vous aider à avancer :",
+    "description": "Conseils carrière, actualités RH et analyses du monde du travail pour vous accompagner dans vos projets professionnels.",
     "readMore": "Lire la suite",
     "thinkTank": {
       "title": "Conseils Carrière",
@@ -104,5 +91,24 @@
   "eventSection": {
     "participate": "Participez"
   },
-  "tagline": "Le média alternatif pour les RH"
+  "tagline": "Le média alternatif pour les RH",
+  "platform": {
+    "label": "Les services Talenteed.io",
+    "jobs": {
+      "title": "Offres d’emploi",
+      "description": "Explorez les opportunités et trouvez votre prochain poste."
+    },
+    "companies": {
+      "title": "Entreprises",
+      "description": "Découvrez les recruteurs et leurs activités."
+    },
+    "resources": {
+      "title": "Conseils carrière",
+      "description": "Informez-vous sur l’emploi et préparez vos candidatures."
+    },
+    "events": {
+      "title": "Événements RH",
+      "description": "Découvrez les rencontres et rendez-vous professionnels."
+    }
+  }
 }
