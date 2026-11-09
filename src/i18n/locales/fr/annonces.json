@@ -84,5 +84,10 @@
     "fileTooLarge": "Le fichier est trop volumineux. Taille maximale : 5 Mo",
     "selectCv": "Veuillez sélectionner un CV",
     "applicationSent": "Votre candidature a bien été envoyée !"
+  },
+  "error": {
+    "title": "Les offres ne sont pas disponibles pour le moment.",
+    "description": "Vérifiez votre connexion puis relancez la recherche. Vos filtres sont conservés.",
+    "retry": "Réessayer"
   }
 }
