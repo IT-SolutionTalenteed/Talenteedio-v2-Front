@@ -1,14 +1,14 @@
 {
   "hero": {
-    "eventLabel": "Africa Talent Summit — 5 & 6 Novembre 2026",
-    "title": "Construisez la carrière qui façonnera l'Afrique de demain"
+    "eventLabel": "Talenteed.io — Votre espace carrière",
+    "title": "Préparez votre prochaine étape professionnelle"
   },
   "confirmation": {
     "title": "Merci pour votre inscription !",
-    "subtitle": "Votre profil a bien été enregistré. Créez votre mot de passe pour accéder à votre espace personnel et finaliser votre candidature.",
+    "subtitle": "Votre profil a bien été enregistré. Créez votre mot de passe pour accéder à votre espace personnel et compléter votre profil.",
     "note": "Un e-mail de confirmation vous sera envoyé une fois votre compte créé. Pensez à compléter votre",
     "noteStrong": "Matching IA",
-    "noteEnd": "pour maximiser vos chances d'obtenir des rendez-vous avec les entreprises participantes."
+    "noteEnd": "pour identifier les opportunités adaptées à votre profil."
   },
   "password": {
     "sectionTitle": "Choisissez votre mot de passe",
