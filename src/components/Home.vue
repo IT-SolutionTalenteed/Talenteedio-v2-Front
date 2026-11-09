@@ -42,7 +42,7 @@
                 {{ heroEvent.ville }}{{ heroEvent.pays ? ', ' + heroEvent.pays : '' }}
               </p>
 
-              <p v-if="!isLuxembourgHero && heroDescription" class="hero-event-description">
+              <p v-if="heroDescription" class="hero-event-description">
                 {{ heroDescription }}
               </p>
 
@@ -172,7 +172,7 @@
             </div>
           </router-link>
 
-          <router-link :to="categories.length ? `/evenements/categorie/${categories[0].id}` : '/'" class="ql-card animate-on-scroll stagger-1">
+          <router-link to="/evenements" class="ql-card animate-on-scroll stagger-1">
             <div class="ql-icon ql-icon--orange"><i class="fa-solid fa-calendar-days"></i></div>
             <div class="ql-body">
               <h3>{{ t('home.quicklinks.events.title') }}</h3>
@@ -270,31 +270,26 @@
       </div>
     </section>
 
-    <!-- 5. SECTION STATISTIQUES — 5 000+ Participants attendus ══ -->
-    <section class="section-stats">
+    <!-- 5. LES SERVICES TALENTEED.IO ══ -->
+    <section class="section-stats" :aria-label="t('home.platform.label')">
       <div class="container">
         <div class="stats-grid">
-          <div class="stat-card animate-on-scroll">
-            <div class="stat-number-large" data-count="5000">0</div>
-            <div class="stat-description">{{ t('home.stats.participants') }}</div>
-          </div>
-          <div class="stat-card animate-on-scroll stagger-1">
-            <div class="stat-number-large" data-count="50">0</div>
-            <div class="stat-description">{{ t('home.stats.speakers') }}</div>
-          </div>
-          <div class="stat-card animate-on-scroll stagger-2">
-            <div class="stat-number-large" data-count="30">0</div>
-            <div class="stat-description">{{ t('home.stats.countries') }}</div>
-          </div>
-          <div class="stat-card animate-on-scroll stagger-3">
-            <div class="stat-number-large" data-count="15">0</div>
-            <div class="stat-description">{{ t('home.stats.sessions') }}</div>
-          </div>
+          <router-link
+            v-for="(item, index) in platformLinks"
+            :key="item.key"
+            :to="item.to"
+            class="stat-card platform-card animate-on-scroll"
+            :class="`stagger-${index}`"
+          >
+            <i :class="item.icon" class="platform-icon" aria-hidden="true"></i>
+            <h3 class="platform-title">{{ t(`home.platform.${item.key}.title`) }}</h3>
+            <p class="stat-description">{{ t(`home.platform.${item.key}.description`) }}</p>
+          </router-link>
         </div>
       </div>
     </section>
 
-    <!-- 6. SECTION CTA — Prêt à rejoindre le mouvement? ══ -->
+    <!-- 6. REJOINDRE TALENTEED.IO ══ -->
     <section class="section-cta">
       <div class="container">
         <div class="cta-card animate-on-scroll">
@@ -307,10 +302,10 @@
             </p>
             <div class="cta-actions">
               <router-link to="/profile-selection" class="btn-primary">
-                {{ t('home.cta.earlyBird') }}
+                {{ t('home.cta.createAccount') }}
               </router-link>
               <router-link to="/entreprises" class="btn-secondary">
-                {{ t('home.cta.becomePartner') }}
+                {{ t('home.cta.discoverCompanies') }}
               </router-link>
             </div>
           </div>
@@ -459,13 +454,12 @@ const event      = ref(null)
 const now = ref(Date.now())
 const isEventPromotionVisible = computed(() => isEventActive(event.value, now.value))
 const articles   = ref([])
-const categories = ref([])
 const offres   = ref([])
 const heroEvents = ref([])
 const activeHeroIndex = ref(0)
 const heroEvent = computed(() => heroEvents.value[activeHeroIndex.value] || null)
 const isLuxembourgHero = computed(() => String(heroEvent.value?.id) === '1')
-const heroDescription = computed(() => truncate(stripHtml(heroEvent.value?.description), 320))
+const heroDescription = computed(() => truncate(stripHtml(heroEvent.value?.description), 220))
 const isHeroPromotionVisible = computed(() => isEventActive(heroEvent.value, now.value))
 const heroHovered = ref(false)
 const heroFocused = ref(false)
@@ -541,6 +535,13 @@ async function loadHeroEvents() {
   } while (page <= lastPage)
 }
 
+const platformLinks = [
+  { key: 'jobs', to: '/annonces', icon: 'fa-solid fa-briefcase' },
+  { key: 'companies', to: '/entreprises', icon: 'fa-solid fa-building' },
+  { key: 'resources', to: '/blog', icon: 'fa-solid fa-newspaper' },
+  { key: 'events', to: '/evenements', icon: 'fa-solid fa-calendar-days' },
+]
+
 // Auth state
 const isLoggedIn = computed(() => !!localStorage.getItem('token'))
 const userRole = computed(() => localStorage.getItem('userRole') || '')
@@ -570,12 +571,11 @@ onMounted(async () => {
   startHeroRotation()
 
   const config = { signal: requestController.signal }
-  const [heroRes, evRes, artRes, offRes, catRes] = await Promise.allSettled([
+  const [heroRes, evRes, artRes, offRes] = await Promise.allSettled([
     loadHeroEvents(),
     axios.get(`${apiBase}/public/featured-event`, config),
     axios.get(`${apiBase}/public/articles`, config),
     axios.get(`${apiBase}/public/offres`, { ...config, params: { per_page: 6 } }),
-    axios.get(`${apiBase}/public/categories-evenements`, config),
   ])
   if (requestController.signal.aborted) return
 
@@ -586,12 +586,10 @@ onMounted(async () => {
   }
   if (artRes.status === 'fulfilled') articles.value = artRes.value.data
   if (offRes.status === 'fulfilled') offres.value = offRes.value.data.data || offRes.value.data
-  if (catRes.status === 'fulfilled') categories.value = catRes.value.data
 
   await nextTick()
   if (requestController.signal.aborted) return
   initAnimations()
-  initCounterAnimation()
 })
 
 onUnmounted(() => {
@@ -689,45 +687,6 @@ function initAnimations() {
   document.querySelectorAll('.animate-on-scroll').forEach(el => {
     observer.observe(el)
   })
-}
-
-function initCounterAnimation() {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const el = entry.target
-        const target = parseInt(el.dataset.count) || 0
-        animateCounter(el, target)
-        observer.unobserve(el)
-      }
-    })
-  }, { threshold: 0.5 })
-
-  animationObservers.push(observer)
-  document.querySelectorAll('.stat-number-large').forEach(el => {
-    observer.observe(el)
-  })
-}
-
-function animateCounter(el, target) {
-  const duration = 2000
-  const start = 0
-  const startTime = performance.now()
-
-  function update(currentTime) {
-    const elapsed = currentTime - startTime
-    const progress = Math.min(elapsed / duration, 1)
-    const easeOutQuart = 1 - Math.pow(1 - progress, 4)
-    const current = Math.round(easeOutQuart * (target - start) + start)
-    
-    el.textContent = current.toLocaleString() + '+'
-    
-    if (progress < 1) {
-      requestAnimationFrame(update)
-    }
-  }
-  
-  requestAnimationFrame(update)
 }
 
 // Language switching function
@@ -1291,7 +1250,7 @@ section {
   transform: scale(1.1);
 }
 
-/* ── Stats Section ─────────────────────────────────── */
+/* ── Talenteed.io services ─────────────────────────────────── */
 .section-stats {
   padding: 80px 0;
   background: linear-gradient(135deg, rgba(240, 124, 0, 0.05) 0%, rgba(25, 43, 194, 0.05) 50%, rgba(240, 124, 0, 0.05) 100%);
@@ -1321,16 +1280,11 @@ section {
   padding: 32px 16px;
 }
 
-.stat-number-large {
-  font-size: clamp(3rem, 8vw, 4rem);
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--orange) 0%, var(--blue) 50%, var(--navy) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  line-height: 1;
-  margin-bottom: 16px;
-}
+.platform-card { display: flex; flex-direction: column; align-items: center; gap: 16px; text-decoration: none; border-radius: 16px; transition: background .2s; }
+.platform-card:hover { background: rgba(255,255,255,.7); }
+.platform-card:focus-visible { outline: 3px solid var(--orange); outline-offset: 4px; }
+.platform-icon { font-size: 32px; color: var(--blue); }
+.platform-title { font-size: 22px; font-weight: 700; color: var(--navy); line-height: 1.3; margin: 0; }
 
 .stat-description {
   color: var(--muted);
@@ -3194,7 +3148,7 @@ section {
 .hero-modern--carousel { height: 100vh; min-height: 0; padding: calc(var(--site-bar-h, 72px) + 24px) 0 88px; }
 .hero-modern--carousel > .container:not(.hero-carousel-controls) { height: 100%; min-height: 0; display: flex; align-items: center; padding-bottom: 0; }
 .hero-event-layout { width: 100%; max-height: 100%; min-height: 0; }
-.hero-modern--carousel .hero-title { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; }
+.hero-modern--carousel .hero-title { display: block; overflow: visible; overflow-wrap: anywhere; }
 .hero-modern--carousel .hero-content { max-height: 100%; overflow-y: auto; scrollbar-width: thin; }
 .hero-modern .hero-carousel-controls {
   position: absolute;
@@ -3274,6 +3228,7 @@ section {
 .hero-modern--split .hero-title { color: #fff; font-size: clamp(2rem, 4vw, 3.75rem); overflow-wrap: anywhere; }
 .hero-modern--split .hero-description,
 .hero-event-description { color: #eef2ff; font-size: 16px; line-height: 1.7; margin: 0 0 24px; max-width: none; }
+.hero-event-description { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
 .hero-modern--split .hero-actions { margin-bottom: 24px; justify-content: flex-start; }
 .hero-modern--split .hero-actions .btn-primary { color: #040a5d; font-weight: 700; }
 .hero-modern--split .countdown-modern { justify-content: flex-start; }
