@@ -1,28 +1,28 @@
 {
   "mobileCta": {
     "button": "Access opportunities",
-    "note": "Profile-based selection • Limited places"
+    "note": "Complete your profile at your own pace"
   },
   "hero": {
-    "eventBadge": "Africa Talent Summit — November 5 & 6, 2026",
-    "title": "Build the career that will shape",
-    "titleHighlight": "tomorrow's Africa",
-    "description": "Meet ambitious pan-African companies on November 5 and 6, 2026, and access concrete opportunities, selected for their impact and excellence.",
+    "eventBadge": "Talenteed.io — Your career workspace",
+    "title": "Take the next step in",
+    "titleHighlight": "your career",
+    "description": "Discover jobs, companies and HR events on Talenteed.io. Create your profile to prepare your next professional step.",
     "button": "Access opportunities",
-    "selectionNote": "Profile-based selection • Limited places",
+    "selectionNote": "Complete your profile at your own pace",
     "scrollHint": "Discover"
   },
   "intro": {
-    "title": "Africa has never needed talents like you more.",
+    "title": "Your next professional step starts here.",
     "bullets": {
       "opportunities": "Access concrete opportunities.",
-      "companies": "Meet ambitious companies.",
-      "projects": "Work on projects that truly matter."
+      "companies": "Discover companies that are hiring.",
+      "projects": "Prepare your applications with practical advice."
     },
-    "subtitle": "Don't just watch the future being built. Be part of it."
+    "subtitle": "Explore your options and build your career with Talenteed.io."
   },
   "form": {
-    "title": "Join the Summit",
+    "title": "Join Talenteed.io",
     "subtitle": "Complete your profile to access opportunities",
     "googleButton": "Sign up with Google",
     "divider": "or fill out the form",
@@ -88,15 +88,15 @@
   },
   "stickyCta": {
     "title": "Access opportunities",
-    "text": "Ambitious pan-African companies are waiting for you on",
-    "date": "November 5 and 6, 2026",
-    "location": "in Luxembourg.",
-    "button": "Apply now",
-    "note": "Profile-based selection • Limited places",
+    "text": "Discover opportunities and build",
+    "date": "your career",
+    "location": "with Talenteed.io.",
+    "button": "Create my profile",
+    "note": "Complete your profile at your own pace",
     "features": {
-      "access": "Access to pan-African opportunities",
+      "access": "Access to job opportunities",
       "matching": "AI matching with companies",
-      "interviews": "Live interviews — Luxembourg",
+      "interviews": "Professional events and networking",
       "free": "100% free registration"
     }
   }
