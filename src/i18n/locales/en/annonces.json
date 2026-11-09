@@ -84,5 +84,10 @@
     "fileTooLarge": "File is too large. Maximum size: 5 MB",
     "selectCv": "Please select a CV",
     "applicationSent": "Your application has been sent!"
+  },
+  "error": {
+    "title": "Job offers are currently unavailable.",
+    "description": "Check your connection and try again. Your filters are saved.",
+    "retry": "Try again"
   }
 }
