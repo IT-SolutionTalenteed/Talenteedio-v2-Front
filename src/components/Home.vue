@@ -7,8 +7,7 @@
     <!-- ══ HERO — Carrousel des événements ══ -->
     <section
       v-if="heroEvent"
-      class="hero-modern"
-      :class="{ 'hero-modern--carousel': heroEvents.length > 1 }"
+      class="hero-modern hero-modern--carousel"
       role="region"
       :aria-label="t('home.hero.carouselLabel')"
       :aria-roledescription="t('home.hero.carouselRole')"
@@ -34,16 +33,14 @@
             </div>
 
             <h1 class="hero-title">
-              <router-link :to="`/evenements/${heroEvent.id}`" class="hero-title-link">
-                {{ heroEvent.titre }}
-              </router-link>
+              {{ heroEvent.titre }}
             </h1>
 
             <p v-if="isHeroPromotionVisible" class="hero-description">
               {{ heroEvent.ville }}{{ heroEvent.pays ? ', ' + heroEvent.pays : '' }}
             </p>
 
-            <div v-if="isHeroPromotionVisible" class="hero-actions">
+            <div class="hero-actions">
               <router-link :to="`/evenements/${heroEvent.id}`" class="btn-primary">
                 {{ t('home.hero.viewEvent') }}
               </router-link>
@@ -71,13 +68,13 @@
         </Transition>
       </div>
 
-      <div v-if="heroEvents.length > 1" class="hero-carousel-controls container">
+      <div class="hero-carousel-controls container">
         <div class="hero-carousel-arrows">
-          <button type="button" class="hero-carousel-button" :aria-label="t('home.hero.previousEvent')" @click="goToHeroEvent(activeHeroIndex - 1)">
-            <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+          <button type="button" class="hero-carousel-button" :disabled="heroEvents.length < 2" :aria-label="t('home.hero.previousEvent')" @click="goToHeroEvent(activeHeroIndex - 1)">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6" /></svg>
           </button>
-          <button type="button" class="hero-carousel-button" :aria-label="t('home.hero.nextEvent')" @click="goToHeroEvent(activeHeroIndex + 1)">
-            <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+          <button type="button" class="hero-carousel-button" :disabled="heroEvents.length < 2" :aria-label="t('home.hero.nextEvent')" @click="goToHeroEvent(activeHeroIndex + 1)">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6" /></svg>
           </button>
         </div>
         <div class="hero-carousel-dots" role="group" :aria-label="t('home.hero.carouselLabel')">
@@ -94,7 +91,7 @@
         </div>
         <div class="hero-carousel-playback">
           <span class="hero-carousel-counter" aria-hidden="true">{{ activeHeroIndex + 1 }} / {{ heroEvents.length }}</span>
-          <button type="button" class="hero-carousel-button" :aria-label="t(isCarouselPlaying ? 'home.hero.pauseCarousel' : 'home.hero.playCarousel')" @click="isCarouselPlaying = !isCarouselPlaying">
+          <button v-if="heroEvents.length > 1" type="button" class="hero-carousel-button" :aria-label="t(isCarouselPlaying ? 'home.hero.pauseCarousel' : 'home.hero.playCarousel')" @click="isCarouselPlaying = !isCarouselPlaying">
             <i :class="isCarouselPlaying ? 'fa-solid fa-pause' : 'fa-solid fa-play'" aria-hidden="true"></i>
           </button>
         </div>
@@ -3181,10 +3178,7 @@ section {
   background-position: center;
   background-repeat: no-repeat;
 }
-.hero-title-link { color: inherit; text-decoration: none; }
-.hero-title-link:hover { color: inherit; }
 .hero-modern:focus-visible,
-.hero-title-link:focus-visible,
 .hero-carousel-button:focus-visible,
 .hero-carousel-dot:focus-visible { outline: 3px solid #f29f1f; outline-offset: 4px; }
 .hero-modern--carousel { min-height: 600px; }
@@ -3215,7 +3209,9 @@ section {
   cursor: pointer;
   backdrop-filter: blur(8px);
 }
-.hero-carousel-button:hover { background: #f07c00; border-color: #f07c00; }
+.hero-carousel-button svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.hero-carousel-button:hover:not(:disabled) { background: #f07c00; border-color: #f07c00; }
+.hero-carousel-button:disabled { opacity: .45; cursor: default; }
 .hero-carousel-dots { display: flex; gap: 4px; overflow-x: auto; min-width: 0; padding: 6px; }
 .hero-carousel-dot {
   display: inline-flex;
