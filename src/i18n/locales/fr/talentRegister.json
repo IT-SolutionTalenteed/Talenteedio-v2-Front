@@ -1,28 +1,28 @@
 {
   "mobileCta": {
     "button": "Accéder aux opportunités",
-    "note": "Sélection sur profil • Places limitées"
+    "note": "Un profil à compléter à votre rythme"
   },
   "hero": {
-    "eventBadge": "Africa Talent Summit — 5 & 6 Novembre 2026",
-    "title": "Construisez la carrière qui façonnera",
-    "titleHighlight": "l'Afrique de demain",
-    "description": "Rencontrez, les 5 et 6 novembre 2026, des entreprises panafricaines ambitieuses et accédez à des opportunités concrètes, sélectionnées pour leur impact et leur exigence.",
+    "eventBadge": "Talenteed.io — Votre espace carrière",
+    "title": "Donnez un nouvel élan à",
+    "titleHighlight": "votre carrière",
+    "description": "Découvrez les offres d’emploi, les entreprises et les événements RH sur Talenteed.io. Créez votre profil pour préparer votre prochaine étape professionnelle.",
     "button": "Accéder aux opportunités",
-    "selectionNote": "Sélection sur profil • Places limitées",
+    "selectionNote": "Un profil à compléter à votre rythme",
     "scrollHint": "Découvrir"
   },
   "intro": {
-    "title": "L'Afrique n'a jamais eu autant besoin de talents comme le vôtre.",
+    "title": "Votre prochaine étape professionnelle se prépare ici.",
     "bullets": {
       "opportunities": "Accédez à des opportunités concrètes.",
-      "companies": "Rencontrez des entreprises ambitieuses.",
-      "projects": "Travaillez sur des projets qui comptent vraiment."
+      "companies": "Découvrez les entreprises qui recrutent.",
+      "projects": "Préparez vos candidatures avec des conseils concrets."
     },
-    "subtitle": "Ne regardez plus le futur se construire. Faites-en partie."
+    "subtitle": "Explorez les possibilités et construisez votre parcours avec Talenteed.io."
   },
   "form": {
-    "title": "Rejoindre le Summit",
+    "title": "Rejoindre Talenteed.io",
     "subtitle": "Complétez votre profil pour accéder aux opportunités",
     "googleButton": "S'inscrire avec Google",
     "divider": "ou remplir le formulaire",
@@ -88,15 +88,15 @@
   },
   "stickyCta": {
     "title": "Accéder aux opportunités",
-    "text": "Des entreprises panafricaines ambitieuses vous attendent les",
-    "date": "5 et 6 novembre 2026",
-    "location": "à Luxembourg.",
-    "button": "Candidater maintenant",
-    "note": "Sélection sur profil • Places limitées",
+    "text": "Découvrez les offres et développez",
+    "date": "votre parcours professionnel",
+    "location": "avec Talenteed.io.",
+    "button": "Créer mon profil",
+    "note": "Un profil à compléter à votre rythme",
     "features": {
-      "access": "Accès aux offres panafricaines",
+      "access": "Accès aux offres d’emploi",
       "matching": "Matching IA avec les entreprises",
-      "interviews": "Entretiens en direct — Luxembourg",
+      "interviews": "Événements et rencontres professionnelles",
       "free": "Inscription 100 % gratuite"
     }
   }
