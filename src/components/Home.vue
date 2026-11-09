@@ -2,7 +2,7 @@
   <div class="home-page">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <PublicNav />
+    <PublicNav :overlay="heroEvents.length > 0" />
 
     <!-- ══ HERO — Carrousel des événements ══ -->
     <section
@@ -3191,7 +3191,7 @@ section {
 .hero-modern:focus-visible,
 .hero-carousel-button:focus-visible,
 .hero-carousel-dot:focus-visible { outline: 3px solid #f29f1f; outline-offset: 4px; }
-.hero-modern--carousel { height: 100vh; min-height: 0; padding: 40px 0 88px; }
+.hero-modern--carousel { height: 100vh; min-height: 0; padding: calc(var(--site-bar-h, 72px) + 24px) 0 88px; }
 .hero-modern--carousel > .container:not(.hero-carousel-controls) { height: 100%; min-height: 0; display: flex; align-items: center; padding-bottom: 0; }
 .hero-event-layout { width: 100%; max-height: 100%; min-height: 0; }
 .hero-modern--carousel .hero-title { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; }
@@ -3251,7 +3251,7 @@ section {
   .hero-carousel-dot::before { transition: none; }
 }
 @media (max-width: 640px) {
-  .hero-modern--carousel { padding: 24px 0 80px; }
+  .hero-modern--carousel { padding: calc(var(--site-bar-h, 68px) + 16px) 0 80px; }
   .hero-modern .hero-carousel-controls { gap: 8px; bottom: 20px; }
   .hero-carousel-arrows { gap: 6px; }
   .hero-carousel-counter { font-size: 11px; }
