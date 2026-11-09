@@ -1,46 +1,46 @@
 {
   "hero": {
-    "eventBadge": "Africa Talent Summit — 5 & 6 Novembre 2026",
+    "eventBadge": "Talenteed.io — Talents & entreprises",
     "title": "Choisissez votre profil",
-    "subtitle": "Rejoignez le premier sommet panafricain dédié aux talents et aux entreprises qui construisent l'Afrique de demain"
+    "subtitle": "Créez votre espace Talenteed.io pour explorer les opportunités ou présenter vos besoins de recrutement."
   },
   "talent": {
     "title": "Je suis un Talent",
-    "description": "Accédez à des opportunités de carrière exceptionnelles auprès d'entreprises panafricaines ambitieuses",
+    "description": "Découvrez les offres, préparez vos candidatures et identifiez les opportunités adaptées à votre profil.",
     "features": {
-      "access": "Accès aux offres panafricaines",
+      "access": "Accès aux offres d’emploi",
       "matching": "Matching IA avec les entreprises",
-      "interviews": "Entretiens en direct à Luxembourg",
+      "interviews": "Rencontres lors des événements RH",
       "free": "Inscription 100% gratuite"
     },
     "button": "S'inscrire comme Talent",
-    "badge": "2 000+ talents attendus"
+    "badge": "Votre espace carrière"
   },
   "company": {
     "title": "Je suis une Entreprise",
-    "description": "Recrutez les meilleurs talents d'Afrique et de la diaspora pour accélérer votre croissance",
+    "description": "Présentez votre entreprise et échangez avec notre équipe autour de vos besoins de recrutement.",
     "features": {
-      "talents": "2 000+ talents présélectionnés",
+      "talents": "Visibilité auprès des talents",
       "matching": "Matching IA par profil et poste",
-      "interviews": "Entretiens planifiés sur 2 jours",
+      "interviews": "Rencontres lors des événements RH",
       "support": "Accompagnement dédié"
     },
     "button": "S'inscrire comme Entreprise",
-    "badge": "150+ entreprises participantes"
+    "badge": "Votre espace recrutement"
   },
   "whyParticipate": {
-    "title": "Pourquoi participer au Summit ?",
+    "title": "Pourquoi rejoindre Talenteed.io ?",
     "panAfrican": {
-      "title": "Portée panafricaine",
-      "description": "Connectez-vous avec des acteurs de 30+ pays africains"
+      "title": "Un réseau professionnel",
+      "description": "Découvrez les entreprises et les événements de la plateforme."
     },
     "smartMatching": {
       "title": "Matching intelligent",
-      "description": "Notre IA optimise les rencontres selon vos besoins"
+      "description": "Identifiez les correspondances entre vos compétences et les opportunités."
     },
     "opportunities": {
       "title": "Opportunités concrètes",
-      "description": "Des entretiens qualifiés, pas de simples rencontres"
+      "description": "Retrouvez des offres, des recruteurs et des conseils pour votre parcours."
     }
   }
 }
