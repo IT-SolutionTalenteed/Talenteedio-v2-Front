@@ -77,7 +77,7 @@
               <span v-if="ev.is_featured" class="ev-badge-featured">⭐ {{ t('evenements.card.featured') }}</span>
             </div>
             <div class="cat-event-body">
-              <h3>{{ ev.titre }}</h3>
+              <h3 :class="{ 'title-full': String(ev.id) === '1' }" :title="ev.titre">{{ ev.titre }}</h3>
               <div class="cat-event-meta">
                 <span v-if="ev.date_debut">
                   <i class="fa-solid fa-calendar"></i> {{ formatDateRange(ev.date_debut, ev.date_fin) }}
