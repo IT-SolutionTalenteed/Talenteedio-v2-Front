@@ -1,13 +1,13 @@
 {
   "hero": {
-    "eventBadge": "Africa Talent Summit — November 5 & 6, 2026",
+    "eventBadge": "Talenteed.io — Companies & recruitment",
     "title": "Access the talents that",
     "titleEmphasis": "your growth demands",
-    "description": "Meet, on November 5 and 6, 2026, 2,000 highly qualified profiles, pre-selected to meet the real needs of companies operating in Africa."
+    "description": "Introduce your company, share your hiring needs and discover the ways Talenteed.io can help you connect with talent."
   },
   "form": {
-    "title": "Join the Summit",
-    "subtitle": "Access the best talents from Africa and the diaspora",
+    "title": "Join Talenteed.io",
+    "subtitle": "Tell us about your company and hiring needs.",
     "contactSection": "Main contact",
     "companySection": "Company information",
     "fields": {
@@ -32,7 +32,7 @@
       "city": "E.g.: Abidjan",
       "country": "Select..."
     },
-    "submit": "Become a partner",
+    "submit": "Introduce my company",
     "note": "By submitting this form, you accept our",
     "terms": "terms and conditions",
     "and": "and our",
@@ -59,29 +59,41 @@
     "other": "Other"
   },
   "cta": {
-    "title": "Book a call",
-    "description": "Our team is available to present the Summit opportunities and build your recruitment strategy.",
-    "button": "Book a slot"
+    "title": "Let’s discuss your hiring needs",
+    "description": "Contact our team to discover Talenteed.io services and discuss your recruitment plans.",
+    "button": "Contact our team"
   },
   "benefits": {
-    "talents": "2,000+ pre-selected talents",
+    "talents": "Visibility with talent",
     "matching": "AI matching by profile and position",
-    "interviews": "Interviews scheduled over 2 days",
-    "markets": "Access to pan-African markets",
+    "interviews": "Professional events and networking",
+    "markets": "A presence for your company",
     "support": "Dedicated support"
   },
   "eventFooter": {
-    "badge": "Africa Talent Summit Luxembourg",
-    "title": "The meeting place for",
-    "titleEmphasis": "talents and companies",
-    "titleEnd": "building tomorrow's Africa",
-    "description": "On November 5 and 6, 2026, Luxembourg hosts the first edition of the Africa Talent Summit — two days of exchanges, interviews and connections between Africa's most ambitious companies and diaspora talents.",
-    "kpis": {
-      "talents": "Talents",
-      "days": "Days",
-      "countries": "Countries represented",
-      "preselected": "Pre-selected"
-    },
-    "button": "Become a partner"
+    "badge": "Talenteed.io",
+    "title": "A space for",
+    "titleEmphasis": "talent and companies",
+    "titleEnd": "focused on jobs and HR",
+    "description": "Talenteed.io brings together jobs, companies, professional events and career advice. Tell us about your plans to discover how the platform can support you.",
+    "button": "Introduce my company",
+    "highlights": {
+      "jobs": {
+        "title": "Jobs",
+        "description": "Openings and opportunities"
+      },
+      "companies": {
+        "title": "Companies",
+        "description": "Visibility and recruitment"
+      },
+      "events": {
+        "title": "Networking",
+        "description": "Professional events"
+      },
+      "resources": {
+        "title": "Advice",
+        "description": "Career and HR content"
+      }
+    }
   }
 }
