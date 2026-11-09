@@ -1,46 +1,46 @@
 {
   "hero": {
-    "eventBadge": "Africa Talent Summit — November 5 & 6, 2026",
+    "eventBadge": "Talenteed.io — Talent & companies",
     "title": "Choose your profile",
-    "subtitle": "Join the first pan-African summit dedicated to talents and companies building tomorrow's Africa"
+    "subtitle": "Create your Talenteed.io workspace to explore opportunities or tell us about your hiring needs."
   },
   "talent": {
     "title": "I am a Talent",
-    "description": "Access exceptional career opportunities with ambitious pan-African companies",
+    "description": "Discover jobs, prepare your applications and identify opportunities that fit your profile.",
     "features": {
-      "access": "Access to pan-African opportunities",
+      "access": "Access to job opportunities",
       "matching": "AI matching with companies",
-      "interviews": "Live interviews in Luxembourg",
+      "interviews": "Meet employers at HR events",
       "free": "100% free registration"
     },
     "button": "Register as Talent",
-    "badge": "2,000+ expected talents"
+    "badge": "Your career workspace"
   },
   "company": {
     "title": "I am a Company",
-    "description": "Recruit the best talents from Africa and the diaspora to accelerate your growth",
+    "description": "Introduce your company and talk to our team about your hiring needs.",
     "features": {
-      "talents": "2,000+ pre-selected talents",
+      "talents": "Visibility with talent",
       "matching": "AI matching by profile and position",
-      "interviews": "Interviews scheduled over 2 days",
+      "interviews": "Meet talent at HR events",
       "support": "Dedicated support"
     },
     "button": "Register as Company",
-    "badge": "150+ participating companies"
+    "badge": "Your recruitment workspace"
   },
   "whyParticipate": {
-    "title": "Why participate in the Summit?",
+    "title": "Why join Talenteed.io?",
     "panAfrican": {
-      "title": "Pan-African reach",
-      "description": "Connect with stakeholders from 30+ African countries"
+      "title": "A professional network",
+      "description": "Discover companies and events on the platform."
     },
     "smartMatching": {
       "title": "Smart matching",
-      "description": "Our AI optimizes meetings according to your needs"
+      "description": "Identify connections between your skills and available opportunities."
     },
     "opportunities": {
       "title": "Concrete opportunities",
-      "description": "Qualified interviews, not just simple meetings"
+      "description": "Find jobs, employers and advice for your career."
     }
   }
 }
